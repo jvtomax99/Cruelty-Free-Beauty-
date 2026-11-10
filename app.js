@@ -42,4 +42,9 @@
     el.addEventListener("pointerup", up, { once: true });
     el.addEventListener("pointercancel", cancel, { once: true });
   }, { passive: true });
+
+  /* ---------- Offline: the worker saves the app so it opens with no signal ---------- */
+  if ("serviceWorker" in navigator && window.isSecureContext) {
+    window.addEventListener("load", () => { navigator.serviceWorker.register("./sw.js").catch(() => {}); });
+  }
 })();

@@ -2,30 +2,43 @@
 
 ## What this is
 
-A site about cruelty-free beauty: TO FILL (what it does and for whom). The
-repo is empty so far: a README, no code, no SPEC.md, no hosting chosen yet.
+**C.F.B. (Cruelty-Free Beauty)**, "Cruelty free looks best on skin." A
+phone-first installable web app for makeup shoppers: is this brand
+cruelty-free (with the proof), and is it right for me. Built by Jose for the
+founder (name TO FILL in SPEC.md). Plain HTML, CSS and JS, no build step.
+Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
+`DESIGN.md`.
 
 ## This project: how the general rules apply here
 
-- **New project.** No code before SPEC.md exists. First step: help Jose write
-  SPEC.md (who it's for, "Done when" lines, "Not in v1", "Later", Phases), with
-  research on 2 or 3 similar tools first (cruelty-free checkers and brand
-  lists), then plan mode.
-- **Real user:** TO FILL (Jose himself, or someone he is building it for).
-- **Hosting:** not chosen yet. Decide it in the plan and write it here
-  (Lions-Roar-, Phillis-bookshelves- and CPA-study-app are on GitHub Pages;
-  Interp is on Vercel).
+- **Plan and phases:** `SPEC.md` ("Phases"). Phase 1 (look and shell) done
+  2026-11-10. Next: phase 2, brand data.
+- **Real user:** the founder (TO FILL). Remind Jose to check plans, brand
+  rules and any words that speak for them with the founder.
+- **Hosting:** GitHub Pages from `main`, root folder, at
+  `jvtomax99.github.io/Cruelty-Free-Beauty-/`. Pages stays off until phase 3
+  (a live site with no brands helps no one); turning it on is a repo
+  setting, so ask Jose. No branch previews: the preview is Playwright
+  screenshots (390 px, then 1440 px) served from the parent folder, plus a
+  "try this" list.
+- **Offline worker:** bump `CACHE_VERSION` in `sw.js` in every change to a
+  file it precaches, or returning users keep the old app.
+- **Network:** peta.org, crueltyfree.peta.org, leapingbunny.org,
+  crueltyfreeinternational.org and world.openbeautyfacts.org are allowed in
+  the Default environment (2026-11-10). Exponent and ACTAsia refuse
+  automated readers; cite the certifiers' own pages instead.
 - **Claims need sources.** Whether a brand is cruelty-free changes (parent
   companies, sales where animal testing is required). Every such claim links
   its source and the date it was checked; never state one from memory.
 - **Handoffs:** new handoffs go in root `HANDOFF.md`. None exists yet.
 - **Rule docs:** `docs/design-rules.md`, `docs/assets.md`,
-  `docs/cleanup-audit.md` and `docs/refactor.md` are in the repo.
-  `DESIGN.md`, `docs/ARCHITECTURE.md` and `docs/CLEANUP.md` do not exist yet;
-  make them when the first code or design work needs them.
-- **Site check:** not set up yet (no pages). When the first page lands, copy
-  `.github/site-check.cjs` and `.github/workflows/site-check.yml` from
-  Lions-Roar- and list the pages there.
+  `docs/cleanup-audit.md` and `docs/refactor.md`. `docs/CLEANUP.md` does not
+  exist yet. Assets are listed in `CREDITS.md`. Budget: $0 (free only).
+- **Site check.** Every pull request runs `.github/site-check.cjs` ("Site
+  check": missing files, links starting with "/", script errors at phone and
+  desktop width). It must be green before asking Jose to push. Run it with
+  `node .github/site-check.cjs index.html`. A new page goes into the list in
+  `.github/workflows/site-check.yml`.
 
 - **Public repo, paid assets.** The repo is public (checked 2026-11-10), so paid raw files can't be committed (docs/assets.md, section 9) unless Jose makes it private.
 - **Taste skill.** Saved in `.claude/skills/taste/` (Senlin's, MIT; `SOURCE.md` there says where from). It asks for the Playwright MCP server; in a cloud session use the Playwright already installed instead (run its `references/extract.js` with `page.evaluate`).

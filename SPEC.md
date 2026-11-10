@@ -38,10 +38,13 @@ me**.
    - *Strict* (the founder's original rule): certified, parent company does
      not test, and not sold in mainland China stores.
    - Default: TO FILL (recommended: Strict, the founder's mission).
-5. China: since May 1, 2021, imported general cosmetics can skip China's
-   animal testing with a safety assessment and a GMP certificate; special
-   cosmetics (sunscreen, for example) still can be tested. The app treats
-   China sales as a filter, not as the definition of cruelty-free.
+5. China: Leaping Bunny's FAQ says China's rules now make it possible, in
+   specific cases, to sell there without animal testing and stay certified
+   (its China Qualification Program). Trade press dates the change to May 1,
+   2021, for imported general cosmetics with a safety assessment and a GMP
+   certificate; special cosmetics (sunscreen, for example) can still be
+   tested. The app treats China sales as a filter, not as the definition of
+   cruelty-free.
 6. Every brand is rechecked at least every 90 days. Past that, it shows
    "check due" until rechecked.
 7. No PETA or Leaping Bunny logos (trademarks). The app names the
@@ -94,12 +97,12 @@ only if it can be shown to work across skin tones.
 
 ## Phases
 
-### Phase 1: Look and app shell
-- [ ] DESIGN.md (soft luxury), sample page shown to Jose before wider use
-- [ ] Bunny logo (SVG), app icons, home-screen install, offline cache
-- [ ] Home (greeting, search, four tiles), tab bar, empty screens
-- [ ] Learn page with sourced answers
-- [ ] Site check on every pull request
+### Phase 1: Look and app shell (done 2026-11-10)
+- [x] DESIGN.md (soft luxury), sample page shown to Jose before wider use
+- [x] Bunny logo (SVG), app icons, home-screen install, offline cache
+- [x] Home (greeting, search, four tiles), tab bar, empty screens
+- [x] Learn page with sourced answers
+- [x] Site check on every pull request
 
 ### Phase 2: Brand data
 - [ ] Research and verify 30 makeup brands from primary sources
@@ -123,4 +126,9 @@ only if it can be shown to work across skin tones.
 - The founder's name, and who will recheck brands every 90 days.
 - Default strictness.
 - 1 to 3 websites whose look the founder likes (for DESIGN.md).
+
+## Decided
+
+- 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
+  quiz; $0 asset budget; soft luxury look; Fraunces headings.
 - Paid or affiliate links: ever?
