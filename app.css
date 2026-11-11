@@ -258,6 +258,16 @@ main {
   background: transparent; color: var(--rose); font: 600 var(--fs-sub)/1 var(--font-body); cursor: pointer;
 }
 
+/* ---------- What changed (Home card, Brands history, brand page line) ---------- */
+.card.changes { margin-top: var(--sp-4); }
+.change-list { list-style: none; display: grid; gap: var(--sp-3); padding: 0; margin: var(--sp-3) 0 0; }
+.change .src { margin: var(--sp-1) var(--sp-1) 0; }
+#changes-all { margin-top: var(--sp-6); }
+#changes-all h2 { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); margin: 0 var(--sp-1); }
+#changes-all .count { margin-top: var(--sp-1); }
+.change-note { margin: 0 0 var(--sp-3); padding: var(--sp-3) var(--sp-4); border: 1px solid var(--line); border-left: 3px solid var(--rose); border-radius: var(--r-md); background: var(--paper); font-size: var(--fs-sub); }
+.change-note a { color: var(--rose); font-weight: 600; }
+
 /* ---------- One brand ---------- */
 .back { display: inline-flex; align-items: center; gap: var(--sp-1); min-height: 44px; margin-top: var(--sp-3); color: var(--rose); font-weight: 600; text-decoration: none; }
 .back svg { width: 20px; height: 20px; transform: rotate(90deg); }

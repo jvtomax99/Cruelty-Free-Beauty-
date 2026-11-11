@@ -30,6 +30,8 @@ const REVIEW = ['verified', 'needs-review'];
 const LINK_TYPES = ['plain', 'affiliate'];
 const CLAIMS = { peta: STATUS, leapingBunny: STATUS, parent: PARENT_STATUS, chinaRetail: STATUS };
 
+const OWN_SITE = { peta: /^https:\/\/(crueltyfree\.)?peta\.org\//, leapingBunny: /^https:\/\/(www\.)?leapingbunny\.org\// };
+
 const errors = [];
 const warnings = [];
 const err = (id, msg) => errors.push(`${id}: ${msg}`);
@@ -100,14 +102,58 @@ function checkBrand(b, seen) {
   }
   if (!REVIEW.includes(b.review)) err(id, `review "${b.review}" is not one of ${REVIEW.join(', ')}`);
   // Brand rule 3: a certifier's status must link that certifier's own site.
-  const own = { peta: /^https:\/\/(crueltyfree\.)?peta\.org\//, leapingBunny: /^https:\/\/(www\.)?leapingbunny\.org\// };
-  for (const [k, re] of Object.entries(own)) {
+  for (const [k, re] of Object.entries(OWN_SITE)) {
     const c = b[k];
     if (c && (c.status === 'yes' || c.status === 'no') && !re.test(c.url || '')) err(id, `${k} says "${c.status}" but does not link ${k === 'peta' ? 'PETA' : 'Leaping Bunny'}'s own site`);
   }
   if (b.review === 'verified') {
     const open = Object.keys(CLAIMS).filter((k) => b[k] && (b[k].checked === null || b[k].checked === undefined));
     if (open.length) err(id, `review is "verified" but ${open.join(', ')} not researched`);
+  }
+}
+
+// The "changes" list feeds the app's "What changed" notices, so a wrong entry is a wrong public
+// claim about a brand: each needs a known brand, a real before and after, a date and a source.
+function checkChanges(list, brands) {
+  if (list === undefined) return;
+  if (!Array.isArray(list)) return err('changes', 'must be a list');
+  const newest = new Map(), keys = new Set();
+  list.forEach((c, i) => {
+    const at = `changes ${i + 1}`;
+    if (!c || typeof c !== 'object') return err(at, 'is not an object');
+    const b = brands.find((x) => x && x.id === c.id);
+    if (!b) return err(at, `brand id "${c.id}" is not in the list`);
+    const allowed = CLAIMS[c.claim];
+    if (!allowed) return err(at, `claim "${c.claim}" is not one of ${Object.keys(CLAIMS).join(', ')}`);
+    if (!allowed.includes(c.from) || !allowed.includes(c.to)) err(at, `from "${c.from}" and to "${c.to}" must each be one of ${allowed.join(', ')}`);
+    if (c.from === c.to) err(at, 'from and to are the same, so nothing changed');
+    if (c.claim === 'leapingBunny' && c.from !== 'yes' && c.to !== 'yes') err(at, 'a Leaping Bunny change must start or end at "yes" (the app says "no longer in" or "now in" its guide)');
+    if (c.law !== undefined && !(c.law === true && c.claim === 'peta' && c.to === 'no')) err(at, 'law may only be true, on a peta change to "no" (PETA: working for regulatory change)');
+    const dup = `${c.id}|${c.claim}|${c.date}`;
+    if (keys.has(dup)) err(at, `a second ${c.claim} change for ${c.id} on ${c.date}`);
+    keys.add(dup);
+    if (!isDate(c.date)) return err(at, `date "${c.date}" is not YYYY-MM-DD`);
+    if (ageDays(c.date) < 0) err(at, `date ${c.date} is in the future`);
+    if (!isUrl(c.url)) err(at, 'has no https source link');
+    else if (OWN_SITE[c.claim] && !OWN_SITE[c.claim].test(c.url)) err(at, `a ${c.claim} change must link the certifier's own site`);
+    if (c.note !== undefined && (typeof c.note !== 'string' || c.note.length > 120)) err(at, 'note must be text of at most 120 characters');
+    const k = `${c.id}|${c.claim}`;
+    if (!newest.has(k) || newest.get(k).date < c.date) newest.set(k, c);
+  });
+  // The newest change to a claim must agree with what the brand record says now.
+  for (const c of newest.values()) {
+    const b = brands.find((x) => x.id === c.id);
+    const now = c.claim === 'parent' ? b.parent && b.parent.testsOnAnimals : b[c.claim] && b[c.claim].status;
+    if (now !== c.to) err(`changes (${c.id})`, `says ${c.claim} became "${c.to}" on ${c.date}, but the brand record says "${now}"`);
+    const checked = b[c.claim] && b[c.claim].checked;
+    if (isDate(checked) && checked < c.date) err(`changes (${c.id})`, `${c.claim} change is dated ${c.date}, after the record's checked date ${checked}`);
+  }
+  // Each change to a claim must start where the one before it ended.
+  const byClaim = new Map();
+  for (const c of list) if (c && isDate(c.date)) byClaim.set(`${c.id}|${c.claim}`, [...(byClaim.get(`${c.id}|${c.claim}`) || []), c]);
+  for (const [k, a] of byClaim) {
+    a.sort((x, y) => x.date.localeCompare(y.date));
+    for (let i = 1; i < a.length; i++) if (a[i].from !== a[i - 1].to) err(`changes (${k})`, `the change on ${a[i].date} starts at "${a[i].from}", but the one before ended at "${a[i - 1].to}"`);
   }
 }
 
@@ -141,10 +187,11 @@ async function main() {
   if (!Array.isArray(data.brands)) { console.error('brands.json has no "brands" list'); process.exit(1); }
   const seen = new Set();
   data.brands.forEach((b) => checkBrand(b, seen));
+  checkChanges(data.changes, data.brands);
   let linkCount = 0;
   if (process.argv.includes('--links')) linkCount = await checkLinks(data.brands);
 
-  console.log(`${data.brands.length} brands checked${linkCount ? `, ${linkCount} links opened` : ''}.`);
+  console.log(`${data.brands.length} brands and ${(data.changes || []).length} changes checked${linkCount ? `, ${linkCount} links opened` : ''}.`);
   if (warnings.length) console.log(`\nWarnings (${warnings.length}):\n  ` + warnings.join('\n  '));
   if (errors.length) console.log(`\nErrors (${errors.length}):\n  ` + errors.join('\n  '));
   else console.log('\nNo errors.');
