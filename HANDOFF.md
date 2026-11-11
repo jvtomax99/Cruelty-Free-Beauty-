@@ -11,13 +11,13 @@ me", wants white, and Jose then asked for a second mock: "more dramatic,
 cute, something about saving animals from makeup cruelty, the bunny is the
 hero".
 
-**Mock 2 ("The Rescue") is cancelled (Jose, 2026-11-11, evening).** The
-stage show stays as the film. Still open, ask Jose with buttons: does the
-stage film stay pink (merge PR #10 as it is), get a free white regrade, or
-get remade on a white set (about 600 Runway credits; 1,478 left)? He also
-asked once whether the bunny's cape could be purple (a preview was shown);
-the cape only existed in mock 2, so confirm whether he wants one on the
-stage bunny.
+**Mock 2 ("The Rescue") is back on (Jose cancelled it, then brought it
+back the same evening, 2026-11-11).** Next step: Jose picks, with buttons,
+what happens to it: show the founder the storyboard first, animate it
+(about 650 Runway credits; 1,478 left), or change frames. He asked whether
+the cape can be purple: yes, a preview of the hero frame with a royal
+purple cape was shown (Meshy task `01a1cc42-6833-71d3-9aaf-b205b02ac690`);
+he has not yet said white or purple.
 
 ## What exists
 
@@ -30,7 +30,7 @@ stage bunny.
   `tools/make-launch-video.sh`), then bump `MEDIA` in `sw.js`. If the new
   film ends on white, change the flash colour in the script and check the
   handover to the drawn logo (it is drawn for a dark stage).
-- Mock 2 storyboard (cancelled, kept only for reference), seven frames, made on Meshy (image-to-image,
+- Mock 2 storyboard, seven frames, made on Meshy (image-to-image,
   `nano-banana`, the stage test frame as the bunny reference, 3 credits
   each). Re-download with
   `GET https://api.meshy.ai/openapi/v1/image-to-image/<id>`:
