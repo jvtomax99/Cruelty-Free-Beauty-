@@ -36,6 +36,8 @@ confirms it.
 
 - `node .github/site-check.cjs index.html` (runs on every pull request).
 - `node tools/check-brands.cjs --links` after any brand data change.
+- Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
+  a recheck pull request.
 - `node --check` on each `.js` file.
 - Preview: Playwright screenshots at 390 px then 1440 px, served from the
   parent folder so the URL includes `/Cruelty-Free-Beauty-/`.

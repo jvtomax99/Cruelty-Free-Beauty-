@@ -12,7 +12,7 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 ## This project: how the general rules apply here
 
 - **Plan and phases:** `SPEC.md` ("Phases"). Phase 1 (look and shell) done
-  2026-11-10. Next: phase 2, brand data.
+  2026-11-10, phase 2 (brand data) 2026-11-11. Next: phase 3, directory.
 - **Real user:** the founder (TO FILL). Remind Jose to check plans, brand
   rules and any words that speak for them with the founder.
 - **Hosting:** GitHub Pages from `main`, root folder, at
@@ -30,7 +30,9 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 - **Claims need sources.** Whether a brand is cruelty-free changes (parent
   companies, sales where animal testing is required). Every such claim links
   its source and the date it was checked; never state one from memory.
-- **Handoffs:** new handoffs go in root `HANDOFF.md`. None exists yet.
+- **Handoffs:** new handoffs go in root `HANDOFF.md`. None exists now.
+- **Brand sites:** read them with curl or Playwright from Bash (subagents'
+  WebFetch skips the proxy and fails). Verify every quote before saving.
 - **Rule docs:** `docs/design-rules.md`, `docs/assets.md`,
   `docs/cleanup-audit.md` and `docs/refactor.md`. `docs/CLEANUP.md` does not
   exist yet. Assets are listed in `CREDITS.md`. Budget: $0 (free only).
