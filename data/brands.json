@@ -1094,9 +1094,9 @@
    },
    "parent": {
     "name": "Unilever",
-    "testsOnAnimals": "no",
+    "testsOnAnimals": "yes",
     "url": "https://crueltyfree.peta.org/company/unilever/",
-    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "note": "PETA lists Unilever as \"Working for Regulatory Change\": such companies \"conduct tests on animals only when required by law\".",
     "checked": "2026-11-11"
    },
    "chinaRetail": {

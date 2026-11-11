@@ -58,6 +58,7 @@ function checkClaim(id, key, c, allowed) {
 }
 
 function checkBrand(b, seen) {
+  if (!b || typeof b !== 'object') return err('(empty entry)', 'brand entry is not an object');
   const id = b && b.id ? b.id : '(no id)';
   if (!b.id || !/^[a-z0-9-]+$/.test(b.id)) err(id, 'id must be lowercase letters, digits and dashes');
   if (seen.has(b.id)) err(id, 'duplicate id');
@@ -76,18 +77,30 @@ function checkBrand(b, seen) {
   else {
     if (!b.whereToBuy.length) warn(id, 'whereToBuy not filled in');
     b.whereToBuy.forEach((w, i) => {
+      if (!w || typeof w !== 'object') return err(id, `whereToBuy ${i + 1} is not an object`);
       if (!w.store) err(id, `whereToBuy ${i + 1} has no store name`);
       if (!isUrl(w.url)) err(id, `whereToBuy ${i + 1} link is not an https link`);
       if (!LINK_TYPES.includes(w.linkType)) err(id, `whereToBuy ${i + 1} linkType must be plain or affiliate`);
     });
   }
   if (!REVIEW.includes(b.review)) err(id, `review "${b.review}" is not one of ${REVIEW.join(', ')}`);
+  // Brand rule 3: a certifier's status must link that certifier's own site.
+  const own = { peta: /^https:\/\/(crueltyfree\.)?peta\.org\//, leapingBunny: /^https:\/\/(www\.)?leapingbunny\.org\// };
+  for (const [k, re] of Object.entries(own)) {
+    const c = b[k];
+    if (c && (c.status === 'yes' || c.status === 'no') && !re.test(c.url || '')) err(id, `${k} says "${c.status}" but does not link ${k === 'peta' ? 'PETA' : 'Leaping Bunny'}'s own site`);
+  }
+  if (b.review === 'verified') {
+    const open = Object.keys(CLAIMS).filter((k) => b[k] && (b[k].checked === null || b[k].checked === undefined));
+    if (open.length) err(id, `review is "verified" but ${open.join(', ')} not researched`);
+  }
 }
 
 async function checkLinks(brands) {
   const links = new Map(); // url -> brand ids
   for (const b of brands) {
-    const urls = [...Object.keys(CLAIMS).map((k) => b[k] && b[k].url), ...(b.whereToBuy || []).map((w) => w.url)];
+    if (!b || typeof b !== 'object') continue;
+    const urls = [...Object.keys(CLAIMS).map((k) => b[k] && b[k].url), b.priceSource && b.priceSource.url, ...(b.whereToBuy || []).map((w) => w && w.url)];
     for (const u of urls) if (isUrl(u)) links.set(u, [...(links.get(u) || []), b.id]);
   }
   for (const [url, ids] of links) {

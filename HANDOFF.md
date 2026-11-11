@@ -17,7 +17,8 @@ Jose a push notification.
   pull request; affiliate links undecided (`linkType` field); brand list.
 - `data/brands.json`: 30 brands, PETA and Leaping Bunny status sourced and
   dated 2026-11-11. Parents only where PETA names them (L'Oréal, Estée
-  Lauder and Kosé test; Unilever and Markwins don't, per PETA).
+  Lauder and Kosé test; Unilever tests when the law requires it ("Working
+  for Regulatory Change"); Markwins does not, per PETA).
 - `tools/lookup-certifiers.cjs` (PETA JSON plus page icons; Leaping Bunny
   via its own query API inside the page, needs Playwright) and
   `tools/check-brands.cjs` (tested: catches broken records, dead links,

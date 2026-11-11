@@ -39,20 +39,24 @@ async function peta(name) {
     // PETA marks each listing with icons: is-cf-logo ("Company That Doesn't
     // Test"), is-vegan ("All products are vegan"). Pages without them say
     // either "does test on animals" or "may not be cruelty-free" (not listed).
-    const icons = [...html.matchAll(/peta-icons__item--([a-z-]+)/g)].map((m) => m[1]);
+    const icons = [...html.matchAll(/peta-icons__item--([a-z-]+)[^>]*title="([^"]*)"/g)]
+      .map((m) => ({ cls: m[1], title: decode(m[2]) }));
+    const has = (re) => icons.some((i) => re.test(i.title));
     let status = 'unknown';
     let verdict = 'no verdict found';
-    if (icons.includes('is-cf-logo')) { status = 'yes'; verdict = "PETA: company that doesn't test"; }
+    // The is-cf-logo class is shared: its title tells "doesn't test" apart from
+    // "Working for Regulatory Change" (tests when the law requires it).
+    if (has(/Regulatory Change/i)) { status = 'no'; verdict = 'PETA: working for regulatory change (tests only when required by law)'; }
+    else if (has(/Doesn.t Test/i)) { status = 'yes'; verdict = "PETA: company that doesn't test"; }
     else if (/does test on animals/i.test(page)) { status = 'no'; verdict = 'PETA: does test on animals'; }
-    else if (/working for regulatory change/i.test(page)) { status = 'unknown'; verdict = 'PETA: working for regulatory change'; }
     else if (/may not be cruelty-free/i.test(page)) { status = 'unknown'; verdict = 'PETA: may not be cruelty-free (not on its list)'; }
     out.push({
       title: decode(h.title.rendered),
       url: h.link,
       status,
       verdict,
-      vegan: icons.includes('is-vegan'),
-      countries: h.class_list.filter((c) => c.startsWith('country-availability-')).map((c) => c.slice(21)),
+      vegan: icons.some((i) => i.cls === 'is-vegan'),
+      countries: (h.class_list || []).filter((c) => c.startsWith('country-availability-')).map((c) => c.slice(21)),
     });
     await sleep(400);
   }
@@ -81,6 +85,7 @@ async function leapingBunny(page, name) {
 async function main() {
   const args = process.argv.slice(2);
   let names;
+  if (args[0] === '--file' && !args[1]) { console.error('Usage: --file data/brands.json'); process.exit(1); }
   if (args[0] === '--file') {
     const data = JSON.parse(fs.readFileSync(args[1], 'utf8'));
     names = data.brands.map((b) => ({ id: b.id, search: b.search || [b.name] }));
