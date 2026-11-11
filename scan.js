@@ -17,6 +17,10 @@
 
   const video = $("scan-video"), cam = $("scan-cam"), startBtn = $("scan-start"), status = $("scan-status"), out = $("scan-result");
   let detector = null, stream = null, running = false, timer = 0, busy = false;
+  let openId = 0, opening = false;   // each camera open gets an id; stopCamera() cancels a pending one
+  let lookupId = 0;                  // only the newest lookup may draw its result
+  let readFails = 0;                 // reader errors in a row (not "no barcode in this frame")
+  const onScanScreen = () => !document.querySelector('[data-screen="scan"]').hidden && !document.hidden;
 
   /* ---------- Saved lists (always parsed defensively: storage can hold anything) ---------- */
   const readList = (k) => { try { const a = JSON.parse(store.get(k, "[]")); return Array.isArray(a) ? a.filter((x) => x && typeof x === "object") : []; } catch (_) { return []; } };
@@ -58,35 +62,42 @@
   /* ---------- Camera ---------- */
   async function startCamera() {
     if (running) { stopCamera(); return; }
-    out.innerHTML = "";
+    if (opening) return;   // a second tap while the first open is still going
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       say("This browser can't open the camera here. Take a photo of the barcode, or type its numbers below.");
       return;
     }
+    const my = ++openId;
+    opening = true; startBtn.disabled = true;
+    lookupId++; out.innerHTML = "";
     say("Opening the camera…");
+    let s = null;
     try {
-      const [s] = await Promise.all([
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }),
-        getDetector(),
-      ]);
-      stream = s;
+      await getDetector();   // the reader first, so a failed load never leaves a camera open
+      s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
     } catch (err) {
-      stopCamera();
+      opening = false; startBtn.disabled = false;
+      if (my !== openId) return;
       say(err && err.name === "NotAllowedError"
         ? "Camera access is off for C.F.B. You can allow it in your phone's settings, or take a photo of the barcode instead."
         : err && /load/.test(err.message || "") ? "Couldn't load the barcode reader. Check your connection, or type the numbers below."
         : "Couldn't open the camera. Take a photo of the barcode, or type its numbers below.");
       return;
     }
+    opening = false; startBtn.disabled = false;
+    // Cancelled, or the person left the screen or the app while the camera was opening.
+    if (my !== openId || !onScanScreen()) { s.getTracks().forEach((t) => t.stop()); if (my === openId) say(""); return; }
+    stream = s;
     video.srcObject = stream;
     cam.hidden = false;
     try { await video.play(); } catch (_) {}
-    running = true;
+    running = true; readFails = 0;
     startBtn.textContent = "Stop camera";
     say("Hold the barcode inside the frame.");
     tick();
   }
   function stopCamera() {
+    openId++;   // cancels an open still in progress
     running = false;
     clearTimeout(timer);
     if (stream) stream.getTracks().forEach((t) => t.stop());
@@ -101,6 +112,7 @@
       busy = true;
       try {
         const found = await detector.detect(video);
+        readFails = 0;
         const code = found.map((f) => f.rawValue).find(validCode);
         if (code && running) {
           stopCamera();
@@ -109,7 +121,15 @@
           lookup(code);
           return;
         }
-      } catch (_) { /* a frame that can't be read; try the next */ }
+      } catch (_) {
+        // The odd bad frame is normal; a reader that fails every time (its file didn't load) isn't.
+        if (++readFails >= 12) {
+          busy = false;
+          stopCamera();
+          say("The barcode reader isn't working on this phone right now. Take a photo, or type the numbers below.");
+          return;
+        }
+      }
       busy = false;
     }
     timer = setTimeout(tick, 220);
@@ -119,6 +139,7 @@
   async function fromPhoto(file) {
     if (!file) return;
     stopCamera();
+    const my = ++lookupId;
     out.innerHTML = "";
     say("Reading the photo…");
     try {
@@ -127,24 +148,28 @@
       const found = await d.detect(img);
       if (img.close) img.close();
       const code = found.map((f) => f.rawValue).find(validCode);
+      if (my !== lookupId) return;
       if (code) { lookup(code); return; }
       say("Couldn't find a barcode in that photo. Try closer, in good light, or type the numbers below.");
     } catch (_) {
+      if (my !== lookupId) return;
       say("Couldn't read that photo. Try again, or type the numbers below.");
     }
   }
 
   /* ---------- Lookup ---------- */
-  const validCode = (c) => /^\d{8}$|^\d{12,14}$/.test(String(c || "").trim());
+  const validCode = (c) => /^(\d{8}|\d{12}|\d{13})$/.test(String(c || "").trim());
   function say(msg) { status.textContent = msg; }
 
   async function lookup(code) {
     code = String(code).trim();
+    const my = ++lookupId;
     say(`Barcode ${code}. Looking it up…`);
     out.innerHTML = "";
     const brands = await window.CFB.brands;
+    if (my !== lookupId) return;
     if (!brands.length) { say("Couldn't load our brand list. Check your connection and reopen the app."); return; }
-    let product = null, reached = false;
+    let product = null, reached = false, down = false;
     const ctl = new AbortController();
     const stop = setTimeout(() => ctl.abort(), TIMEOUT_MS);
     try {
@@ -152,16 +177,17 @@
       if (r.ok || r.status === 404) {
         reached = true;
         const j = await r.json().catch(() => ({}));
-        if (j && j.status === 1 && j.product) product = j.product;
-      }
-    } catch (_) { /* offline or Open Beauty Facts is down */ }
+        if (j && j.status === 1 && j.product && typeof j.product === "object") product = j.product;
+      } else down = true;   // busy (429) or broken (5xx)
+    } catch (_) { down = navigator.onLine !== false; }
     clearTimeout(stop);
+    if (my !== lookupId) return;   // a newer scan or lookup has started
     say("");
 
-    if (!reached) { showAskBrand(code, "offline"); return; }
-    const brandText = product ? String(product.brands || "").trim() : "";
+    if (!reached) { showAskBrand(code, down ? "down" : "offline"); return; }
+    const brandText = product && typeof product.brands === "string" ? product.brands.trim() : "";
     if (!product || !brandText) { showAskBrand(code, product ? "nobrand" : "unknown", product); return; }
-    const b = window.CFB.match([brandText, ...(product.brands_tags || [])]);
+    const b = window.CFB.match(brandText);
     const name = product.product_name ? String(product.product_name).trim() : "";
     if (b) showBrand(b, { code, product: name });
     else showUnlisted(brandText.split(",")[0].trim(), { code, product: name });
@@ -212,7 +238,8 @@
     remember({ code: code || "", product: product || "", brand: null, name, t: Date.now() });
   }
   function showAskBrand(code, why, product) {
-    const lead = why === "offline" ? "Can't reach Open Beauty Facts right now (you may be offline)."
+    const lead = why === "offline" ? "You seem to be offline, so we can't look the barcode up."
+      : why === "down" ? "Open Beauty Facts isn't answering right now."
       : why === "nobrand" ? "Open Beauty Facts has this product but not its brand."
       : "This barcode isn't in Open Beauty Facts yet.";
     out.innerHTML = `
@@ -233,6 +260,7 @@
       e.preventDefault();
       const typed = $("scan-brand-q").value.trim();
       if (!typed) return;
+      lookupId++;
       const b = window.CFB.match(typed);
       if (b) showBrand(b, { code: "", product: "" });
       else showUnlisted(typed, { code: "", product: "" });

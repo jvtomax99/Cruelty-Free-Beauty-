@@ -49,40 +49,29 @@
   const CHIP = { pass: "Passes", fail: "Doesn't pass", none: "Not on either list" };
 
   /* ---------- Match a brand name from a label (Open Beauty Facts or typed) ----------
-     "NYX Professional Makeup", "M.A.C", "L'Oréal Paris" and "e.l.f." should all find our brand.
-     Each name splits into words; a name matches when its first words, run together, equal one
-     of the brand's keys (its name and `search` names, also without trailing words like
-     "Cosmetics"). The longest match wins. A list like "Maybelline, L'Oréal" is tried in order. */
-  const words = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
-  const FILLER = new Set(["cosmetics", "cosmetic", "makeup", "professional", "paris", "companies", "inc"]);
+     A wrong match shows a wrong verdict, so this is strict: the WHOLE name must equal one of the
+     brand's keys (its name and `search` names), after dropping trailing words like "Cosmetics",
+     "Professional Makeup", "Paris" or "New York", and ignoring spaces and punctuation.
+     So "NYX Professional Makeup", "M.A.C", "L'Oréal Paris" and "E.l.f." match, while
+     "Thrive Natural Care", "Fenty Skin" or "Revolution Skincare" don't.
+     Only the first name in a list counts: Open Beauty Facts writes "Naturium, e.l.f. Beauty"
+     (brand, then owner), and the owner's verdict isn't the brand's. */
+  const words = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  const FILLER = new Set(["cosmetics", "cosmetic", "makeup", "professional", "paris", "companies", "inc", "new", "york", "london", "usa"]);
+  function trimmed(w) { w = w.slice(); while (w.length > 1 && FILLER.has(w[w.length - 1])) w.pop(); return w.join(""); }
   let keyCache = null;
-  function keysOf(b) {
-    const out = new Set();
-    for (const n of [b.name, ...(b.search || [])]) {
-      const w = words(n);
-      out.add(w.join(""));
-      while (w.length > 1 && FILLER.has(w[w.length - 1])) { w.pop(); out.add(w.join("")); }
-    }
-    return out;
-  }
-  function matchOne(text) {
-    const w = words(text);
-    let best = null, bestLen = 0;
-    for (const [b, keys] of keyCache) {
-      for (let k = w.length; k > bestLen; k--) {
-        if (keys.has(w.slice(0, k).join(""))) { best = b; bestLen = k; break; }
+  function match(text) {
+    if (!brands.length) return null;
+    if (!keyCache) {
+      keyCache = new Map();
+      for (const b of brands) for (const n of [b.name, ...(b.search || [])]) {
+        for (const k of [words(n).join(""), trimmed(words(n))]) if (k && !keyCache.has(k)) keyCache.set(k, b);
       }
     }
-    return best;
-  }
-  function match(names) {
-    if (!brands.length) return null;
-    if (!keyCache) keyCache = brands.map((b) => [b, keysOf(b)]);
-    for (const part of [].concat(names).flatMap((n) => String(n ?? "").split(/[,;]/))) {
-      const b = part.trim() && matchOne(part);
-      if (b) return b;
-    }
-    return null;
+    const first = String(text ?? "").split(/[,;]/)[0];
+    const w = words(first);
+    if (!w.length) return null;
+    return keyCache.get(w.join("")) || keyCache.get(trimmed(w)) || null;
   }
 
   /* ---------- Saved brands (only on this phone) ---------- */

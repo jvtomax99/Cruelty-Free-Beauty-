@@ -48,7 +48,13 @@ const OBF_NAMES = [
   ["L'Oréal Paris", 'loreal-paris'], ["L'Oréal", 'loreal-paris'], ['Maybelline, L\'Oréal', 'maybelline'], ['MAC cosmetics', 'mac'],
   ['M.A.C', 'mac'], ['Estée Lauder', 'estee-lauder'], ['estee lauder', 'estee-lauder'], ['Clinique', 'clinique'], ['benefit', 'benefit'],
   ["Juvia's Place", 'juvias-place'], ['Rare Beauty', 'rare-beauty'], ['Physicians Formula', 'physicians-formula'],
+  ['Maybelline New York', 'maybelline'], ['elf', 'elf'],
+  // Must NOT match (a wrong match shows a wrong verdict): other brands that start with one of ours,
+  // and lists where only the owner company is ours (reviewer, 2026-11-11).
   ['Garnier', null], ['Rare Earth Naturals', null], ['Macadamia', null], ['', null],
+  ['Thrive Natural Care', null], ['Thrive Market', null], ['Revolution Skincare', null], ['Kylie Minogue', null],
+  ['Mac Paul', null], ["Mac's", null], ['Benefit Lab', null], ['Elf Bar', null], ['Fenty Skin', null],
+  ['Naturium, e.l.f. Beauty', null], ["Lancôme, L'Oréal", null], ["La Roche-Posay, L'Oréal", null], ['Smashbox, Estée Lauder', null],
 ];
 
 (async () => {
@@ -80,19 +86,27 @@ const OBF_NAMES = [
 
   browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', `--use-file-for-fake-video-capture=${y4m}`] });
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, permissions: ['camera'] });
-  await ctx.addInitScript(() => { delete window.BarcodeDetector; });
+  await ctx.addInitScript(() => {
+    delete window.BarcodeDetector;
+    // Keep every camera stream the page opens, to check none is left running.
+    const gum = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    window.__streams = [];
+    navigator.mediaDevices.getUserMedia = async (c) => { const s = await gum(c); window.__streams.push(s); return s; };
+  });
+  const liveTracks = () => page.evaluate(() => window.__streams.flatMap((s) => s.getTracks()).filter((t) => t.readyState === 'live').length);
   const errors = [];
   const OBF_FAKE = {
     [MAYBELLINE]: { status: 1, product: { product_name: 'Super Stay Matte Ink', brands: 'Maybelline', brands_tags: ['maybelline'] } },
     '0000000000017': { status: 1, product: { product_name: 'Glow Serum', brands: 'Glowfield Labs', brands_tags: ['glowfield-labs'] } },
     '0000000000024': { status: 1, product: { product_name: 'Mystery Balm', brands: '' } },
   };
-  let obfOffline = false, obfCalls = [];
+  let obfOffline = false, obfCalls = [], slowCode = null;
   if (!LIVE) {
-    await ctx.route('https://world.openbeautyfacts.org/**', (route) => {
+    await ctx.route('https://world.openbeautyfacts.org/**', async (route) => {
       const code = (route.request().url().match(/product\/(\d+)\.json/) || [])[1];
       obfCalls.push(code);
       if (obfOffline) return route.abort('internetdisconnected');
+      if (code === slowCode) await new Promise((r) => setTimeout(r, 1500));
       const body = OBF_FAKE[code] || { status: 0, status_verbose: 'product not found' };
       route.fulfill({ status: OBF_FAKE[code] ? 200 : 404, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) });
     });
@@ -123,10 +137,17 @@ const OBF_NAMES = [
   // 4. Fake camera: the live loop finds the same barcode and turns the camera off.
   await page.click('#scan-clear');
   await page.evaluate(() => { document.getElementById('scan-result').innerHTML = ''; });
-  await page.click('#scan-start');
+  await page.evaluate(() => { const b = document.getElementById('scan-start'); b.click(); b.click(); });   // a double tap
   await page.waitForSelector('#scan-h', { timeout: 20000 });
   check(/Maybelline/.test(await page.textContent('#scan-result')), 'camera scan reads the barcode and shows Maybelline');
   check(await page.isHidden('#scan-cam') && (await page.textContent('#scan-start')) === 'Start camera', 'camera turns off after a read');
+  check(await page.evaluate(() => window.__streams.length) === 1 && await liveTracks() === 0, 'a double tap opens one camera, and it is fully off after the read');
+  // Leave the screen while the camera is still opening: it must not start behind another screen.
+  await page.evaluate(() => { document.getElementById('scan-start').click(); location.hash = '#learn'; });
+  await page.waitForTimeout(1500);
+  check(await liveTracks() === 0, 'leaving while the camera opens leaves no camera running');
+  await page.goto(BASE + '#scan');
+  await page.waitForSelector('[data-screen=scan]:not([hidden])');
 
   if (!LIVE) {
     // 5. Unknown barcode -> brand box -> typed brand.
@@ -155,9 +176,19 @@ const OBF_NAMES = [
     obfOffline = true;
     await page.fill('#scan-code', MAYBELLINE);
     await page.click('#scan-code-form button');
-    await page.waitForFunction(() => /Can't reach Open Beauty Facts/.test(document.getElementById('scan-result').textContent));
-    check(true, 'offline lookup says so and asks for the brand');
+    await page.waitForFunction(() => /isn't answering|offline/.test(document.getElementById('scan-result').textContent));
+    check(true, 'failed lookup says so and asks for the brand');
     obfOffline = false;
+
+    // An older, slower lookup must not replace a newer result.
+    slowCode = MAYBELLINE;
+    await page.fill('#scan-code', MAYBELLINE);
+    await page.click('#scan-code-form button');
+    await page.fill('#scan-code', '0000000000017');
+    await page.click('#scan-code-form button');
+    await page.waitForTimeout(2500);
+    check(/Glowfield/.test(await page.textContent('#scan-result')) && !/Super Stay/.test(await page.textContent('#scan-result')), 'a slow earlier lookup doesn\'t overwrite the newer result');
+    slowCode = null;
 
     await page.fill('#scan-code', '12ab');
     await page.click('#scan-code-form button');
