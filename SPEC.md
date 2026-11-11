@@ -169,6 +169,11 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-11 (Jose): the launch show is "too simplistic". Version 2 is to
+  be glamorous and close to the Star Rail reveal: real animated video
+  (key art animated by a video model, Runway credits bought by Jose, so the
+  $0 budget doesn't apply to this piece), about 20 seconds. Version 1 stays
+  as the fallback. Plan and research: `HANDOFF.md`.
 - 2026-11-11 (Jose): a launch show, built now, styled on a game's
   character reveal (the video he sent) and his other apps' intros. The new
   logo is our own redraw of his bunny picture (sitting, hugging a

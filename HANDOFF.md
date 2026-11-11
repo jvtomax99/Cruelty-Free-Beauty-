@@ -15,9 +15,10 @@ cached, reduced motion, a failed load).
 
 ## Exact next step
 
-Jose picks how to build it (asked with buttons at the end of the last chat;
-his answers are under "Decisions" once given). Then: write the short plan in
-plan mode, get his OK, build.
+Confirm with Jose that the two things under "Decisions" are done (credits
+bought, host allowed). Then write the short plan in plan mode (shot list for
+about 20 s, which models, the fallback, file sizes), get his OK, and build:
+key art per shot, animate, cut, wire into `intro.js`.
 
 ## What the research found
 
@@ -80,7 +81,24 @@ task.
 
 ## Decisions
 
-(to fill from Jose's answers)
+Jose, 2026-11-11 (buttons):
+
+- **How:** real animated video (way 1). He buys the Runway credits.
+- **Length:** about 20 seconds.
+- **Where:** a new session builds it.
+
+Still waiting on Jose before any Runway work can be downloaded:
+
+1. Runway credits bought (roughly 800 to 1,500;
+   https://app.runwayml.com/settings/billing). Check the balance with the
+   Runway `whoami` tool before generating.
+2. `dnznrvs05pmza.cloudfront.net` added to the Default environment's
+   Allowed domains (Claude's own request was rejected).
+
+Not carried over: the Star Rail recording lives only in the old session's
+uploads. The shot list above is the record; ask Jose to attach it again if
+a closer look is needed. It is game footage: never commit it or frames of
+it (public repo).
 
 ## Files to look at first
 
