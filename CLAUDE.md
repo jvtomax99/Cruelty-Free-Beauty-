@@ -42,6 +42,11 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
   `node .github/site-check.cjs index.html`. A new page goes into the list in
   `.github/workflows/site-check.yml`.
 
+- **Merging (Jose, 2026-11-11):** Claude merges its own pull requests into
+  main without waiting, once the site check is green and the reviewer's
+  findings are fixed; then a phone notification naming the change, plus the
+  one-line undo. Exception: a monthly recheck PR that changes any brand's
+  status waits for Jose. Force push and history rewrites still need asking.
 - **Public repo, paid assets.** The repo is public (checked 2026-11-10), so paid raw files can't be committed (docs/assets.md, section 9) unless Jose makes it private.
 - **Taste skill.** Saved in `.claude/skills/taste/` (Senlin's, MIT; `SOURCE.md` there says where from). It asks for the Playwright MCP server; in a cloud session use the Playwright already installed instead (run its `references/extract.js` with `page.evaluate`).
 - **Refactor prompt.** docs/refactor.md, run when Jose asks for "Refactor: CLEANUP.md items ...".
