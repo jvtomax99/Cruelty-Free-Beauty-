@@ -302,9 +302,9 @@ main {
 .rt-tip { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-foot); }
 .rt-step ul { list-style: none; padding: 0; margin: var(--sp-2) 0 0; display: grid; gap: var(--sp-3); }
 .rt-step li { display: grid; gap: 2px; }
-.rt-brand { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; color: var(--ink); text-decoration: none; min-height: 32px; display: inline-flex; align-items: center; }
+.rt-brand { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; color: var(--ink); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
 .rt-why { color: var(--ink-soft); font-size: var(--fs-foot); }
-.rt-links a { color: var(--rose); font-weight: 600; font-size: var(--fs-sub); }
+.rt-links a { color: var(--rose); font-weight: 600; font-size: var(--fs-sub); display: inline-flex; align-items: center; min-height: 44px; }
 .rt-kind { color: var(--ink-soft); font-size: var(--fs-foot); }
 .rt-none { color: var(--ink-soft); font-size: var(--fs-sub); }
 .pf-actions { display: grid; gap: var(--sp-2); margin-top: var(--sp-4); }

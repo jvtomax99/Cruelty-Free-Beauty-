@@ -28,12 +28,17 @@
     return "neutral";
   }
 
-  function load() { try { return JSON.parse(store.get("profile", "null")); } catch (_) { return null; } }
+  // A saved profile is used only if every answer is one we know; anything else starts the quiz fresh.
+  function valid(p) {
+    return p && typeof p === "object" && QUESTIONS.every((q) => Object.prototype.hasOwnProperty.call(LABEL[q.key], p[q.key])) && UNDERTONE[p.undertone];
+  }
+  function load() { try { const p = JSON.parse(store.get("profile", "null")); return valid(p) ? p : null; } catch (_) { return null; } }
   function save(p) { store.set("profile", JSON.stringify(p)); }
   function clear() { try { localStorage.removeItem("cfb-profile"); } catch (_) {} }
 
   let answers = {};
   let step = 0;
+  let inQuiz = false;   // a quiz in progress survives switching screens
 
   /* ---------- Quiz ---------- */
   function renderQuestion() {
@@ -61,12 +66,13 @@
   }
   const focusQuestion = () => { const l = app.querySelector(".quiz-q"); if (l) l.focus({ preventScroll: true }); window.scrollTo(0, 0); };
 
-  function start() { answers = {}; step = 0; renderQuestion(); focusQuestion(); }
+  function start() { answers = {}; step = 0; inQuiz = true; renderQuestion(); focusQuestion(); }
 
   function finish() {
     const p = { ...answers, undertone: undertoneFrom(answers), undertoneSet: false, saved: new Date().toISOString().slice(0, 10) };
     save(p);
-    renderProfile(p);
+    inQuiz = false;
+    renderProfile(p, true);
     window.scrollTo(0, 0);
   }
 
@@ -92,8 +98,12 @@
     return parts.join(" · ");
   }
 
-  async function renderProfile(p) {
+  async function renderProfile(p, focus) {
     const brands = await window.CFB.brands;
+    if (!brands.length) {
+      app.innerHTML = `<div class="pf-card"><h2 tabindex="-1">Your profile</h2><p class="pf-sum">Couldn't load the brand list. Check your connection and reopen the app.</p></div>`;
+      return;
+    }
     const mode = window.CFB.mode();
     const modeName = mode === "strict" ? "Strict" : "Certified";
     const unchecked = brands.filter((b) => !b.sells && window.CFB.verdict(b, mode).pass).length;
@@ -114,7 +124,7 @@
           <span class="rt-why">${esc(why(b, mode))}</span>
           ${finder ? `<span class="rt-links">${finder}${f.label !== "Shade finder" && f.label !== "Brand's site" ? ` <span class="rt-kind">(${esc(f.label.toLowerCase())})</span>` : ""}</span>` : ""}
         </li>`;
-      }).join("") : `<li class="rt-none">No brand on our list fits this step${p.budget !== "any" ? " at this budget. Try “Any” budget." : "."}</li>`;
+      }).join("") : `<li class="rt-none">No brand on our list fits ${same ? "your routine" : "this step"}${p.budget !== "any" ? " at this budget. Try “Any” budget." : "."}</li>`;
       return `<div class="rt-step">
         <h3>${name}</h3>
         ${shadeTip && list.length ? `<p class="rt-tip">Tell the shade finder: ${esc(depth.toLowerCase())} depth, ${esc(tone.toLowerCase())} undertone.</p>` : ""}
@@ -124,7 +134,7 @@
 
     app.innerHTML = `
       <div class="pf-card">
-        <h2>Your profile</h2>
+        <h2 tabindex="-1" id="pf-h">Your profile</h2>
         <p class="pf-sum">${summary.map(esc).join(" · ")}</p>
         <p class="pf-tone">Undertone ${p.undertoneSet ? "set by you" : "from your three tests"}. A starting point; check in daylight.</p>
         <div class="pf-tones" role="group" aria-label="Change undertone">
@@ -132,7 +142,7 @@
         </div>
       </div>
       <h2 class="rt-head">Your routine</h2>
-      <p class="rt-intro">Brands that pass ${modeName} (change it on the Brands screen), fit your budget${p.vegan === "yes" ? ", are fully vegan" : ""} and sell each step. We suggest brands, not products: shades and formulas are on each brand's own site.${unchecked ? ` ${unchecked} brand${unchecked === 1 ? "'s" : "s'"} ranges aren't checked yet, so they're left out.` : ""}</p>
+      <p class="rt-intro">Brands that pass ${modeName} (change it on the Brands screen), fit your budget${p.vegan === "yes" ? ", are fully vegan" : ""} and sell each step. We suggest brands, not products: shades and formulas are on each brand's own site. Your skin type and finish don't change the picks yet: we don't have sourced data on which products suit them.${unchecked ? ` ${unchecked} brand${unchecked === 1 ? "'s" : "s'"} ranges aren't checked yet, so they're left out.` : ""}</p>
       ${blocks}
       <div class="pf-actions">
         <button type="button" class="more" id="pf-retake">Retake the quiz</button>
@@ -142,10 +152,11 @@
 
     app.querySelectorAll("[data-tone]").forEach((b) => b.addEventListener("click", () => {
       const next = { ...p, undertone: b.dataset.tone, undertoneSet: true };
-      save(next); renderProfile(next);
+      save(next); renderProfile(next, true);
     }));
     document.getElementById("pf-retake").addEventListener("click", start);
-    document.getElementById("pf-clear").addEventListener("click", () => { clear(); renderIntro(); });
+    document.getElementById("pf-clear").addEventListener("click", () => { clear(); renderIntro(); const s = document.getElementById("pf-start"); if (s) s.focus(); });
+    if (focus) document.getElementById("pf-h").focus({ preventScroll: true });
   }
 
   function renderIntro() {
@@ -159,7 +170,10 @@
   }
 
   // Redraw on each visit, so a strictness change on the Brands screen shows up here.
-  function show() { const p = load(); if (p && p.skin) renderProfile(p); else if (!app.querySelector(".quiz")) renderIntro(); }
+  function show() {
+    if (inQuiz) { if (!app.querySelector(".quiz")) renderQuestion(); return; }
+    const p = load(); if (p) renderProfile(p); else renderIntro();
+  }
   document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "profile") show(); });
   show();
 })();

@@ -59,6 +59,11 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(/Tell the shade finder: medium depth, warm undertone/.test(await page.textContent('#profile-app')), 'shade-finder tip uses depth and undertone');
   check(!/in stock/i.test(await page.textContent('#profile-app')), 'never says "in stock"');
 
+  check(await page.evaluate(() => document.activeElement && document.activeElement.id) === 'pf-h', 'after the last answer, focus is on the profile heading');
+  check(/don't change the picks yet/.test(await page.textContent('#profile-app')), 'says plainly that skin type and finish do not change the picks');
+  const tiny = await page.$$eval('.rt-step a', (as) => as.filter((a) => a.getBoundingClientRect().height < 44).length);
+  check(tiny === 0, 'every routine link is at least 44 px tall');
+
   // Answers survive a reload; undertone can be changed by hand
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.pf-card');
@@ -91,6 +96,18 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.click('#pf-clear');
   check(await page.evaluate(() => localStorage.getItem('cfb-profile')) === null, '"Clear my answers" removes them from the phone');
   check(/Eight quick questions/.test(await page.textContent('#profile-app')), 'after clearing, the quiz intro shows again');
+
+  // A damaged saved profile falls back to the quiz intro instead of a blank screen
+  await page.evaluate(() => localStorage.setItem('cfb-profile', '{"skin":"dry","budget":"any"}'));
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.goto(BASE + '#profile');
+  await page.waitForTimeout(500);
+  check(/Eight quick questions/.test(await page.textContent('#profile-app')), 'a damaged saved profile shows the quiz intro');
+
+  // A retake left halfway is still there after visiting another screen
+  await page.click('#pf-start'); await page.click('.quiz-opt >> text="Oily"');
+  await page.goto(BASE + '#brands'); await page.goto(BASE + '#profile'); await page.waitForTimeout(300);
+  check(/2 of 8/.test(await page.textContent('#profile-app')), 'a quiz in progress survives switching screens');
 
   // Offline
   await page.evaluate(() => navigator.serviceWorker.ready); await page.waitForTimeout(1500);
