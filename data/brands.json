@@ -1,0 +1,1124 @@
+{
+ "schema": 1,
+ "updated": "2026-11-11",
+ "brands": [
+  {
+   "id": "elf",
+   "name": "e.l.f. Cosmetics",
+   "search": [
+    "e.l.f. Cosmetics",
+    "elf cosmetics"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/elf-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1018",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "milani",
+   "name": "Milani",
+   "search": [
+    "Milani"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/milani-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2101",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "colourpop",
+   "name": "ColourPop",
+   "search": [
+    "ColourPop"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/colourpop-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "fenty-beauty",
+   "name": "Fenty Beauty",
+   "search": [
+    "Fenty"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/fenty-beauty/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "rare-beauty",
+   "name": "Rare Beauty",
+   "search": [
+    "Rare Beauty"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/cosmetic-ventures/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1342",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "glossier",
+   "name": "Glossier",
+   "search": [
+    "Glossier"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/glossier/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1610",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "tarte",
+   "name": "Tarte",
+   "search": [
+    "Tarte"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/tarte-cosmetics-kose/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Kosé",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/kose/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "too-faced",
+   "name": "Too Faced",
+   "search": [
+    "Too Faced"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/too-faced-cosmetics-estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "urban-decay",
+   "name": "Urban Decay",
+   "search": [
+    "Urban Decay"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/urban-decay-loreal/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "kylie-cosmetics",
+   "name": "Kylie Cosmetics",
+   "search": [
+    "Kylie Cosmetics",
+    "Kylie Jenner"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "morphe",
+   "name": "Morphe",
+   "search": [
+    "Morphe"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/morphe/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1302",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "wet-n-wild",
+   "name": "wet n wild",
+   "search": [
+    "wet n wild"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/wet-n-wild-markwins/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Markwins",
+    "testsOnAnimals": "no",
+    "url": "https://crueltyfree.peta.org/company/markwins-international/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "physicians-formula",
+   "name": "Physicians Formula",
+   "search": [
+    "Physicians Formula"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/physicians-formula/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "pacifica",
+   "name": "Pacifica",
+   "search": [
+    "Pacifica"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/pacifica/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "ilia",
+   "name": "ILIA",
+   "search": [
+    "ILIA"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2218",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2218",
+    "note": "Leaping Bunny: owned by a parent company that is not certified",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "kosas",
+   "name": "Kosas",
+   "search": [
+    "Kosas"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1811",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "charlotte-tilbury",
+   "name": "Charlotte Tilbury",
+   "search": [
+    "Charlotte Tilbury"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/charlotte-tilbury/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "huda-beauty",
+   "name": "Huda Beauty",
+   "search": [
+    "Huda Beauty"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/huda-beauty/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "anastasia-beverly-hills",
+   "name": "Anastasia Beverly Hills",
+   "search": [
+    "Anastasia"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/anastasia-beverly-hills/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "juvias-place",
+   "name": "Juvia's Place",
+   "search": [
+    "Juvia's Place",
+    "Juvias Place",
+    "Juvia"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "makeup-revolution",
+   "name": "Makeup Revolution",
+   "search": [
+    "Revolution"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/revolution-beauty/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "thrive-causemetics",
+   "name": "Thrive Causemetics",
+   "search": [
+    "Thrive"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/thrive-causemetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1752",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "hourglass",
+   "name": "Hourglass",
+   "search": [
+    "Hourglass"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/hourglass-cosmetics-unilever/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Unilever",
+    "testsOnAnimals": "no",
+    "url": "https://crueltyfree.peta.org/company/unilever/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "nyx",
+   "name": "NYX Professional Makeup",
+   "search": [
+    "NYX"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/nyx-professional-makeup-loreal/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "maybelline",
+   "name": "Maybelline",
+   "search": [
+    "Maybelline"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/maybelline-loreal/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "loreal-paris",
+   "name": "L'Oréal Paris",
+   "search": [
+    "L'Oreal Paris",
+    "L'Oreal"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "n/a",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "The brand is the parent company",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "mac",
+   "name": "MAC Cosmetics",
+   "search": [
+    "MAC Cosmetics",
+    "M.A.C",
+    "MAC"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/mac-cosmetics-estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "estee-lauder",
+   "name": "Estée Lauder",
+   "search": [
+    "Estee Lauder Companies",
+    "Estee Lauder"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "n/a",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "The brand is the parent company",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "clinique",
+   "name": "Clinique",
+   "search": [
+    "Clinique"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/clinique-estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "benefit",
+   "name": "Benefit Cosmetics",
+   "search": [
+    "Benefit"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/benefit-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  }
+ ]
+}
