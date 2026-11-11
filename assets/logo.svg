@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="28 0 512 512" role="img" aria-label="C.F.B. bunny holding a lipstick">
+  <title>C.F.B. bunny</title>
+  <g stroke="#3B2A2A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ears -->
+    <ellipse cx="196" cy="150" rx="44" ry="112" transform="rotate(-12 196 150)" fill="#FFF9F5"/>
+    <ellipse cx="316" cy="150" rx="44" ry="112" transform="rotate(12 316 150)" fill="#FFF9F5"/>
+    <ellipse cx="196" cy="160" rx="18" ry="74" transform="rotate(-12 196 160)" fill="#F2C4C4" stroke="none"/>
+    <ellipse cx="316" cy="160" rx="18" ry="74" transform="rotate(12 316 160)" fill="#F2C4C4" stroke="none"/>
+    <!-- head -->
+    <ellipse cx="256" cy="310" rx="150" ry="128" fill="#FFF9F5"/>
+    <!-- eyes, closed and smiling -->
+    <path d="M190 300 q20 -22 40 0 M282 300 q20 -22 40 0" fill="none"/>
+    <!-- nose and mouth -->
+    <path d="M244 326 h24 l-12 12 z" fill="#3B2A2A" stroke-width="8"/>
+    <path d="M256 340 q-10 16 -24 6 M256 340 q10 16 24 6" fill="none" stroke-width="9"/>
+  </g>
+  <!-- cheeks -->
+  <circle cx="176" cy="342" r="20" fill="#EFA9AE" opacity=".75"/>
+  <circle cx="336" cy="342" r="20" fill="#EFA9AE" opacity=".75"/>
+  <!-- lipstick held at the lower right -->
+  <g transform="rotate(28 372 392)" stroke="#3B2A2A" stroke-width="12" stroke-linejoin="round">
+    <path d="M350 306 q22 -30 44 -8 v52 h-44 z" fill="#B65A6E"/>
+    <rect x="342" y="350" width="60" height="26" rx="5" fill="#E4C3A9"/>
+    <rect x="336" y="376" width="72" height="92" rx="10" fill="#C99A7C"/>
+  </g>
+  <!-- paws over the lipstick -->
+  <g stroke="#3B2A2A" stroke-width="12" fill="#FFF9F5">
+    <ellipse cx="338" cy="420" rx="30" ry="24"/>
+    <ellipse cx="392" cy="446" rx="28" ry="22"/>
+  </g>
+</svg>
