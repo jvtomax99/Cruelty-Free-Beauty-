@@ -4,12 +4,11 @@
 company for the 30 brands in `data/brands.json` from the brands' own sites,
 then price, product types and where to buy, then review and pull request.
 
-**Exact next step:** fill `price`, `productTypes` and `whereToBuy` for the
-30 brands (PETA's "Where to Find" and "What X Sells" and Leaping Bunny's
-"Products Sold" are sourced starting points), run
-`node tools/check-brands.cjs --links`, then create the monthly recheck
-scheduled task, run the reviewer subagent, open the pull request and send
-Jose a push notification.
+**Exact next step:** phase 2 pull request is open (see GitHub). After Jose
+merges it: fill price and where to buy for the 17 brands left (needs the
+second batch of sites below added in Settings), then check off phase 2 and
+start phase 3. Also: Jose must attach the repo and GitHub to the monthly
+recheck scheduled task in claude.ai, or it can't run.
 
 ## Done (branch `claude/clever-lovelace-io1u7j`, pushed)
 - SPEC decisions 2026-11-11: Strict default, failing only on known
@@ -48,8 +47,8 @@ Jose a push notification.
 ## Still to do
 - Price, productTypes, whereToBuy (empty now, the check script warns).
 - Optional: the second batch of hosts, if Jose adds them in Settings.
-- The monthly scheduled recheck task (not created yet).
-- Reviewer subagent, then pull request and push notification.
+- Monthly recheck scheduled task exists (3rd of each month, 19:43 UTC) but
+  has no repo or GitHub attached yet.
 
 ## Look at first
 `data/brands.json`, `tools/check-brands.cjs`, `SPEC.md` (Brand rules).

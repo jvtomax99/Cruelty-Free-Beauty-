@@ -62,7 +62,9 @@ me**.
 - **Install and offline.** Done when it installs on an iPhone and an
   Android phone and opens with the brand list in airplane mode.
 - **Brand directory and search.** Done when 30 makeup brands each have a
-  full record with working evidence links and a last-checked date, and
+  record where every claim has a working evidence link and a last-checked
+  date or is marked unknown (2026-11-11: brands rarely publish China sales
+  or owners), and
   search finds any of them by name on a phone.
 - **Brand page.** Done when it shows both certifications, the parent
   company, China, vegan, where to buy, sources and the checked date, and
@@ -111,9 +113,12 @@ only if it can be shown to work across skin tones.
 - [x] Site check on every pull request
 
 ### Phase 2: Brand data
-- [ ] Research and verify 30 makeup brands from primary sources
-- [ ] `data/brands.json` plus a check script (missing fields, dead links,
+- [x] Research and verify 30 makeup brands from primary sources (certifier
+      status for all 30; unknowns marked)
+- [x] `data/brands.json` plus a check script (missing fields, dead links,
       checks older than 90 days)
+- [ ] Fill price and where to buy for the 17 brands left (needs the
+      second batch of sites allowed), and owners where a source exists
 
 ### Phase 3: Directory
 - [ ] Brand list, search, filters, strictness switch
