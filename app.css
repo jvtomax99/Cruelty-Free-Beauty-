@@ -19,6 +19,9 @@
   --ink-soft: #6B524D;    /* secondary text */
   --line: #EBDCD6;
   --focus: #9E4F62;
+  --glass: rgba(255,252,250,.78);      /* tab bar */
+  --glass-line: rgba(235,220,214,.9);
+  --rail-bg: rgba(255,252,250,.6);
 
   /* type */
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
@@ -28,11 +31,12 @@
   --tr-sm: 0.01em; --tr-body: -0.005em; --tr-head: -0.012em; --tr-title: -0.02em;
 
   /* space, radius */
-  --sp-1: 6px; --sp-2: 9px; --sp-3: 13px; --sp-4: 17px; --sp-5: 26px; --sp-6: 40px;
+  --sp-px: 2px; --sp-1: 6px; --sp-2: 9px; --sp-3: 13px; --sp-4: 17px; --sp-5: 26px; --sp-6: 40px;
   --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-pill: 999px;
 
   /* the finish: every raised surface, tinted cocoa, never black */
   --finish: 0 1px 0 0 inset rgba(255,255,255,.82), 0 1px 2px rgba(59,42,42,.06), 0 8px 20px -12px rgba(94,52,58,.24);
+  --pressed: 0 1px 2px rgba(59,42,42,.08);
   --float: 0 1px 0 0 inset rgba(255,255,255,.9), 0 2px 6px rgba(59,42,42,.06), 0 18px 34px -16px rgba(94,52,58,.32);
 
   /* motion */
@@ -57,6 +61,7 @@ p { margin: 0; }
 a { color: var(--rose); text-underline-offset: 3px; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: var(--r-sm); }
+[tabindex="-1"]:focus { outline: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* soft colour mesh, fixed behind everything (iPhone ignores background-attachment: fixed) */
@@ -108,7 +113,7 @@ main {
   background: var(--blush); box-shadow: var(--finish); text-align: left; text-decoration: none; color: var(--ink); cursor: pointer;
   transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease), box-shadow var(--t-press) var(--ease);
 }
-.tile:active, .tile.is-pressed { transform: scale(.97); background: var(--blush-2); box-shadow: 0 1px 2px rgba(59,42,42,.08); }
+.tile:active, .tile.is-pressed { transform: scale(.97); background: var(--blush-2); box-shadow: var(--pressed); }
 .tile-icon { width: 40px; height: 40px; border-radius: var(--r-md); display: grid; place-items: center; }
 .tile-icon svg { width: 32px; height: 32px; }
 .tile-title { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; line-height: 1.15; letter-spacing: var(--tr-head); margin-top: auto; }
@@ -143,7 +148,7 @@ main {
 .learn details { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--finish); overflow: hidden; }
 .learn summary {
   list-style: none; cursor: pointer; display: flex; align-items: center; gap: var(--sp-3);
-  min-height: 60px; padding: var(--sp-3) var(--sp-4);
+  min-height: 60px; padding: var(--sp-3) var(--sp-4); outline-offset: -3px;
   font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; letter-spacing: var(--tr-head);
   transition: background-color var(--t-press) var(--ease);
 }
@@ -155,17 +160,17 @@ main {
 .learn .body p + p { margin-top: var(--sp-2); }
 .sources { margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--line); font-size: var(--fs-foot); color: var(--ink-soft); }
 .sources ul { margin: var(--sp-1) 0 0; padding-left: 1.1em; }
-.sources li + li { margin-top: 4px; }
+.sources a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* ---------- Tab bar (phones) ---------- */
 .tabbar {
-  position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 12px); transform: translateX(-50%);
-  display: flex; gap: 2px; padding: 6px; border-radius: var(--r-pill);
-  background: rgba(255,252,250,.78); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid rgba(235,220,214,.9); box-shadow: var(--float); z-index: 10;
+  position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + var(--sp-3)); transform: translateX(-50%);
+  display: flex; gap: var(--sp-px); padding: var(--sp-1); border-radius: var(--r-pill);
+  background: var(--glass); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--glass-line); box-shadow: var(--float); z-index: 10;
 }
 .tab {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-px);
   min-width: 74px; height: 52px; padding: 0 var(--sp-2); border-radius: var(--r-pill);
   color: var(--ink-soft); text-decoration: none; font-size: var(--fs-cap2); font-weight: 550; letter-spacing: var(--tr-sm);
   transition: background-color var(--t-press) var(--ease), color var(--t-press) var(--ease), transform var(--t-press) var(--ease);
@@ -182,7 +187,7 @@ main {
   .rail {
     display: flex; flex-direction: column; gap: var(--sp-1); position: sticky; top: 0; height: 100dvh;
     width: 248px; flex: none; padding: var(--sp-5) var(--sp-4);
-    background: rgba(255,252,250,.6); border-right: 1px solid var(--line);
+    background: var(--rail-bg); border-right: 1px solid var(--line);
   }
   .rail .brandbar { margin-bottom: var(--sp-5); }
   .rail .tab { flex-direction: row; justify-content: flex-start; gap: var(--sp-3); height: 48px; padding: 0 var(--sp-3); font-size: var(--fs-sub); border-radius: var(--r-md); }

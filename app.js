@@ -11,13 +11,22 @@
 
   /* ---------- Screens (hash routing, so the Back button retraces) ---------- */
   const SCREENS = ["home", "brands", "profile", "learn"];
+  const scrollOf = {};   // each screen keeps its own scroll, like a phone's tab bar
+  let current = null;
   function show() {
     const name = SCREENS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "home";
+    if (current) scrollOf[current] = window.scrollY;
     document.querySelectorAll("[data-screen]").forEach(s => { s.hidden = s.dataset.screen !== name; });
     document.querySelectorAll("[data-tab]").forEach(t => {
       if (t.dataset.tab === name) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current");
     });
-    window.scrollTo(0, 0);
+    window.scrollTo(0, scrollOf[name] || 0);
+    // move focus to the new screen's heading so screen readers announce it (not on first load)
+    if (current && current !== name) {
+      const h = document.querySelector(`[data-screen="${name}"] h1`);
+      if (h) h.focus({ preventScroll: true });
+    }
+    current = name;
     document.title = name === "home" ? "C.F.B. · Cruelty-Free Beauty" : "C.F.B. · " + name[0].toUpperCase() + name.slice(1);
   }
   window.addEventListener("hashchange", show);
@@ -39,8 +48,11 @@
     el.classList.add("is-pressed");
     const up = () => setTimeout(() => el.classList.remove("is-pressed"), HOLD_MS);
     const cancel = () => el.classList.remove("is-pressed");
-    el.addEventListener("pointerup", up, { once: true });
-    el.addEventListener("pointercancel", cancel, { once: true });
+    const off = () => { el.removeEventListener("pointerup", onUp); el.removeEventListener("pointercancel", onCancel); };
+    const onUp = () => { off(); up(); };
+    const onCancel = () => { off(); cancel(); };
+    el.addEventListener("pointerup", onUp);
+    el.addEventListener("pointercancel", onCancel);
   }, { passive: true });
 
   /* ---------- Offline: the worker saves the app so it opens with no signal ---------- */

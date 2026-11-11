@@ -13,7 +13,7 @@
     {
       q: "Cruelty-free or vegan: what's the difference?",
       a: [
-        "Cruelty-free is about testing: the product and its ingredients weren't tested on animals by the company or its suppliers. Vegan is about ingredients: nothing in it comes from an animal.",
+        "Cruelty-free is about testing: no new animal testing by the company or its suppliers after a fixed cut-off date. (Almost every ingredient, even water, was tested on animals at some point in the past, so the promise is about the future.) Vegan is about ingredients: nothing in it comes from an animal.",
         "A product can be one without the other. Leaping Bunny certifies testing only and says ingredient lists, which the law requires on the label, tell you whether a product is vegan. PETA keeps a separate list of vegan companies that don't test.",
         "C.F.B. shows the two separately on every brand."
       ],
@@ -33,7 +33,7 @@
       a: [
         "Some cruelty-free brands belong to parent companies that do test on animals.",
         "Leaping Bunny keeps a brand like that on its list only if it runs as a stand-alone company with its own supply chain and still meets the Standard. Leaping Bunny also says many shoppers would rather not give money to a parent company that hasn't committed to ending animal testing.",
-        "C.F.B. names the parent company on every brand page. Turn on Strict and brands whose parent tests are hidden."
+        "C.F.B. will name the parent company on every brand page, with a Strict setting that hides brands whose parent tests."
       ],
       src: [LB_FAQ, PETA_FAQ]
     },
@@ -43,7 +43,7 @@
         "Not automatically, any more. Leaping Bunny says brands importing to sell in mainland China used to have to test, but recent changes to China's rules make it possible, in specific cases, to sell there and stay Leaping Bunny certified. It runs a China program with regulatory experts that checks the paperwork and keeps watching after sales start.",
         "Leaping Bunny says it sees no animal testing for products sold to China online (cross-border e-commerce), and that China's policies change often.",
         "PETA asks companies that do business in China extra questions, because products sold there are likely to be tested.",
-        "C.F.B. lets you decide: Strict hides brands sold in mainland China stores."
+        "C.F.B. will let you decide: its Strict setting will hide brands sold in mainland China stores."
       ],
       src: [LB_FAQ, PETA_FAQ]
     },

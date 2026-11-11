@@ -1,9 +1,10 @@
 /* C.F.B. offline worker.
-   The page: network first, but if it hasn't arrived in 1 s the saved copy opens.
-   Everything else: the saved copy at once, refreshed in the background.
+   Every file comes from one versioned cache, so a launch never mixes a new page
+   with old files. A new version (bumped CACHE_VERSION) downloads everything in the
+   background, then takes over: the next launch is the new version, whole.
    Paths are relative to the worker's scope, so it works under /Cruelty-Free-Beauty-/.
    Bump CACHE_VERSION in every change that touches a file listed below. */
-const CACHE_VERSION = "cfb-v1";
+const CACHE_VERSION = "cfb-v2";
 const PRECACHE = [
   "./",
   "index.html",
@@ -19,12 +20,13 @@ const PRECACHE = [
   "assets/icons/icon-512.png",
   "assets/icons/apple-touch-icon.png"
 ];
-const PAGE_WAIT = 1000;
+const SCOPE = new URL(self.registration.scope).pathname;   // e.g. /Cruelty-Free-Beauty-/
 
 self.addEventListener("install", e => {
+  // all or nothing: if any file fails, this version doesn't install and the old one stays
   e.waitUntil(
     caches.open(CACHE_VERSION)
-      .then(c => Promise.allSettled(PRECACHE.map(u => c.add(new Request(u, { cache: "reload" })))))
+      .then(c => c.addAll(PRECACHE.map(u => new Request(u, { cache: "reload" }))))
       .then(() => self.skipWaiting())
   );
 });
@@ -42,36 +44,15 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
-
-  if (req.mode === "navigate") {
-    e.respondWith(pageFirst(req));
-  } else {
-    e.respondWith(savedThenRefresh(req, e));
-  }
+  e.respondWith(fromCache(req, url));
 });
 
-async function pageFirst(req) {
+async function fromCache(req, url) {
   const cache = await caches.open(CACHE_VERSION);
-  const saved = await cache.match(req, { ignoreSearch: true }) || await cache.match("index.html");
-  const fresh = fetch(req).then(res => {
-    if (res.ok) cache.put(req, res.clone());
-    return res;
-  });
-  if (!saved) return fresh;
-  const timer = new Promise(r => setTimeout(() => r(saved), PAGE_WAIT));
-  return Promise.race([fresh.catch(() => saved), timer]);
-}
-
-async function savedThenRefresh(req, e) {
-  const cache = await caches.open(CACHE_VERSION);
-  const saved = await cache.match(req, { ignoreSearch: true });
-  const fresh = fetch(req).then(res => {
-    if (res.ok) cache.put(req, res.clone());
-    return res;
-  });
-  if (saved) {
-    e.waitUntil(fresh.catch(() => {}));
-    return saved;
+  let saved = await cache.match(req, { ignoreSearch: true });
+  // the app's own page, whatever query it was opened with; other paths go to the network
+  if (!saved && req.mode === "navigate" && (url.pathname === SCOPE || url.pathname === SCOPE + "index.html")) {
+    saved = await cache.match("index.html");
   }
-  return fresh;
+  return saved || fetch(req);
 }

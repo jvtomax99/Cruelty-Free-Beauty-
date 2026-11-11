@@ -24,6 +24,9 @@ here.
 | `--ink` | #3B2A2A | Body text |
 | `--ink-soft` | #6B524D | Secondary text |
 | `--line` | #EBDCD6 | Hairlines, borders |
+| `--focus` | #9E4F62 | Keyboard focus ring (3 px) |
+| `--glass` / `--glass-line` | cream at 78% / line at 90% | Tab bar glass and its edge |
+| `--rail-bg` | cream at 60% | Side rail on computers |
 
 Measured contrast (WCAG, 4.5:1 needed for text): ink on cream 12.6,
 ink-soft on cream 6.7, rose on cream 5.2, rose-ink on blush 6.6, ink-soft
@@ -39,13 +42,18 @@ everything (`body::before`).
 - **Everything else:** Inter (variable).
 - Scale (`--fs-*`): 11, 12, 13, 15, 16, 17, 20, 22, 28, 34, and 40 for the
   hello line. Body text is 16. Inputs are never under 16 (iPhone zooms).
+- Weights: 450 (italic slogan), 500 (hello), 550 (labels, screen titles),
+  600 (tile and card titles, wordmark).
 - Letter spacing tightens as size grows (`--tr-sm`, `--tr-body`,
   `--tr-head`, `--tr-title`). Small capitals labels (the greeting) use
   0.12em.
 
 ## Space and shape
 
-- Spacing `--sp-*`: 6, 9, 13, 17, 26, 40.
+- Spacing `--sp-*`: 2 (`--sp-px`, icon to label in tabs), 6, 9, 13, 17, 26, 40.
+- Sizes that aren't spacing: logo 44 (brand bar) and 96 (empty states),
+  icons 22 to 32, tap targets at least 44, content 760 (phone) and 980
+  (computer).
 - Radius: `--r-sm` 10, `--r-md` 14, `--r-lg` 20, `--r-pill`. A rounded
   child inside a rounded parent takes the smaller radius (tile 20, its icon
   14).
@@ -62,7 +70,8 @@ Every raised surface uses `--finish`, tinted cocoa, never black:
 0 8px 20px -12px rgba(94,52,58,.24);
 ```
 
-Floating things (the tab bar) use `--float`, a deeper version.
+Floating things (the tab bar) use `--float`, a deeper version. A pressed
+tile drops to `--pressed`.
 
 ## Icons
 
@@ -90,6 +99,8 @@ tiles.
   rule is written `X:active, X.is-pressed`.
 - Entrance animations use `backwards`, never `both` (a held last frame
   would beat the press rule).
+- Each screen keeps its own scroll position (like a phone's tab bar), and
+  a screen change moves focus to its heading so screen readers announce it.
 - Every animation has a `prefers-reduced-motion` guard; every control
   keeps `:focus-visible` (3 px rose ring).
 

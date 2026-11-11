@@ -6,6 +6,7 @@
 <title>C.F.B. · Cruelty-Free Beauty</title>
 <meta name="description" content="Cruelty-free makeup, with the proof. Who certified each brand, when it was checked, and what suits your skin.">
 <meta name="theme-color" content="#FBF6F2">
+<meta name="apple-mobile-web-app-title" content="C.F.B.">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -56,12 +57,12 @@
 
       <div class="hello">
         <div class="hello-time" id="hello-time">Hello</div>
-        <h1 class="hello-line" id="hello-line">Cruelty free looks <em>best on skin.</em></h1>
+        <h1 class="hello-line" id="hello-line" tabindex="-1">Cruelty free looks <em>best on skin.</em></h1>
       </div>
 
-      <a class="search" href="#brands" role="button">
+      <a class="search" href="#brands">
         <svg aria-hidden="true"><use href="#i-search"/></svg>
-        <span>Search cruelty-free brands</span>
+        <span>Search brands</span>
       </a>
 
       <div class="tiles">
@@ -91,7 +92,7 @@
         <h2 id="promise-h">Our promise</h2>
         <p>Every brand here shows its proof, so you never take our word for it.</p>
         <ul class="proof">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Who certified it: PETA, Leaping Bunny, or both</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Who certified it, if anyone: PETA, Leaping Bunny, or both</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Who owns it, and whether they test</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>The date we last checked, with the link</span></li>
         </ul>
@@ -101,8 +102,8 @@
     <!-- ---------- Brands ---------- -->
     <section class="screen" data-screen="brands" aria-labelledby="brands-h" hidden>
       <div class="screen-head">
-        <h1 id="brands-h">Brands</h1>
-        <p>Cruelty-free makeup brands, each with its proof.</p>
+        <h1 id="brands-h" tabindex="-1">Brands</h1>
+        <p>Makeup brands, each with its proof.</p>
       </div>
       <div class="empty">
         <img src="assets/logo.svg" alt="">
@@ -114,7 +115,7 @@
     <!-- ---------- Profile ---------- -->
     <section class="screen" data-screen="profile" aria-labelledby="profile-h" hidden>
       <div class="screen-head">
-        <h1 id="profile-h">My beauty profile</h1>
+        <h1 id="profile-h" tabindex="-1">My beauty profile</h1>
         <p>A few quick questions about your skin, then a routine from cruelty-free brands.</p>
       </div>
       <div class="empty">
@@ -127,7 +128,7 @@
     <!-- ---------- Learn ---------- -->
     <section class="screen" data-screen="learn" aria-labelledby="learn-h" hidden>
       <div class="screen-head">
-        <h1 id="learn-h">Learn</h1>
+        <h1 id="learn-h" tabindex="-1">Learn</h1>
         <p>The words on every label, explained, with sources.</p>
       </div>
       <div class="learn" id="learn-list"></div>

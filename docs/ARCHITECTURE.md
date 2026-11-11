@@ -13,7 +13,7 @@ relative.
 | `app.css` | All styles. Tokens in `:root` at the top; DESIGN.md explains them |
 | `app.js` | Screens by `#hash` (Back retraces), greeting by time of day, press feedback (`LIFTS`, `.is-pressed` held 260 ms), saved settings (`CFB.store`, localStorage inside try/catch), registers the worker |
 | `learn.js` | The Learn answers and their sources (`ANSWERS`, `CHECKED` date) |
-| `sw.js` | Offline worker: page network-first with a 1 s fallback, everything else saved copy first. `CACHE_VERSION` is bumped by hand in every change to a precached file |
+| `sw.js` | Offline worker: every file from one versioned cache, so a launch never mixes old and new files. A bumped `CACHE_VERSION` downloads the new version whole in the background; it shows a launch or two later (tested 2026-11-11). Bump it by hand in every change to a precached file |
 | `manifest.webmanifest` | Install name, colours, icons |
 | `assets/logo.svg` | The bunny logo (original) |
 | `assets/icons/` | App icons, made from the logo by `tools/make-icons.cjs` |
