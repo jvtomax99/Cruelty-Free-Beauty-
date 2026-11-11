@@ -108,14 +108,17 @@ me**.
     slogan are real text over the last shots; the film ends on a pink-white
     flash and the drawn logo flies to Home as in version 1. It plays in
     full on every open. The drawn show (version 1) plays instead when the
-    film is not loaded at the tap, on reduced motion, with data saver on,
-    or if the film fails or freezes for 1.5 s. "Enter quietly" plays it
-    muted. On a computer the film is a centred column. The offline worker
-    saves the film after its first play. Not in this version: a widescreen
+    film can't start within 0.8 s of the tap, on reduced motion, or with
+    data saver on. If the film breaks or freezes for 1.5 s part-way, the
+    app opens at once. "Enter quietly" plays it muted. On a computer the
+    film is a centred column. The offline worker saves the film once it
+    has played. Not in this version: a widescreen
     cut, a shorter cut for later opens, voice-over.
     - Done when: one tap on the gate plays the film and lands on a working
       Home; Skip reaches Home in under 1.5 s at any moment; with the film
-      blocked, version 1 lands on Home in under 7 s.
+      blocked, version 1 lands on Home in under 7 s (under 8 s when the
+      film is merely still loading). Not yet checked on a real iPhone:
+      the test browser can't stand in for one (Jose to try it).
 
 ## Not in v1
 
@@ -197,7 +200,7 @@ only if it can be shown to work across skin tones.
   be glamorous and close to the Star Rail reveal: real animated video
   (key art animated by a video model, Runway credits bought by Jose, so the
   $0 budget doesn't apply to this piece), about 20 seconds. Version 1 stays
-  as the fallback. Plan and research: `HANDOFF.md`.
+  as the fallback. (Built the same day; the handoff file is gone.)
 - 2026-11-11 (Jose): a launch show, built now, styled on a game's
   character reveal (the video he sent) and his other apps' intros. The new
   logo is our own redraw of his bunny picture (sitting, hugging a

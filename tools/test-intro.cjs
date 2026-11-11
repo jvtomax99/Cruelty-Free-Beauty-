@@ -175,8 +175,26 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await dp.goto(BASE);
   await dp.click('[data-sound=off]'); await dp.waitForTimeout(600);
   check(!(await film(dp)).on, 'film not loaded at the tap: the drawn show plays');
-  check(await gone(dp, 7000), 'film not loaded at the tap: Home in under 7 s');
+  check(await gone(dp, 8000), 'film not loaded at the tap: Home in under 8 s');
   await dc.close();
+
+  // like an iPhone: nothing of the film loads until the tap; it must still start, a moment later
+  const [ic, ip] = await openFilm({ serviceWorkers: 'block' });
+  let tapped = false; const held = [];
+  await ip.route('**/assets/video/**', (r) => { if (tapped) r.continue().catch(() => {}); else held.push(r); });
+  await ip.goto(BASE); await ip.waitForTimeout(600);
+  check(!(await film(ip)).ready, 'film held back until the tap (as on an iPhone): not ready at the gate');
+  await ip.click('[data-sound=on]'); tapped = true; held.forEach((r) => r.continue().catch(() => {}));
+  await ip.waitForTimeout(1500);
+  f = await film(ip);
+  check(f.on && !f.muted && f.time > 0.2, `film held back until the tap: it still starts, with sound (at ${f.time.toFixed(1)} s)`);
+  // a double tap on the gate must not skip the film
+  await ip.goto(BASE); await filmReady(ip);
+  await ip.dblclick('[data-sound=off]', { delay: 30 }); await ip.mouse.click(195, 300); await ip.waitForTimeout(100);
+  await ip.waitForTimeout(1200);
+  f = await film(ip);
+  check(f.on && await showing(ip), 'film: a double tap on the gate does not skip it');
+  await ic.close();
 
   // reduced motion and data saver never download the film
   for (const [name, opts, init] of [['reduced motion', { reducedMotion: 'reduce' }, null], ['data saver', {}, () => Object.defineProperty(navigator, 'connection', { value: { saveData: true } })]]) {

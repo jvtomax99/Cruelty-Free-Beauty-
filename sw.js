@@ -5,7 +5,7 @@
    Paths are relative to the worker's scope, so it works under /Cruelty-Free-Beauty-/.
    Bump CACHE_VERSION in every change that touches a file listed below.
    The launch film is the one exception: it is too big to make the install wait for it, so it
-   lives in its own cache (MEDIA), is saved the first time the page asks for it, and survives
+   lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
 const CACHE_VERSION = "cfb-v12";
 const MEDIA = "cfb-media-v1";
@@ -62,7 +62,7 @@ self.addEventListener("fetch", e => {
 let filling = null;
 function fill(href) {
   if (filling) return filling;
-  filling = fetch(href, { cache: "reload" })
+  filling = fetch(href)                    // the browser has usually just played it: this comes from its own cache
     .then(res => (res.status === 200 ? caches.open(MEDIA).then(c => c.put(href, res)) : null))
     .catch(() => {})
     .then(() => { filling = null; });

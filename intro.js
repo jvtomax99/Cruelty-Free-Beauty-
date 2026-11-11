@@ -1,4 +1,6 @@
-/* C.F.B. launch show: a stage reveal for the bunny, about 6 s after one tap.
+/* C.F.B. launch show: a stage reveal for the bunny after one tap.
+   Version 2 is a rendered 20 s film (assets/video/launch.mp4) played over the drawn show; see "the film" below.
+   The drawn show (version 1, about 6 s, described next) plays alone whenever the film can't.
    The head of index.html decides before paint whether it plays (html.intro-on): every launch,
    unless ?intro=0, the Profile switch is off, or the link opens one brand (#brand/...); ?intro=1 forces it.
    The gate ("Enter with sound" / "Enter quietly") gives the tap phones need before sound.
@@ -184,8 +186,8 @@
 
   /* ---------- the film: version 2, a rendered cut played over the scene above ----------
      When the film is ready at the tap it plays; the drawn show stays underneath, parked on its hero pose, and
-     takes over for the landing on Home. The drawn show plays alone when the film is not loaded yet, on reduced
-     motion, with data saver on, or if the film fails or stalls. */
+     takes over for the landing on Home. The drawn show plays alone when the film can't start within 0.8 s of the
+     tap, on reduced motion, or with data saver on. If the film breaks or freezes part-way, the app opens at once. */
   const vid = el.querySelector(".in-film");
   const FILM = { src: "assets/video/launch.mp4", card: 15.5, tail: 1.15, hold: 0.4 };
   let filmOn = false, filmAt = -1, filmMoved = 0;
@@ -200,19 +202,21 @@
     } catch (_) {}
   }
   const filmReady = () => !!vid && !vid.error && !!vid.getAttribute("src") && vid.readyState >= 3 && !vid.seeking && isFinite(vid.duration);
-  /* start it inside the tap (phones only start video with sound from one); false means: play the drawn show */
-  function filmPlay(withSound) {
-    if (!filmReady() || reduce() || saver()) return false;
-    let p;
-    try { vid.muted = !withSound; vid.volume = 1; p = vid.play(); } catch (_) { return false; }
-    filmOn = true; filmAt = -1; filmMoved = performance.now(); vid.classList.add("is-on");
-    el.classList.add("is-film", "is-filmcard");               // the drawn scene hides under the film; the card sits on the film
-    if (p && p.catch) p.catch(() => { if (filmOn) filmHandover(true); });
-    // ask the offline worker to keep the film (on a first visit it was fetched before the worker was in charge)
-    try { if (navigator.serviceWorker) navigator.serviceWorker.ready.then(r => { if (r.active) r.active.postMessage("save-film"); }).catch(() => {}); } catch (_) {}
-    return true;
+  /* Start it inside the tap (phones only start video from one, and an iPhone loads nothing before it).
+     False means the film can't be tried at all. True means play() was called: begin() follows on "playing". */
+  let filmWait = false, filmPlayed = false;
+  function filmTry(withSound) {
+    if (!vid || vid.error || !vid.getAttribute("src") || reduce() || saver()) return null;
+    try { vid.muted = !withSound; vid.volume = 1; filmWait = true; return vid.play() || Promise.resolve(); } catch (_) { filmWait = false; return null; }
   }
-  /* the film is over, skipped or stuck: the drawn bunny, already in its hero pose underneath, flies to Home */
+  function filmBegin() {
+    filmOn = true; filmPlayed = true; filmAt = -1; filmMoved = performance.now(); vid.classList.add("is-on");
+    el.classList.add("is-film", "is-filmcard");               // the drawn scene hides under the film; the card sits on the film
+    target = null; state = "show"; skipBtn.hidden = false; skipBtn.focus({ preventScroll: true });
+    paused = true; now = T.exit - FILM.hold; kick();           // the drawn show waits under it on its hero pose
+  }
+  /* the film is over, skipped or stuck: the drawn bunny, already in its hero pose underneath, flies to Home
+     (fast: at once, and the film goes silent; else after a short hold, while the film's last chord rings out) */
   function filmHandover(fast) {
     if (!filmOn) return;
     filmOn = false;
@@ -224,6 +228,8 @@
   }
   if (vid) {
     vid.addEventListener("error", () => filmHandover(true));
+    // back from another app or tab: the phone paused the film; carry on rather than treat it as stuck
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && filmOn) { filmMoved = performance.now(); const p = vid.play(); if (p && p.catch) p.catch(() => {}); } });
     vid.addEventListener("ended", () => filmHandover(false));
   }
   const BEAM_GATE = 0.32;
@@ -379,7 +385,7 @@
   const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
 
   /* every pending timer, so a skip or a replay never inherits an old one */
-  let timers = [], replayed = false, pendingCtx = null;
+  let timers = [], replayed = false, pendingCtx = null, startAt = 0;
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
   const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
 
@@ -399,12 +405,10 @@
     if (state !== "gate") return;
     state = "starting";                                     // further taps now skip; they can't start it twice
     gate.classList.add("is-gone"); gate.inert = true;
-    if (svg && filmPlay(withSound)) {                       // the film is ready: it plays, the drawn show waits under it
-      target = null; state = "show"; skipBtn.hidden = false; skipBtn.focus({ preventScroll: true });
-      paused = true; now = T.exit - FILM.hold; kick();
-      return;
-    }
-    pendingCtx = withSound ? Sound.context() : null;        // made inside the tap: iOS only starts sound from one
+    startAt = performance.now();
+    const trying = svg ? filmTry(withSound) : null;         // play() is called here, inside the tap
+    const sure = !!trying && filmReady();                   // already buffered: no need for the drawn show's sound
+    pendingCtx = withSound && !sure ? Sound.context() : null;   // made inside the tap: iOS only starts sound from one
     const go = () => {
       if (state !== "starting") return;
       const ctx = pendingCtx; pendingCtx = null;
@@ -417,6 +421,23 @@
       later(() => { target = logoTarget(); }, (T.exit - 0.3 + lead) * 1000);
       kick();
     };
+    if (trying) {
+      // the film starts (normally at once; on an iPhone after it loads a little), or within 0.8 s the drawn show does
+      const begin = () => {
+        if (!filmWait || state !== "starting") return;
+        filmWait = false;
+        if (pendingCtx) { pendingCtx.close().catch(() => {}); pendingCtx = null; }
+        filmBegin();
+      };
+      const giveUp = () => {
+        if (!filmWait) return;
+        filmWait = false; vid.removeEventListener("playing", begin); vid.pause();
+        if (state === "starting") go();
+      };
+      vid.addEventListener("playing", begin, { once: true });
+      trying.catch(giveUp); later(giveUp, 800);
+      return;
+    }
     // the logo is normally loaded long before the tap; on a slow first visit, wait at most 1.5 s
     if (svg) go(); else Promise.race([ready, new Promise(r => setTimeout(r, 1500))]).then(go);
   }
@@ -429,6 +450,7 @@
   function skip() {
     if (state !== "show") return;
     if (filmOn) return filmHandover(true);
+    if (vid && !vid.paused) { vid.muted = true; vid.pause(); }   // a skip while the film's last chord rings
     if (still) return finish();
     if (sound) { sound.fade(); sound = null; }
     if (now < T.exit) { target = logoTarget(); skipAt = (performance.now() - t0) / 1000; }
@@ -437,6 +459,11 @@
     if (state === "idle") return;
     clearTimers();
     state = "idle"; paused = false; still = false;
+    filmWait = false;
+    if (filmPlayed) {                                      // now that it has played, ask the offline worker to keep the film
+      filmPlayed = false;
+      try { if (navigator.serviceWorker) navigator.serviceWorker.ready.then(r => { if (r.active) r.active.postMessage("save-film"); }).catch(() => {}); } catch (_) {}
+    }
     if (vid) { if (filmOn || !natural) { vid.muted = true; vid.pause(); } filmOn = false; vid.classList.remove("is-on"); el.classList.remove("is-film", "is-filmcard"); }
     if (sound && !natural) sound.fade();                   // at the natural end the landing chime rings out on its own
     sound = null;
@@ -456,7 +483,11 @@
   gate.querySelectorAll("[data-sound]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); start(b.dataset.sound === "on"); }));
   skipBtn.addEventListener("click", e => { e.stopPropagation(); skip(); });
   // a tap anywhere: with sound on the gate, skip after it
-  el.addEventListener("click", () => { if (state === "gate") start(true); else if (state === "starting") finish(); else skip(); });
+  el.addEventListener("click", () => {
+    if (state === "gate") return start(true);
+    if (performance.now() - startAt < 400) return;         // the second half of a double tap must not skip the show
+    if (state === "starting") finish(); else skip();
+  });
   addEventListener("keydown", e => { if (e.key !== "Escape") return; if (state === "gate") start(false); else if (state === "starting") finish(); else skip(); });
 
   /* ---------- the music: made in code (Web Audio), original ----------
