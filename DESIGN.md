@@ -18,7 +18,7 @@ here.
 | `--blush` | #F6E4E0 | Tiles, soft fills, pressed rows |
 | `--blush-2` | #F0D2CE | Pressed tiles, the active tab |
 | `--pink` | #EFA9AE | Icon colour blocks only, never text |
-| `--nude` | #E4C3A9 | Accents in art and the logo |
+| `--nude` | #E4C3A9 | Accents in art |
 | `--rose` | #9E4F62 | Accent text, links, focus ring |
 | `--rose-ink` | #7E3A4B | Accent text on blush |
 | `--ink` | #3B2A2A | Body text |
@@ -28,6 +28,8 @@ here.
 | `--glass` / `--glass-line` | cream at 78% / line at 90% | Tab bar glass and its edge |
 | `--rail-bg` | cream at 60% | Side rail on computers |
 | `--scrim` | ink at 35% | Dims the camera view around the barcode frame |
+| `--bunny-line` | #DB6B7E | The logo's outline |
+| `--night`, `--night-2`, `--spot`, `--glow`, `--star`, `--halo`, `--veil`, `--spot-line`, `--night-glass` | see "Launch show" | The launch show only |
 
 Measured contrast (WCAG, 4.5:1 needed for text): ink on cream 12.6,
 ink-soft on cream 6.7, rose on cream 5.2, rose-ink on blush 6.6, ink-soft
@@ -41,8 +43,8 @@ everything (`body::before`).
 - **Headings:** Fraunces, a soft serif (variable, WOFF2 in
   `assets/fonts/`). Display italic in rose for the slogan's last words.
 - **Everything else:** Inter (variable).
-- Scale (`--fs-*`): 11, 12, 13, 15, 16, 17, 20, 22, 28, 34, and 40 for the
-  hello line. Body text is 16. Inputs are never under 16 (iPhone zooms).
+- Scale (`--fs-*`): 11, 12, 13, 15, 16, 17, 20, 22, 28, 34, 40 for the
+  hello line, and 56 (`--fs-show`) for the launch show's name card. Body text is 16. Inputs are never under 16 (iPhone zooms).
 - Weights: 450 (italic slogan), 500 (hello), 550 (labels, screen titles),
   600 (tile and card titles, wordmark).
 - Letter spacing tightens as size grows (`--tr-sm`, `--tr-body`,
@@ -133,9 +135,30 @@ tiles.
 
 ## Logo
 
-`assets/logo.svg`: an original bunny with closed happy eyes and blush
-cheeks, holding a rose lipstick. Cocoa outlines, cream face. It reads at
-32 px. Never use PETA or Leaping Bunny marks anywhere in the app.
+`assets/logo.svg` (redrawn 2026-11-11 from Jose's reference picture, our
+own drawing): a white bunny sitting on a pink shadow, hugging a lipstick
+(charcoal tube, pink bullet), closed happy eyes, a "w" smile, blush cheeks,
+white hearts around it. Outline `--bunny-line` #DB6B7E, 3.05:1 on cream
+(the 3:1 graphics minimum). Every part has an id (`ears`, `body`, `face`,
+`eye-l`, `bullet`, `hearts`...): the launch show animates them, so keep the
+ids when editing. Re-render the icons with `node tools/make-icons.cjs`. It
+reads at 32 px. Never use PETA or Leaping Bunny marks anywhere in the app.
+
+## Launch show (night)
+
+The only dark screen in the app: "pink after dark", the soft luxury
+palette under a spotlight. Tokens: `--night` #1C0F13 (the stage),
+`--night-2` #3A1E27 (where the spot falls), `--spot` #FFE3E8 (light, text
+on night, 15.4:1), `--glow` #F28DA0 (glow, the flash's edge), `--star` #FFF6F4 (the
+name card's brightest text), `--halo` (pink at 60%, text and button glow),
+`--veil` (night at 75%, the vignette's edge), `--spot-line` (outlines on
+night) and `--night-glass` (buttons over the stage). Labels in
+`--pink` (7.9:1 on night-2). The name card's "C.F.B." is Fraunces 600 at
+`--fs-show` (56) with a pink glow; small-caps labels at 0.32em. Buttons:
+52 px pills, the main one blush with rose-ink text and a pink glow, the
+other an outline. The focus ring on night is `--pink`. Letterbox bars
+(6vh, at most 56 px) frame the show like a film. Reduced motion: the
+finished hero pose, held 1.6 s, then a 0.6 s fade.
 
 ## Don'ts
 

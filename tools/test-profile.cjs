@@ -8,6 +8,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const BASE = `http://localhost:8768/${path.basename(path.resolve(__dirname, '..'))}/`;
+const APP = BASE + '?intro=0';   // skip the launch show: this test is about the profile
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json' };
 const server = http.createServer((req, res) => {
   let p = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
@@ -45,7 +46,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
     return el ? [...el.querySelectorAll('.rt-brand')].map((a) => a.textContent) : null;
   }, step);
 
-  await page.goto(BASE + '#profile', { waitUntil: 'networkidle' });
+  await page.goto(APP + '#profile', { waitUntil: 'networkidle' });
   check(/Eight quick questions/.test(await page.textContent('#profile-app')), 'Profile opens on the quiz intro');
 
   // Quiz 1: warm by majority (green veins, gold, burns), $$ budget, not vegan-only
@@ -72,12 +73,12 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(/Cool undertone/.test(await page.textContent('.pf-sum')) && /set by you/.test(await page.textContent('.pf-tone')), 'undertone can be set by hand');
 
   // Strictness from the Brands screen carries over
-  await page.goto(BASE + '#brands'); await page.click('.mode-btn[data-mode=certified]');
-  await page.goto(BASE + '#profile'); await page.waitForSelector('.pf-card');
+  await page.goto(APP + '#brands'); await page.click('.mode-btn[data-mode=certified]');
+  await page.goto(APP + '#profile'); await page.waitForSelector('.pf-card');
   const fC = await stepNames('foundation'), fCwant = expected('foundation', { budget: '$$', vegan: 'no' }, certified);
   check(JSON.stringify(fC) === JSON.stringify(fCwant), `foundation under Certified follows the Brands switch: ${JSON.stringify(fC)}`);
-  await page.goto(BASE + '#brands'); await page.click('.mode-btn[data-mode=strict]');
-  await page.goto(BASE + '#profile'); await page.waitForSelector('.pf-card');
+  await page.goto(APP + '#brands'); await page.click('.mode-btn[data-mode=strict]');
+  await page.goto(APP + '#profile'); await page.waitForSelector('.pf-card');
 
   // Quiz 2: tie gives neutral; vegan-only and any budget
   await page.click('#pf-retake');
@@ -100,13 +101,13 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   // A damaged saved profile falls back to the quiz intro instead of a blank screen
   await page.evaluate(() => localStorage.setItem('cfb-profile', '{"skin":"dry","budget":"any"}'));
   await page.reload({ waitUntil: 'networkidle' });
-  await page.goto(BASE + '#profile');
+  await page.goto(APP + '#profile');
   await page.waitForTimeout(500);
   check(/Eight quick questions/.test(await page.textContent('#profile-app')), 'a damaged saved profile shows the quiz intro');
 
   // A retake left halfway is still there after visiting another screen
   await page.click('#pf-start'); await page.click('.quiz-opt >> text="Oily"');
-  await page.goto(BASE + '#brands'); await page.goto(BASE + '#profile'); await page.waitForTimeout(300);
+  await page.goto(APP + '#brands'); await page.goto(APP + '#profile'); await page.waitForTimeout(300);
   check(/2 of 8/.test(await page.textContent('#profile-app')), 'a quiz in progress survives switching screens');
 
   // Offline

@@ -12,7 +12,7 @@ const path = require('path');
 
 const LIVE = process.argv.includes('--live');
 const ROOT = path.resolve(__dirname, '..', '..');
-const BASE = `http://localhost:8767/${path.basename(path.resolve(__dirname, '..'))}/`;
+const BASE = `http://localhost:8767/${path.basename(path.resolve(__dirname, '..'))}/?intro=0`;   // skip the launch show: this test is about the scanner
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json', '.wasm': 'application/wasm' };
 const server = http.createServer((req, res) => {
   let p = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
