@@ -28,7 +28,7 @@ here.
 | `--glass` / `--glass-line` | cream at 78% / line at 90% | Tab bar glass and its edge |
 | `--rail-bg` | cream at 60% | Side rail on computers |
 | `--bunny-line` | #DB6B7E | The logo's outline |
-| `--night`, `--night-2`, `--spot`, `--glow` | see "Launch show" | The launch show only |
+| `--night`, `--night-2`, `--spot`, `--glow`, `--star`, `--halo`, `--veil`, `--spot-line`, `--night-glass` | see "Launch show" | The launch show only |
 
 Measured contrast (WCAG, 4.5:1 needed for text): ink on cream 12.6,
 ink-soft on cream 6.7, rose on cream 5.2, rose-ink on blush 6.6, ink-soft
@@ -134,7 +134,10 @@ reads at 32 px. Never use PETA or Leaping Bunny marks anywhere in the app.
 The only dark screen in the app: "pink after dark", the soft luxury
 palette under a spotlight. Tokens: `--night` #1C0F13 (the stage),
 `--night-2` #3A1E27 (where the spot falls), `--spot` #FFE3E8 (light, text
-on night, 15.4:1), `--glow` #F28DA0 (glow, the flash's edge). Labels in
+on night, 15.4:1), `--glow` #F28DA0 (glow, the flash's edge), `--star` #FFF6F4 (the
+name card's brightest text), `--halo` (pink at 60%, text and button glow),
+`--veil` (night at 75%, the vignette's edge), `--spot-line` (outlines on
+night) and `--night-glass` (buttons over the stage). Labels in
 `--pink` (7.9:1 on night-2). The name card's "C.F.B." is Fraunces 600 at
 `--fs-show` (56) with a pink glow; small-caps labels at 0.32em. Buttons:
 52 px pills, the main one blush with rose-ink text and a pink glow, the

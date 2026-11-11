@@ -83,6 +83,7 @@
     wide = W / H > 1.15; el.classList.toggle("is-wide", wide);
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
     if (svg) Object.assign(svg.style, { width: D + "px", height: D + "px", left: (W - D) / 2 + "px", top: (H - D) / 2 + "px" });
+    if (state === "show" && now > T.exit - 0.3) target = logoTarget();   // turned mid-landing: aim at the new spot
     if (state !== "idle") draw();
   }
   addEventListener("resize", resize);
@@ -309,15 +310,21 @@
     if (state === "show" && !paused) {
       now = (performance.now() - t0) / 1000;
       if (skipAt !== null) now = T.exit + (now - skipAt) * 1.6;    // a skip runs the landing a little faster
-      if (now >= T.end) return finish();
+      if (now >= T.end) return finish(true);
     }
     try { draw(); } catch (e) { return finish(); }   // a drawing error must never trap anyone behind the show
     raf = requestAnimationFrame(loop);
   }
   const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
 
-  function open() {
-    state = "gate"; now = -1; skipAt = null; still = false;
+  /* every pending timer, so a skip or a replay never inherits an old one */
+  let timers = [], replayed = false, pendingCtx = null;
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+
+  function open(fromReplay) {
+    clearTimers(); replayed = !!fromReplay;
+    state = "gate"; now = -1; skipAt = null; still = false; gate.inert = false;
     root.classList.add("intro-on");
     el.style.opacity = ""; el.hidden = false;
     gate.classList.remove("is-gone"); skipBtn.hidden = true;
@@ -328,23 +335,29 @@
   }
   function start(withSound) {
     if (state !== "gate") return;
-    gate.classList.add("is-gone");
-    ready.then(() => {
-      if (!svg) return finish();                            // no star to show: straight to Home
-      target = null; state = "show"; skipBtn.hidden = false;
-      if (reduce()) return stillShow(withSound);
+    state = "starting";                                     // further taps now skip; they can't start it twice
+    gate.classList.add("is-gone"); gate.inert = true;
+    pendingCtx = withSound ? Sound.context() : null;        // made inside the tap: iOS only starts sound from one
+    const go = () => {
+      if (state !== "starting") return;
+      const ctx = pendingCtx; pendingCtx = null;
+      if (!svg) { if (ctx) ctx.close().catch(() => {}); return finish(); }   // no star to show: straight to Home
+      target = null; state = "show"; skipBtn.hidden = false; skipBtn.focus({ preventScroll: true });
+      if (reduce()) return stillShow(ctx);
       const lead = 0.08;
-      if (withSound) sound = Sound.play(lead, 0);
+      if (ctx) sound = Sound.play(ctx, lead, 0);
       t0 = performance.now() + lead * 1000; now = -lead;
-      setTimeout(() => { target = logoTarget(); }, (T.exit - 0.3) * 1000);
+      later(() => { target = logoTarget(); }, (T.exit - 0.3 + lead) * 1000);
       kick();
-    });
+    };
+    // the logo is normally loaded long before the tap; on a slow first visit, wait at most 1.5 s
+    if (svg) go(); else Promise.race([ready, new Promise(r => setTimeout(r, 1500))]).then(go);
   }
   /* reduced motion: the finished hero pose, held, then a soft fade to Home */
-  function stillShow(withSound) {
+  function stillShow(ctx) {
     still = true; paused = true; now = T.exit - 0.01; draw();
-    if (withSound) sound = Sound.play(0.05, T.flash - 0.05);
-    setTimeout(() => { el.style.transition = "opacity .6s ease"; el.style.opacity = "0"; setTimeout(finish, 620); }, 1600);
+    if (ctx) sound = Sound.play(ctx, 0.05, T.flash - 0.05);
+    later(() => { el.style.transition = "opacity .6s ease"; el.style.opacity = "0"; later(finish, 620); }, 1600);
   }
   function skip() {
     if (state !== "show") return;
@@ -352,30 +365,39 @@
     if (sound) { sound.fade(); sound = null; }
     if (now < T.exit) { target = logoTarget(); skipAt = (performance.now() - t0) / 1000; }
   }
-  function finish() {
+  function finish(natural) {
+    if (state === "idle") return;
+    clearTimers();
     state = "idle"; paused = false; still = false;
-    if (sound) { sound.fade(); sound = null; }
+    if (sound && !natural) sound.fade();                   // at the natural end the landing chime rings out on its own
+    sound = null;
+    if (pendingCtx) { pendingCtx.close().catch(() => {}); pendingCtx = null; }
     root.classList.remove("intro-on");
     el.style.transition = ""; el.style.opacity = "";
     bg.style.webkitMaskImage = bg.style.maskImage = "";
     if (app) app.inert = false;
     if (themeMeta) themeMeta.content = DAY_THEME;
+    // focus back into the app: the Replay button after a replay, else the screen's heading
+    const f = replayed ? document.getElementById("intro-replay") : document.querySelector(".app [data-screen]:not([hidden]) h1");
+    if (f) f.focus({ preventScroll: true });
     document.dispatchEvent(new CustomEvent("cfb:intro-done"));
   }
 
   /* ---------- taps ---------- */
   gate.querySelectorAll("[data-sound]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); start(b.dataset.sound === "on"); }));
   skipBtn.addEventListener("click", e => { e.stopPropagation(); skip(); });
-  el.addEventListener("click", () => { if (state === "gate") start(true); else if (state === "show") skip(); });   // a tap anywhere: with sound on the gate, skip during the show
-  addEventListener("keydown", e => { if (e.key === "Escape") { if (state === "gate") start(false); else skip(); } });
+  // a tap anywhere: with sound on the gate, skip after it
+  el.addEventListener("click", () => { if (state === "gate") start(true); else if (state === "starting") finish(); else skip(); });
+  addEventListener("keydown", e => { if (e.key !== "Escape") return; if (state === "gate") start(false); else if (state === "starting") finish(); else skip(); });
 
   /* ---------- the music: made in code (Web Audio), original ----------
      A spot click and a low swell, the lipstick's twist (ticks), a sparkle, whooshes on the cuts, a four-beat build
      at 120 bpm, a boom on the flash, then a bright D major 9 chord with a bell run up, which fades as Home opens. */
   const Sound = {
-    play(lead, from) {
-      let ctx; try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (_) { return null; }
-      if (ctx.state === "suspended") ctx.resume();
+    context() {
+      try { const c = new (window.AudioContext || window.webkitAudioContext)(); if (c.state === "suspended") c.resume(); return c; } catch (_) { return null; }
+    },
+    play(ctx, lead, from) {
       const base = ctx.currentTime + lead - from;
       const at = s => base + s;
       const master = ctx.createGain(); master.gain.value = 0.8;
@@ -452,11 +474,11 @@
     sw.addEventListener("change", () => store.set("intro", sw.checked ? "on" : "off"));
   }
   const rp = document.getElementById("intro-replay");
-  if (rp) rp.addEventListener("click", () => { if (state === "idle") open(); });
+  if (rp) rp.addEventListener("click", () => { if (state === "idle") open(true); });
 
   /* tests and the Profile replay */
   window.CFBIntro = {
-    replay: () => { if (state === "idle") open(); },
+    replay: () => { if (state === "idle") open(true); },
     seek: s => ready.then(() => { if (state === "idle") open(); state = "show"; paused = true; gate.classList.add("is-gone"); now = s; if (s > T.exit) target = target || logoTarget(); draw(); }),
     T
   };
