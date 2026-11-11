@@ -141,9 +141,9 @@
    },
    "chinaRetail": {
     "status": "unknown",
-    "url": null,
-    "note": "Not yet researched",
-    "checked": null
+    "url": "https://fentybeauty.com/pages/help-faqs",
+    "note": "Brand's FAQ: \"No, we do not test our products on animals in any region.\" It does not say whether it sells in mainland China stores.",
+    "checked": "2026-11-11"
    },
    "vegan": "unknown",
    "price": null,
@@ -622,10 +622,10 @@
     "checked": null
    },
    "chinaRetail": {
-    "status": "unknown",
-    "url": null,
-    "note": "Not yet researched",
-    "checked": null
+    "status": "yes",
+    "url": "https://www.charlottetilbury.com/us/help/cruelty-free",
+    "note": "Brand's own help page: \"Charlotte Tilbury products sold in China meet these requirements.\" It says SPF products are not sold in China.",
+    "checked": "2026-11-11"
    },
    "vegan": "unknown",
    "price": null,
