@@ -14,22 +14,30 @@
   const scrollOf = {};   // each screen keeps its own scroll, like a phone's tab bar
   let current = null;
   function show() {
-    const name = SCREENS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "home";
+    const hash = location.hash.slice(1);
+    const isBrand = hash.startsWith("brand/");   // #brand/<id>: one brand's page, under the Brands tab
+    const name = isBrand ? "brand" : SCREENS.includes(hash) ? hash : "home";
+    const tab = isBrand ? "brands" : name;
     if (current) scrollOf[current] = window.scrollY;
     document.querySelectorAll("[data-screen]").forEach(s => { s.hidden = s.dataset.screen !== name; });
     document.querySelectorAll("[data-tab]").forEach(t => {
-      if (t.dataset.tab === name) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current");
+      if (t.dataset.tab === tab) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current");
     });
-    window.scrollTo(0, scrollOf[name] || 0);
+    // brands.js draws the brand page; it listens for this and sets the title
+    document.dispatchEvent(new CustomEvent("cfb:screen", { detail: { name, id: isBrand ? decodeURIComponent(hash.slice(6)) : null } }));
+    window.scrollTo(0, isBrand ? 0 : scrollOf[name] || 0);
     // move focus to the new screen's heading so screen readers announce it (not on first load)
     if (current && current !== name) {
       const h = document.querySelector(`[data-screen="${name}"] h1`);
       if (h) h.focus({ preventScroll: true });
     }
-    current = name;
+    current = isBrand ? null : name;   // a brand page keeps no scroll of its own
+    if (isBrand) return;
     document.title = name === "home" ? "C.F.B. · Cruelty-Free Beauty" : "C.F.B. · " + name[0].toUpperCase() + name.slice(1);
   }
   window.addEventListener("hashchange", show);
+  window.CFB.show = show;   // brands.js calls it once the brand data has loaded
+
   show();
 
   /* ---------- Greeting by time of day ---------- */
@@ -39,7 +47,7 @@
   /* ---------- Press feedback on touch ----------
      :hover never fires on a phone, and :active flickers off before the eye sees it,
      so a touched control holds .is-pressed for 260 ms (Interp's pattern). */
-  const LIFTS = ".tile, .tab, .search, .learn summary";
+  const LIFTS = ".tile, .tab, .search, .learn summary, .brand-row, .chip, .mode-btn";
   const HOLD_MS = 260;
   document.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse") return;

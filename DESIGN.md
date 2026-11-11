@@ -90,6 +90,18 @@ tiles.
 - **Tab bar (phones):** floating glass capsule, 52 px tabs, the active one
   in blush-2. **Side rail (computers)** replaces it.
 - **Empty state:** the logo, a Fraunces line, one honest sentence.
+- **Strict / Certified switch:** blush pill track, the chosen side paper
+  with the finish (44 px tall).
+- **Filter chip:** paper pill with a hairline, 40 px; on: blush-2 with
+  rose-ink text.
+- **Brand row:** paper card, radius 20, name in Fraunces 17, chips on the
+  right, the reason it fails on its own line in ink-soft.
+- **Verdict chip:** Passes = blush-2 / rose-ink; Doesn't pass = ink /
+  paper; Not on either list = paper with a dashed ink-soft edge. The words
+  always say it, so colour is never the only signal.
+- **Fact card (brand page):** small-caps rose-ink label, the status at 17
+  semibold, then the source link and "Checked" date. Two columns from
+  900 px.
 
 ## Motion
 
