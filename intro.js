@@ -432,13 +432,14 @@
       // 5. the flash: a boom, a crash, the hero chord, a bell run up
       kick(T.flash, 1); tone(T.flash, 1.1, "sine", 55, 38, 0.6, 0.004);
       noise(T.flash, 1.5, "lowpass", 9000, 1800, 0.35, 0.7, 0.6);
-      [146.83, 185, 220, 277.18, 329.63, 440].forEach((f, i) => { tone(T.flash, 2.6, "sawtooth", f, f, 0.045, 0.02, 0.5, 2600); tone(T.flash, 2.6, "triangle", f * 2, f * 2, 0.03, 0.02, 0.5); });
+      [146.83, 185, 220, 277.18, 329.63, 440].forEach((f, i) => { tone(T.flash, 4.2, "sawtooth", f, f, 0.045, 0.02, 0.5, 2600); tone(T.flash, 4.2, "triangle", f * 2, f * 2, 0.03, 0.02, 0.5); });
       [587.33, 739.99, 880, 1108.73, 1318.51, 1760, 2217.46].forEach((f, i) => bell(T.flash + 0.08 + i * 0.07, f, 0.1));
       tone(T.card, 0.3, "sine", 120, 60, 0.4, 0.003); noise(T.card, 0.5, "highpass", 6000, 9000, 0.06, 1, 0.6);
       [1318.51, 1760, 2217.46].forEach((f, i) => bell(T.card + 0.45 + i * 0.12, f, 0.06));
-      // fade out as Home opens
-      master.gain.setValueAtTime(0.8, at(T.exit)); master.gain.exponentialRampToValueAtTime(0.0001, at(T.end + 0.5));
-      setTimeout(() => ctx.close().catch(() => {}), (T.end + 1.2 - from + lead) * 1000);
+      // a chime as the bunny lands on the logo, then out
+      bell(T.end - 0.18, 1760, 0.09); bell(T.end - 0.1, 2637.02, 0.06);
+      master.gain.setValueAtTime(0.8, at(T.end)); master.gain.exponentialRampToValueAtTime(0.0001, at(T.end + 0.9));
+      setTimeout(() => ctx.close().catch(() => {}), (T.end + 1.5 - from + lead) * 1000);
       return { fade() { try { const n = ctx.currentTime; master.gain.cancelScheduledValues(n); master.gain.setValueAtTime(master.gain.value, n); master.gain.exponentialRampToValueAtTime(0.0001, n + 0.3); setTimeout(() => ctx.close().catch(() => {}), 500); } catch (_) {} } };
     }
   };
