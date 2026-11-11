@@ -89,6 +89,14 @@
         <span>Search brands</span>
       </a>
 
+      <section class="card changes" id="changes-card" aria-labelledby="changes-h" hidden>
+        <h2 id="changes-h">What changed</h2>
+        <p>Since you last looked, on the certifiers' own lists.</p>
+        <ul class="change-list" id="changes-new"></ul>
+        <p id="changes-rest" hidden></p>
+        <button type="button" class="more" id="changes-ok">Got it</button>
+      </section>
+
       <div class="tiles">
         <a class="tile" href="#brands">
           <span class="tile-icon"><svg aria-hidden="true"><use href="#t-brands"/></svg></span>
@@ -151,6 +159,11 @@
       <p class="count" id="brand-count" aria-live="polite"></p>
       <ul class="brand-list" id="brand-list"></ul>
       <p class="count" id="brand-hint">Only brands that pass are listed. Search any other brand to see what PETA and Leaping Bunny say about it.</p>
+      <section class="changes" id="changes-all" aria-labelledby="changes-all-h" hidden>
+        <h2 id="changes-all-h">Recent changes</h2>
+        <p class="count">What changed on the certifiers' lists in the last 12 months, newest first.</p>
+        <ul class="change-list" id="changes-list"></ul>
+      </section>
     </section>
 
     <!-- ---------- One brand (#brand/<id>) ---------- -->
@@ -232,6 +245,7 @@
 <script src="app.js"></script>
 <script src="learn.js"></script>
 <script src="brands.js"></script>
+<script src="changes.js"></script>
 <script src="profile.js"></script>
 <script src="scan.js"></script>
 <script src="intro.js"></script>

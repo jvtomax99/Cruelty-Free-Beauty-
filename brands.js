@@ -185,6 +185,7 @@
 
     page.innerHTML = `
       <div class="brand-top"><h1 id="brand-h" tabindex="-1">${esc(b.name)}</h1>${saveButton(b)}</div>
+      ${window.CFB.changeLine ? window.CFB.changeLine(b.id) : ""}
       <div class="verdict-box v-${v.kind}">
         <p class="verdict-title">${v.pass ? `Passes ${modeName}` : CHIP[v.kind]}</p>
         <p>${esc(v.reason)}</p>
@@ -221,8 +222,10 @@
   window.CFB.saved = saved;
   window.CFB.saveButton = saveButton;
   window.CFB.CHIP = CHIP;
-  window.CFB.brands = fetch("data/brands.json")
-    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  // The whole file, for changes.js ("changes"); an empty one if it couldn't load.
+  const file = fetch("data/brands.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  window.CFB.data = file.catch(() => ({ brands: [], changes: [] }));
+  window.CFB.brands = file
     .then((d) => {
       brands = d.brands;
       renderList();

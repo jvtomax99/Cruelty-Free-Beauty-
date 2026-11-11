@@ -103,6 +103,17 @@ me**.
   - Done when: the gate shows on every launch, both buttons play the show
     and land on a working Home in under 7 s, Skip works at any moment, and
     `?intro=0` skips it.
+- **What changed** (founder's ask, 2026-11-11). When a recheck finds that a
+  brand's PETA, Leaping Bunny, parent company or China status changed, the
+  app says so the next time it is opened: a card on Home (brands the person
+  hearted first), a line on the brand's page, and "Recent changes" under
+  the Brands list for 12 months. The words say only what the list showed on
+  the date we looked ("No longer in Leaping Bunny's guide"), never why, and
+  good news shows too. Changes live in `data/brands.json` ("changes") and
+  go live only through the recheck pull request Jose reads.
+  - Done when: a change added to `data/brands.json` shows on Home at the
+    next open with its date and source link, hearted brands first; "Got it"
+    hides it and it stays in "Recent changes" and on the brand page.
 
 ## Not in v1
 
@@ -111,7 +122,8 @@ me**.
 - Exact shade matching across brands (no free shade data).
 - Reviews, photo uploads, accounts, sign-in.
 - Store stock or "near me".
-- Brand-change alerts.
+- Notifications while the app is closed, or by email (they need a push or
+  mail service; the in-app "What changed" notice is in v1).
 - An app-store app.
 - Skincare, hair and household products.
 - Paid or affiliate links (undecided; the data has a link-type field so
@@ -125,7 +137,7 @@ Prices for the 10 brands whose sites block automated readers (e.l.f.,
 Too Faced, Urban Decay, Kosas, Juvia's Place, NYX, Maybelline, L'Oréal
 Paris, Estée Lauder, Benefit): checked by hand, or by the founder.
 
-Brand-change alerts, Spanish (EN | ES switch
+Notifications while the app is closed, Spanish (EN | ES switch
 like Lions-Roar-), near me, skincare, reviews, a camera undertone helper
 only if it can be shown to work across skin tones.
 
@@ -169,7 +181,16 @@ only if it can be shown to work across skin tones.
 - [x] The gate, the shots, the music, skip, the landing on Home's logo
 - [x] Profile switch and replay
 
+### What changed (added 2026-11-11, the founder's ask)
+- [x] `changes` list in the data, checked by `check-brands`
+- [x] Home card, brand page line, "Recent changes" under Brands
+- [x] `lookup-certifiers --diff` prints what looks changed, for a person
+      to confirm
+
 ## Open questions (TO FILL)
+
+- Does the founder accept the neutral wording ("No longer in Leaping
+  Bunny's guide", never "dropped")? Jose to ask.
 
 - The founder's name (stays out of the repo until Jose fills it in).
 - 1 to 3 websites whose look the founder likes (for DESIGN.md).
