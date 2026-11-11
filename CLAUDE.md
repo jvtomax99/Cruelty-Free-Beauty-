@@ -5,7 +5,7 @@
 **C.F.B. (Cruelty-Free Beauty)**, "Cruelty free looks best on skin." A
 phone-first installable web app for makeup shoppers: is this brand
 cruelty-free (with the proof), and is it right for me. Built by Jose for the
-founder (name TO FILL in SPEC.md). Plain HTML, CSS and JS, no build step.
+founder, Wilmarie Lopez (copyright is hers). Plain HTML, CSS and JS, no build step.
 Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 `DESIGN.md`.
 
@@ -13,7 +13,7 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 
 - **Plan and phases:** `SPEC.md` ("Phases"). Phase 1 (look and shell) done
   2026-11-10. Next: phase 2, brand data.
-- **Real user:** the founder (TO FILL). Remind Jose to check plans, brand
+- **Real user:** the founder, Wilmarie Lopez (TikTok `@itss_wilmarie`). Remind Jose to check plans, brand
   rules and any words that speak for them with the founder.
 - **Hosting:** GitHub Pages from `main`, root folder, at
   `jvtomax99.github.io/Cruelty-Free-Beauty-/`. Pages stays off until phase 3

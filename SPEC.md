@@ -12,8 +12,9 @@ A phone-first app that answers two questions for makeup shoppers:
 **is this brand cruelty-free** (with the evidence), and **is it right for
 me**.
 
-- **Founder and real user:** TO FILL (name). Jose builds it for them; they
-  check the plan, the brand rules and any words that speak for them.
+- **Founder and real user:** Wilmarie Lopez (TikTok `@itss_wilmarie`). Jose
+  builds it for her; she checks the plan, the brand rules and any words
+  that speak for her. The app's copyright is in her name.
 - **Audience:** people who already shop cruelty-free or are switching,
   mostly on a phone, often in a store aisle. US first (retailers and
   certifications differ by country).
@@ -123,12 +124,14 @@ only if it can be shown to work across skin tones.
 
 ## Open questions (TO FILL)
 
-- The founder's name, and who will recheck brands every 90 days.
+- Who will recheck brands every 90 days.
 - Default strictness.
 - 1 to 3 websites whose look the founder likes (for DESIGN.md).
 
 ## Decided
 
+- 2026-11-11 (Jose): the founder is Wilmarie Lopez; copyright is hers
+  ("© 2026 Wilmarie Lopez", app footer and README).
 - 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
   quiz; $0 asset budget; soft luxury look; Fraunces headings.
 - Paid or affiliate links: ever?
