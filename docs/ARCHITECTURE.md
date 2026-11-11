@@ -12,8 +12,10 @@ relative.
 | `index.html` | The shell: icon sprite, side rail (computers), the four screens (`data-screen` home, brands, profile, learn), tab bar (phones) |
 | `app.css` | All styles. Tokens in `:root` at the top; DESIGN.md explains them |
 | `app.js` | Screens by `#hash` (Back retraces), greeting by time of day, press feedback (`LIFTS`, `.is-pressed` held 260 ms), saved settings (`CFB.store`, localStorage inside try/catch), registers the worker |
-| `brands.js` | Brands screen and brand pages (`#brand/<id>`): loads `data/brands.json`, works out each verdict (Strict / Certified, saved as `cfb-mode`), search, filters |
-| `profile.js` | Profile screen: 8-question quiz, profile (saved as `cfb-profile`, only on the phone), routine of brands per step using `CFB.verdict` and the brand data from `brands.js` |
+| `brands.js` | Brands screen and brand pages (`#brand/<id>`): loads `data/brands.json`, works out each verdict (Strict / Certified, saved as `cfb-mode`), search, filters. Also shared helpers: `CFB.match` (a label's brand name to our brand), `CFB.saved` (hearts, `cfb-saved`) |
+| `scan.js` | Scan screen (`#scan`): camera or photo, barcode to brand through Open Beauty Facts (only the number is sent), matched by `CFB.match`, verdict by `CFB.verdict`. Falls back to typing the brand. Recent scans (`cfb-scans`, 10) and brands we haven't checked (`cfb-unlisted`, 50) stay on the phone. Camera stops on leaving the screen |
+| `assets/vendor/barcode-detector/` | Barcode reader for phones without one built in (iPhone): `barcode-detector` 3.2.3 plus `zxing_reader.wasm` 3.1.6, MIT and Apache 2.0; its README says how to update |
+| `profile.js` | Profile screen: 8-question quiz, profile (saved as `cfb-profile`, only on the phone), routine of brands per step using `CFB.verdict` and the brand data from `brands.js`; Saved brands list |
 | `learn.js` | The Learn answers and their sources (`ANSWERS`, `CHECKED` date) |
 | `sw.js` | Offline worker: every file from one versioned cache, so a launch never mixes old and new files. A bumped `CACHE_VERSION` downloads the new version whole in the background; it shows a launch or two later (tested 2026-11-11). Bump it by hand in every change to a precached file |
 | `manifest.webmanifest` | Install name, colours, icons |
@@ -28,7 +30,8 @@ relative.
 
 ## How data moves
 
-Nothing leaves the phone. Settings and, later, quiz answers live in
+Nothing leaves the phone except a scanned barcode number, sent to Open
+Beauty Facts to learn the brand. Settings and, later, quiz answers live in
 localStorage under `cfb-` keys. Brand data is `data/brands.json`, precached by
 the worker so the list will work offline once the Brands screen reads it
 (phase 3). Research flow: `lookup-certifiers`
@@ -40,6 +43,7 @@ confirms it.
 - `node .github/site-check.cjs index.html` (runs on every pull request).
 - `node tools/check-brands.cjs --links` after any brand data change.
 - `node tools/test-profile.cjs`: the quiz and routine in a real browser (undertone, picks checked against the data, reload, clear, offline).
+- `node tools/test-scan.cjs` (add `--live` for real Open Beauty Facts lookups): photo, fake camera and typed barcodes through the vendored reader, every result type, brand matching on real Open Beauty Facts names, saved list, offline.
 - `node tools/test-directory.cjs`: the directory in a real browser (counts, search, filters, brand page, Back, offline).
 - Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
   a recheck pull request.

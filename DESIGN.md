@@ -27,6 +27,7 @@ here.
 | `--focus` | #9E4F62 | Keyboard focus ring (3 px) |
 | `--glass` / `--glass-line` | cream at 78% / line at 90% | Tab bar glass and its edge |
 | `--rail-bg` | cream at 60% | Side rail on computers |
+| `--scrim` | ink at 35% | Dims the camera view around the barcode frame |
 
 Measured contrast (WCAG, 4.5:1 needed for text): ink on cream 12.6,
 ink-soft on cream 6.7, rose on cream 5.2, rose-ink on blush 6.6, ink-soft
@@ -106,6 +107,13 @@ tiles.
   chips to change it by hand.
 - **Routine step:** paper card like the fact card; brand name in Fraunces
   17 (links to its page), the reason in ink-soft, "Find your shade" link.
+- **Save button:** paper pill with a hairline, heart icon and "Save";
+  on: blush-2 with the heart filled pink, "Saved". Beside the brand name.
+- **Scan screen:** the camera in a radius-20 frame with a paper aim box and
+  a `--scrim` around it; rose "Start camera" button; the result is a paper
+  card with the verdict box, "See the proof" (rose) and Save. Other ways in
+  (photo, typed numbers) are the outline `.more` buttons.
+- **Scan button (Brands):** a 52 px paper square beside the search.
 - **Fact card (brand page):** small-caps rose-ink label, the status at 17
   semibold, then the source link and "Checked" date. Two columns from
   900 px.

@@ -48,6 +48,68 @@
   }
   const CHIP = { pass: "Passes", fail: "Doesn't pass", none: "Not on either list" };
 
+  /* ---------- Match a brand name from a label (Open Beauty Facts or typed) ----------
+     "NYX Professional Makeup", "M.A.C", "L'Oréal Paris" and "e.l.f." should all find our brand.
+     Each name splits into words; a name matches when its first words, run together, equal one
+     of the brand's keys (its name and `search` names, also without trailing words like
+     "Cosmetics"). The longest match wins. A list like "Maybelline, L'Oréal" is tried in order. */
+  const words = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  const FILLER = new Set(["cosmetics", "cosmetic", "makeup", "professional", "paris", "companies", "inc"]);
+  let keyCache = null;
+  function keysOf(b) {
+    const out = new Set();
+    for (const n of [b.name, ...(b.search || [])]) {
+      const w = words(n);
+      out.add(w.join(""));
+      while (w.length > 1 && FILLER.has(w[w.length - 1])) { w.pop(); out.add(w.join("")); }
+    }
+    return out;
+  }
+  function matchOne(text) {
+    const w = words(text);
+    let best = null, bestLen = 0;
+    for (const [b, keys] of keyCache) {
+      for (let k = w.length; k > bestLen; k--) {
+        if (keys.has(w.slice(0, k).join(""))) { best = b; bestLen = k; break; }
+      }
+    }
+    return best;
+  }
+  function match(names) {
+    if (!brands.length) return null;
+    if (!keyCache) keyCache = brands.map((b) => [b, keysOf(b)]);
+    for (const part of [].concat(names).flatMap((n) => String(n ?? "").split(/[,;]/))) {
+      const b = part.trim() && matchOne(part);
+      if (b) return b;
+    }
+    return null;
+  }
+
+  /* ---------- Saved brands (only on this phone) ---------- */
+  const saved = {
+    list() { try { const a = JSON.parse(store.get("saved", "[]")); return Array.isArray(a) ? a.filter((x) => typeof x === "string") : []; } catch (_) { return []; } },
+    has(id) { return saved.list().includes(id); },
+    toggle(id) {
+      const a = saved.list(), on = !a.includes(id);
+      store.set("saved", JSON.stringify(on ? [id, ...a] : a.filter((x) => x !== id)));
+      document.dispatchEvent(new CustomEvent("cfb:saved", { detail: { id, on } }));
+      return on;
+    },
+  };
+  // A heart button: brand pages and scan results use the same one.
+  function saveButton(b) {
+    const on = saved.has(b.id);
+    return `<button type="button" class="save-btn" data-save="${esc(b.id)}" aria-pressed="${on}"><svg aria-hidden="true"><use href="#i-heart"/></svg><span>${on ? "Saved" : "Save"}</span><span class="sr-only"> ${esc(b.name)}</span></button>`;
+  }
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-save]");
+    if (!btn) return;
+    const on = saved.toggle(btn.dataset.save);
+    document.querySelectorAll(`[data-save="${CSS.escape(btn.dataset.save)}"]`).forEach((x) => {
+      x.setAttribute("aria-pressed", on); x.querySelector("span").textContent = on ? "Saved" : "Save";
+    });
+  });
+
   /* ---------- List ---------- */
   function matches(b) {
     if (state.vegan && b.vegan !== "all") return false;
@@ -138,7 +200,7 @@
       : `<p class="fact-status">No buy link yet.</p>`;
 
     page.innerHTML = `
-      <h1 id="brand-h" tabindex="-1">${esc(b.name)}</h1>
+      <div class="brand-top"><h1 id="brand-h" tabindex="-1">${esc(b.name)}</h1>${saveButton(b)}</div>
       <div class="verdict-box v-${v.kind}">
         <p class="verdict-title">${v.pass ? `Passes ${modeName}` : CHIP[v.kind]}</p>
         <p>${esc(v.reason)}</p>
@@ -172,6 +234,10 @@
   // Shared with profile.js: the same verdict, the current strictness, and the data once loaded.
   window.CFB.verdict = verdict;
   window.CFB.mode = () => state.mode;
+  window.CFB.match = match;
+  window.CFB.saved = saved;
+  window.CFB.saveButton = saveButton;
+  window.CFB.CHIP = CHIP;
   window.CFB.brands = fetch("data/brands.json")
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((d) => {

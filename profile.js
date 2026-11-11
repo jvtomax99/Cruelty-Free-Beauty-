@@ -174,6 +174,38 @@
     if (inQuiz) { if (!app.querySelector(".quiz")) renderQuestion(); return; }
     const p = load(); if (p) renderProfile(p); else renderIntro();
   }
-  document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "profile") show(); });
+  /* ---------- Saved brands (hearts on brand pages and scan results) ---------- */
+  const savedApp = document.getElementById("saved-app");
+  let refocus = false;
+  async function renderSaved() {
+    const brands = await window.CFB.brands;
+    const ids = window.CFB.saved.list();
+    const list = ids.map((id) => brands.find((b) => b.id === id)).filter(Boolean);
+    const mode = window.CFB.mode();
+    const rows = list.map((b) => {
+      const v = window.CFB.verdict(b, mode);
+      return `<li class="sv-row">
+        <a class="brand-row" href="#brand/${encodeURIComponent(b.id)}"><span class="brand-name">${esc(b.name)}</span><span class="brand-meta"><span class="verdict v-${v.kind}">${window.CFB.CHIP[v.kind]}</span></span></a>
+        <button type="button" class="sv-remove" data-unsave="${esc(b.id)}">Remove<span class="sr-only"> ${esc(b.name)}</span></button>
+      </li>`;
+    }).join("");
+    savedApp.innerHTML = `
+      <h2 class="rt-head" id="sv-h" tabindex="-1">Saved brands</h2>
+      ${list.length
+        ? `<p class="rt-intro">Verdicts under ${mode === "strict" ? "Strict" : "Certified"}, as of today's data.</p><ul class="brand-list sv-list">${rows}</ul>`
+        : `<p class="sv-empty">Tap Save on a brand's page or after a scan, and it shows here.</p>`}`;
+    savedApp.querySelectorAll("[data-unsave]").forEach((x) => x.addEventListener("click", () => {
+      refocus = true;
+      window.CFB.saved.toggle(x.dataset.unsave);   // fires cfb:saved, which redraws
+    }));
+    if (refocus) {   // after Remove, keep focus in the list rather than losing it to the page
+      refocus = false;
+      (savedApp.querySelector("[data-unsave]") || document.getElementById("sv-h")).focus({ preventScroll: true });
+    }
+  }
+  document.addEventListener("cfb:saved", renderSaved);
+
+  document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "profile") { show(); renderSaved(); } });
   show();
+  renderSaved();
 })();
