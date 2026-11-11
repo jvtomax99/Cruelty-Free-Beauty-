@@ -4,10 +4,12 @@
 company for the 30 brands in `data/brands.json` from the brands' own sites,
 then price, product types and where to buy, then review and pull request.
 
-**Exact next step:** add the brand-site research results to
-`data/brands.json` (quotes checked against the live page), run
-`node tools/check-brands.cjs --links`, then ask Jose about the blocked
-second batch of hosts (below).
+**Exact next step:** fill `price`, `productTypes` and `whereToBuy` for the
+30 brands (PETA's "Where to Find" and "What X Sells" and Leaping Bunny's
+"Products Sold" are sourced starting points), run
+`node tools/check-brands.cjs --links`, then create the monthly recheck
+scheduled task, run the reviewer subagent, open the pull request and send
+Jose a push notification.
 
 ## Done (branch `claude/clever-lovelace-io1u7j`, pushed)
 - SPEC decisions 2026-11-11: Strict default; unknown parent or China shows
@@ -22,6 +24,17 @@ second batch of hosts (below).
   checks over 90 days with `CHECK_DATE`).
 - `sw.js` precaches `data/brands.json`, `CACHE_VERSION` cfb-v3.
 
+## Research lessons (2026-11-11)
+- Subagents' WebFetch skips the proxy: every brand site fails DNS for them.
+  Use curl or Playwright from Bash (goes through the proxy) and WebSearch
+  to find page URLs. Verify every quote with curl before saving it.
+- Brands almost never publish China sales or owners: of 18 brand sites,
+  only Charlotte Tilbury did (sells in China, saved). Fenty's FAQ says no
+  testing "in any region" (saved as context, China still unknown). So
+  Strict now fails only on known problems (SPEC, founder to confirm).
+- kosas.com gets a 403 from the proxy; Huda Beauty's policy page URL is
+  unknown; e.l.f.'s cruelty-free page is JavaScript and shows no China text.
+
 ## Environment (Default)
 - Added: `imisservices.mosaic-mobile.info` (Leaping Bunny's list) and 19
   brand hosts (e.l.f. through Huda Beauty).
@@ -32,8 +45,8 @@ second batch of hosts (below).
   separate C.F.B. environment.
 
 ## Still to do
-- China and parent for the remaining brands; price, productTypes,
-  whereToBuy (all empty now, the check script warns).
+- Price, productTypes, whereToBuy (empty now, the check script warns).
+- Optional: the second batch of hosts, if Jose adds them in Settings.
 - The monthly scheduled recheck task (not created yet).
 - Reviewer subagent, then pull request and push notification.
 
