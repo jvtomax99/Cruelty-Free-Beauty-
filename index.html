@@ -13,8 +13,30 @@
 <link rel="preload" href="assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="app.css">
+<!-- launch show: decide before paint so Home never flashes first (intro.js; ?intro=0 skips, ?intro=1 forces) -->
+<script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");setTimeout(function(){if(!window.CFBIntro)d.classList.remove("intro-on")},5000)}})();</script>
 </head>
 <body>
+
+<!-- ---------- Launch show (intro.js): the gate, then the bunny's stage reveal ---------- -->
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="C.F.B. opening">
+  <div class="in-bg"></div>
+  <div class="in-scene" aria-hidden="true"></div>
+  <canvas class="in-fx" aria-hidden="true"></canvas>
+  <div class="in-flash" aria-hidden="true"></div>
+  <div class="in-bars" aria-hidden="true"><i></i><i></i></div>
+  <div class="in-card" aria-hidden="true">
+    <div class="in-name">C.F.B.</div>
+    <div class="in-label">Cruelty-Free Beauty</div>
+    <div class="in-slogan">Cruelty free looks <em>best on skin.</em></div>
+  </div>
+  <div class="in-gate">
+    <div class="in-presents">C.F.B. presents</div>
+    <button class="in-btn in-btn-main" type="button" data-sound="on">Enter with sound</button>
+    <button class="in-btn" type="button" data-sound="off">Enter quietly</button>
+  </div>
+  <button class="in-skip" type="button" hidden>Skip</button>
+</div>
 
 <!-- ---------- Icons (one sprite; duotone: pink block plus cocoa line) ---------- -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -143,6 +165,11 @@
         <h2>Coming soon</h2>
         <p>Your answers will stay on this phone. Nothing is sent anywhere.</p>
       </div>
+      <div class="card intro-set">
+        <h2>Opening show</h2>
+        <label class="switch-row"><input type="checkbox" id="intro-switch" checked> Play the opening when the app starts</label>
+        <button class="pill-btn" type="button" id="intro-replay">Replay the opening</button>
+      </div>
     </section>
 
     <!-- ---------- Learn ---------- -->
@@ -168,5 +195,6 @@
 <script src="app.js"></script>
 <script src="learn.js"></script>
 <script src="brands.js"></script>
+<script src="intro.js"></script>
 </body>
 </html>

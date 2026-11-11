@@ -8,6 +8,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const BASE = `http://localhost:8766/${path.basename(path.resolve(__dirname, '..'))}/`;
+const APP = BASE + '?intro=0';   // skip the launch show: this test is about the directory
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json' };
 const server = http.createServer((req, res) => {
   let p = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
@@ -33,7 +34,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   const rows = () => page.$$eval('#brand-list .brand-row', (a) => a.length);
   const count = () => page.textContent('#brand-count');
 
-  await page.goto(BASE + '#brands', { waitUntil: 'networkidle' });
+  await page.goto(APP + '#brands', { waitUntil: 'networkidle' });
   await page.waitForSelector('#brand-list .brand-row');
   check((await count()).startsWith(`${strict.length} of 30 brands pass Strict`), `Strict count is ${strict.length}: "${await count()}"`);
   check(await rows() === strict.length, `browsing Strict lists ${strict.length} brands (got ${await rows()})`);
@@ -74,12 +75,12 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.waitForSelector('[data-screen=brands]:not([hidden])');
   check(true, 'Back returns to the list');
   await page.click('.mode-btn[data-mode=strict]');
-  await page.goto(BASE + '#brand/tarte');
+  await page.goto(APP + '#brand/tarte');
   await page.waitForSelector('#brand-page .facts');
   check(/Kosé, tests on animals/.test(await page.textContent('#brand-page')), 'Tarte under Strict: fails over its parent, Kosé (opened by direct link)');
 
   // "All brands" goes back in history, focus lands on the Brands heading, the phone's Back doesn't reopen the brand
-  await page.goto(BASE + '#home', { waitUntil: 'networkidle' });   // fresh history: home, list, brand
+  await page.goto(APP + '#home', { waitUntil: 'networkidle' });   // fresh history: home, list, brand
   await page.click('.tab[href="#brands"] >> visible=true');
   await page.waitForSelector('#brand-list .brand-row');
   await page.click('a[href="#brand/glossier"]');
@@ -93,15 +94,15 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check((await page.evaluate(() => location.hash)) === '#home', 'Back after "All brands" goes to Home, not the brand page again');
 
   // A broken or unknown brand link says so
-  await page.goto(BASE + '#brand/%E0');
+  await page.goto(APP + '#brand/%E0');
   await page.waitForTimeout(800);
   check(/Brand not found/.test(await page.textContent('#brand-page')), 'a malformed brand link shows "Brand not found"');
-  await page.goto(BASE + '#brand/no-such-brand');
+  await page.goto(APP + '#brand/no-such-brand');
   await page.waitForTimeout(800);
   check(/Brand not found/.test(await page.textContent('#brand-page')), 'an unknown brand id shows "Brand not found"');
 
   // Offline: after the worker installs, the list still loads with no network
-  await page.goto(BASE + '#brands', { waitUntil: 'networkidle' });
+  await page.goto(APP + '#brands', { waitUntil: 'networkidle' });
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForTimeout(1500);
   await ctx.setOffline(true);

@@ -84,6 +84,20 @@ me**.
 - **Learn.** Cruelty-free vs vegan, PETA vs Leaping Bunny, parent
   companies, China today. Done when every answer links a primary source.
 
+- **Launch show** (added 2026-11-11). A short stage reveal for the bunny,
+  in the style of a game's character reveal: a gate ("Enter with sound" /
+  "Enter quietly"), an empty stage under a spotlight, close-ups (the
+  lipstick twisting up, ears in silhouette against a bright door, the paws,
+  the face), one flash, the hero pose with hearts and the name card, then
+  the bunny lands on Home's logo. Pink after dark; music made in code.
+  Every launch; Skip and a tap skip it; `?intro=0` skips, `?intro=1`
+  forces; never on a link to one brand. Profile: "Play the opening when
+  the app starts" switch and "Replay the opening". Not in this version: a
+  shorter cut for later launches, rendered video, voice-over, haptics.
+  - Done when: the gate shows on every launch, both buttons play the show
+    and land on a working Home in under 7 s, Skip works at any moment, and
+    `?intro=0` skips it.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
@@ -140,6 +154,11 @@ only if it can be shown to work across skin tones.
       library for iPhone, which has no built-in barcode reader)
 - [ ] Saved list on the phone
 
+### Launch show (added 2026-11-11, between phases 3 and 4)
+- [x] New bunny logo (sitting, hugging a lipstick, hearts) and icons
+- [x] The gate, the shots, the music, skip, the landing on Home's logo
+- [x] Profile switch and replay
+
 ## Open questions (TO FILL)
 
 - The founder's name (stays out of the repo until Jose fills it in).
@@ -147,6 +166,12 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-11 (Jose): a launch show, built now, styled on a game's
+  character reveal (the video he sent) and his other apps' intros. The new
+  logo is our own redraw of his bunny picture (sitting, hugging a
+  lipstick, hearts). Pink after dark, not the video's purple. Full show on
+  every launch. A tap first, then the show with sound. Founder to see the
+  logo and the show.
 - 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
   quiz; $0 asset budget; soft luxury look; Fraunces headings.
 - 2026-11-11 (Jose): default strictness is Strict. Brand rechecks run as a
