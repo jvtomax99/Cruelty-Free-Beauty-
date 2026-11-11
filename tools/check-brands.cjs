@@ -83,6 +83,21 @@ function checkBrand(b, seen) {
       if (!LINK_TYPES.includes(w.linkType)) err(id, `whereToBuy ${i + 1} linkType must be plain or affiliate`);
     });
   }
+  const STEPS = ['foundation', 'concealer', 'blush', 'bronzer', 'lip'];
+  if (b.sells !== null && b.sells !== undefined) {
+    if (typeof b.sells !== 'object') err(id, 'sells must be an object or null');
+    else {
+      for (const k of STEPS) if (typeof b.sells[k] !== 'boolean') err(id, `sells.${k} must be true or false`);
+      const s = b.sells.source;
+      if (!s || !isUrl(s.url) || !isDate(s.checked)) err(id, 'sells has no source with an https link and checked date');
+      else if (ageDays(s.checked) > MAX_AGE_DAYS) warn(id, `sells check due (last checked ${s.checked})`);
+    }
+  }
+  if (b.shadeFinder !== null && b.shadeFinder !== undefined) {
+    const f = b.shadeFinder;
+    if (!f || !isUrl(f.url) || !f.label || !isDate(f.checked)) err(id, 'shadeFinder needs an https url, a label and a checked date');
+    else if (ageDays(f.checked) > MAX_AGE_DAYS) warn(id, `shadeFinder check due (last checked ${f.checked})`);
+  }
   if (!REVIEW.includes(b.review)) err(id, `review "${b.review}" is not one of ${REVIEW.join(', ')}`);
   // Brand rule 3: a certifier's status must link that certifier's own site.
   const own = { peta: /^https:\/\/(crueltyfree\.)?peta\.org\//, leapingBunny: /^https:\/\/(www\.)?leapingbunny\.org\// };
@@ -100,7 +115,7 @@ async function checkLinks(brands) {
   const links = new Map(); // url -> brand ids
   for (const b of brands) {
     if (!b || typeof b !== 'object') continue;
-    const urls = [...Object.keys(CLAIMS).map((k) => b[k] && b[k].url), b.priceSource && b.priceSource.url, ...(b.whereToBuy || []).map((w) => w && w.url)];
+    const urls = [...Object.keys(CLAIMS).map((k) => b[k] && b[k].url), b.priceSource && b.priceSource.url, b.shadeFinder && b.shadeFinder.url, b.sells && b.sells.source && b.sells.source.url, ...(b.whereToBuy || []).map((w) => w && w.url)];
     for (const u of urls) if (isUrl(u)) links.set(u, [...(links.get(u) || []), b.id]);
   }
   for (const [url, ids] of links) {
