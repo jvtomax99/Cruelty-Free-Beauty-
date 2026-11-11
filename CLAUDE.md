@@ -34,8 +34,8 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 - **Brand sites:** read them with curl or Playwright from Bash (subagents'
   WebFetch skips the proxy and fails). Verify every quote before saving.
 - **Rule docs:** `docs/design-rules.md`, `docs/assets.md`,
-  `docs/cleanup-audit.md` and `docs/refactor.md`. `docs/CLEANUP.md` does not
-  exist yet. Assets are listed in `CREDITS.md`. Budget: $0 (free only).
+  `docs/cleanup-audit.md` and `docs/refactor.md`. Cleanup list:
+  `docs/CLEANUP.md` (last audit 2026-11-11). Assets are listed in `CREDITS.md`. Budget: $0 (free only).
 - **Site check.** Every pull request runs `.github/site-check.cjs` ("Site
   check": missing files, links starting with "/", script errors at phone and
   desktop width). It must be green before asking Jose to push. Run it with
