@@ -9,6 +9,15 @@
 // check that is due (over 90 days old). The app shows "check due" for those.
 
 const fs = require('fs');
+
+// Node's fetch ignores HTTPS_PROXY unless NODE_USE_ENV_PROXY is set (cloud
+// sessions reach the web only through a proxy). Re-run once with it on.
+if ((process.env.HTTPS_PROXY || process.env.https_proxy) && !process.env.NODE_USE_ENV_PROXY) {
+  const r = require('child_process').spawnSync(process.execPath, ['--no-warnings', ...process.argv.slice(1)], {
+    stdio: 'inherit', env: { ...process.env, NODE_USE_ENV_PROXY: '1' },
+  });
+  process.exit(r.status === null ? 1 : r.status);
+}
 const path = require('path');
 
 const FILE = process.env.BRANDS_FILE || path.join(__dirname, '..', 'data', 'brands.json');
@@ -59,6 +68,8 @@ function checkBrand(b, seen) {
   if (!VEGAN.includes(b.vegan)) err(id, `vegan "${b.vegan}" is not one of ${VEGAN.join(', ')}`);
   if (!PRICE.includes(b.price)) err(id, `price "${b.price}" is not one of $, $$, $$$ or null`);
   if (b.price === null) warn(id, 'price not filled in');
+  else if (!b.priceSource || !isUrl(b.priceSource.url) || !isDate(b.priceSource.checked)) err(id, 'price has no priceSource with an https link and checked date');
+  else if (ageDays(b.priceSource.checked) > MAX_AGE_DAYS) warn(id, `price check due (last checked ${b.priceSource.checked})`);
   if (!Array.isArray(b.productTypes)) err(id, 'productTypes must be a list');
   else if (!b.productTypes.length) warn(id, 'productTypes not filled in');
   if (!Array.isArray(b.whereToBuy)) err(id, 'whereToBuy must be a list');

@@ -37,7 +37,13 @@
    "vegan": "all",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.elfcosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -72,10 +78,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.milanicosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.milanicosmetics.com/",
+    "note": "Median $12.99 across 111 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "colourpop",
@@ -109,10 +133,27 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://colourpop.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://colourpop.com/",
+    "note": "Median $10.00 across 163 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "fenty-beauty",
@@ -146,10 +187,27 @@
     "checked": "2026-11-11"
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$$",
+   "productTypes": [
+    "lips",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://fentybeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://fentybeauty.com/",
+    "note": "Median $48.00 across 98 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "rare-beauty",
@@ -183,10 +241,28 @@
     "checked": null
    },
    "vegan": "all",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.rarebeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.rarebeauty.com/",
+    "note": "Median $23.00 across 76 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "glossier",
@@ -220,10 +296,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.glossier.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.glossier.com/",
+    "note": "Median $24.00 across 46 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "tarte",
@@ -257,10 +351,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://tartecosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://tartecosmetics.com/",
+    "note": "Median $26.00 across 144 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "too-faced",
@@ -296,7 +408,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.toofaced.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -333,7 +451,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.urbandecay.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -369,10 +493,27 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://kyliecosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://kyliecosmetics.com/",
+    "note": "Median $22.50 across 58 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "morphe",
@@ -406,10 +547,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://morphe.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://morphe.com/",
+    "note": "Median $13.00 across 85 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "wet-n-wild",
@@ -443,10 +602,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.wetnwildbeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.wetnwildbeauty.com/",
+    "note": "Median $5.99 across 240 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "physicians-formula",
@@ -480,10 +657,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.physiciansformula.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.physiciansformula.com/",
+    "note": "Median $14.49 across 188 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "pacifica",
@@ -517,10 +712,27 @@
     "checked": null
    },
    "vegan": "all",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.pacificabeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.pacificabeauty.com/",
+    "note": "Median $14.00 across 149 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "ilia",
@@ -554,10 +766,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://iliabeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://iliabeauty.com/",
+    "note": "Median $37.00 across 50 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "kosas",
@@ -630,7 +860,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.charlottetilbury.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -665,10 +901,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://hudabeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://hudabeauty.com/",
+    "note": "Median $25.00 across 65 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "anastasia-beverly-hills",
