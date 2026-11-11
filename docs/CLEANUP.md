@@ -8,17 +8,17 @@ packages, so knip and depcheck had nothing to check; a helper scanned for
 unused CSS, unused code and abandoned files, and each item below was
 confirmed with grep.
 
-1. **Maskable icon not saved for offline.** `sw.js` PRECACHE lists every
+1. **DONE 2026-11-11: Maskable icon not saved for offline.** `sw.js` PRECACHE lists every
    icon except `assets/icons/icon-maskable-512.png`, which
    `manifest.webmanifest` uses. Fixing it means an installed app always has
    its Android icon, even offline. Add one line and bump `CACHE_VERSION`.
    Risk: low.
-2. **Lookup script may not reach PETA through the proxy.**
+2. **DONE 2026-11-11: Lookup script may not reach PETA through the proxy.**
    `tools/check-brands.cjs` restarts itself with `NODE_USE_ENV_PROXY=1` so
    Node's fetch uses the proxy; `tools/lookup-certifiers.cjs` does not. It
    works today only because PETA's site resolves without the proxy. Copying
    the same 8 lines protects the monthly recheck. Risk: low.
-3. **ARCHITECTURE.md says the brand list works offline.** `data/brands.json`
+3. **DONE 2026-11-11: ARCHITECTURE.md says the brand list works offline.** `data/brands.json`
    is precached, but no screen reads it until phase 3. Reword to "will work
    offline once the Brands screen reads it" (or fix in phase 3). Risk: low.
 4. **Unused design tokens.** `app.css` defines `--nude`, `--fs-cap` and
