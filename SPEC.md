@@ -81,6 +81,9 @@ me**.
   bronzer, lip) of product lines from brands that pass the user's
   strictness setting, each with why it fits and a link to that brand's own
   shade finder. Answers stay on the phone.
+  (2026-11-11, Jose: the routine suggests brands per step, not named
+  products; we hold no sourced product data. "Why it fits" uses strictness,
+  budget, vegan and what the brand sells.)
 - **Learn.** Cruelty-free vs vegan, PETA vs Leaping Bunny, parent
   companies, China today. Done when every answer links a primary source.
 
