@@ -37,7 +37,9 @@ me**.
    - *Certified:* listed by PETA or certified by Leaping Bunny.
    - *Strict* (the founder's original rule): certified, parent company does
      not test, and not sold in mainland China stores.
-   - Default: TO FILL (recommended: Strict, the founder's mission).
+   - Default: Strict (decided 2026-11-11).
+   - Under Strict, an "unknown" parent company or China field shows "not
+     confirmed for Strict" (gray): not a pass, not a fail.
 5. China: Leaping Bunny's FAQ says China's rules now make it possible, in
    specific cases, to sell there without animal testing and stay certified
    (its China Qualification Program). Trade press dates the change to May 1,
@@ -87,7 +89,8 @@ me**.
 - Brand-change alerts.
 - An app-store app.
 - Skincare, hair and household products.
-- Paid or affiliate links (TO FILL: ever? If yes, always disclosed).
+- Paid or affiliate links (undecided; the data has a link-type field so
+  they can be added later, always disclosed).
 
 ## Later
 
@@ -123,12 +126,18 @@ only if it can be shown to work across skin tones.
 
 ## Open questions (TO FILL)
 
-- The founder's name, and who will recheck brands every 90 days.
-- Default strictness.
+- The founder's name (stays out of the repo until Jose fills it in).
 - 1 to 3 websites whose look the founder likes (for DESIGN.md).
 
 ## Decided
 
 - 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
   quiz; $0 asset budget; soft luxury look; Fraunces headings.
+- 2026-11-11 (Jose): default strictness is Strict. Brand rechecks run as a
+  monthly scheduled Claude task that opens a pull request for Jose to
+  approve. Affiliate links undecided; the data leaves room for them.
+  Brand list: 24 likely certified plus 6 popular brands that may fail
+  (Maybelline, L'Oréal Paris, MAC, Estée Lauder, Clinique, Benefit). Each
+  claim in a record has its own source and date; the verdict is computed
+  by the app, never stored.
 - Paid or affiliate links: ever?
