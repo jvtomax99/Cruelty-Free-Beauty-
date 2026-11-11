@@ -858,7 +858,7 @@
     "checked": "2026-11-11"
    },
    "vegan": "unknown",
-   "price": null,
+   "price": "$$$",
    "productTypes": [],
    "whereToBuy": [
     {
@@ -867,7 +867,12 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.charlottetilbury.com/us",
+    "note": "Median $83.70 across 169 prices shown on the brand's US home page (gift sets included; single products seen at about $25 to $50). Over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "huda-beauty",
@@ -956,10 +961,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.anastasiabeverlyhills.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.anastasiabeverlyhills.com/",
+    "note": "Median $25.00 across 113 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "juvias-place",
@@ -1032,10 +1055,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.revolutionbeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.revolutionbeauty.com/",
+    "note": "Median £6.00 across 184 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$. Prices on this site are in pounds (UK site).",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "thrive-causemetics",
@@ -1069,10 +1110,28 @@
     "checked": null
    },
    "vegan": "all",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://thrivecausemetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://thrivecausemetics.com/",
+    "note": "Median $26.00 across 72 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "hourglass",
@@ -1106,10 +1165,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.hourglasscosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.hourglasscosmetics.com/",
+    "note": "Median $39.00 across 89 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "nyx",
@@ -1145,7 +1222,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.nyxcosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -1182,7 +1265,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Brand site (sells through other stores)",
+     "url": "https://www.maybelline.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -1220,7 +1309,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Brand site (sells through other stores)",
+     "url": "https://www.lorealparisusa.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -1257,10 +1352,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.maccosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.maccosmetics.com/",
+    "note": "Median $27.00 across 207 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "estee-lauder",
@@ -1297,7 +1410,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.esteelauder.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -1332,10 +1451,28 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": null,
-   "productTypes": [],
-   "whereToBuy": [],
-   "review": "needs-review"
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.clinique.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.clinique.com/",
+    "note": "Median $32.00 across 218 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
   },
   {
    "id": "benefit",
@@ -1371,7 +1508,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.benefitcosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   }
  ]
