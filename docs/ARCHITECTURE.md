@@ -28,7 +28,8 @@ relative.
 
 Nothing leaves the phone. Settings and, later, quiz answers live in
 localStorage under `cfb-` keys. Brand data is `data/brands.json`, precached by
-the worker, so the list works offline. Research flow: `lookup-certifiers`
+the worker so the list will work offline once the Brands screen reads it
+(phase 3). Research flow: `lookup-certifiers`
 prints what the certifiers say, a person updates the JSON, `check-brands`
 confirms it.
 
