@@ -192,6 +192,7 @@ only if it can be shown to work across skin tones.
   Jose chose every open). The music has a Puerto Rican feel, "think of Bad
   Bunny": the reggaeton take, picked by ear over a plena and salsa take.
   The 5-second test clip was approved before the rest was made.
+  The founder saw the finished film and liked it (Jose, 2026-11-11).
 - 2026-11-11 (Jose): the launch show is "too simplistic". Version 2 is to
   be glamorous and close to the Star Rail reveal: real animated video
   (key art animated by a video model, Runway credits bought by Jose, so the
