@@ -29,12 +29,12 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await new Promise((r) => server.listen(8767, r));
   const browser = await chromium.launch();
   const errors = [];
-  const open = async (opts = {}) => {
+  const open = async ({ film = false, ...opts } = {}) => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block', ...opts });   // no offline worker: it would fetch past the block below
     const page = await ctx.newPage();
     page.on('pageerror', (e) => errors.push(e.message));
     // the checks below are for the drawn show, which is what plays when the film can't: so the film is blocked
-    await page.route('**/assets/video/**', (r) => r.abort());
+    if (!film) await page.route('**/assets/video/**', (r) => r.abort());
     return [ctx, page];
   };
   const showing = (p) => p.evaluate(() => document.documentElement.classList.contains('intro-on'));
@@ -118,12 +118,12 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await ctx5.close();
 
   /* ---------- the film (version 2) ---------- */
-  const openFilm = async (opts = {}) => { const [c, p] = await open({ serviceWorkers: 'allow', ...opts }); await p.unroute('**/assets/video/**'); return [c, p]; };
+  const openFilm = (opts = {}) => open({ film: true, serviceWorkers: 'allow', ...opts });
   const film = (p) => p.evaluate(() => window.CFBIntro.film());
   const filmReady = (p) => p.waitForFunction(() => window.CFBIntro && window.CFBIntro.film().ready, null, { timeout: 15000 }).then(() => true, () => false);
   const countCtx = (p) => p.addInitScript(() => { const A = window.AudioContext; window.__ctxs = 0; window.AudioContext = function () { window.__ctxs++; return new A(); }; });
 
-  // first open: the whole film with sound, then Home; the next open: only the ending, and quiet stays quiet
+  // every open: the whole film with sound, then Home
   const [fc, fp] = await openFilm();
   await countCtx(fp);
   await fp.goto(BASE);
@@ -134,19 +134,21 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(f.on && !f.muted && !f.paused && f.time > 0.5 && f.time < 3, `film: "Enter with sound" plays it from the start, with sound (at ${f.time.toFixed(1)} s)`);
   check(await fp.evaluate(() => getComputedStyle(document.querySelector('.in-film')).opacity) === '1', 'film: it is on screen');
   check(await fp.evaluate(() => document.activeElement.className) === 'in-skip', 'film: focus is on Skip');
-  check(await gone(fp, 24000), `film: the whole film plays and lands on Home (${((Date.now() - f0) / 1000).toFixed(1)} s)`);
-  const fr = await fp.evaluate(() => ({ inert: document.querySelector('.app').inert, hit: !!document.elementFromPoint(innerWidth / 2, innerHeight / 2).closest('.app'), seen: localStorage.getItem('cfb-intro-seen'), focus: document.activeElement.id }));
+  await fp.waitForFunction(() => window.CFBIntro.film().time > 16.6, null, { timeout: 20000 }).catch(() => {});
+  const cardUp = await fp.evaluate(() => { const c = document.querySelector('.in-card'), n = document.querySelector('.in-name'); return +getComputedStyle(c).opacity === 1 && +getComputedStyle(n).opacity === 1; });
+  check(cardUp, 'film: the name card is up over the last shots');
+  check(await gone(fp, 8000), `film: the whole film plays and lands on Home (${((Date.now() - f0) / 1000).toFixed(1)} s)`);
+  const fr = await fp.evaluate(() => ({ inert: document.querySelector('.app').inert, hit: !!document.elementFromPoint(innerWidth / 2, innerHeight / 2).closest('.app'), focus: document.activeElement.id }));
   check(!fr.inert && fr.hit && fr.focus === 'hello-line', 'film: Home takes taps afterwards and focus is on its heading');
-  check(fr.seen === '1', 'film: the first full play is remembered');
+  // the next open plays the whole film again (Jose, 2026-11-11), and quiet stays quiet
   await fp.reload();
-  check(await filmReady(fp), 'film, later open: ready at the ending');
-  f0 = Date.now();
-  await fp.click('[data-sound=off]'); await fp.waitForTimeout(600);
+  check(await filmReady(fp), 'film, next open: ready again');
+  await fp.click('[data-sound=off]'); await fp.waitForTimeout(900);
   f = await film(fp);
-  check(f.on && f.muted && f.time >= 14, `film, later open: starts at the ending (${f.time.toFixed(1)} s), muted for "Enter quietly"`);
-  check(await gone(fp, 9000), `film, later open: lands on Home (${((Date.now() - f0) / 1000).toFixed(1)} s)`);
+  check(f.on && f.muted && f.time < 3, `film, next open: plays from the start again (${f.time.toFixed(1)} s), muted for "Enter quietly"`);
+  await fp.click('.in-skip'); await gone(fp, 1500);
   check(await fp.evaluate(() => window.__ctxs) === 0, 'film: "Enter quietly" makes no sound object');
-  // Replay always plays the whole film; Skip leaves it at once
+  // Replay plays the whole film; Skip leaves it at once
   await fp.goto(BASE + '?intro=0#profile');
   await fp.click('#intro-replay');
   await filmReady(fp);
@@ -163,7 +165,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   const [sc, sp] = await openFilm();
   await sp.goto(BASE); await filmReady(sp);
   await sp.click('[data-sound=off]'); await sp.waitForTimeout(800);
-  await sp.evaluate(() => { const v = document.querySelector('.in-film'); v.pause(); v.dispatchEvent(new Event('waiting')); });
+  await sp.evaluate(() => document.querySelector('.in-film').pause());
   check(await gone(sp, 3500), 'film: stuck for 1.5 s mid-play, the app opens anyway');
   await sc.close();
 
@@ -196,11 +198,15 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await wp.click('.in-skip');
   check(await gone(wp, 1500), '1440 px: Skip lands on Home');
   // offline worker: once saved, the film is served in pieces (phones need that) and survives going offline
-  const saved = await wp.waitForFunction(async () => { const c = await caches.open('cfb-media-v1'); return (await c.keys()).length > 0 && !!navigator.serviceWorker.controller; }, null, { timeout: 15000 }).then(() => true, () => false);
+  let saved = false;
+  for (let i = 0; i < 30 && !saved; i++) {
+    saved = await wp.evaluate(async () => (await (await caches.open('cfb-media-v1')).keys()).length > 0 && !!navigator.serviceWorker.controller);
+    if (!saved) await wp.waitForTimeout(500);
+  }
   check(saved, 'offline worker: the film is saved after the first play');
   await wc.setOffline(true);
   const piece = await wp.evaluate(async () => { const r = await fetch('assets/video/launch.mp4', { headers: { Range: 'bytes=100-299' } }); return { status: r.status, len: (await r.arrayBuffer()).byteLength, range: r.headers.get('Content-Range') }; }).catch((e) => ({ status: 0, len: 0, range: String(e) }));
-  check(piece.status === 206 && piece.len === 200 && /^bytes 100-299\//.test(piece.range || ''), `offline worker: serves a piece of the film with no network (${piece.status}, ${piece.len} bytes)`);
+  check(piece.status === 206 && piece.len === 200 && /^bytes 100-299\//.test(piece.range || ''), `offline worker: serves a piece of the film with no network (${piece.status}, ${piece.len} bytes${piece.status ? '' : ', ' + piece.range})`);
   await wc.close();
 
   check(errors.length === 0, `no script errors${errors.length ? ': ' + errors.join('; ') : ''}`);

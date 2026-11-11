@@ -187,20 +187,16 @@
      takes over for the landing on Home. The drawn show plays alone when the film is not loaded yet, on reduced
      motion, with data saver on, or if the film fails or stalls. */
   const vid = el.querySelector(".in-film");
-  const FILM = { src: "assets/video/launch.mp4", card: 15.5, short: 14, tail: 1.15, hold: 0.4 };
-  let filmOn = false, filmFull = false, stallTimer = 0;
+  const FILM = { src: "assets/video/launch.mp4", card: 15.5, tail: 1.15, hold: 0.4 };
+  let filmOn = false, filmAt = -1, filmMoved = 0;
   const saver = () => { const c = navigator.connection; return !!(c && c.saveData); };
-  const filmSeen = () => !!(store && store.get("intro-seen", "") === "1");
-  function filmLoad(full) {                      // called when the gate opens, so the film buffers while it shows
+  function filmLoad() {                          // called when the gate opens, so the film buffers while it shows
     if (!vid) return;
-    vid.pause(); vid.classList.remove("is-on"); filmOn = false;
+    vid.pause(); vid.classList.remove("is-on"); filmOn = false; el.classList.remove("is-film", "is-filmcard");
     if (reduce() || saver()) return;
-    filmFull = full;
     try {
       if (!vid.getAttribute("src")) { vid.preload = "auto"; vid.src = FILM.src; vid.load(); }
-      const at = full ? 0 : FILM.short;
-      if (vid.readyState > 0) vid.currentTime = at;
-      else vid.addEventListener("loadedmetadata", () => { if (state === "gate") vid.currentTime = filmFull ? 0 : FILM.short; }, { once: true });
+      else if (vid.readyState > 0) vid.currentTime = 0;        // a replay: back to the first frame
     } catch (_) {}
   }
   const filmReady = () => !!vid && !vid.error && !!vid.getAttribute("src") && vid.readyState >= 3 && !vid.seeking && isFinite(vid.duration);
@@ -209,26 +205,24 @@
     if (!filmReady() || reduce() || saver()) return false;
     let p;
     try { vid.muted = !withSound; vid.volume = 1; p = vid.play(); } catch (_) { return false; }
-    filmOn = true; vid.classList.add("is-on");
+    filmOn = true; filmAt = -1; filmMoved = performance.now(); vid.classList.add("is-on");
+    el.classList.add("is-film", "is-filmcard");               // the drawn scene hides under the film; the card sits on the film
     if (p && p.catch) p.catch(() => { if (filmOn) filmHandover(true); });
-    if (filmFull && store) store.set("intro-seen", "1");
+    // ask the offline worker to keep the film (on a first visit it was fetched before the worker was in charge)
+    try { if (navigator.serviceWorker) navigator.serviceWorker.ready.then(r => { if (r.active) r.active.postMessage("save-film"); }).catch(() => {}); } catch (_) {}
     return true;
   }
   /* the film is over, skipped or stuck: the drawn bunny, already in its hero pose underneath, flies to Home */
   function filmHandover(fast) {
     if (!filmOn) return;
-    filmOn = false; clearTimeout(stallTimer); stallTimer = 0;
-    vid.classList.remove("is-on");
+    filmOn = false;
+    vid.classList.remove("is-on"); el.classList.remove("is-film");
     if (fast) { vid.muted = true; vid.pause(); }               // a natural end lets the last chord ring out
     target = logoTarget(); paused = false;
     const from = fast ? T.exit : T.exit - FILM.hold;
     t0 = performance.now() - from * 1000; now = from; skipAt = fast ? from : null;
   }
   if (vid) {
-    const stuck = () => { if (filmOn && !stallTimer) stallTimer = setTimeout(() => { stallTimer = 0; if (filmOn) filmHandover(true); }, 1500); };
-    const moving = () => { clearTimeout(stallTimer); stallTimer = 0; };
-    vid.addEventListener("waiting", stuck); vid.addEventListener("stalled", stuck);
-    vid.addEventListener("playing", moving); vid.addEventListener("timeupdate", moving);
     vid.addEventListener("error", () => filmHandover(true));
     vid.addEventListener("ended", () => filmHandover(false));
   }
@@ -367,7 +361,13 @@
   function loop() {
     raf = 0;
     if (state === "idle") return;
-    if (state === "show" && filmOn && vid.currentTime >= vid.duration - FILM.tail) filmHandover(false);
+    if (state === "show" && filmOn) {
+      // the film's own clock: near its end the drawn show takes over; frozen for 1.5 s (a dead connection), the same, fast
+      const ft = vid.currentTime, wall = performance.now();
+      if (ft !== filmAt) { filmAt = ft; filmMoved = wall; }
+      if (ft >= vid.duration - FILM.tail) filmHandover(false);
+      else if (wall - filmMoved > 1500) filmHandover(true);
+    }
     if (state === "show" && !paused) {
       now = (performance.now() - t0) / 1000;
       if (skipAt !== null) now = T.exit + (now - skipAt) * 1.6;    // a skip runs the landing a little faster
@@ -391,7 +391,7 @@
     gate.classList.remove("is-gone"); skipBtn.hidden = true;
     if (app) app.inert = true;
     if (themeMeta) themeMeta.content = "#1C0F13";
-    filmLoad(replayed || !filmSeen());
+    filmLoad();
     resize(); kick();
     const b = gate.querySelector("[data-sound=on]"); if (b) b.focus({ preventScroll: true });
   }
@@ -437,7 +437,7 @@
     if (state === "idle") return;
     clearTimers();
     state = "idle"; paused = false; still = false;
-    if (vid) { if (filmOn || !natural) { vid.muted = true; vid.pause(); } filmOn = false; clearTimeout(stallTimer); stallTimer = 0; vid.classList.remove("is-on"); }
+    if (vid) { if (filmOn || !natural) { vid.muted = true; vid.pause(); } filmOn = false; vid.classList.remove("is-on"); el.classList.remove("is-film", "is-filmcard"); }
     if (sound && !natural) sound.fade();                   // at the natural end the landing chime rings out on its own
     sound = null;
     if (pendingCtx) { pendingCtx.close().catch(() => {}); pendingCtx = null; }
@@ -547,7 +547,7 @@
   /* tests and the Profile replay */
   window.CFBIntro = {
     replay: () => { if (state === "idle") open(true); },
-    film: () => ({ on: filmOn, ready: filmReady(), full: filmFull, time: vid ? vid.currentTime : 0, muted: vid ? vid.muted : true, paused: vid ? vid.paused : true }),
+    film: () => ({ on: filmOn, ready: filmReady(), time: vid ? vid.currentTime : 0, muted: vid ? vid.muted : true, paused: vid ? vid.paused : true }),
     seek: s => ready.then(() => { if (state === "idle") open(); state = "show"; paused = true; gate.classList.add("is-gone"); now = s; if (s > T.exit) target = target || logoTarget(); draw(); }),
     T
   };

@@ -356,6 +356,8 @@ html.intro-on .intro {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
 }
+.in-scene, .in-fx { transition: opacity .28s ease; }
+.intro.is-film .in-scene, .intro.is-film .in-fx { opacity: 0; }
 .in-flash { position: absolute; inset: 0; opacity: 0; pointer-events: none; background: radial-gradient(circle at 50% 45%, var(--paper), var(--spot) 55%, var(--glow)); }
 .in-bars i { position: absolute; left: 0; right: 0; height: min(6vh, 56px); background: var(--night); transform: scaleY(0); }
 .in-bars i:first-child { top: 0; transform-origin: top; }
@@ -373,6 +375,8 @@ html.intro-on .intro {
 .in-slogan { margin-top: var(--sp-3); font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 450; color: var(--star); text-shadow: 0 0 18px var(--halo); }
 .in-slogan em { font-style: italic; color: var(--pink); }
 .intro.is-wide .in-card { left: 56%; right: 4%; top: 50%; bottom: auto; transform: translateY(-50%); text-align: left; }
+/* over the film the card stays centred on the film's column, as on a phone */
+.intro.is-wide.is-filmcard .in-card { left: 0; right: 0; top: auto; bottom: max(13vh, calc(env(safe-area-inset-bottom) + 72px)); transform: none; text-align: center; }
 
 .in-gate {
   position: absolute; left: 0; right: 0; bottom: max(11vh, calc(env(safe-area-inset-bottom) + 40px));

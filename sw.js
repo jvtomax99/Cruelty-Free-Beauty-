@@ -68,6 +68,11 @@ function fill(href) {
     .then(() => { filling = null; });
   return filling;
 }
+self.addEventListener("message", e => {
+  if (e.data !== "save-film") return;
+  const href = location.origin + SCOPE + FILM;
+  e.waitUntil(caches.open(MEDIA).then(c => c.match(href)).then(hit => (hit ? null : fill(href))));
+});
 async function film(req, url) {
   const href = url.origin + url.pathname;
   const cache = await caches.open(MEDIA);
