@@ -12,8 +12,8 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 ## This project: how the general rules apply here
 
 - **Plan and phases:** `SPEC.md` ("Phases"). Phase 1 (look and shell) done
-  2026-11-10, phase 2 (brand data) and phase 3 (directory) 2026-11-11. Next: phase 4,
-  beauty profile. GitHub Pages: ask Jose before turning it on.
+  2026-11-10, phases 2 to 4 (brand data, directory, profile) 2026-11-11. Next: phase
+  5, scanner and saved list. GitHub Pages: ask Jose before turning it on.
 - **Real user:** the founder (TO FILL). Remind Jose to check plans, brand
   rules and any words that speak for them with the founder.
 - **Hosting:** GitHub Pages from `main`, root folder, at

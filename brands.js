@@ -169,17 +169,22 @@
   $("brand-q").addEventListener("input", (e) => { state.q = e.target.value.trim(); renderList(); });
   $("brand-more").addEventListener("click", () => { state.showAll = !state.showAll; renderList(); });
 
-  fetch("data/brands.json")
+  // Shared with profile.js: the same verdict, the current strictness, and the data once loaded.
+  window.CFB.verdict = verdict;
+  window.CFB.mode = () => state.mode;
+  window.CFB.brands = fetch("data/brands.json")
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((d) => {
       brands = d.brands;
       renderList();
       if (location.hash.startsWith("#brand/")) window.CFB.show();   // a brand link opened directly
+      return brands;
     })
     .catch(() => {
       const msg = "Couldn't load the brand list. Check your connection and reopen the app.";
       $("brand-count").textContent = msg;
       $("brand-page").innerHTML = `<h1 id="brand-h" tabindex="-1">Brand</h1><p class="lede">${msg}</p>`;
+      return [];
     });
 
   // "All brands" goes back in history when we came from the list, so the phone's

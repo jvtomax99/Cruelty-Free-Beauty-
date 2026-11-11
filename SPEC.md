@@ -136,7 +136,7 @@ only if it can be shown to work across skin tones.
       come from their sites but can't be opened from the cloud environment)
 
 ### Phase 4: Beauty profile
-- [ ] Quiz, profile, suggested routine
+- [x] Quiz, profile, suggested routine (2026-11-11; brands per step)
 
 ### Phase 5: Scanner and saved list
 - [ ] Barcode scan (Open Beauty Facts for barcode to brand; a code
