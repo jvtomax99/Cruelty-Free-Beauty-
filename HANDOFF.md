@@ -30,7 +30,11 @@ gold tiara. Jose first asked for it tilted to one side, then (same
 evening) said to drop the side tiara: one small pearl tiara, centred and
 straight. Frame 8 is now the rendered hero holding its lipstick on plain
 ivory with "Welcome" under it (Jose picked this over a redrawn flat
-logo). Open: the film then lands on Home's flat logo, which has no cape
+logo). The whole storyboard was then repainted (version 4) with that
+rendered bunny as the reference for every hero frame; the stage shot is
+white and gold. The frames live only in the session scratchpad and on
+Meshy (image-to-image tasks of 2026-11-11); repaint them at 2K on Runway
+as key art before animating, using the Welcome bunny as the reference. Open: the film then lands on Home's flat logo, which has no cape
 or tiara, so either the app logo is redrawn to match or the landing is
 replaced by a fade. The reference for that look
 is Meshy task for "cape-a" (hero on the rock). Jose asked for the cape to
