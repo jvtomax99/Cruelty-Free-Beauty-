@@ -12,6 +12,7 @@ relative.
 | `index.html` | The shell: icon sprite, side rail (computers), the four screens (`data-screen` home, brands, profile, learn), tab bar (phones) |
 | `app.css` | All styles. Tokens in `:root` at the top; DESIGN.md explains them |
 | `app.js` | Screens by `#hash` (Back retraces), greeting by time of day, press feedback (`LIFTS`, `.is-pressed` held 260 ms), saved settings (`CFB.store`, localStorage inside try/catch), registers the worker |
+| `brands.js` | Brands screen and brand pages (`#brand/<id>`): loads `data/brands.json`, works out each verdict (Strict / Certified, saved as `cfb-mode`), search, filters |
 | `learn.js` | The Learn answers and their sources (`ANSWERS`, `CHECKED` date) |
 | `sw.js` | Offline worker: every file from one versioned cache, so a launch never mixes old and new files. A bumped `CACHE_VERSION` downloads the new version whole in the background; it shows a launch or two later (tested 2026-11-11). Bump it by hand in every change to a precached file |
 | `manifest.webmanifest` | Install name, colours, icons |
@@ -37,6 +38,7 @@ confirms it.
 
 - `node .github/site-check.cjs index.html` (runs on every pull request).
 - `node tools/check-brands.cjs --links` after any brand data change.
+- `node tools/test-directory.cjs`: the directory in a real browser (counts, search, filters, brand page, Back, offline).
 - Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
   a recheck pull request.
 - `node --check` on each `.js` file.

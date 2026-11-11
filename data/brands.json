@@ -823,7 +823,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://kosas.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {
@@ -1020,7 +1026,13 @@
    "vegan": "unknown",
    "price": null,
    "productTypes": [],
-   "whereToBuy": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.juviasplace.com/",
+     "linkType": "plain"
+    }
+   ],
    "review": "needs-review"
   },
   {

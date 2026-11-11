@@ -69,8 +69,9 @@ me**.
 - **Brand page.** Done when it shows both certifications, the parent
   company, China, vegan, where to buy, sources and the checked date, and
   says "unknown" plainly wherever evidence is missing.
-- **Filters.** Strictness, vegan, price (drugstore, mid, luxury), product
-  type. Done when switching to Strict hides every brand whose parent tests
+- **Filters.** Strictness, vegan, price (drugstore, mid, luxury). (Product
+  type moved to Later 2026-11-11: the data has the same types for almost
+  every brand.) Done when switching to Strict hides every brand whose parent tests
   or that sells in China, and the count updates.
 - **Where to buy.** Done when every brand has at least one buy link that
   opens. Wording is "carries this brand", never "in stock".
@@ -99,6 +100,8 @@ me**.
 
 ## Later
 
+Product-type filter, once product data tells brands apart (quiz phase).
+
 Prices for the 10 brands whose sites block automated readers (e.l.f.,
 Too Faced, Urban Decay, Kosas, Juvia's Place, NYX, Maybelline, L'Oréal
 Paris, Estée Lauder, Benefit): checked by hand, or by the founder.
@@ -125,8 +128,9 @@ only if it can be shown to work across skin tones.
       sites (done 2026-11-11; the other 10 sites block automated readers)
 
 ### Phase 3: Directory
-- [ ] Brand list, search, filters, strictness switch
-- [ ] Brand page and where to buy
+- [x] Brand list, search, filters, strictness switch (2026-11-11)
+- [x] Brand page and where to buy (2026-11-11; Kosas and Juvia's links
+      come from their sites but can't be opened from the cloud environment)
 
 ### Phase 4: Beauty profile
 - [ ] Quiz, profile, suggested routine

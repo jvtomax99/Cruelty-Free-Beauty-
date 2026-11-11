@@ -105,11 +105,31 @@
         <h1 id="brands-h" tabindex="-1">Brands</h1>
         <p>Makeup brands, each with its proof.</p>
       </div>
-      <div class="empty">
-        <img src="assets/logo.svg" alt="">
-        <h2>Brands are on the way</h2>
-        <p>We're checking each brand with PETA and Leaping Bunny before it goes on the list. They arrive in the next update.</p>
+      <div class="mode" role="group" aria-label="How strict">
+        <button type="button" class="mode-btn" data-mode="strict" aria-pressed="true">Strict</button>
+        <button type="button" class="mode-btn" data-mode="certified" aria-pressed="false">Certified</button>
       </div>
+      <p class="mode-help" id="mode-help"></p>
+      <label class="search search-field">
+        <svg aria-hidden="true"><use href="#i-search"/></svg>
+        <span class="sr-only">Search brands</span>
+        <input id="brand-q" type="search" placeholder="Search a brand" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="chips" role="group" aria-label="Filters">
+        <button type="button" class="chip" data-filter="vegan" aria-pressed="false">Vegan</button>
+        <button type="button" class="chip" data-price="$" aria-pressed="false">$ Drugstore</button>
+        <button type="button" class="chip" data-price="$$" aria-pressed="false">$$ Mid</button>
+        <button type="button" class="chip" data-price="$$$" aria-pressed="false">$$$ Luxury</button>
+      </div>
+      <p class="count" id="brand-count" aria-live="polite"></p>
+      <ul class="brand-list" id="brand-list"></ul>
+      <button type="button" class="more" id="brand-more" hidden></button>
+    </section>
+
+    <!-- ---------- One brand (#brand/<id>) ---------- -->
+    <section class="screen" data-screen="brand" aria-labelledby="brand-h" hidden>
+      <a class="back" href="#brands"><svg aria-hidden="true"><use href="#i-chev"/></svg>All brands</a>
+      <div id="brand-page"><h1 id="brand-h" tabindex="-1">Brand</h1></div>
     </section>
 
     <!-- ---------- Profile ---------- -->
@@ -147,5 +167,6 @@
 
 <script src="app.js"></script>
 <script src="learn.js"></script>
+<script src="brands.js"></script>
 </body>
 </html>

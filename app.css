@@ -202,3 +202,69 @@ main {
   .screen { animation: none; }
   .tile, .tab, .search, .learn summary, .learn summary .chev { transition: none; }
 }
+
+/* ---------- Brands: switch, search, filters, list ---------- */
+.mode { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-px); padding: 3px; background: var(--blush); border-radius: var(--r-pill); }
+.mode-btn {
+  min-height: 44px; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--rose-ink);
+  font: 600 var(--fs-call)/1 var(--font-body); cursor: pointer; transition: background-color var(--t-press) var(--ease), transform var(--t-press) var(--ease);
+}
+.mode-btn[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: var(--finish); }
+.mode-btn.is-pressed { transform: scale(.97); }
+.mode-help { margin: var(--sp-2) var(--sp-1) var(--sp-4); color: var(--ink-soft); font-size: var(--fs-foot); }
+.search-field { cursor: text; }
+.search-field input { flex: 1; min-width: 0; height: 50px; border: 0; background: transparent; color: var(--ink); font: inherit; outline: none; }
+.search-field input::placeholder { color: var(--ink-soft); }
+.search-field:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-3); }
+.chip {
+  min-height: 44px; padding: 0 var(--sp-4); border: 1px solid var(--line); border-radius: var(--r-pill);
+  background: var(--paper); color: var(--ink-soft); font: 500 var(--fs-sub)/1 var(--font-body); cursor: pointer;
+  transition: background-color var(--t-press) var(--ease), transform var(--t-press) var(--ease);
+}
+.chip[aria-pressed="true"] { background: var(--blush-2); border-color: var(--blush-2); color: var(--rose-ink); }
+.chip.is-pressed { transform: scale(.96); }
+.count { margin: var(--sp-4) var(--sp-1) var(--sp-2); color: var(--ink-soft); font-size: var(--fs-foot); }
+.brand-list { list-style: none; display: grid; gap: var(--sp-2); padding: 0; margin: 0; }
+.brand-row {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--sp-1) var(--sp-3); align-items: center;
+  padding: var(--sp-3) var(--sp-4); min-height: 60px; background: var(--paper); border: 1px solid var(--line);
+  border-radius: var(--r-lg); box-shadow: var(--finish); color: var(--ink); text-decoration: none;
+  transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
+}
+.brand-row:active, .brand-row.is-pressed { transform: scale(.985); background: var(--blush); }
+.brand-name { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; letter-spacing: var(--tr-head); }
+.brand-meta { display: flex; gap: var(--sp-1); align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.brand-why { grid-column: 1 / -1; color: var(--ink-soft); font-size: var(--fs-foot); line-height: 1.35; }
+.verdict, .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 var(--sp-2); border-radius: var(--r-pill); font-size: var(--fs-cap2); font-weight: 600; letter-spacing: var(--tr-sm); white-space: nowrap; }
+.tag { background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line); }
+.v-pass { background: var(--blush-2); color: var(--rose-ink); }
+.v-fail { background: var(--ink); color: var(--paper); }
+.v-none { background: var(--paper); color: var(--ink-soft); border: 1px dashed var(--ink-soft); }
+.none { padding: var(--sp-5) var(--sp-4); text-align: center; color: var(--ink-soft); font-size: var(--fs-sub); }
+.more {
+  display: block; width: 100%; min-height: 48px; margin-top: var(--sp-3); border: 1px solid var(--line); border-radius: var(--r-md);
+  background: transparent; color: var(--rose); font: 600 var(--fs-sub)/1 var(--font-body); cursor: pointer;
+}
+
+/* ---------- One brand ---------- */
+.back { display: inline-flex; align-items: center; gap: var(--sp-1); min-height: 44px; margin-top: var(--sp-3); color: var(--rose); font-weight: 600; text-decoration: none; }
+.back svg { width: 20px; height: 20px; transform: rotate(90deg); }
+#brand-page h1 { font-family: var(--font-display); font-size: var(--fs-large); font-weight: 550; letter-spacing: var(--tr-title); line-height: 1.1; margin: var(--sp-2) 0 var(--sp-4); }
+#brand-page .lede { color: var(--ink-soft); }
+.verdict-box { padding: var(--sp-4); border-radius: var(--r-lg); }
+.verdict-box.v-none { border-style: dashed; }
+.verdict-title { font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 600; margin-bottom: var(--sp-1); }
+.verdict-box p + p { font-size: var(--fs-sub); }
+.verdict-notes { margin-top: var(--sp-1); opacity: .9; }
+.facts { display: grid; gap: var(--sp-3); margin-top: var(--sp-4); }
+.fact { padding: var(--sp-4); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--finish); }
+.fact h2 { font-size: var(--fs-cap); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--rose-ink); }
+.fact-status { margin-top: var(--sp-1); font-size: var(--fs-head); font-weight: 600; }
+.fact-note { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-sub); }
+.src { margin-top: var(--sp-2); color: var(--ink-soft); font-size: var(--fs-foot); }
+.src a, .buy a { color: var(--rose); font-weight: 600; }
+.due { color: var(--rose-ink); font-weight: 700; }
+.buy { list-style: none; padding: 0; margin: var(--sp-2) 0 0; display: grid; gap: var(--sp-1); }
+.buy span { color: var(--ink-soft); font-size: var(--fs-sub); }
+@media (min-width: 900px) { .facts { grid-template-columns: 1fr 1fr; } }
