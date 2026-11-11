@@ -41,8 +41,8 @@ me**.
    - Strict fails a brand only on a known problem: a parent that tests, or
      sold in mainland China stores, each with a source. An unknown passes
      with a small note ("brand doesn't say where it sells"). Brands almost
-     never publish this (1 of 18 brand sites did, 2026-11-11). Founder to
-     confirm.
+     never publish this (1 of 18 brand sites did, 2026-11-11). Founder
+     approved 2026-11-11.
 5. China: Leaping Bunny's FAQ says China's rules now make it possible, in
    specific cases, to sell there without animal testing and stay certified
    (its China Qualification Program). Trade press dates the change to May 1,
@@ -81,6 +81,9 @@ me**.
   bronzer, lip) of product lines from brands that pass the user's
   strictness setting, each with why it fits and a link to that brand's own
   shade finder. Answers stay on the phone.
+  (2026-11-11, Jose: the routine suggests brands per step, not named
+  products; we hold no sourced product data. "Why it fits" uses strictness,
+  budget, vegan and what the brand sells.)
 - **Learn.** Cruelty-free vs vegan, PETA vs Leaping Bunny, parent
   companies, China today. Done when every answer links a primary source.
 
@@ -147,14 +150,14 @@ only if it can be shown to work across skin tones.
       come from their sites but can't be opened from the cloud environment)
 
 ### Phase 4: Beauty profile
-- [ ] Quiz, profile, suggested routine
+- [x] Quiz, profile, suggested routine (2026-11-11; brands per step)
 
 ### Phase 5: Scanner and saved list
 - [ ] Barcode scan (Open Beauty Facts for barcode to brand; a code
       library for iPhone, which has no built-in barcode reader)
 - [ ] Saved list on the phone
 
-### Launch show (added 2026-11-11, between phases 3 and 4)
+### Launch show (added 2026-11-11, after phase 4)
 - [x] New bunny logo (sitting, hugging a lipstick, hearts) and icons
 - [x] The gate, the shots, the music, skip, the landing on Home's logo
 - [x] Profile switch and replay
@@ -182,5 +185,7 @@ only if it can be shown to work across skin tones.
   claim in a record has its own source and date; the verdict is computed
   by the app, never stored.
 - 2026-11-11 (Jose): Strict fails only on known problems; unknowns pass
-  with a note (replaces "not confirmed for Strict"). Founder to confirm.
+  with a note (replaces "not confirmed for Strict"). Founder approved
+  2026-11-11, with the labels "Passes" / "Doesn't pass" / "Not on either
+  list".
 - Paid or affiliate links: ever?

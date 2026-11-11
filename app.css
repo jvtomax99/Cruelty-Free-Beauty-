@@ -279,6 +279,46 @@ main {
 .buy span { color: var(--ink-soft); font-size: var(--fs-sub); }
 @media (min-width: 900px) { .facts { grid-template-columns: 1fr 1fr; } }
 
+/* ---------- Profile: quiz ---------- */
+.quiz fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.quiz-progress { color: var(--ink-soft); font-size: var(--fs-foot); }
+.quiz-bar { height: 6px; margin: var(--sp-1) 0 var(--sp-4); background: var(--blush); border-radius: var(--r-pill); overflow: hidden; }
+.quiz-bar span { display: block; height: 100%; background: var(--rose); border-radius: var(--r-pill); transition: width var(--t-screen) var(--ease); }
+.quiz-q { font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 600; letter-spacing: var(--tr-head); line-height: 1.2; padding: 0; }
+.quiz-hint { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-foot); }
+.quiz-options { display: grid; gap: var(--sp-2); margin-top: var(--sp-4); }
+.quiz-opt {
+  min-height: 56px; padding: 0 var(--sp-4); text-align: left; border: 1px solid var(--line); border-radius: var(--r-lg);
+  background: var(--paper); box-shadow: var(--finish); color: var(--ink); font: 600 var(--fs-call)/1.2 var(--font-body); cursor: pointer;
+  transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
+}
+.quiz-opt[aria-pressed="true"] { background: var(--blush-2); border-color: var(--blush-2); color: var(--rose-ink); }
+.quiz-opt:active, .quiz-opt.is-pressed { transform: scale(.985); background: var(--blush); }
+.quiz-back { min-height: 44px; margin-top: var(--sp-3); padding: 0 var(--sp-2); border: 0; background: none; color: var(--rose); font: 600 var(--fs-sub)/1 var(--font-body); cursor: pointer; }
+
+/* ---------- Profile: card and routine ---------- */
+.pf-intro p:first-child { color: var(--ink-soft); font-size: var(--fs-sub); }
+.pf-start { width: 100%; min-height: 52px; margin-top: var(--sp-4); border: 0; border-radius: var(--r-md); background: var(--rose); color: var(--paper); font: 600 var(--fs-call)/1 var(--font-body); box-shadow: var(--finish); cursor: pointer; }
+.pf-private { margin-top: var(--sp-3); color: var(--ink-soft); font-size: var(--fs-foot); text-align: center; }
+.pf-card { padding: var(--sp-4); background: var(--blush); border-radius: var(--r-lg); }
+.pf-card h2, .rt-head { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); }
+.pf-sum { margin-top: var(--sp-1); font-weight: 600; color: var(--rose-ink); }
+.pf-tone { margin-top: var(--sp-2); color: var(--ink-soft); font-size: var(--fs-foot); }
+.pf-tones { display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-top: var(--sp-2); }
+.rt-head { margin-top: var(--sp-5); }
+.rt-intro { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-sub); }
+.rt-step { margin-top: var(--sp-4); padding: var(--sp-4); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--finish); }
+.rt-step h3 { font-size: var(--fs-cap); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--rose-ink); }
+.rt-tip { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-foot); }
+.rt-step ul { list-style: none; padding: 0; margin: var(--sp-2) 0 0; display: grid; gap: var(--sp-3); }
+.rt-step li { display: grid; gap: 2px; }
+.rt-brand { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; color: var(--ink); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.rt-why { color: var(--ink-soft); font-size: var(--fs-foot); }
+.rt-links a { color: var(--rose); font-weight: 600; font-size: var(--fs-sub); display: inline-flex; align-items: center; min-height: 44px; }
+.rt-kind { color: var(--ink-soft); font-size: var(--fs-foot); }
+.rt-none { color: var(--ink-soft); font-size: var(--fs-sub); }
+.pf-actions { display: grid; gap: var(--sp-2); margin-top: var(--sp-4); }
+
 /* ---------- Opening show settings (Profile) ---------- */
 .intro-set { text-align: left; }
 .switch-row { display: flex; align-items: center; gap: var(--sp-2); min-height: 44px; margin-top: var(--sp-2); font-size: var(--fs-sub); color: var(--ink); cursor: pointer; }

@@ -12,8 +12,8 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 ## This project: how the general rules apply here
 
 - **Plan and phases:** `SPEC.md` ("Phases"). Phase 1 (look and shell) done
-  2026-11-10, phase 2 (brand data) and phase 3 (directory) 2026-11-11. Next: phase 4,
-  beauty profile. GitHub Pages: ask Jose before turning it on.
+  2026-11-10, phases 2 to 4 (brand data, directory, profile) 2026-11-11. Next: phase
+  5, scanner and saved list. GitHub Pages: ask Jose before turning it on.
 - **Real user:** the founder (TO FILL). Remind Jose to check plans, brand
   rules and any words that speak for them with the founder.
 - **Hosting:** GitHub Pages from `main`, root folder, at
@@ -69,6 +69,7 @@ Same in every project. Where the "This project" section above differs, it wins.
 
 - **Show me it works.** I can't check code, so every feature ends with proof I can see. Never say "fixed", "works" or "done" without running or testing it; say what you checked, or "not verified" and why. Small change: a screenshot or a short "try this" list. Big feature: check its "Done when" line and give me the link to a preview I can open on my phone (what a preview is here: "This project").
 - **Review before the pull request.** After a phase or big feature, and before opening its pull request, a separate reviewer subagent checks the changes for bugs, broken behavior and mismatches with SPEC.md, without seeing how the code was written. Fix what it finds; tell me in 2 or 3 lines what it caught.
+- **Choices:** whenever I offer options or a next step, give them as clickable buttons (recommended first, marked), never as a plain list to type back (Jose, 2026-11-11).
 - **Reports:** status updates extremely concise, fragments fine. Explanations in plain full sentences. After a meaningful change, 2 or 3 plain sentences on what changed and why.
 - **Ask first** before: deleting data or files I may need, changing logins or accounts, pushing to main, deploying to the live site, anything that costs money.
 
