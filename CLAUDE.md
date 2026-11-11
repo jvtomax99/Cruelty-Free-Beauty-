@@ -35,7 +35,8 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
   `tools/make-launch-video.sh`. It is not in the worker's precache list; if
   the film changes, bump `MEDIA` in `sw.js`. Runway credits are Jose's:
   ask before spending more.
-- **Handoffs:** new handoffs go in root `HANDOFF.md`. None exists now.
+- **Handoffs:** new handoffs go in root `HANDOFF.md`. One exists (launch
+  film on hold for the founder, 2026-11-11): read it first.
 - **Brand sites:** read them with curl or Playwright from Bash (subagents'
   WebFetch skips the proxy and fails). Verify every quote before saving.
 - **Rule docs:** `docs/design-rules.md`, `docs/assets.md`,
