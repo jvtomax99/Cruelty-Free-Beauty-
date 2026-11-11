@@ -12,7 +12,8 @@
   /* ---------- Screens (hash routing, so the Back button retraces) ---------- */
   const SCREENS = ["home", "brands", "profile", "learn"];
   const scrollOf = {};   // each screen keeps its own scroll, like a phone's tab bar
-  let current = null;
+  let current = null;     // screen whose scroll we remember
+  let lastShown = null;   // screen on view, for moving focus
   function show() {
     const hash = location.hash.slice(1);
     const isBrand = hash.startsWith("brand/");   // #brand/<id>: one brand's page, under the Brands tab
@@ -24,13 +25,16 @@
       if (t.dataset.tab === tab) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current");
     });
     // brands.js draws the brand page; it listens for this and sets the title
-    document.dispatchEvent(new CustomEvent("cfb:screen", { detail: { name, id: isBrand ? decodeURIComponent(hash.slice(6)) : null } }));
+    let id = null;
+    if (isBrand) { try { id = decodeURIComponent(hash.slice(6)); } catch (_) { id = ""; } }   // a broken link shows "Brand not found"
+    document.dispatchEvent(new CustomEvent("cfb:screen", { detail: { name, id } }));
     window.scrollTo(0, isBrand ? 0 : scrollOf[name] || 0);
     // move focus to the new screen's heading so screen readers announce it (not on first load)
-    if (current && current !== name) {
+    if (lastShown && lastShown !== name) {
       const h = document.querySelector(`[data-screen="${name}"] h1`);
       if (h) h.focus({ preventScroll: true });
     }
+    lastShown = name;
     current = isBrand ? null : name;   // a brand page keeps no scroll of its own
     if (isBrand) return;
     document.title = name === "home" ? "C.F.B. · Cruelty-Free Beauty" : "C.F.B. · " + name[0].toUpperCase() + name.slice(1);

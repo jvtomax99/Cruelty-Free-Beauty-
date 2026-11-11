@@ -92,7 +92,7 @@ tiles.
 - **Empty state:** the logo, a Fraunces line, one honest sentence.
 - **Strict / Certified switch:** blush pill track, the chosen side paper
   with the finish (44 px tall).
-- **Filter chip:** paper pill with a hairline, 40 px; on: blush-2 with
+- **Filter chip:** paper pill with a hairline, 44 px; on: blush-2 with
   rose-ink text.
 - **Brand row:** paper card, radius 20, name in Fraunces 17, chips on the
   right, the reason it fails on its own line in ink-soft.

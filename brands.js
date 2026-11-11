@@ -30,7 +30,7 @@
         const law = /regulatory/i.test(b.peta.note);
         return { pass: false, kind: "fail", reason: law ? "PETA says it tests on animals when the law requires it." : "PETA says it tests on animals.", notes };
       }
-      return { pass: false, kind: "none", reason: "Not on PETA's or Leaping Bunny's list, so its cruelty-free claim isn't verified.", notes };
+      return { pass: false, kind: "none", reason: "Not on PETA's or Leaping Bunny's list, so its cruelty-free status isn't verified.", notes };
     }
     const by = peta === "yes" && lb === "yes" ? "PETA and Leaping Bunny" : peta === "yes" ? "PETA" : "Leaping Bunny";
     if (mode === "strict") {
@@ -42,7 +42,7 @@
         return { pass: false, kind: "fail", reason: `Certified by ${by}, but sold in mainland China stores, by its own account.`, notes };
       }
       if (b.parent.testsOnAnimals === "unknown") notes.push("Parent company not confirmed.");
-      if (b.chinaRetail.status === "unknown") notes.push("Brand doesn't say where it sells.");
+      if (b.chinaRetail.status === "unknown") notes.push(b.chinaRetail.checked ? "Brand doesn't say where it sells." : "Where it sells not checked yet.");
     }
     return { pass: true, kind: "pass", reason: `Certified by ${by}.`, notes };
   }
@@ -177,6 +177,20 @@
       if (location.hash.startsWith("#brand/")) window.CFB.show();   // a brand link opened directly
     })
     .catch(() => {
-      $("brand-count").textContent = "Couldn't load the brand list. Check your connection and reopen the app.";
+      const msg = "Couldn't load the brand list. Check your connection and reopen the app.";
+      $("brand-count").textContent = msg;
+      $("brand-page").innerHTML = `<h1 id="brand-h" tabindex="-1">Brand</h1><p class="lede">${msg}</p>`;
     });
+
+  // "All brands" goes back in history when we came from the list, so the phone's
+  // Back button doesn't reopen the brand page afterwards.
+  let cameFromList = false;
+  window.addEventListener("hashchange", (e) => {
+    const from = new URL(e.oldURL).hash, to = location.hash;
+    if (to.startsWith("#brand/")) { if (from === "#brands") cameFromList = true; }
+    else cameFromList = false;
+  });
+  document.querySelector(".back").addEventListener("click", (e) => {
+    if (cameFromList) { e.preventDefault(); history.back(); }
+  });
 })();

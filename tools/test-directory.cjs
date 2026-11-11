@@ -78,6 +78,28 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.waitForSelector('#brand-page .facts');
   check(/Kosé, tests on animals/.test(await page.textContent('#brand-page')), 'Tarte under Strict: fails over its parent, Kosé (opened by direct link)');
 
+  // "All brands" goes back in history, focus lands on the Brands heading, the phone's Back doesn't reopen the brand
+  await page.goto(BASE + '#home', { waitUntil: 'networkidle' });   // fresh history: home, list, brand
+  await page.click('.tab[href="#brands"] >> visible=true');
+  await page.waitForSelector('#brand-list .brand-row');
+  await page.click('a[href="#brand/glossier"]');
+  await page.waitForSelector('#brand-page .facts');
+  check(/Where it sells not checked yet/.test(await page.textContent('#brand-page')), 'unchecked China says "not checked yet", not "brand doesn\'t say"');
+  await page.click('.back');
+  await page.waitForSelector('[data-screen=brands]:not([hidden])');
+  check(await page.evaluate(() => document.activeElement && document.activeElement.id) === 'brands-h', 'focus moves to the Brands heading after "All brands"');
+  await page.goBack();
+  await page.waitForTimeout(300);
+  check((await page.evaluate(() => location.hash)) === '#home', 'Back after "All brands" goes to Home, not the brand page again');
+
+  // A broken or unknown brand link says so
+  await page.goto(BASE + '#brand/%E0');
+  await page.waitForTimeout(800);
+  check(/Brand not found/.test(await page.textContent('#brand-page')), 'a malformed brand link shows "Brand not found"');
+  await page.goto(BASE + '#brand/no-such-brand');
+  await page.waitForTimeout(800);
+  check(/Brand not found/.test(await page.textContent('#brand-page')), 'an unknown brand id shows "Brand not found"');
+
   // Offline: after the worker installs, the list still loads with no network
   await page.goto(BASE + '#brands', { waitUntil: 'networkidle' });
   await page.evaluate(() => navigator.serviceWorker.ready);
