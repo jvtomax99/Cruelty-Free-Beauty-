@@ -96,6 +96,12 @@ Barcode scanner, saved list, brand-change alerts, Spanish (EN | ES switch
 like Lions-Roar-), near me, skincare, reviews, a camera undertone helper
 only if it can be shown to work across skin tones.
 
+From Wilmarie's TikTok (2026-11-11, 40 captions read, 10 videos watched):
+saved lip combos (liner, tint, gloss, each with shade and proof), an
+"affordable" price filter, a "nobody pays to be on this list" promise (if
+she agrees; settles the affiliate question), and eye color as a quiz
+question ("what works on brown eyes").
+
 ## Phases
 
 ### Phase 1: Look and app shell (done 2026-11-10)
@@ -106,16 +112,25 @@ only if it can be shown to work across skin tones.
 - [x] Site check on every pull request
 
 ### Phase 2: Brand data
-- [ ] Research and verify 30 makeup brands from primary sources
+- [ ] Research and verify 30 makeup brands from primary sources, starting
+      with the ones Wilmarie uses on TikTok (e.l.f., essence, Kiss, Makeup
+      By Mario, ATHR Beauty, Summer Fridays, Morphe)
+- [ ] A "Wilmarie's pick" field per brand, with the link to her video
 - [ ] `data/brands.json` plus a check script (missing fields, dead links,
       checks older than 90 days)
 
 ### Phase 3: Directory
 - [ ] Brand list, search, filters, strictness switch
+- [ ] "Wilmarie's picks" mark on her brands, listed first; the mark never
+      changes or softens a brand's verdict
+- [ ] Her voice in the app's words ("Hola mi gente" on Home, her tagline,
+      friendlier empty screens); she approves every line first
 - [ ] Brand page and where to buy
 
 ### Phase 4: Beauty profile
 - [ ] Quiz, profile, suggested routine
+- [ ] Routine result laid out as "The Face / The Makeup" (the look
+      described on top, the products below), like her split-screen videos
 
 ### Phase 5: Scanner and saved list
 - [ ] Barcode scan (Open Beauty Facts for barcode to brand; a code
@@ -130,6 +145,10 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-11 (Jose): personalize from her TikTok with three things: her
+  voice in the words, a "Wilmarie's picks" mark on brands, and "The Face /
+  The Makeup" as the quiz result. She is the curator, not the subject: no
+  photos or clips of her in the app. Wilmarie still has to OK these.
 - 2026-11-11 (Jose): the founder is Wilmarie Lopez; copyright is hers
   ("© 2026 Wilmarie Lopez", app footer and README).
 - 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
