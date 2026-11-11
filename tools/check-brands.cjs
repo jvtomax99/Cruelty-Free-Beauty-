@@ -117,7 +117,7 @@ function checkBrand(b, seen) {
 function checkChanges(list, brands) {
   if (list === undefined) return;
   if (!Array.isArray(list)) return err('changes', 'must be a list');
-  const newest = new Map();
+  const newest = new Map(), keys = new Set();
   list.forEach((c, i) => {
     const at = `changes ${i + 1}`;
     if (!c || typeof c !== 'object') return err(at, 'is not an object');
@@ -127,6 +127,11 @@ function checkChanges(list, brands) {
     if (!allowed) return err(at, `claim "${c.claim}" is not one of ${Object.keys(CLAIMS).join(', ')}`);
     if (!allowed.includes(c.from) || !allowed.includes(c.to)) err(at, `from "${c.from}" and to "${c.to}" must each be one of ${allowed.join(', ')}`);
     if (c.from === c.to) err(at, 'from and to are the same, so nothing changed');
+    if (c.claim === 'leapingBunny' && c.from !== 'yes' && c.to !== 'yes') err(at, 'a Leaping Bunny change must start or end at "yes" (the app says "no longer in" or "now in" its guide)');
+    if (c.law !== undefined && !(c.law === true && c.claim === 'peta' && c.to === 'no')) err(at, 'law may only be true, on a peta change to "no" (PETA: working for regulatory change)');
+    const dup = `${c.id}|${c.claim}|${c.date}`;
+    if (keys.has(dup)) err(at, `a second ${c.claim} change for ${c.id} on ${c.date}`);
+    keys.add(dup);
     if (!isDate(c.date)) return err(at, `date "${c.date}" is not YYYY-MM-DD`);
     if (ageDays(c.date) < 0) err(at, `date ${c.date} is in the future`);
     if (!isUrl(c.url)) err(at, 'has no https source link');
@@ -140,6 +145,15 @@ function checkChanges(list, brands) {
     const b = brands.find((x) => x.id === c.id);
     const now = c.claim === 'parent' ? b.parent && b.parent.testsOnAnimals : b[c.claim] && b[c.claim].status;
     if (now !== c.to) err(`changes (${c.id})`, `says ${c.claim} became "${c.to}" on ${c.date}, but the brand record says "${now}"`);
+    const checked = b[c.claim] && b[c.claim].checked;
+    if (isDate(checked) && checked < c.date) err(`changes (${c.id})`, `${c.claim} change is dated ${c.date}, after the record's checked date ${checked}`);
+  }
+  // Each change to a claim must start where the one before it ended.
+  const byClaim = new Map();
+  for (const c of list) if (c && isDate(c.date)) byClaim.set(`${c.id}|${c.claim}`, [...(byClaim.get(`${c.id}|${c.claim}`) || []), c]);
+  for (const [k, a] of byClaim) {
+    a.sort((x, y) => x.date.localeCompare(y.date));
+    for (let i = 1; i < a.length; i++) if (a[i].from !== a[i - 1].to) err(`changes (${k})`, `the change on ${a[i].date} starts at "${a[i].from}", but the one before ended at "${a[i - 1].to}"`);
   }
 }
 

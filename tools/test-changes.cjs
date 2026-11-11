@@ -31,6 +31,8 @@ const MADE_UP = [
   { id: 'morphe', claim: 'leapingBunny', from: 'yes', to: 'unknown', date: ago(400), url: LB },     // over 12 months
   { id: 'not-a-brand', claim: 'peta', from: 'yes', to: 'no', date: ago(2), url: PETA },             // unknown brand
   { id: 'elf', claim: 'peta', from: 'yes', to: 'no', date: ago(-5), url: PETA },                    // in the future
+  { id: 'ilia', claim: 'leapingBunny', from: 'no', to: 'unknown', date: ago(4), url: LB },          // never was in the guide
+  { id: 'tarte', claim: 'constructor', from: 'yes', to: 'no', date: ago(4), url: PETA },            // not a claim
 ];
 const LATER = { id: 'rare-beauty', claim: 'leapingBunny', from: 'yes', to: 'unknown', date: ago(1), url: LB };
 
@@ -74,6 +76,9 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
   check(/And 1 more/.test(await page.textContent('#changes-rest')), 'says one more is under Brands');
   const card = await page.textContent('#changes-card');
   check(!/Morphe|e\.l\.f\./.test(card), 'ignores a change over 12 months old, one dated in the future and an unknown brand');
+  const allNames = await page.$$eval('#changes-list .brand-name', (a) => a.map((x) => x.textContent).join());
+  check(!/ILIA|Tarte/.test(allNames), 'ignores a Leaping Bunny entry that never was "yes" and an unknown claim');
+  check(/Newly confirmed: its parent company tests on animals/.test(card), 'a first finding (from unknown) says "Newly confirmed", not "now"');
   check(/No longer on PETA's cruelty-free list/.test(card) && /No longer in Leaping Bunny's guide/.test(card) && /Now on PETA's cruelty-free list/.test(card), 'says what the list showed, good news included');
   check(!/dropped|removed|quit|abandon|lost/i.test(card), 'never says why (no "dropped", "removed", "lost")');
   const src = await page.$$eval('#changes-new .src', (a) => a.map((p) => ({ t: p.textContent, href: (p.querySelector('a') || {}).href })));
@@ -85,7 +90,7 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
   await page.click('#changes-new a[href="#brand/kosas"]');
   await page.waitForSelector('#brand-page .facts');
   const note = await page.textContent('#brand-page .change-note');
-  check(/^Changed \d{1,2} [A-Z][a-z]{2} \d{4}\. No longer in Leaping Bunny's guide\./.test(note), `Kosas's page says it: "${note}"`);
+  check(/^Checked \d{1,2} [A-Z][a-z]{2} \d{4}\. No longer in Leaping Bunny's guide\./.test(note), `Kosas's page says it: "${note}"`);
   if (shots) await page.screenshot({ path: path.join(shots, 'changes-brand-phone.png') });
   await page.goto(APP + '#brand/milani'); await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('#brand-page .facts');
@@ -104,6 +109,28 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
   const order = await page.$$eval('#changes-list .brand-name', (a) => a.map((x) => x.textContent));
   check(order[0] === 'Milani' && order[5] === 'Kosas', 'that list is newest first');
   if (shots) await page.locator('#changes-all').screenshot({ path: path.join(shots, 'changes-brands-phone.png') });
+
+  // A phone that refuses to save (private mode): "Got it" still hides the card for this visit.
+  {
+    const c2 = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+    await c2.addInitScript(() => { Storage.prototype.setItem = () => { throw new Error('refused'); }; });
+    await c2.route('**/data/brands.json', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ...real, changes: MADE_UP }) }));
+    const p2 = await c2.newPage();
+    p2.on('pageerror', (e) => errors.push(e.message));
+    await p2.goto(APP, { waitUntil: 'networkidle' });
+    await p2.click('#changes-ok');
+    check(await p2.isHidden('#changes-card'), 'storage refused: "Got it" still hides the card');
+    await c2.close();
+  }
+  {
+    const law = [{ id: 'milani', claim: 'peta', from: 'yes', to: 'no', law: true, date: ago(2), url: PETA }];
+    const c3 = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+    await c3.route('**/data/brands.json', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ...real, changes: law }) }));
+    const p3 = await c3.newPage();
+    await p3.goto(APP, { waitUntil: 'networkidle' });
+    check(/testing on animals when the law requires it\./.test(await p3.textContent('#changes-card')), 'PETA "regulatory change" says "when the law requires it"');
+    await c3.close();
+  }
 
   // A change found by a later recheck shows on its own.
   changes = [LATER, ...MADE_UP];

@@ -111,8 +111,13 @@ me**.
   the date we looked ("No longer in Leaping Bunny's guide"), never why, and
   good news shows too. Changes live in `data/brands.json` ("changes") and
   go live only through the recheck pull request Jose reads.
-  - Done when: a change added to `data/brands.json` shows on Home at the
-    next open with its date and source link, hearted brands first; "Got it"
+  A first finding (from "unknown") says "Newly confirmed", not "now". The
+  date shown is when we checked, not when the list changed. The compare
+  tool covers PETA and Leaping Bunny; parent and China changes are entered
+  by hand. An installed app shows a change one or two opens after the
+  update, because of how the offline worker swaps versions.
+  - Done when: a change added to `data/brands.json` shows on Home once the
+    app has updated, with its date and source link, hearted brands first; "Got it"
     hides it and it stays in "Recent changes" and on the brand page.
 
 ## Not in v1

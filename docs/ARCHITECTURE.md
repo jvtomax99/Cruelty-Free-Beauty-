@@ -52,7 +52,10 @@ confirms it.
 - Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
   a recheck pull request. A status that changed also gets an entry in
   `changes` (brand id, claim, from, to, date, source link, optional short
-  note), which is what the app announces.
+  note stating a fact, never a reason; `law: true` when PETA says "working
+  for regulatory change"), which is what the app announces. A data-only
+  change still needs the `CACHE_VERSION` bump, or installed apps never
+  get it.
 - `node --check` on each `.js` file.
 - Preview: Playwright screenshots at 390 px then 1440 px, served from the
   parent folder so the URL includes `/Cruelty-Free-Beauty-/`.

@@ -110,12 +110,15 @@ async function leapingBunny(page, name) {
 async function main() {
   const args = process.argv.slice(2);
   let names;
-  if (args[0] === '--file' && !args[1]) { console.error('Usage: --file data/brands.json'); process.exit(1); }
-  if (args[0] === '--file') {
-    const data = JSON.parse(fs.readFileSync(args[1], 'utf8'));
+  const wantDiff = args.includes('--diff');
+  const fileAt = args.indexOf('--file');
+  const file = fileAt >= 0 ? args[fileAt + 1] : null;
+  if ((fileAt >= 0 && (!file || file.startsWith('--'))) || (wantDiff && !file)) { console.error('Usage: --file data/brands.json [--diff]'); process.exit(1); }
+  if (file) {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
     names = data.brands.map((b) => ({ id: b.id, search: b.search || [b.name] }));
   } else {
-    names = args.map((n) => ({ id: n, search: [n] }));
+    names = args.filter((a) => !a.startsWith('--')).map((n) => ({ id: n, search: [n] }));
   }
   const { chromium } = require('playwright');
   const browser = await chromium.launch();
@@ -135,7 +138,7 @@ async function main() {
     process.stderr.write(`${n.id}: PETA ${row.peta.length}, LB ${row.leapingBunny.length}\n`);
   }
   await browser.close();
-  if (args.includes('--diff') && args[0] === '--file') return diff(JSON.parse(fs.readFileSync(args[1], 'utf8')).brands, results);
+  if (wantDiff) return diff(JSON.parse(fs.readFileSync(file, 'utf8')).brands, results);
   console.log(JSON.stringify(results, null, 2));
 }
 
@@ -155,12 +158,22 @@ async function diff(brands, results) {
     // PETA
     const stored = b.peta.status;
     let hit = r.peta.find((x) => x.url === b.peta.url);
-    if (!hit && stored !== 'unknown') {
-      try { hit = await petaPage(b.peta.url); } catch (e) { unsure.push(`${b.name}: could not open its PETA page (${e.message})`); }
-      if (hit === null) out.push({ why: `${b.name}: its PETA page is gone`, entry: entry('peta', 'unknown', PETA + '/') });
+    // The brand's own PETA page, when the record links one, is read directly: a search can miss it.
+    if (!hit && /\/company\//.test(b.peta.url || '')) {
+      try { hit = await petaPage(b.peta.url); } catch (e) { unsure.push(`${b.name}: could not open its PETA page (${e.message})`); continue; }
+      if (hit === null) {
+        if (stored !== 'unknown') out.push({ why: `${b.name}: its PETA page is gone`, entry: entry('peta', 'unknown', PETA + '/') });
+        hit = undefined;
+      }
     }
+    // A page we couldn't read a verdict from is not a change: PETA may have changed its page.
+    if (hit && hit.verdict === 'no verdict found') { unsure.push(`${b.name}: no verdict found on ${hit.url}; read it by hand`); hit = undefined; }
     if (!hit && stored === 'unknown') hit = r.peta.find((x) => x.status !== 'unknown' && names.includes(fold(x.title.replace(/\s*\(.*\)\s*$/, ''))));
-    if (hit && hit.status !== stored) out.push({ why: `${b.name}: PETA says "${hit.verdict}" (stored: ${stored})`, entry: entry('peta', hit.status, hit.url) });
+    if (hit && hit.status !== stored) {
+      const e = entry('peta', hit.status, hit.url);
+      if (/regulatory change/i.test(hit.verdict)) e.law = true;
+      out.push({ why: `${b.name}: PETA says "${hit.verdict}" (stored: ${stored})`, entry: e });
+    }
 
     // Leaping Bunny
     const lbStored = b.leapingBunny.status;
@@ -171,6 +184,7 @@ async function diff(brands, results) {
       if (lb) out.push({ why: `${b.name}: found in Leaping Bunny's guide as "${lb.tradingName || lb.company}" (stored: ${lbStored})`, entry: entry('leapingBunny', 'yes', lb.url) });
     }
   }
+  console.log('Compared PETA and Leaping Bunny only. Parent company and China changes are found and entered by hand.\n');
   console.log(out.length ? `${out.length} possible change(s). Open each link and confirm before editing data/brands.json:\n` : 'No changes: every stored PETA and Leaping Bunny status matches a fresh lookup.');
   for (const o of out) console.log(`- ${o.why}\n  ${JSON.stringify(o.entry)}\n`);
   if (unsure.length) console.log(`Could not check (${unsure.length}):\n  ` + unsure.join('\n  '));
