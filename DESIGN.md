@@ -152,6 +152,14 @@ other an outline. The focus ring on night is `--pink`. Letterbox bars
 (6vh, at most 56 px) frame the show like a film. Reduced motion: the
 finished hero pose, held 1.6 s, then a 0.6 s fade.
 
+The film (version 2) keeps the same night: plum-brown dark, pink and warm
+bulb light, no purple, no pure black. It fills a phone screen (cropped to
+fit, behind the letterbox bars). On a wide screen it is a centred 9:16
+column whose side edges fade into the night. The name card sits on the
+film, centred near the bottom, from 15.5 s; the film's last 1.15 s is a
+held `--spot` flash, over which it fades (0.28 s) to the drawn logo for
+the landing. The drawn scene is hidden while the film is on.
+
 ## Don'ts
 
 - No pure black or grey; no `rgba(0,0,0,x)` shadows.

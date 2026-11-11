@@ -96,10 +96,26 @@ me**.
   Every launch; Skip and a tap skip it; `?intro=0` skips, `?intro=1`
   forces; never on a link to one brand. Profile: "Play the opening when
   the app starts" switch and "Replay the opening". Not in this version: a
-  shorter cut for later launches, rendered video, voice-over, haptics.
+  shorter cut for later launches, voice-over, haptics.
   - Done when: the gate shows on every launch, both buttons play the show
     and land on a working Home in under 7 s, Skip works at any moment, and
     `?intro=0` skips it.
+  - **Version 2, the film** (2026-11-11). A rendered 20-second film of the
+    bunny's stage entrance (`assets/video/launch.mp4`): the spotlight, the
+    hop onto the stage, flash cuts, the lipstick, the doorway, the bunny
+    crowd under a giant screen, the bulb ring, fireworks, the final
+    portrait. Reggaeton score with a Puerto Rican feel (Jose). The name and
+    slogan are real text over the last shots; the film ends on a pink-white
+    flash and the drawn logo flies to Home as in version 1. It plays in
+    full on every open. The drawn show (version 1) plays instead when the
+    film is not loaded at the tap, on reduced motion, with data saver on,
+    or if the film fails or freezes for 1.5 s. "Enter quietly" plays it
+    muted. On a computer the film is a centred column. The offline worker
+    saves the film after its first play. Not in this version: a widescreen
+    cut, a shorter cut for later opens, voice-over.
+    - Done when: one tap on the gate plays the film and lands on a working
+      Home; Skip reaches Home in under 1.5 s at any moment; with the film
+      blocked, version 1 lands on Home in under 7 s.
 
 ## Not in v1
 
@@ -161,6 +177,8 @@ only if it can be shown to work across skin tones.
 - [x] New bunny logo (sitting, hugging a lipstick, hearts) and icons
 - [x] The gate, the shots, the music, skip, the landing on Home's logo
 - [x] Profile switch and replay
+- [x] Version 2: the rendered 20-second film, with version 1 as the
+      fallback (2026-11-11)
 
 ## Open questions (TO FILL)
 
@@ -169,6 +187,11 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-11 (Jose, buttons): the film plays in full, 20 seconds, on every
+  open (Claude recommended the full film once and a short ending after;
+  Jose chose every open). The music has a Puerto Rican feel, "think of Bad
+  Bunny": the reggaeton take, picked by ear over a plena and salsa take.
+  The 5-second test clip was approved before the rest was made.
 - 2026-11-11 (Jose): the launch show is "too simplistic". Version 2 is to
   be glamorous and close to the Star Rail reveal: real animated video
   (key art animated by a video model, Runway credits bought by Jose, so the

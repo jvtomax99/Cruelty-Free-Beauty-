@@ -31,6 +31,10 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 - **Claims need sources.** Whether a brand is cruelty-free changes (parent
   companies, sales where animal testing is required). Every such claim links
   its source and the date it was checked; never state one from memory.
+- **Launch film:** `assets/video/launch.mp4` (20 s, 4.5 MB), cut by
+  `tools/make-launch-video.sh`. It is not in the worker's precache list; if
+  the film changes, bump `MEDIA` in `sw.js`. Runway credits are Jose's:
+  ask before spending more.
 - **Handoffs:** new handoffs go in root `HANDOFF.md`. None exists now.
 - **Brand sites:** read them with curl or Playwright from Bash (subagents'
   WebFetch skips the proxy and fails). Verify every quote before saving.
