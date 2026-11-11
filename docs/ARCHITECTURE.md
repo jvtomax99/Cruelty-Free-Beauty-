@@ -14,10 +14,11 @@ relative.
 | `app.js` | Screens by `#hash` (Back retraces), greeting by time of day, press feedback (`LIFTS`, `.is-pressed` held 260 ms), saved settings (`CFB.store`, localStorage inside try/catch), registers the worker |
 | `brands.js` | Brands screen and brand pages (`#brand/<id>`): loads `data/brands.json`, works out each verdict (Strict / Certified, saved as `cfb-mode`), search, filters |
 | `profile.js` | Profile screen: 8-question quiz, profile (saved as `cfb-profile`, only on the phone), routine of brands per step using `CFB.verdict` and the brand data from `brands.js` |
+| `intro.js` | The launch show: gate, shots, sparkles (one canvas), music (Web Audio), skip, the landing on Home's logo, Profile's switch (`cfb-intro`) and replay. A script in `index.html`'s head decides before paint (`html.intro-on`). `CFBIntro.seek(t)` shows any moment for tests |
 | `learn.js` | The Learn answers and their sources (`ANSWERS`, `CHECKED` date) |
 | `sw.js` | Offline worker: every file from one versioned cache, so a launch never mixes old and new files. A bumped `CACHE_VERSION` downloads the new version whole in the background; it shows a launch or two later (tested 2026-11-11). Bump it by hand in every change to a precached file |
 | `manifest.webmanifest` | Install name, colours, icons |
-| `assets/logo.svg` | The bunny logo (original) |
+| `assets/logo.svg` | The bunny logo (original). Every part has an id; `intro.js` animates them |
 | `assets/icons/` | App icons, made from the logo by `tools/make-icons.cjs` |
 | `assets/fonts/` | Fraunces (headings) and Inter (text), WOFF2, OFL |
 | `data/brands.json` | The 30 brands. Each claim (PETA, Leaping Bunny, parent company, China sales) has its own `url` and `checked` date; values yes / no / unknown (parent also n/a). The cruelty-free verdict is never stored: the app works it out per strictness. `search` holds the names the recheck looks up. `sells` (foundation, concealer, blush, bronzer, lip) and `shadeFinder` come from the brand's own site, each dated. `price` ($ / $$ / $$$) comes from the median single-product price on the brand's own site, explained in `priceSource` |
@@ -40,6 +41,7 @@ confirms it.
 - `node .github/site-check.cjs index.html` (runs on every pull request).
 - `node tools/check-brands.cjs --links` after any brand data change.
 - `node tools/test-profile.cjs`: the quiz and routine in a real browser (undertone, picks checked against the data, reload, clear, offline).
+- `node tools/test-intro.cjs` after any change to the launch show or the logo.
 - `node tools/test-directory.cjs`: the directory in a real browser (counts, search, filters, brand page, Back, offline).
 - Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
   a recheck pull request.

@@ -1,31 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="28 0 512 512" role="img" aria-label="C.F.B. bunny holding a lipstick">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="150 150 880 880" role="img" aria-label="C.F.B. bunny hugging a lipstick">
   <title>C.F.B. bunny</title>
-  <g stroke="#3B2A2A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
-    <!-- ears -->
-    <ellipse cx="196" cy="150" rx="44" ry="112" transform="rotate(-12 196 150)" fill="#FFF9F5"/>
-    <ellipse cx="316" cy="150" rx="44" ry="112" transform="rotate(12 316 150)" fill="#FFF9F5"/>
-    <ellipse cx="196" cy="160" rx="18" ry="74" transform="rotate(-12 196 160)" fill="#F2C4C4" stroke="none"/>
-    <ellipse cx="316" cy="160" rx="18" ry="74" transform="rotate(12 316 160)" fill="#F2C4C4" stroke="none"/>
-    <!-- head -->
-    <ellipse cx="256" cy="310" rx="150" ry="128" fill="#FFF9F5"/>
-    <!-- eyes, closed and smiling -->
-    <path d="M190 300 q20 -22 40 0 M282 300 q20 -22 40 0" fill="none"/>
-    <!-- nose and mouth -->
-    <path d="M244 326 h24 l-12 12 z" fill="#3B2A2A" stroke-width="8"/>
-    <path d="M256 340 q-10 16 -24 6 M256 340 q10 16 24 6" fill="none" stroke-width="9"/>
+  <!-- Drawn for C.F.B. Every part has an id: intro.js animates them one by one. -->
+  <defs>
+    <path id="heart" d="M0 12C-6 6-22-3-22-15c0-8 6-13 12-13 5 0 8 3 10 6 2-3 5-6 10-6 6 0 12 5 12 13C22-3 6 6 0 12z"/>
+  </defs>
+  <g id="hearts" fill="#FFF8F7">
+    <use href="#heart" transform="translate(880 350) scale(1.5)"/>
+    <use href="#heart" transform="translate(905 448) scale(1.3)" opacity=".55"/>
+    <use href="#heart" transform="translate(985 512) scale(1.1)"/>
+    <use href="#heart" transform="translate(300 446) scale(.9)"/>
+    <use href="#heart" transform="translate(228 570) scale(1.3)"/>
+    <use href="#heart" transform="translate(250 632) scale(.95)" opacity=".55"/>
+    <use href="#heart" transform="translate(990 660) scale(.8)" opacity=".7"/>
   </g>
-  <!-- cheeks -->
-  <circle cx="176" cy="342" r="20" fill="#EFA9AE" opacity=".75"/>
-  <circle cx="336" cy="342" r="20" fill="#EFA9AE" opacity=".75"/>
-  <!-- lipstick held at the lower right -->
-  <g transform="rotate(28 372 392)" stroke="#3B2A2A" stroke-width="12" stroke-linejoin="round">
-    <path d="M350 306 q22 -30 44 -8 v52 h-44 z" fill="#B65A6E"/>
-    <rect x="342" y="350" width="60" height="26" rx="5" fill="#E4C3A9"/>
-    <rect x="336" y="376" width="72" height="92" rx="10" fill="#C99A7C"/>
-  </g>
-  <!-- paws over the lipstick -->
-  <g stroke="#3B2A2A" stroke-width="12" fill="#FFF9F5">
-    <ellipse cx="338" cy="420" rx="30" ry="24"/>
-    <ellipse cx="392" cy="446" rx="28" ry="22"/>
+  <ellipse id="shadow" cx="590" cy="968" rx="350" ry="44" fill="#EFA3AE"/>
+  <g id="bunny" stroke="#DB6B7E" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <g id="ears">
+      <g id="ear-l"><rect x="420" y="190" width="124" height="320" rx="62" transform="rotate(-4 482 350)" fill="#FFFDFC"/>
+        <rect x="455" y="260" width="58" height="220" rx="29" transform="rotate(-4 482 350)" fill="#F8D6DB" stroke="none"/></g>
+      <g id="ear-r"><rect x="638" y="190" width="124" height="320" rx="62" transform="rotate(4 700 350)" fill="#FFFDFC"/>
+        <rect x="671" y="260" width="58" height="220" rx="29" transform="rotate(4 700 350)" fill="#F8D6DB" stroke="none"/></g>
+    </g>
+    <g id="feet">
+      <g id="foot-l"><ellipse cx="398" cy="900" rx="78" ry="64" fill="#FFFDFC"/><ellipse cx="368" cy="902" rx="30" ry="40" fill="#F8D6DB" stroke="none"/></g>
+      <g id="foot-r"><ellipse cx="782" cy="900" rx="78" ry="64" fill="#FFFDFC"/><ellipse cx="812" cy="902" rx="30" ry="40" fill="#F8D6DB" stroke="none"/></g>
+    </g>
+    <path id="body" fill="#FFFDFC" d="M590 440C702 440 772 518 777 620C781 700 800 760 804 830C810 906 772 962 700 966H480C408 962 370 906 376 830C380 760 399 700 403 620C408 518 478 440 590 440Z"/>
+    <g id="face">
+      <g id="cheeks" fill="#F6B3BD" stroke="none"><ellipse cx="468" cy="650" rx="27" ry="15"/><ellipse cx="712" cy="650" rx="27" ry="15"/></g>
+      <path id="eye-l" fill="none" d="M466 614Q497 580 528 614"/>
+      <path id="eye-r" fill="none" d="M652 614Q683 580 714 614"/>
+      <path id="mouth" fill="none" stroke-width="15" d="M562 646Q576 666 590 648Q604 666 618 646"/>
+    </g>
+    <g id="lipstick" transform="translate(515 928) rotate(39) translate(0 -300)" stroke="none">
+      <g id="bullet"><path d="M-40 -18V-142L40 -192V-18Z" fill="#EE8E9C"/><path d="M-40 -142L40 -192V-170L-40 -120Z" fill="#F6AEB8"/><rect x="-28" y="-128" width="12" height="104" rx="6" fill="#F8C1C9"/></g>
+      <rect x="-50" y="-30" width="100" height="40" rx="8" fill="#3E3537"/>
+      <rect id="tube" x="-56" y="0" width="112" height="300" rx="20" fill="#504548"/>
+      <rect x="-40" y="22" width="12" height="256" rx="6" fill="#6E6265"/>
+    </g>
+    <g id="paws" fill="#FFFDFC">
+      <path id="paw-l" d="M418 812C452 842 510 846 548 822"/>
+      <path id="paw-r" d="M632 822C672 846 724 842 762 812"/>
+    </g>
   </g>
 </svg>
