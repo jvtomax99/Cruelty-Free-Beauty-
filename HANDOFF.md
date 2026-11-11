@@ -11,13 +11,28 @@ me", wants white, and Jose then asked for a second mock: "more dramatic,
 cute, something about saving animals from makeup cruelty, the bunny is the
 hero".
 
-**Mock 2 ("The Rescue") is back on (Jose cancelled it, then brought it
-back the same evening, 2026-11-11).** Next step: Jose picks, with buttons,
-what happens to it: show the founder the storyboard first, animate it
-(about 650 Runway credits; 1,478 left), or change frames. He asked whether
-the cape can be purple: yes, a preview of the hero frame with a royal
-purple cape was shown (Meshy task `01a1cc42-6833-71d3-9aaf-b205b02ac690`);
-he has not yet said white or purple.
+**The founder has given the story herself (2026-11-11, evening). Mock 3
+is her version and replaces mocks 1 and 2 as the direction:**
+
+> "You can start at the lab where is it dark and a little gothic and the
+> hero arrives using different makeup like eyeliner, mascara, and lipstick
+> to unlock the cages and free all the animals. They all walk to the light -
+> the surroundings should start to get lighter to fit the theme of freedom
+> and then you see all the animals and the hero at the concert/ show like
+> in the first video and the hero holds the lipstick. Then the hero with
+> lipsticks turns into the app logo and you see a "Welcome" underneath"
+
+A storyboard of it (8 frames: gothic lab, hero arrives, eyeliner, mascara,
+lipstick, into the light, the show, logo with "Welcome") was painted on
+Meshy and sent to Jose. Claude's assumptions in it, not yet confirmed: a
+royal purple cape (Jose asked if it could be purple); the show relit in
+white and gold, no pink; the hero has no cape in the show shot; "Welcome"
+is real text under the drawn logo, replacing the name card.
+
+**Next step: Jose shows her the storyboard and brings back her OK or
+changes.** Then animate (about 700 to 800 Runway credits for 8 shots;
+1,478 left; Runway must be reconnected first). Eight beats do not fit 20
+seconds comfortably: propose about 24 seconds, or drop one makeup beat.
 
 ## What exists
 
