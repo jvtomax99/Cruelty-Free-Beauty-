@@ -2,7 +2,7 @@
 
 Last audit: 2026-11-11, after phase 2.
 
-Report from `docs/cleanup-audit.md`. Nothing here has been changed yet. Run
+Report from `docs/cleanup-audit.md`. Items 1 to 3 are fixed; the rest wait. Run
 fixes with "Refactor: CLEANUP.md items ..." (docs/refactor.md). No
 packages, so knip and depcheck had nothing to check; a helper scanned for
 unused CSS, unused code and abandoned files, and each item below was
