@@ -3,8 +3,13 @@
    with old files. A new version (bumped CACHE_VERSION) downloads everything in the
    background, then takes over: the next launch is the new version, whole.
    Paths are relative to the worker's scope, so it works under /Cruelty-Free-Beauty-/.
-   Bump CACHE_VERSION in every change that touches a file listed below. */
-const CACHE_VERSION = "cfb-v11";
+   Bump CACHE_VERSION in every change that touches a file listed below.
+   The launch film is the one exception: it is too big to make the install wait for it, so it
+   lives in its own cache (MEDIA), is saved the first time the page asks for it, and survives
+   app updates. If the film itself changes, bump MEDIA. */
+const CACHE_VERSION = "cfb-v12";
+const MEDIA = "cfb-media-v1";
+const FILM = "assets/video/launch.mp4";
 const PRECACHE = [
   "./",
   "index.html",
@@ -39,7 +44,7 @@ self.addEventListener("install", e => {
 self.addEventListener("activate", e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION && k !== MEDIA).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -49,8 +54,41 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
-  e.respondWith(fromCache(req, url));
+  e.respondWith(url.pathname === SCOPE + FILM ? film(req, url) : fromCache(req, url));
 });
+
+/* The launch film. Saved whole the first time it is asked for; after that it is served from
+   the cache in the pieces the browser asks for (iPhones only play video served that way). */
+let filling = null;
+function fill(href) {
+  if (filling) return filling;
+  filling = fetch(href, { cache: "reload" })
+    .then(res => (res.status === 200 ? caches.open(MEDIA).then(c => c.put(href, res)) : null))
+    .catch(() => {})
+    .then(() => { filling = null; });
+  return filling;
+}
+async function film(req, url) {
+  const href = url.origin + url.pathname;
+  const cache = await caches.open(MEDIA);
+  const saved = await cache.match(href);
+  if (!saved) { fill(href); return fetch(req); }      // not saved yet: play from the network, save for next time
+  const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") || "");
+  if (!range) return saved;
+  const blob = await saved.blob(), size = blob.size;
+  let from = range[1] === "" ? Math.max(0, size - Number(range[2])) : Number(range[1]);
+  let to = range[1] === "" || range[2] === "" ? size - 1 : Math.min(Number(range[2]), size - 1);
+  if (from > to || from >= size) return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${size}` } });
+  return new Response(blob.slice(from, to + 1), {
+    status: 206,
+    headers: {
+      "Content-Type": saved.headers.get("Content-Type") || "video/mp4",
+      "Content-Range": `bytes ${from}-${to}/${size}`,
+      "Content-Length": String(to - from + 1),
+      "Accept-Ranges": "bytes"
+    }
+  });
+}
 
 async function fromCache(req, url) {
   const cache = await caches.open(CACHE_VERSION);

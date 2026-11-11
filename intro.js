@@ -180,6 +180,58 @@
 
   /* ---------- one frame ---------- */
   let state = "idle", t0 = 0, now = 0, skipAt = null, sound = null, still = false;
+  const store = window.CFB && window.CFB.store;
+
+  /* ---------- the film: version 2, a rendered cut played over the scene above ----------
+     When the film is ready at the tap it plays; the drawn show stays underneath, parked on its hero pose, and
+     takes over for the landing on Home. The drawn show plays alone when the film is not loaded yet, on reduced
+     motion, with data saver on, or if the film fails or stalls. */
+  const vid = el.querySelector(".in-film");
+  const FILM = { src: "assets/video/launch.mp4", card: 15.5, short: 14, tail: 1.15, hold: 0.4 };
+  let filmOn = false, filmFull = false, stallTimer = 0;
+  const saver = () => { const c = navigator.connection; return !!(c && c.saveData); };
+  const filmSeen = () => !!(store && store.get("intro-seen", "") === "1");
+  function filmLoad(full) {                      // called when the gate opens, so the film buffers while it shows
+    if (!vid) return;
+    vid.pause(); vid.classList.remove("is-on"); filmOn = false;
+    if (reduce() || saver()) return;
+    filmFull = full;
+    try {
+      if (!vid.getAttribute("src")) { vid.preload = "auto"; vid.src = FILM.src; vid.load(); }
+      const at = full ? 0 : FILM.short;
+      if (vid.readyState > 0) vid.currentTime = at;
+      else vid.addEventListener("loadedmetadata", () => { if (state === "gate") vid.currentTime = filmFull ? 0 : FILM.short; }, { once: true });
+    } catch (_) {}
+  }
+  const filmReady = () => !!vid && !vid.error && !!vid.getAttribute("src") && vid.readyState >= 3 && !vid.seeking && isFinite(vid.duration);
+  /* start it inside the tap (phones only start video with sound from one); false means: play the drawn show */
+  function filmPlay(withSound) {
+    if (!filmReady() || reduce() || saver()) return false;
+    let p;
+    try { vid.muted = !withSound; vid.volume = 1; p = vid.play(); } catch (_) { return false; }
+    filmOn = true; vid.classList.add("is-on");
+    if (p && p.catch) p.catch(() => { if (filmOn) filmHandover(true); });
+    if (filmFull && store) store.set("intro-seen", "1");
+    return true;
+  }
+  /* the film is over, skipped or stuck: the drawn bunny, already in its hero pose underneath, flies to Home */
+  function filmHandover(fast) {
+    if (!filmOn) return;
+    filmOn = false; clearTimeout(stallTimer); stallTimer = 0;
+    vid.classList.remove("is-on");
+    if (fast) { vid.muted = true; vid.pause(); }               // a natural end lets the last chord ring out
+    target = logoTarget(); paused = false;
+    const from = fast ? T.exit : T.exit - FILM.hold;
+    t0 = performance.now() - from * 1000; now = from; skipAt = fast ? from : null;
+  }
+  if (vid) {
+    const stuck = () => { if (filmOn && !stallTimer) stallTimer = setTimeout(() => { stallTimer = 0; if (filmOn) filmHandover(true); }, 1500); };
+    const moving = () => { clearTimeout(stallTimer); stallTimer = 0; };
+    vid.addEventListener("waiting", stuck); vid.addEventListener("stalled", stuck);
+    vid.addEventListener("playing", moving); vid.addEventListener("timeupdate", moving);
+    vid.addEventListener("error", () => filmHandover(true));
+    vid.addEventListener("ended", () => filmHandover(false));
+  }
   const BEAM_GATE = 0.32;
   function draw() {
     const t = state === "gate" ? -1 : now;
@@ -237,6 +289,14 @@
     card.label.style.opacity = seg(t, T.card + 0.2, T.card + 0.45);
     const wr = eInOut(seg(t, T.card + 0.4, T.card + 1.05));
     card.slogan.style.clipPath = `inset(-10% ${((1 - wr) * 100).toFixed(1)}% -10% 0)`;
+    if (filmOn) {                                 // over the film the same card arrives on the film's own beat
+      const ft = vid.currentTime, a = seg(ft, FILM.card, FILM.card + 0.18);
+      card.box.style.opacity = ft >= FILM.card ? 1 : 0;
+      card.name.style.opacity = a; card.name.style.transform = `scale(${lerp(1.5, 1, eOut(a)).toFixed(3)})`;
+      card.label.style.opacity = seg(ft, FILM.card + 0.2, FILM.card + 0.45);
+      card.slogan.style.clipPath = `inset(-10% ${((1 - eInOut(seg(ft, FILM.card + 0.4, FILM.card + 1.05))) * 100).toFixed(1)}% -10% 0)`;
+      flash.style.opacity = 0;
+    }
 
     const sk = 1 - seg(t, T.exit, T.exit + 0.2);
     skipBtn.style.opacity = sk; skipBtn.style.pointerEvents = sk < 1 ? "none" : "";
@@ -252,7 +312,7 @@
 
     // the canvas: dust in the beam, sparkles, hearts in the door light, fireworks, confetti
     const g = cx2; g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, W, H);
-    if (still) return;
+    if (still || filmOn) return;
     g.globalCompositeOperation = "lighter";
     if (beam > 0.05) {
       for (const d of DUST) {
@@ -307,6 +367,7 @@
   function loop() {
     raf = 0;
     if (state === "idle") return;
+    if (state === "show" && filmOn && vid.currentTime >= vid.duration - FILM.tail) filmHandover(false);
     if (state === "show" && !paused) {
       now = (performance.now() - t0) / 1000;
       if (skipAt !== null) now = T.exit + (now - skipAt) * 1.6;    // a skip runs the landing a little faster
@@ -330,6 +391,7 @@
     gate.classList.remove("is-gone"); skipBtn.hidden = true;
     if (app) app.inert = true;
     if (themeMeta) themeMeta.content = "#1C0F13";
+    filmLoad(replayed || !filmSeen());
     resize(); kick();
     const b = gate.querySelector("[data-sound=on]"); if (b) b.focus({ preventScroll: true });
   }
@@ -337,6 +399,11 @@
     if (state !== "gate") return;
     state = "starting";                                     // further taps now skip; they can't start it twice
     gate.classList.add("is-gone"); gate.inert = true;
+    if (svg && filmPlay(withSound)) {                       // the film is ready: it plays, the drawn show waits under it
+      target = null; state = "show"; skipBtn.hidden = false; skipBtn.focus({ preventScroll: true });
+      paused = true; now = T.exit - FILM.hold; kick();
+      return;
+    }
     pendingCtx = withSound ? Sound.context() : null;        // made inside the tap: iOS only starts sound from one
     const go = () => {
       if (state !== "starting") return;
@@ -361,6 +428,7 @@
   }
   function skip() {
     if (state !== "show") return;
+    if (filmOn) return filmHandover(true);
     if (still) return finish();
     if (sound) { sound.fade(); sound = null; }
     if (now < T.exit) { target = logoTarget(); skipAt = (performance.now() - t0) / 1000; }
@@ -369,6 +437,7 @@
     if (state === "idle") return;
     clearTimers();
     state = "idle"; paused = false; still = false;
+    if (vid) { if (filmOn || !natural) { vid.muted = true; vid.pause(); } filmOn = false; clearTimeout(stallTimer); stallTimer = 0; vid.classList.remove("is-on"); }
     if (sound && !natural) sound.fade();                   // at the natural end the landing chime rings out on its own
     sound = null;
     if (pendingCtx) { pendingCtx.close().catch(() => {}); pendingCtx = null; }
@@ -467,7 +536,6 @@
   };
 
   /* ---------- Profile: replay, and the launch switch ---------- */
-  const store = window.CFB && window.CFB.store;
   const sw = document.getElementById("intro-switch");
   if (sw && store) {
     sw.checked = store.get("intro", "on") !== "off";
@@ -479,6 +547,7 @@
   /* tests and the Profile replay */
   window.CFBIntro = {
     replay: () => { if (state === "idle") open(true); },
+    film: () => ({ on: filmOn, ready: filmReady(), full: filmFull, time: vid ? vid.currentTime : 0, muted: vid ? vid.muted : true, paused: vid ? vid.paused : true }),
     seek: s => ready.then(() => { if (state === "idle") open(); state = "show"; paused = true; gate.classList.add("is-gone"); now = s; if (s > T.exit) target = target || logoTarget(); draw(); }),
     T
   };
