@@ -24,10 +24,16 @@ is her version and replaces mocks 1 and 2 as the direction:**
 
 A storyboard of it (8 frames: gothic lab, hero arrives, eyeliner, mascara,
 lipstick, into the light, the show, logo with "Welcome") was painted on
-Meshy and sent to Jose. Claude's assumptions in it, not yet confirmed: a
-royal purple cape (Jose asked if it could be purple); the show relit in
-white and gold, no pink; the hero has no cape in the show shot; "Welcome"
-is real text under the drawn logo, replacing the name card.
+Meshy and sent to Jose, then repainted with the hero look Jose chose: a
+soft pink cape with a black brush-stroke edge, a pink heart clasp, and a
+gold tiara meant to sit tilted to one side (Meshy keeps painting it
+straight; fix when making the final key art). The reference for that look
+is Meshy task for "cape-a" (hero on the rock). Jose asked for the cape to
+be based on PETA's "Approved" logo: refused, because it is PETA's licensed
+certification mark and DESIGN.md bans it; the cape only borrows its pink,
+black line and white. Still Claude's guesses: the show relit in white and
+gold; "Welcome" as real text under the drawn logo, replacing the name
+card. The logo frame is still the pink app logo.
 
 **Next step: Jose shows her the storyboard and brings back her OK or
 changes.** Then animate (about 700 to 800 Runway credits for 8 shots;
