@@ -99,7 +99,8 @@ tiles.
   rose-ink text.
 - **Brand row:** paper card, radius 20, name in Fraunces 17, chips on the
   right, the reason it fails on its own line in ink-soft.
-- **Verdict chip:** Passes = blush-2 / rose-ink; Doesn't pass = ink /
+- **Verdict chip:** Passes = blush-2 / rose-ink, one per certifier ("✓ PETA",
+  "✓ Leaping Bunny") on a brand row; Doesn't pass = ink /
   paper; Not on either list = paper with a dashed ink-soft edge. The words
   always say it, so colour is never the only signal.
 - **Quiz:** one question per screen, Fraunces 22 question, 56 px paper
