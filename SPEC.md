@@ -41,8 +41,8 @@ me**.
    - Strict fails a brand only on a known problem: a parent that tests, or
      sold in mainland China stores, each with a source. An unknown passes
      with a small note ("brand doesn't say where it sells"). Brands almost
-     never publish this (1 of 18 brand sites did, 2026-11-11). Founder to
-     confirm.
+     never publish this (1 of 18 brand sites did, 2026-11-11). Founder
+     approved 2026-11-11.
 5. China: Leaping Bunny's FAQ says China's rules now make it possible, in
    specific cases, to sell there without animal testing and stay certified
    (its China Qualification Program). Trade press dates the change to May 1,
@@ -160,5 +160,7 @@ only if it can be shown to work across skin tones.
   claim in a record has its own source and date; the verdict is computed
   by the app, never stored.
 - 2026-11-11 (Jose): Strict fails only on known problems; unknowns pass
-  with a note (replaces "not confirmed for Strict"). Founder to confirm.
+  with a note (replaces "not confirmed for Strict"). Founder approved
+  2026-11-11, with the labels "Passes" / "Doesn't pass" / "Not on either
+  list".
 - Paid or affiliate links: ever?
