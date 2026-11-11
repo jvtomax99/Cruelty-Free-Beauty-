@@ -128,8 +128,9 @@ only if it can be shown to work across skin tones.
       sites (done 2026-11-11; the other 10 sites block automated readers)
 
 ### Phase 3: Directory
-- [ ] Brand list, search, filters, strictness switch
-- [ ] Brand page and where to buy
+- [x] Brand list, search, filters, strictness switch (2026-11-11)
+- [x] Brand page and where to buy (2026-11-11; Kosas and Juvia's links
+      come from their sites but can't be opened from the cloud environment)
 
 ### Phase 4: Beauty profile
 - [ ] Quiz, profile, suggested routine
