@@ -37,7 +37,12 @@ me**.
    - *Certified:* listed by PETA or certified by Leaping Bunny.
    - *Strict* (the founder's original rule): certified, parent company does
      not test, and not sold in mainland China stores.
-   - Default: TO FILL (recommended: Strict, the founder's mission).
+   - Default: Strict (decided 2026-11-11).
+   - Strict fails a brand only on a known problem: a parent that tests, or
+     sold in mainland China stores, each with a source. An unknown passes
+     with a small note ("brand doesn't say where it sells"). Brands almost
+     never publish this (1 of 18 brand sites did, 2026-11-11). Founder to
+     confirm.
 5. China: Leaping Bunny's FAQ says China's rules now make it possible, in
    specific cases, to sell there without animal testing and stay certified
    (its China Qualification Program). Trade press dates the change to May 1,
@@ -57,7 +62,9 @@ me**.
 - **Install and offline.** Done when it installs on an iPhone and an
   Android phone and opens with the brand list in airplane mode.
 - **Brand directory and search.** Done when 30 makeup brands each have a
-  full record with working evidence links and a last-checked date, and
+  record where every claim has a working evidence link and a last-checked
+  date or is marked unknown (2026-11-11: brands rarely publish China sales
+  or owners), and
   search finds any of them by name on a phone.
 - **Brand page.** Done when it shows both certifications, the parent
   company, China, vegan, where to buy, sources and the checked date, and
@@ -87,7 +94,8 @@ me**.
 - Brand-change alerts.
 - An app-store app.
 - Skincare, hair and household products.
-- Paid or affiliate links (TO FILL: ever? If yes, always disclosed).
+- Paid or affiliate links (undecided; the data has a link-type field so
+  they can be added later, always disclosed).
 
 ## Later
 
@@ -105,9 +113,12 @@ only if it can be shown to work across skin tones.
 - [x] Site check on every pull request
 
 ### Phase 2: Brand data
-- [ ] Research and verify 30 makeup brands from primary sources
-- [ ] `data/brands.json` plus a check script (missing fields, dead links,
+- [x] Research and verify 30 makeup brands from primary sources (certifier
+      status for all 30; unknowns marked)
+- [x] `data/brands.json` plus a check script (missing fields, dead links,
       checks older than 90 days)
+- [ ] Fill price and where to buy for the 17 brands left (needs the
+      second batch of sites allowed), and owners where a source exists
 
 ### Phase 3: Directory
 - [ ] Brand list, search, filters, strictness switch
@@ -123,12 +134,20 @@ only if it can be shown to work across skin tones.
 
 ## Open questions (TO FILL)
 
-- The founder's name, and who will recheck brands every 90 days.
-- Default strictness.
+- The founder's name (stays out of the repo until Jose fills it in).
 - 1 to 3 websites whose look the founder likes (for DESIGN.md).
 
 ## Decided
 
 - 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
   quiz; $0 asset budget; soft luxury look; Fraunces headings.
+- 2026-11-11 (Jose): default strictness is Strict. Brand rechecks run as a
+  monthly scheduled Claude task that opens a pull request for Jose to
+  approve. Affiliate links undecided; the data leaves room for them.
+  Brand list: 24 likely certified plus 6 popular brands that may fail
+  (Maybelline, L'Oréal Paris, MAC, Estée Lauder, Clinique, Benefit). Each
+  claim in a record has its own source and date; the verdict is computed
+  by the app, never stored.
+- 2026-11-11 (Jose): Strict fails only on known problems; unknowns pass
+  with a note (replaces "not confirmed for Strict"). Founder to confirm.
 - Paid or affiliate links: ever?

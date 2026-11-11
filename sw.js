@@ -4,13 +4,14 @@
    background, then takes over: the next launch is the new version, whole.
    Paths are relative to the worker's scope, so it works under /Cruelty-Free-Beauty-/.
    Bump CACHE_VERSION in every change that touches a file listed below. */
-const CACHE_VERSION = "cfb-v2";
+const CACHE_VERSION = "cfb-v3";
 const PRECACHE = [
   "./",
   "index.html",
   "app.css",
   "app.js",
   "learn.js",
+  "data/brands.json",
   "manifest.webmanifest",
   "assets/logo.svg",
   "assets/fonts/fraunces.woff2",

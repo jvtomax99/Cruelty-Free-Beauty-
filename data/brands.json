@@ -1,0 +1,1378 @@
+{
+ "schema": 1,
+ "updated": "2026-11-11",
+ "brands": [
+  {
+   "id": "elf",
+   "name": "e.l.f. Cosmetics",
+   "search": [
+    "e.l.f. Cosmetics",
+    "elf cosmetics"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/elf-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1018",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.elfcosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review"
+  },
+  {
+   "id": "milani",
+   "name": "Milani",
+   "search": [
+    "Milani"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/milani-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2101",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.milanicosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.milanicosmetics.com/",
+    "note": "Median $12.99 across 111 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "colourpop",
+   "name": "ColourPop",
+   "search": [
+    "ColourPop"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/colourpop-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://colourpop.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://colourpop.com/",
+    "note": "Median $10.00 across 163 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "fenty-beauty",
+   "name": "Fenty Beauty",
+   "search": [
+    "Fenty"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/fenty-beauty/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": "https://fentybeauty.com/pages/help-faqs",
+    "note": "Brand's FAQ: \"No, we do not test our products on animals in any region.\" It does not say whether it sells in mainland China stores.",
+    "checked": "2026-11-11"
+   },
+   "vegan": "unknown",
+   "price": "$$$",
+   "productTypes": [
+    "lips",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://fentybeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://fentybeauty.com/",
+    "note": "Median $48.00 across 98 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "rare-beauty",
+   "name": "Rare Beauty",
+   "search": [
+    "Rare Beauty"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/cosmetic-ventures/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1342",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.rarebeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.rarebeauty.com/",
+    "note": "Median $23.00 across 76 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "glossier",
+   "name": "Glossier",
+   "search": [
+    "Glossier"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/glossier/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1610",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.glossier.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.glossier.com/",
+    "note": "Median $24.00 across 46 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "tarte",
+   "name": "Tarte",
+   "search": [
+    "Tarte"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/tarte-cosmetics-kose/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Kosé",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/kose/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://tartecosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://tartecosmetics.com/",
+    "note": "Median $26.00 across 144 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "too-faced",
+   "name": "Too Faced",
+   "search": [
+    "Too Faced"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/too-faced-cosmetics-estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.toofaced.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review"
+  },
+  {
+   "id": "urban-decay",
+   "name": "Urban Decay",
+   "search": [
+    "Urban Decay"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/urban-decay-loreal/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.urbandecay.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review"
+  },
+  {
+   "id": "kylie-cosmetics",
+   "name": "Kylie Cosmetics",
+   "search": [
+    "Kylie Cosmetics",
+    "Kylie Jenner"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://kyliecosmetics.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://kyliecosmetics.com/",
+    "note": "Median $22.50 across 58 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "morphe",
+   "name": "Morphe",
+   "search": [
+    "Morphe"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/morphe/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1302",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://morphe.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://morphe.com/",
+    "note": "Median $13.00 across 85 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "wet-n-wild",
+   "name": "wet n wild",
+   "search": [
+    "wet n wild"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/wet-n-wild-markwins/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Markwins",
+    "testsOnAnimals": "no",
+    "url": "https://crueltyfree.peta.org/company/markwins-international/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.wetnwildbeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.wetnwildbeauty.com/",
+    "note": "Median $5.99 across 240 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "physicians-formula",
+   "name": "Physicians Formula",
+   "search": [
+    "Physicians Formula"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/physicians-formula/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.physiciansformula.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.physiciansformula.com/",
+    "note": "Median $14.49 across 188 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "pacifica",
+   "name": "Pacifica",
+   "search": [
+    "Pacifica"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/pacifica/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": "$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.pacificabeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://www.pacificabeauty.com/",
+    "note": "Median $14.00 across 149 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "ilia",
+   "name": "ILIA",
+   "search": [
+    "ILIA"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2218",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2218",
+    "note": "Leaping Bunny: owned by a parent company that is not certified",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://iliabeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://iliabeauty.com/",
+    "note": "Median $37.00 across 50 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "kosas",
+   "name": "Kosas",
+   "search": [
+    "Kosas"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1811",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "charlotte-tilbury",
+   "name": "Charlotte Tilbury",
+   "search": [
+    "Charlotte Tilbury"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/charlotte-tilbury/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "yes",
+    "url": "https://www.charlottetilbury.com/us/help/cruelty-free",
+    "note": "Brand's own help page: \"Charlotte Tilbury products sold in China meet these requirements.\" It says SPF products are not sold in China.",
+    "checked": "2026-11-11"
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://www.charlottetilbury.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review"
+  },
+  {
+   "id": "huda-beauty",
+   "name": "Huda Beauty",
+   "search": [
+    "Huda Beauty"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/huda-beauty/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": "$$",
+   "productTypes": [
+    "lips",
+    "eyes",
+    "cheeks",
+    "face",
+    "brushes",
+    "skincare"
+   ],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://hudabeauty.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "priceSource": {
+    "url": "https://hudabeauty.com/",
+    "note": "Median $25.00 across 65 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   }
+  },
+  {
+   "id": "anastasia-beverly-hills",
+   "name": "Anastasia Beverly Hills",
+   "search": [
+    "Anastasia"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/anastasia-beverly-hills/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "juvias-place",
+   "name": "Juvia's Place",
+   "search": [
+    "Juvia's Place",
+    "Juvias Place",
+    "Juvia"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "Not found in PETA's database",
+    "url": "https://crueltyfree.peta.org/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "makeup-revolution",
+   "name": "Makeup Revolution",
+   "search": [
+    "Revolution"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/revolution-beauty/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "thrive-causemetics",
+   "name": "Thrive Causemetics",
+   "search": [
+    "Thrive"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/thrive-causemetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1752",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "all",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "hourglass",
+   "name": "Hourglass",
+   "search": [
+    "Hourglass"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/hourglass-cosmetics-unilever/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Unilever",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/unilever/",
+    "note": "PETA lists Unilever as \"Working for Regulatory Change\": such companies \"conduct tests on animals only when required by law\".",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "nyx",
+   "name": "NYX Professional Makeup",
+   "search": [
+    "NYX"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/nyx-professional-makeup-loreal/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "maybelline",
+   "name": "Maybelline",
+   "search": [
+    "Maybelline"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/maybelline-loreal/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "loreal-paris",
+   "name": "L'Oréal Paris",
+   "search": [
+    "L'Oreal Paris",
+    "L'Oreal"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "L'Oréal",
+    "testsOnAnimals": "n/a",
+    "url": "https://crueltyfree.peta.org/company/loreal-usa/",
+    "note": "The brand is the parent company",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "mac",
+   "name": "MAC Cosmetics",
+   "search": [
+    "MAC Cosmetics",
+    "M.A.C",
+    "MAC"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/mac-cosmetics-estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "estee-lauder",
+   "name": "Estée Lauder",
+   "search": [
+    "Estee Lauder Companies",
+    "Estee Lauder"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "n/a",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "The brand is the parent company",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "clinique",
+   "name": "Clinique",
+   "search": [
+    "Clinique"
+   ],
+   "peta": {
+    "status": "no",
+    "note": "PETA: does test on animals",
+    "url": "https://crueltyfree.peta.org/company/clinique-estee-lauder/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": "Estée Lauder",
+    "testsOnAnimals": "yes",
+    "url": "https://crueltyfree.peta.org/company/estee-lauder/",
+    "note": "Parent named in PETA's listing; status from PETA's page for the parent",
+    "checked": "2026-11-11"
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  },
+  {
+   "id": "benefit",
+   "name": "Benefit Cosmetics",
+   "search": [
+    "Benefit"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/benefit-cosmetics/",
+    "checked": "2026-11-11"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-11"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [],
+   "review": "needs-review"
+  }
+ ]
+}
