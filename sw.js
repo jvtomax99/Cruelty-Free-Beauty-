@@ -4,7 +4,7 @@
    background, then takes over: the next launch is the new version, whole.
    Paths are relative to the worker's scope, so it works under /Cruelty-Free-Beauty-/.
    Bump CACHE_VERSION in every change that touches a file listed below. */
-const CACHE_VERSION = "cfb-v3";
+const CACHE_VERSION = "cfb-v5";
 const PRECACHE = [
   "./",
   "index.html",
@@ -19,7 +19,8 @@ const PRECACHE = [
   "assets/fonts/inter.woff2",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
-  "assets/icons/apple-touch-icon.png"
+  "assets/icons/apple-touch-icon.png",
+  "assets/icons/icon-maskable-512.png"
 ];
 const SCOPE = new URL(self.registration.scope).pathname;   // e.g. /Cruelty-Free-Beauty-/
 

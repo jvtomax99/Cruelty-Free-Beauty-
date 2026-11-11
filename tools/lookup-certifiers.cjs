@@ -11,6 +11,15 @@
 
 const fs = require('fs');
 
+// Node's fetch ignores HTTPS_PROXY unless NODE_USE_ENV_PROXY is set (cloud
+// sessions reach the web only through a proxy). Re-run once with it on.
+if ((process.env.HTTPS_PROXY || process.env.https_proxy) && !process.env.NODE_USE_ENV_PROXY) {
+  const r = require('child_process').spawnSync(process.execPath, ['--no-warnings', ...process.argv.slice(1)], {
+    stdio: 'inherit', env: { ...process.env, NODE_USE_ENV_PROXY: '1' },
+  });
+  process.exit(r.status === null ? 1 : r.status);
+}
+
 const PETA = 'https://crueltyfree.peta.org';
 const LB = 'https://www.leapingbunny.org';
 const UA = 'Mozilla/5.0 (C.F.B. brand check)';

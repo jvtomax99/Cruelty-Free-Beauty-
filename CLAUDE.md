@@ -12,7 +12,7 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 ## This project: how the general rules apply here
 
 - **Plan and phases:** `SPEC.md` ("Phases"). Phase 1 (look and shell) done
-  2026-11-10. Next: phase 2, brand data.
+  2026-11-10, phase 2 (brand data) 2026-11-11. Next: phase 3, directory.
 - **Real user:** the founder (TO FILL). Remind Jose to check plans, brand
   rules and any words that speak for them with the founder.
 - **Hosting:** GitHub Pages from `main`, root folder, at
@@ -30,16 +30,23 @@ Map of files: `docs/ARCHITECTURE.md`. What and who: `SPEC.md`. Look:
 - **Claims need sources.** Whether a brand is cruelty-free changes (parent
   companies, sales where animal testing is required). Every such claim links
   its source and the date it was checked; never state one from memory.
-- **Handoffs:** new handoffs go in root `HANDOFF.md`. None exists yet.
+- **Handoffs:** new handoffs go in root `HANDOFF.md`. None exists now.
+- **Brand sites:** read them with curl or Playwright from Bash (subagents'
+  WebFetch skips the proxy and fails). Verify every quote before saving.
 - **Rule docs:** `docs/design-rules.md`, `docs/assets.md`,
-  `docs/cleanup-audit.md` and `docs/refactor.md`. `docs/CLEANUP.md` does not
-  exist yet. Assets are listed in `CREDITS.md`. Budget: $0 (free only).
+  `docs/cleanup-audit.md` and `docs/refactor.md`. Cleanup list:
+  `docs/CLEANUP.md` (last audit 2026-11-11). Assets are listed in `CREDITS.md`. Budget: $0 (free only).
 - **Site check.** Every pull request runs `.github/site-check.cjs` ("Site
   check": missing files, links starting with "/", script errors at phone and
   desktop width). It must be green before asking Jose to push. Run it with
   `node .github/site-check.cjs index.html`. A new page goes into the list in
   `.github/workflows/site-check.yml`.
 
+- **Merging (Jose, 2026-11-11):** Claude merges its own pull requests into
+  main without waiting, once the site check is green and the reviewer's
+  findings are fixed; then a phone notification naming the change, plus the
+  one-line undo. Exception: a monthly recheck PR that changes any brand's
+  status waits for Jose. Force push and history rewrites still need asking.
 - **Public repo, paid assets.** The repo is public (checked 2026-11-10), so paid raw files can't be committed (docs/assets.md, section 9) unless Jose makes it private.
 - **Taste skill.** Saved in `.claude/skills/taste/` (Senlin's, MIT; `SOURCE.md` there says where from). It asks for the Playwright MCP server; in a cloud session use the Playwright already installed instead (run its `references/extract.js` with `page.evaluate`).
 - **Refactor prompt.** docs/refactor.md, run when Jose asks for "Refactor: CLEANUP.md items ...".

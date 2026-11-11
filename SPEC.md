@@ -99,6 +99,10 @@ me**.
 
 ## Later
 
+Prices for the 10 brands whose sites block automated readers (e.l.f.,
+Too Faced, Urban Decay, Kosas, Juvia's Place, NYX, Maybelline, L'Oréal
+Paris, Estée Lauder, Benefit): checked by hand, or by the founder.
+
 Barcode scanner, saved list, brand-change alerts, Spanish (EN | ES switch
 like Lions-Roar-), near me, skincare, reviews, a camera undertone helper
 only if it can be shown to work across skin tones.
@@ -117,8 +121,8 @@ only if it can be shown to work across skin tones.
       status for all 30; unknowns marked)
 - [x] `data/brands.json` plus a check script (missing fields, dead links,
       checks older than 90 days)
-- [ ] Fill price and where to buy for the 17 brands left (needs the
-      second batch of sites allowed), and owners where a source exists
+- [x] Price for 20 brands and store links for 28 from the brands' own
+      sites (done 2026-11-11; the other 10 sites block automated readers)
 
 ### Phase 3: Directory
 - [ ] Brand list, search, filters, strictness switch
