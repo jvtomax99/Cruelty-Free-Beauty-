@@ -12,8 +12,8 @@ scheduled task, run the reviewer subagent, open the pull request and send
 Jose a push notification.
 
 ## Done (branch `claude/clever-lovelace-io1u7j`, pushed)
-- SPEC decisions 2026-11-11: Strict default; unknown parent or China shows
-  "not confirmed for Strict"; monthly scheduled Claude recheck opening a
+- SPEC decisions 2026-11-11: Strict default, failing only on known
+  problems (unknowns pass with a note); monthly scheduled Claude recheck opening a
   pull request; affiliate links undecided (`linkType` field); brand list.
 - `data/brands.json`: 30 brands, PETA and Leaping Bunny status sourced and
   dated 2026-11-11. Parents only where PETA names them (L'Oréal, Estée
