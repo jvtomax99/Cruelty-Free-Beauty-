@@ -36,11 +36,11 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
 
   await page.goto(APP + '#brands', { waitUntil: 'networkidle' });
   await page.waitForSelector('#brand-list .brand-row');
-  check((await count()).startsWith(`${strict.length} of 30 brands pass Strict`), `Strict count is ${strict.length}: "${await count()}"`);
+  check((await count()).startsWith(`${strict.length} brands pass Strict`), `Strict count is ${strict.length}: "${await count()}"`);
   check(await rows() === strict.length, `browsing Strict lists ${strict.length} brands (got ${await rows()})`);
 
   await page.click('.mode-btn[data-mode=certified]');
-  check((await count()).startsWith(`${certified.length} of 30 brands pass Certified`), `Certified count is ${certified.length}: "${await count()}"`);
+  check((await count()).startsWith(`${certified.length} brands pass Certified`), `Certified count is ${certified.length}: "${await count()}"`);
   check(await rows() === certified.length, `browsing Certified lists ${certified.length} brands`);
   await page.click('.mode-btn[data-mode=strict]');
 
@@ -57,9 +57,12 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(await rows() === veganStrict.length, `Vegan filter under Strict shows ${veganStrict.length} (got ${await rows()})`);
   await page.click('.chip[data-filter=vegan]');
 
-  await page.click('#brand-more');
-  check(await rows() === 30, '"Show the brands that don\'t pass" lists all 30');
-  await page.click('#brand-more');
+  // Browsing never lists a brand that doesn't pass, and every row names its certifier (founder, 2026-11-11)
+  const listText = await page.textContent('#brand-list');
+  check(!/Doesn't pass|Not on either list|Maybelline|Fenty/.test(listText), 'browsing lists no brand that fails');
+  check(await page.$('#brand-more') === null, 'no "show the brands that don\'t pass" button');
+  const chips = await page.$$eval('#brand-list .brand-row', (a) => a.map((r) => [...r.querySelectorAll('.verdict')].map((c) => c.textContent.replace(/[^A-Za-z ]/g, '').replace('Certified by ', '').trim()).join('+')));
+  check(chips.every((c) => /^(PETA|Leaping Bunny|PETA\+Leaping Bunny)$/.test(c)), `every row names PETA and/or Leaping Bunny (${[...new Set(chips)].join(', ')})`);
 
   // Brand page: Tarte passes Certified but fails Strict over its parent
   await page.evaluate(() => window.scrollTo(0, 400));

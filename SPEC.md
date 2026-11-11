@@ -66,6 +66,9 @@ me**.
   date or is marked unknown (2026-11-11: brands rarely publish China sales
   or owners), and
   search finds any of them by name on a phone.
+  Browsing lists only brands that pass, each row naming its certifier; a
+  brand that doesn't pass appears only when searched or scanned, with the
+  reason (founder, 2026-11-11).
 - **Brand page.** Done when it shows both certifications, the parent
   company, China, vegan, where to buy, sources and the checked date, and
   says "unknown" plainly wherever evidence is missing.

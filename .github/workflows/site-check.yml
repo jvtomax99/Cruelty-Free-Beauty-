@@ -31,6 +31,11 @@ jobs:
       - name: Install the browser
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1
-          npx playwright install --with-deps chromium
+          # The extra system packages (mostly fonts) come from Ubuntu's servers,
+          # which the runner sometimes can't reach (2026-11-11: two pull
+          # requests failed on it). Give that 3 minutes, then install the
+          # browser alone: the runner image already has what Chromium needs,
+          # and if it didn't, the check below would fail to open the page.
+          timeout 180 npx playwright install --with-deps chromium || npx playwright install chromium
       - name: Check the site
         run: node .github/site-check.cjs index.html
