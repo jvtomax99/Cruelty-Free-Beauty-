@@ -34,7 +34,19 @@ logo). The whole storyboard was then repainted (version 4) with that
 rendered bunny as the reference for every hero frame; the stage shot is
 white and gold. The frames live only in the session scratchpad and on
 Meshy (image-to-image tasks of 2026-11-11); repaint them at 2K on Runway
-as key art before animating, using the Welcome bunny as the reference. Open: the film then lands on Home's flat logo, which has no cape
+as key art before animating, using the Welcome bunny as the reference.
+
+The Welcome frame's design is chosen (Jose, 2026-11-11): a bright white
+stage (sheer white curtains, a ring of gold bulbs behind the hero, white
+spotlight, gold glitter), and real text over a white veil at the bottom:
+"C.F.B. PRESENTS" in Inter 600 small capitals, tracked .34em, dark gold
+#9A6B14; "Welcome" in Fraunces italic 500, about 66 px on a 384 px wide
+screen, gold foil gradient #8A5E12 to #C99A3A to #F4DC9A and back; a thin
+gold rule with a diamond; then the slogan in Fraunces 16 px, "best on
+skin." italic in #B4586A. The gold gradient's pale middle is low contrast
+on white: check it on a phone and darken if it is hard to read. These
+replace the night name card in `intro.js` and need new tokens in
+DESIGN.md when built. Open: the film then lands on Home's flat logo, which has no cape
 or tiara, so either the app logo is redrawn to match or the landing is
 replaced by a fade. The reference for that look
 is Meshy task for "cape-a" (hero on the rock). Jose asked for the cape to
