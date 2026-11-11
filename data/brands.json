@@ -44,7 +44,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "milani",
@@ -99,6 +101,23 @@
     "url": "https://www.milanicosmetics.com/",
     "note": "Median $12.99 across 111 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.milanicosmetics.com/",
+     "note": "Product names on the brand's own site (159 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.milanicosmetics.com/collections/foundation",
+    "label": "Foundation page",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -151,7 +170,24 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://colourpop.com/",
-    "note": "Median $10.00 across 163 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "note": "Median $10.00 across 892 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://colourpop.com/",
+     "note": "Product names on the brand's own site (1077 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://colourpop.com/",
+    "label": "Brand's site",
     "checked": "2026-11-11"
    }
   },
@@ -187,7 +223,7 @@
     "checked": "2026-11-11"
    },
    "vegan": "unknown",
-   "price": "$$$",
+   "price": "$$",
    "productTypes": [
     "lips",
     "cheeks",
@@ -205,9 +241,22 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://fentybeauty.com/",
-    "note": "Median $48.00 across 98 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "note": "Median $26.00 across 827 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
-   }
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://fentybeauty.com/",
+     "note": "Product names on the brand's own site (1067 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": null
   },
   {
    "id": "rare-beauty",
@@ -261,6 +310,23 @@
    "priceSource": {
     "url": "https://www.rarebeauty.com/",
     "note": "Median $23.00 across 76 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.rarebeauty.com/",
+     "note": "Product names on the brand's own site (155 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.rarebeauty.com/pages/shade-finder",
+    "label": "Shade finder",
     "checked": "2026-11-11"
    }
   },
@@ -317,6 +383,23 @@
     "url": "https://www.glossier.com/",
     "note": "Median $24.00 across 46 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": false,
+    "lip": true,
+    "source": {
+     "url": "https://www.glossier.com/",
+     "note": "Product names on the brand's own site (118 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.glossier.com/products/perfecting-skin-tint",
+    "label": "Shade guide on the Skin Tint page",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -372,6 +455,23 @@
     "url": "https://tartecosmetics.com/",
     "note": "Median $26.00 across 144 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://tartecosmetics.com/",
+     "note": "Product names on the brand's own site (249 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://tartecosmetics.com/pages/shade-finder",
+    "label": "Shade finder",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -415,7 +515,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "urban-decay",
@@ -458,7 +560,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "kylie-cosmetics",
@@ -511,9 +615,22 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://kyliecosmetics.com/",
-    "note": "Median $22.50 across 58 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "note": "Median $22.00 across 66 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
-   }
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://kyliecosmetics.com/",
+     "note": "Product names on the brand's own site (262 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": null
   },
   {
    "id": "morphe",
@@ -568,6 +685,23 @@
     "url": "https://morphe.com/",
     "note": "Median $13.00 across 85 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://morphe.com/",
+     "note": "Product names on the brand's own site (171 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://morphe.com/",
+    "label": "Brand's site",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -621,7 +755,24 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://www.wetnwildbeauty.com/",
-    "note": "Median $5.99 across 240 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "note": "Median $4.99 across 543 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.wetnwildbeauty.com/",
+     "note": "Product names on the brand's own site (558 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.wetnwildbeauty.com/",
+    "label": "Brand's site",
     "checked": "2026-11-11"
    }
   },
@@ -678,6 +829,23 @@
     "url": "https://www.physiciansformula.com/",
     "note": "Median $14.49 across 188 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.physiciansformula.com/",
+     "note": "Product names on the brand's own site (196 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.physiciansformula.com/collections/foundations",
+    "label": "Foundation page",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -730,7 +898,24 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://www.pacificabeauty.com/",
-    "note": "Median $14.00 across 149 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "note": "Median $14.00 across 154 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.pacificabeauty.com/",
+     "note": "Product names on the brand's own site (255 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.pacificabeauty.com/collections/foundation",
+    "label": "Foundation page",
     "checked": "2026-11-11"
    }
   },
@@ -787,6 +972,23 @@
     "url": "https://iliabeauty.com/",
     "note": "Median $37.00 across 50 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://iliabeauty.com/",
+     "note": "Product names on the brand's own site (77 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://iliabeauty.com/pages/foundation-shade-finder",
+    "label": "Shade finder",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -830,7 +1032,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "charlotte-tilbury",
@@ -878,7 +1082,9 @@
     "url": "https://www.charlottetilbury.com/us",
     "note": "Median $83.70 across 169 prices shown on the brand's US home page (gift sets included; single products seen at about $25 to $50). Over $35 is $$$.",
     "checked": "2026-11-11"
-   }
+   },
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "huda-beauty",
@@ -933,7 +1139,20 @@
     "url": "https://hudabeauty.com/",
     "note": "Median $25.00 across 65 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
-   }
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://hudabeauty.com/",
+     "note": "Product names on the brand's own site (147 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": null
   },
   {
    "id": "anastasia-beverly-hills",
@@ -988,6 +1207,23 @@
     "url": "https://www.anastasiabeverlyhills.com/",
     "note": "Median $25.00 across 113 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.anastasiabeverlyhills.com/",
+     "note": "Product names on the brand's own site (180 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.anastasiabeverlyhills.com/pages/shade-finder",
+    "label": "Shade finder",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -1033,7 +1269,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "makeup-revolution",
@@ -1086,7 +1324,24 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://www.revolutionbeauty.com/",
-    "note": "Median £6.00 across 184 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$. Prices on this site are in pounds (UK site).",
+    "note": "Median £5.00 across 522 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$. Prices on this site are in pounds (UK site).",
+    "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.revolutionbeauty.com/",
+     "note": "Product names on the brand's own site (631 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.revolutionbeauty.com/collections/foundation",
+    "label": "Foundation page",
     "checked": "2026-11-11"
    }
   },
@@ -1143,6 +1398,23 @@
     "url": "https://thrivecausemetics.com/",
     "note": "Median $26.00 across 72 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://thrivecausemetics.com/",
+     "note": "Product names on the brand's own site (163 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://thrivecausemetics.com/pages/shade-finder",
+    "label": "Shade finder",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -1198,6 +1470,23 @@
     "url": "https://www.hourglasscosmetics.com/",
     "note": "Median $39.00 across 89 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.hourglasscosmetics.com/",
+     "note": "Product names on the brand's own site (152 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": {
+    "url": "https://www.hourglasscosmetics.com/pages/foundation-shade-finder",
+    "label": "Shade finder",
+    "checked": "2026-11-11"
    }
   },
   {
@@ -1241,7 +1530,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "maybelline",
@@ -1284,7 +1575,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "loreal-paris",
@@ -1328,7 +1621,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "mac",
@@ -1383,9 +1678,22 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://www.maccosmetics.com/",
-    "note": "Median $27.00 across 207 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "note": "Median $27.00 across 1906 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
-   }
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.maccosmetics.com/",
+     "note": "Product names on the brand's own site (2000 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": null
   },
   {
    "id": "estee-lauder",
@@ -1429,7 +1737,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   },
   {
    "id": "clinique",
@@ -1463,7 +1773,7 @@
     "checked": null
    },
    "vegan": "unknown",
-   "price": "$$",
+   "price": "$$$",
    "productTypes": [
     "lips",
     "eyes",
@@ -1482,9 +1792,22 @@
    "review": "needs-review",
    "priceSource": {
     "url": "https://www.clinique.com/",
-    "note": "Median $32.00 across 218 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
+    "note": "Median $38.00 across 1055 single products listed on the brand's own site (sets and bundles left out). Under $15 is $, $15 to $35 is $$, over $35 is $$$.",
     "checked": "2026-11-11"
-   }
+   },
+   "sells": {
+    "foundation": true,
+    "concealer": true,
+    "blush": true,
+    "bronzer": true,
+    "lip": true,
+    "source": {
+     "url": "https://www.clinique.com/",
+     "note": "Product names on the brand's own site (1241 products read).",
+     "checked": "2026-11-11"
+    }
+   },
+   "shadeFinder": null
   },
   {
    "id": "benefit",
@@ -1527,7 +1850,9 @@
      "linkType": "plain"
     }
    ],
-   "review": "needs-review"
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null
   }
  ]
 }

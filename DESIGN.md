@@ -99,6 +99,13 @@ tiles.
 - **Verdict chip:** Passes = blush-2 / rose-ink; Doesn't pass = ink /
   paper; Not on either list = paper with a dashed ink-soft edge. The words
   always say it, so colour is never the only signal.
+- **Quiz:** one question per screen, Fraunces 22 question, 56 px paper
+  answer cards (chosen: blush-2), a rose progress bar on blush, Back as a
+  rose text button.
+- **Profile card:** blush panel, summary in rose-ink semibold, undertone
+  chips to change it by hand.
+- **Routine step:** paper card like the fact card; brand name in Fraunces
+  17 (links to its page), the reason in ink-soft, "Find your shade" link.
 - **Fact card (brand page):** small-caps rose-ink label, the status at 17
   semibold, then the source link and "Checked" date. Two columns from
   900 px.
