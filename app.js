@@ -10,7 +10,7 @@
   window.CFB = { store };
 
   /* ---------- Screens (hash routing, so the Back button retraces) ---------- */
-  const SCREENS = ["home", "brands", "profile", "learn"];
+  const SCREENS = ["home", "brands", "profile", "learn", "scan"];
   const scrollOf = {};   // each screen keeps its own scroll, like a phone's tab bar
   let current = null;     // screen whose scroll we remember
   let lastShown = null;   // screen on view, for moving focus
@@ -18,7 +18,7 @@
     const hash = location.hash.slice(1);
     const isBrand = hash.startsWith("brand/");   // #brand/<id>: one brand's page, under the Brands tab
     const name = isBrand ? "brand" : SCREENS.includes(hash) ? hash : "home";
-    const tab = isBrand ? "brands" : name;
+    const tab = isBrand ? "brands" : name === "scan" ? "home" : name;   // Scan opens from Home
     if (current) scrollOf[current] = window.scrollY;
     document.querySelectorAll("[data-screen]").forEach(s => { s.hidden = s.dataset.screen !== name; });
     document.querySelectorAll("[data-tab]").forEach(t => {
@@ -51,7 +51,7 @@
   /* ---------- Press feedback on touch ----------
      :hover never fires on a phone, and :active flickers off before the eye sees it,
      so a touched control holds .is-pressed for 260 ms (Interp's pattern). */
-  const LIFTS = ".tile, .tab, .search, .learn summary, .brand-row, .chip, .mode-btn, .quiz-opt, .in-btn, .in-skip, .pill-btn";
+  const LIFTS = ".tile, .tab, .search, .learn summary, .brand-row, .chip, .mode-btn, .quiz-opt, .save-btn, .scan-link, .pf-start, .in-btn, .in-skip, .pill-btn";
   const HOLD_MS = 260;
   document.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse") return;

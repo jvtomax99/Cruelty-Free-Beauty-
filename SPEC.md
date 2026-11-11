@@ -125,7 +125,6 @@ me**.
 - Camera skin or undertone analysis (lighting makes it unreliable; face
   photos are biometric data).
 - Exact shade matching across brands (no free shade data).
-- Barcode scanner (phase 5).
 - Reviews, photo uploads, accounts, sign-in.
 - Store stock or "near me".
 - Brand-change alerts.
@@ -142,7 +141,7 @@ Prices for the 10 brands whose sites block automated readers (e.l.f.,
 Too Faced, Urban Decay, Kosas, Juvia's Place, NYX, Maybelline, L'Oréal
 Paris, Estée Lauder, Benefit): checked by hand, or by the founder.
 
-Barcode scanner, saved list, brand-change alerts, Spanish (EN | ES switch
+Brand-change alerts, Spanish (EN | ES switch
 like Lions-Roar-), near me, skincare, reviews, a camera undertone helper
 only if it can be shown to work across skin tones.
 
@@ -171,10 +170,15 @@ only if it can be shown to work across skin tones.
 ### Phase 4: Beauty profile
 - [x] Quiz, profile, suggested routine (2026-11-11; brands per step)
 
-### Phase 5: Scanner and saved list
-- [ ] Barcode scan (Open Beauty Facts for barcode to brand; a code
+### Phase 5: Scanner and saved list (done 2026-11-11)
+- [x] Barcode scan (Open Beauty Facts for barcode to brand; a code
       library for iPhone, which has no built-in barcode reader)
-- [ ] Saved list on the phone
+      Done when: scanning a real Maybelline barcode shows "Doesn't pass"
+      (Strict) with a link to its proof; a barcode Open Beauty Facts doesn't
+      know asks which brand is on the box.
+- [x] Saved list on the phone
+      Done when: a brand saved from its page or a scan shows on Profile
+      after a reload and offline.
 
 ### Launch show (added 2026-11-11, after phase 4)
 - [x] New bunny logo (sitting, hugging a lipstick, hearts) and icons
@@ -220,4 +224,12 @@ only if it can be shown to work across skin tones.
   with a note (replaces "not confirmed for Strict"). Founder approved
   2026-11-11, with the labels "Passes" / "Doesn't pass" / "Not on either
   list".
+- 2026-11-11 (Jose): phase 5. The scanner replaces the "Where to buy" Home
+  tile, plus a scan button beside the Brands search. A brand we haven't
+  checked gets "We haven't checked it yet" and links to search PETA and
+  Leaping Bunny, never a verdict from memory, and is noted on the phone.
+  Saved brands show on the Profile screen. Reader: `barcode-detector`
+  (MIT, zxing-wasm reader), saved in the repo, used only where the phone
+  has no built-in reader. Open Beauty Facts covers our brands thinly, so
+  typing the brand is part of the main flow.
 - Paid or affiliate links: ever?
