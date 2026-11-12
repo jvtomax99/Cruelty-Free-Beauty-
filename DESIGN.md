@@ -170,24 +170,24 @@ other an outline. The focus ring on night is `--pink`. Letterbox bars
 (6vh, at most 56 px) frame the show like a film. Reduced motion: the
 finished hero pose, held 1.6 s, then a 0.6 s fade.
 
-The film (version 2, remade 2026-11-12) is the founder's story: it starts
-in a dark, slightly gothic lab (cold blue, storybook, never frightening)
-and ends in white and gold. It fills a phone screen (cropped to fit, no
-letterbox bars). On a wide screen it is a centred 9:16 column whose side
-edges fade into the stage behind, which turns from night to white
-(`--day` #FFFFFF, `--day-2` #FBF6EE) when the white Welcome stage starts;
-Skip then sits on `--night-veil` with white text. On a phone held
-sideways only the word "Welcome" shows.
-The Welcome frame is real text on a white veil (`--day-veil`) over the
-bottom 46% of the screen: "C.F.B. PRESENTS" in Inter 600 capitals,
-0.34em, `--fs-cap2`, `--gold-ink` #9A6B14; "Welcome" in Fraunces italic
-500, about 66 px on a phone, in a gold foil gradient (`--gold-deep`
-#8A5E12, `--gold` #C99A3A, `--gold-pale` #F4DC9A and back); a thin gold
-rule with a diamond; the slogan in Fraunces `--fs-call` with "best on
-skin." italic in `--berry` #B4586A. The film's last 1.15 s fades to white
-and holds; the drawn logo appears where the film's hero floated, holds
-0.9 s over the Welcome text, and flies to Home. Gold is for this frame
-only. Never show PETA's logo or bunny-ears mark, in the film or anywhere.
+The film (version 2, remade twice on 2026-11-12) is set in a glamorous
+dressing room at dusk: bronze shadow, warm mirror bulbs, gold rim light,
+ivory satin, marble, pearls, soft pink accents only; one sunlit garden
+shot. No pink or plum wash. It fills a phone screen (cropped to fit, no
+letterbox bars); on a wide screen it is a centred 9:16 column whose side
+edges fade into the night stage. Every word is real text in `.in-over`,
+which sits exactly on the film and sizes itself in the film's own units
+(cqw), so phone and column lay out the same. Lines over the film are
+Fraunces 500 with the second line italic: `--gold-pale` #F4DC9A on a
+`--night-veil` shade over the dressing room, `--gold-deep` #8A5E12 with
+`--berry` italic on a `--day-veil` over the garden. The phone is drawn in
+CSS; its cards are `--paper` with a thin `--gold` edge, an "Example" tag,
+the app's own chips ("Passes" blush, "Doesn't pass" ink), a label and a
+Fraunces status line for brand and for parent company, and "See why" in
+`--rose`. The chosen card gets a `--pink` outline and a filled heart. The
+button is `--rose` with a `--gold-pale` hairline, at least 56 px tall.
+Skip stays top right throughout. Never show PETA's logo or bunny-ears
+mark, real brand names, or a cage.
 
 ## Don'ts
 

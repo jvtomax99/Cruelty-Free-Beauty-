@@ -61,17 +61,16 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.click('.in-skip');
   check(await gone(page, 1500), 'Skip mid-show reaches Home in under 1.5 s');
 
+  await page.evaluate(() => localStorage.clear());        // as on a first visit, so the next two checks test their own rule
   await page.goto(BASE + '?intro=0');
   check(!await showing(page), '?intro=0 skips the show');
   await page.goto(BASE + '#brand/tarte'); await page.reload();
   check(!await showing(page), 'a link to one brand skips the show');
-  await page.goto(BASE + '?intro=0#profile');
-  await page.click('#intro-switch');
+  await page.goto(BASE); await page.click('[data-sound=off]'); await page.waitForTimeout(500); await page.click('.in-skip'); await gone(page, 1500);
   await page.goto(BASE + '#home'); await page.reload();
-  check(!await showing(page), 'Profile switch off: no show at launch');
+  check(!await showing(page) && await page.evaluate(() => localStorage.getItem('cfb-intro-seen')) === '1', 'after the first visit the opening does not play again at launch');
   await page.goto(BASE + '?intro=1');
-  check(await showing(page), '?intro=1 forces it even when switched off');
-  await page.evaluate(() => localStorage.removeItem('cfb-intro'));
+  check(await showing(page), '?intro=1 forces it on a later visit');
   await page.goto(BASE + '?intro=0#profile');
   await page.click('#intro-replay');
   check(await showing(page), 'Replay the opening shows the gate again');
@@ -123,7 +122,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   const filmReady = (p) => p.waitForFunction(() => window.CFBIntro && window.CFBIntro.film().ready, null, { timeout: 15000 }).then(() => true, () => false);
   const countCtx = (p) => p.addInitScript(() => { const A = window.AudioContext; window.__ctxs = 0; window.AudioContext = function () { window.__ctxs++; return new A(); }; });
 
-  // every open: the whole film with sound, then Home
+  // a first visit: the whole film with sound, its words on their beats, then Home
   const [fc, fp] = await openFilm();
   await countCtx(fp);
   await fp.goto(BASE);
@@ -134,26 +133,42 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(f.on && !f.muted && !f.paused && f.time > 0.5 && f.time < 3, `film: "Enter with sound" plays it from the start, with sound (at ${f.time.toFixed(1)} s)`);
   check(await fp.evaluate(() => getComputedStyle(document.querySelector('.in-film')).opacity) === '1', 'film: it is on screen');
   check(await fp.evaluate(() => document.activeElement.className) === 'in-skip', 'film: focus is on Skip');
-  check(!f.day && await fp.evaluate(() => +getComputedStyle(document.querySelector('.in-welcome')).opacity) === 0, 'film: it starts on the night stage, no Welcome yet');
-  await fp.waitForFunction(() => window.CFBIntro.film().time > 22.6, null, { timeout: 30000 }).catch(() => {});
-  const wel = await fp.evaluate(() => { const o = (q) => +getComputedStyle(document.querySelector(q)).opacity; return { box: o('.in-welcome'), word: o('.in-w-word'), text: document.querySelector('.in-w-word').textContent, card: o('.in-card'), day: window.CFBIntro.film().day, bars: getComputedStyle(document.querySelector('.in-bars i')).transform }; });
-  check(wel.box === 1 && wel.word === 1 && wel.text === 'Welcome' && wel.card === 0, `film: "Welcome" is up over the last shot as real text, the night name card is not (${JSON.stringify(wel)})`);
-  check(wel.day && /matrix\(1, 0, 0, 0,/.test(wel.bars), 'film: the stage behind it has turned white and the letterbox bars are away');
-  // the film's hero turns into the drawn logo, with Welcome still under it
-  await fp.waitForFunction(() => !window.CFBIntro.film().on, null, { timeout: 5000 }).catch(() => {});
-  await fp.waitForTimeout(450);
-  const turn = await fp.evaluate(() => { const o = (q) => +getComputedStyle(document.querySelector(q)).opacity, r = document.querySelector('.in-scene svg #body').getBoundingClientRect(); return { film: o('.in-film'), scene: o('.in-scene'), wel: o('.in-welcome'), day: document.getElementById('intro').classList.contains('is-day'), mid: (r.left + r.width / 2) / innerWidth, top: r.top / innerHeight, bottom: r.bottom / innerHeight, showing: document.documentElement.classList.contains('intro-on') }; });
-  check(turn.showing && turn.film < 0.05 && turn.scene > 0.95 && turn.wel > 0.9 && turn.day, `film: at its end the drawn logo stands on the white stage with Welcome under it (${JSON.stringify(turn)})`);
-  check(Math.abs(turn.mid - 0.5) < 0.02 && turn.top > 0.25 && turn.bottom < 0.6, 'film: the logo stands where the film\'s hero floated, above the text');
+  const at = async (t) => { await fp.evaluate((x) => { document.querySelector('.in-film').currentTime = x; }, t); await fp.waitForFunction((x) => { const v = document.querySelector('.in-film'); return !v.seeking && v.currentTime >= x; }, t); await fp.waitForTimeout(450); };
+  const vis = (q) => fp.evaluate((x) => { const n = document.querySelector(x), c = getComputedStyle(n); return c.visibility === 'visible' && +c.opacity > 0.9 ? n.innerText.replace(/\s+/g, ' ').trim() : ''; }, q);
+  check(await vis('.in-ask') === '' && await vis('.in-phone') === '' && await vis('.in-go') === '', 'film: no words, phone or button on the first shot');
+  await at(2.2);
+  check(await vis('.in-ask') === 'Was this tested on animals?', 'film: the question is on screen as real text while she reads the lipstick');
+  await at(4.4);
+  let cardText = await vis('.in-phone');
+  check(/Example/i.test(cardText) && /Doesn't pass/.test(cardText) && /Brand Certified cruelty-free/i.test(cardText) && /Parent company Tests on animals/i.test(cardText) && /See why/.test(cardText) && await vis('.in-ask') === '', `film: the phone shows the example card with brand and parent company apart, and "See why" (${cardText.slice(0, 90)})`);
+  const c1 = await fp.evaluate(() => { const r = document.querySelector('.in-c1').getBoundingClientRect(), s = document.querySelector('.in-screen').getBoundingClientRect(), t = document.querySelector('.in-c1 dd').getBoundingClientRect(); return { inside: r.left >= s.left && r.right <= s.right && r.top >= s.top && r.bottom <= s.bottom, type: t.height }; });
+  check(c1.inside && c1.type >= 16, `film: the card sits inside the phone and its status lines are at least 16 px tall (${Math.round(c1.type)} px)`);
+  await at(6.8);
+  const c2 = await fp.evaluate(() => { const r = document.querySelector('.in-c2').getBoundingClientRect(), o = document.querySelector('.in-c1').getBoundingClientRect(), s = document.querySelector('.in-screen').getBoundingClientRect(); return { in: r.left >= s.left && r.right <= s.right, out: o.right <= s.left + 1, text: document.querySelector('.in-c2').innerText.replace(/\s+/g, ' '), picked: document.querySelector('.in-c2').classList.contains('is-picked') }; });
+  check(c2.in && c2.out && /Try instead/i.test(c2.text) && /Passes/.test(c2.text) && !c2.picked, 'film: the alternative that passes has slid in, not yet chosen');
+  await at(7.6);
+  check(await fp.evaluate(() => document.querySelector('.in-c2').classList.contains('is-picked')), 'film: her tap visibly selects the alternative');
+  await at(9.7);
+  check(await vis('.in-kind') === "Beauty that's kind to them." && await vis('.in-phone') === '', 'film: the garden line is up and the phone is gone');
+  await at(12.4);
+  check(await vis('.in-line') === 'Cruelty-free looks beautiful on you' && await vis('.in-go') === 'Find cruelty-free makeup' && await vis('.in-kind') === '', 'film: the closing line and the "Find cruelty-free makeup" button are up');
+  const lay = await fp.evaluate(() => { const b = document.querySelector('.in-go').getBoundingClientRect(), l = document.querySelector('.in-line').getBoundingClientRect(), k = document.querySelector('.in-skip').getBoundingClientRect(); return { btnH: b.height, btnIn: b.left >= 0 && b.right <= innerWidth && b.bottom <= innerHeight, lineAbove: l.bottom < b.top, skipClear: k.bottom < b.top, skipOn: getComputedStyle(document.querySelector('.in-skip')).opacity === '1' }; });
+  check(lay.btnH >= 44 && lay.btnIn && lay.lineAbove && lay.skipClear && lay.skipOn, `film: the button is a full tap target on screen, the line is above it, Skip is still there (${JSON.stringify(lay)})`);
+  // the film ends: its last frame holds with the button, then Home opens by itself
+  await fp.waitForFunction(() => window.CFBIntro.film().ended, null, { timeout: 5000 }).catch(() => {});
+  const hold = await fp.evaluate(() => ({ showing: document.documentElement.classList.contains('intro-on'), film: +getComputedStyle(document.querySelector('.in-film')).opacity, tab: document.querySelector('.in-go').tabIndex }));
+  check(hold.showing && hold.film === 1 && hold.tab === 0 && await vis('.in-go') !== '', 'film: at its end the last frame is held with the button, which the keyboard can now reach');
   check(await gone(fp, 8000), `film: the whole film plays and lands on Home (${((Date.now() - f0) / 1000).toFixed(1)} s)`);
   const fr = await fp.evaluate(() => ({ inert: document.querySelector('.app').inert, hit: !!document.elementFromPoint(innerWidth / 2, innerHeight / 2).closest('.app'), focus: document.activeElement.id }));
   check(!fr.inert && fr.hit && fr.focus === 'hello-line', 'film: Home takes taps afterwards and focus is on its heading');
-  // the next open plays the whole film again (Jose, 2026-11-11), and quiet stays quiet
+  // a later open goes straight to Home; forced with ?intro=1 it plays again, and quiet stays quiet
   await fp.reload();
-  check(await filmReady(fp), 'film, next open: ready again');
+  check(!await showing(fp), 'film, next open: straight to Home, the opening is for the first visit');
+  await fp.goto(BASE + '?intro=1');
+  check(await filmReady(fp), 'film, forced with ?intro=1: ready again');
   await fp.click('[data-sound=off]'); await fp.waitForTimeout(900);
   f = await film(fp);
-  check(f.on && f.muted && f.time < 3 && !f.day, `film, next open: plays from the start again (${f.time.toFixed(1)} s), muted for "Enter quietly"`);
+  check(f.on && f.muted && f.time < 3, `film, forced again: plays from the start (${f.time.toFixed(1)} s), muted for "Enter quietly"`);
   await fp.evaluate(() => { document.querySelector('.in-film').currentTime = 9; }); await fp.waitForTimeout(400);   // well into the film, so the Replay check below means something
   await fp.click('.in-skip'); await gone(fp, 1500);
   check(await fp.evaluate(() => window.__ctxs) === 0, 'film: "Enter quietly" makes no sound object');
@@ -170,6 +185,26 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(f.paused && f.muted && await fp.evaluate(() => document.activeElement.id) === 'intro-replay', 'film: after Skip it is stopped and silent, focus back on Replay');
   await fc.close();
 
+  // the button at the end opens Home at once
+  const [bc, bp] = await openFilm();
+  await bp.goto(BASE); await filmReady(bp);
+  await bp.click('[data-sound=off]'); await bp.waitForTimeout(600);
+  await bp.evaluate(() => { document.querySelector('.in-film').currentTime = 12.2; }); await bp.waitForTimeout(700);
+  await bp.click('.in-go');
+  check(await gone(bp, 1000), 'film: "Find cruelty-free makeup" opens Home in under 1 s');
+  check(await bp.evaluate(() => ({ hit: !!document.elementFromPoint(innerWidth / 2, innerHeight / 2).closest('.app'), slogan: document.getElementById('hello-line').innerText.replace(/\s+/g, ' ').trim() })).then((r) => r.hit && r.slogan === 'Cruelty-free looks beautiful on you.'), 'Home takes taps and carries the same line: "Cruelty-free looks beautiful on you."');
+  await bc.close();
+
+  // Skip during the held ending
+  const [hc, hp] = await openFilm();
+  await hp.goto(BASE); await filmReady(hp);
+  await hp.click('[data-sound=off]'); await hp.waitForTimeout(600);
+  await hp.evaluate(() => { document.querySelector('.in-film').currentTime = 13.4; });
+  await hp.waitForFunction(() => window.CFBIntro.film().ended, null, { timeout: 5000 }).catch(() => {});
+  await hp.click('.in-skip');
+  check(await gone(hp, 1000), 'film: Skip during the held ending reaches Home in under 1 s');
+  await hc.close();
+
   // the film gets stuck part-way (a dead connection): the app must still open
   const [sc, sp] = await openFilm();
   await sp.goto(BASE); await filmReady(sp);
@@ -185,6 +220,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await dp.click('[data-sound=off]'); await dp.waitForTimeout(600);
   check(!(await film(dp)).on, 'film not loaded at the tap: the drawn show plays');
   check(await gone(dp, 8000), 'film not loaded at the tap: Home in under 8 s');
+  check(await dp.evaluate(() => localStorage.getItem('cfb-intro-seen')) === null, 'film not loaded at the tap: the next visit may try the film again');
   await dc.close();
 
   // like an iPhone: nothing of the film loads until the tap; it must still start, a moment later
@@ -198,7 +234,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   f = await film(ip);
   check(f.on && !f.muted && f.time > 0.2, `film held back until the tap: it still starts, with sound (at ${f.time.toFixed(1)} s)`);
   // a double tap on the gate must not skip the film
-  await ip.goto(BASE); await filmReady(ip);
+  await ip.goto(BASE + '?intro=1'); await filmReady(ip);
   await ip.dblclick('[data-sound=off]', { delay: 30 }); await ip.mouse.click(195, 300); await ip.waitForTimeout(100);
   await ip.waitForTimeout(1200);
   f = await film(ip);
@@ -227,7 +263,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   // offline worker: once saved, the film is served in pieces (phones need that) and survives going offline
   let saved = false;
   for (let i = 0; i < 30 && !saved; i++) {
-    saved = await wp.evaluate(async () => (await (await caches.open('cfb-media-v2')).keys()).length > 0 && !!navigator.serviceWorker.controller);
+    saved = await wp.evaluate(async () => (await (await caches.open('cfb-media-v3')).keys()).length > 0 && !!navigator.serviceWorker.controller);
     if (!saved) await wp.waitForTimeout(500);
   }
   check(saved, 'offline worker: the film is saved after the first play');

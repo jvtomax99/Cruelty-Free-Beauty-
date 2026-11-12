@@ -103,33 +103,43 @@ me**.
   - Done when: the gate shows on every launch, both buttons play the show
     and land on a working Home in under 7 s, Skip works at any moment, and
     `?intro=0` skips it.
-  - **Version 2, the film** (remade 2026-11-12 as the founder's own story).
-    A rendered 24-second film (`assets/video/launch.mp4`), eight beats: a
-    dark, slightly gothic lab with small animals in cages; the hero bunny
-    arrives; eyeliner, then mascara, then lipstick open the cages; everyone
-    walks into the light as the surroundings turn white; the show in white
-    and gold with the hero holding the lipstick; then the hero alone on a
-    white stage. "Welcome" comes in under the hero as real text (gold
-    Fraunces italic, "C.F.B. presents" above, the slogan below), the film
-    fades to white, the drawn logo stands where the hero floated ("the hero
-    turns into the app logo"), and it flies to Home. Reggaeton score with a
-    Puerto Rican feel (Jose): a gothic pulse in the lab, the beat drops when
-    the cages open. The hero's look: round white bunny, closed happy eyes,
-    one small pearl tiara, a soft pink cape with a dark edge and a heart
-    clasp, a charcoal lipstick with a rose bullet; the logo and app icons
-    are redrawn to match. It plays in full on every open. The drawn show
-    (version 1) plays instead when the film can't start within 0.8 s of the
-    tap, on reduced motion, or with data saver on. If the film breaks or
-    freezes for 1.5 s part-way, the app opens at once. "Enter quietly"
-    plays it muted. On a computer the film is a centred column. The offline
-    worker saves the film once it has played. Not in this version: a
-    widescreen cut, a shorter cut for later opens, voice-over.
-    - Done when: one tap on the gate plays the film, "Welcome" shows under
-      the hero, and it lands on a working Home; Skip reaches Home in under
-      1.5 s at any moment; with the film blocked, version 1 lands on Home in
-      under 7 s (under 8 s when the film is merely still loading). Not yet
-      checked on a real iPhone: the test browser can't stand in for one
-      (Jose to try it).
+  - **Version 2, the film** (remade 2026-11-12, second time: Jose's vision
+    of what the app is for). A rendered 13.8-second film
+    (`assets/video/launch.mp4`) set at a vanity in a warm, glamorous
+    dressing room: a lipstick close-up; a woman (a stylised character of
+    the founder) turns it over, curious, and "Was this tested on animals?"
+    appears; she checks it with her phone; a card says "Doesn't pass" with
+    the brand and its parent company on separate lines and "See why"; a
+    second card, "Try instead", "Passes", slides in and her tap selects
+    it; a pink heart rises from the phone into a sunlit garden of
+    comfortable, playful animals and becomes the rabbit ("Beauty that's
+    kind to them."); back at the vanity she wears the lipstick, sets her
+    phone down and the rabbit nudges her hand ("Cruelty-free looks
+    beautiful on you", then the button "Find cruelty-free makeup").
+    The garden is a symbol of compassion: no cage or rescue is shown, and
+    nothing says one purchase saves an animal. Every word, the phone and
+    its cards are real text over the film; the cards are marked "Example"
+    and name no product or brand. A voice in English with a Latina accent
+    speaks her thoughts; it reads fully with the sound off. It plays on
+    the first visit only and from "Replay the opening" in Profile. (If the
+    film was only slow to load and the drawn show played instead, the
+    next visit tries the film again.) On a screen wider than a phone the
+    film is a centred column, not a crop. When it
+    ends, the last frame holds with the button; the button, or 3 seconds,
+    opens Home. The drawn show (version 1) plays instead when the film
+    can't start within 0.8 s of the tap, on reduced motion, or with data
+    saver on. If the film breaks or freezes for 1.5 s, the app opens at
+    once. "Enter quietly" plays it muted. On a computer the film is a
+    centred column. The offline worker saves the film once it has played.
+    Not in this version: a widescreen cut, a tappable "See why", real
+    products on the cards, Spanish.
+    - Done when: on a first visit one tap on the gate plays the film with
+      each line of text on its beat, the two cards readable inside the
+      phone, and the button opens Home; a second visit goes straight to
+      Home; Skip reaches Home in under 1.5 s at any moment; with the film
+      blocked, version 1 lands on Home in under 7 s. Not yet checked on a
+      real iPhone, and the voice and music mix was placed by measurement,
+      not checked by ear by Claude (Jose to listen).
 - **What changed** (founder's ask, 2026-11-11). When a recheck finds that a
   brand's PETA, Leaping Bunny, parent company or China status changed, the
   app says so the next time it is opened: a card on Home (brands the person
@@ -217,6 +227,8 @@ only if it can be shown to work across skin tones.
 - [x] Version 2 remade as the founder's rescue story: 24 seconds, the
       Welcome frame, the logo and icons redrawn as the film's hero
       (2026-11-12)
+- [x] Version 2 remade again as the vanity story with voice, text cards
+      and the button; first visit only; new Home line (2026-11-12)
 
 ### What changed (added 2026-11-11, the founder's ask)
 - [x] `changes` list in the data, checked by `check-brands`
@@ -234,6 +246,21 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-12 (Jose): a new direction for the opening, replacing the
+  rescue film the same day. The app helps people buy makeup that is
+  cruelty-free, and the opening should show that: love of makeup, a moment
+  of concern, the app as the turning point, a cruelty-free alternative, a
+  hopeful garden, her and the rabbit together. It must not suggest that
+  one purchase rescues an animal. Jose's picks: the woman is the founder
+  as a stylised character (painted from a written description; the softer
+  look was preferred over one painted from her photo); dusk dressing-room
+  lighting; about 12 seconds; first visit only with Replay; the closing
+  line "Cruelty-free looks beautiful on you" replaces "Cruelty free looks
+  best on skin." on Home too; the first card says "Doesn't pass" with a
+  reason; voice "la" (a young Latina-accented English voice), made
+  through Runway. The Profile switch is gone (the opening no longer plays
+  at every launch). The founder had not yet seen this version when it was
+  built: Jose to show her.
 - 2026-11-12 (Jose, buttons): the remade film is 24 seconds, all eight
   beats. Frames 2 and 3 of the storyboard were repainted first (a neater
   cape, a visible eyeliner pencil).
