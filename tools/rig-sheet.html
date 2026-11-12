@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8"><style>body{margin:0;background:#fff}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.min.js","three/addons/":"../assets/vendor/three/addons/"}}</script>
+<canvas id="c" width="1500" height="520"></canvas>
+<script type="module">
+import * as THREE from "three"; import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"; import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+const q = new URLSearchParams(location.search), name = q.get("m"), yaw = +(q.get("yaw") || 0);
+const r = new THREE.WebGLRenderer({ canvas: document.getElementById("c"), antialias: true, preserveDrawingBuffer: true }); r.setClearColor(0xffffff); r.autoClear = false;
+const scene = new THREE.Scene(); scene.add(new THREE.HemisphereLight(0xffffff, 0x999999, 2.2));
+const l = new GLTFLoader(); l.setMeshoptDecoder(MeshoptDecoder);
+const g = await l.loadAsync("../assets/sanctuary/" + name + ".glb");
+g.scene.rotation.y = yaw; g.scene.updateMatrixWorld(true);
+let box = new THREE.Box3().setFromObject(g.scene), size = box.getSize(new THREE.Vector3()), mid = box.getCenter(new THREE.Vector3());
+const holder = new THREE.Group(); holder.add(g.scene); g.scene.position.set(-mid.x, -box.min.y, -mid.z); holder.scale.setScalar(1 / size.y); scene.add(holder);
+window.__dims = { x: +(size.x / size.y).toFixed(3), z: +(size.z / size.y).toFixed(3), meshes: 0, tris: 0 }; g.scene.traverse(o => { if (o.isMesh) { __dims.meshes++; __dims.tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+// grid every 0.1 on three planes
+const grid = new THREE.Group(); const mat = new THREE.LineBasicMaterial({ color: 0x3355ff, transparent: true, opacity: .35 }), mat2 = new THREE.LineBasicMaterial({ color: 0xff2222 });
+const pts = (a) => new THREE.BufferGeometry().setFromPoints(a.map(p => new THREE.Vector3(...p)));
+for (let i = -15; i <= 15; i++) { const v = i / 10, m = i % 5 === 0 ? mat2 : mat;
+  grid.add(new THREE.Line(pts([[-2, v, 0], [2, v, 0]]), m), new THREE.Line(pts([[v, -2, 0], [v, 2, 0]]), m), new THREE.Line(pts([[0, v, -2], [0, v, 2]]), m), new THREE.Line(pts([[0, -2, v], [0, 2, v]]), m), new THREE.Line(pts([[-2, 0, v], [2, 0, v]]), m), new THREE.Line(pts([[v, 0, -2], [v, 0, 2]]), m)); }
+scene.add(grid);
+const views = [[[5, 0.5, 0], "side: +Z is LEFT"], [[0, 0.5, 5], "front (from +Z): +X is RIGHT"], [[0, 5, 0.001], "top"]];
+views.forEach(([p], i) => { const c = new THREE.OrthographicCamera(-0.85, 0.85, 1.25, -0.2, 0.1, 20); c.position.set(...p); c.lookAt(0, i === 2 ? 0 : 0.5, 0); if (i === 2) { c.top = 0.9; c.bottom = -0.9; c.updateProjectionMatrix(); } r.setViewport(i * 500, 0, 500, 520); r.render(scene, c); });
+window.__done = true;
+</script>
