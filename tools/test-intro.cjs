@@ -134,9 +134,17 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(f.on && !f.muted && !f.paused && f.time > 0.5 && f.time < 3, `film: "Enter with sound" plays it from the start, with sound (at ${f.time.toFixed(1)} s)`);
   check(await fp.evaluate(() => getComputedStyle(document.querySelector('.in-film')).opacity) === '1', 'film: it is on screen');
   check(await fp.evaluate(() => document.activeElement.className) === 'in-skip', 'film: focus is on Skip');
-  await fp.waitForFunction(() => window.CFBIntro.film().time > 16.6, null, { timeout: 20000 }).catch(() => {});
-  const cardUp = await fp.evaluate(() => { const c = document.querySelector('.in-card'), n = document.querySelector('.in-name'); return +getComputedStyle(c).opacity === 1 && +getComputedStyle(n).opacity === 1; });
-  check(cardUp, 'film: the name card is up over the last shots');
+  check(!f.day && await fp.evaluate(() => +getComputedStyle(document.querySelector('.in-welcome')).opacity) === 0, 'film: it starts on the night stage, no Welcome yet');
+  await fp.waitForFunction(() => window.CFBIntro.film().time > 22.6, null, { timeout: 30000 }).catch(() => {});
+  const wel = await fp.evaluate(() => { const o = (q) => +getComputedStyle(document.querySelector(q)).opacity; return { box: o('.in-welcome'), word: o('.in-w-word'), text: document.querySelector('.in-w-word').textContent, card: o('.in-card'), day: window.CFBIntro.film().day, bars: getComputedStyle(document.querySelector('.in-bars i')).transform }; });
+  check(wel.box === 1 && wel.word === 1 && wel.text === 'Welcome' && wel.card === 0, `film: "Welcome" is up over the last shot as real text, the night name card is not (${JSON.stringify(wel)})`);
+  check(wel.day && /matrix\(1, 0, 0, 0,/.test(wel.bars), 'film: the stage behind it has turned white and the letterbox bars are away');
+  // the film's hero turns into the drawn logo, with Welcome still under it
+  await fp.waitForFunction(() => !window.CFBIntro.film().on, null, { timeout: 5000 }).catch(() => {});
+  await fp.waitForTimeout(450);
+  const turn = await fp.evaluate(() => { const o = (q) => +getComputedStyle(document.querySelector(q)).opacity, r = document.querySelector('.in-scene svg #body').getBoundingClientRect(); return { film: o('.in-film'), scene: o('.in-scene'), wel: o('.in-welcome'), day: document.getElementById('intro').classList.contains('is-day'), mid: (r.left + r.width / 2) / innerWidth, top: r.top / innerHeight, bottom: r.bottom / innerHeight, showing: document.documentElement.classList.contains('intro-on') }; });
+  check(turn.showing && turn.film < 0.05 && turn.scene > 0.95 && turn.wel > 0.9 && turn.day, `film: at its end the drawn logo stands on the white stage with Welcome under it (${JSON.stringify(turn)})`);
+  check(Math.abs(turn.mid - 0.5) < 0.02 && turn.top > 0.25 && turn.bottom < 0.6, 'film: the logo stands where the film\'s hero floated, above the text');
   check(await gone(fp, 8000), `film: the whole film plays and lands on Home (${((Date.now() - f0) / 1000).toFixed(1)} s)`);
   const fr = await fp.evaluate(() => ({ inert: document.querySelector('.app').inert, hit: !!document.elementFromPoint(innerWidth / 2, innerHeight / 2).closest('.app'), focus: document.activeElement.id }));
   check(!fr.inert && fr.hit && fr.focus === 'hello-line', 'film: Home takes taps afterwards and focus is on its heading');
@@ -145,7 +153,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(await filmReady(fp), 'film, next open: ready again');
   await fp.click('[data-sound=off]'); await fp.waitForTimeout(900);
   f = await film(fp);
-  check(f.on && f.muted && f.time < 3, `film, next open: plays from the start again (${f.time.toFixed(1)} s), muted for "Enter quietly"`);
+  check(f.on && f.muted && f.time < 3 && !f.day, `film, next open: plays from the start again (${f.time.toFixed(1)} s), muted for "Enter quietly"`);
   await fp.click('.in-skip'); await gone(fp, 1500);
   check(await fp.evaluate(() => window.__ctxs) === 0, 'film: "Enter quietly" makes no sound object');
   // Replay plays the whole film; Skip leaves it at once

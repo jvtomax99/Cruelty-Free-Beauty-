@@ -13,7 +13,7 @@ const jobs = [
   for (const [out, size, scale] of jobs) {
     const p = await b.newPage({ viewport: { width: size, height: size } });
     await p.setContent(`<body style="margin:0;width:${size}px;height:${size}px;display:grid;place-items:center;
-      background:radial-gradient(90% 90% at 70% 20%,#F6E4E0,#F0D2CE)"><img src="${svg}" style="width:${Math.round(size*scale)}px"></body>`);
+      background:radial-gradient(90% 90% at 70% 20%,#FFFFFF,#F7EFE6)"><img src="${svg}" style="width:${Math.round(size*scale)}px"></body>`);
     await p.screenshot({ path: out }); await p.close();
   }
   await b.close();
