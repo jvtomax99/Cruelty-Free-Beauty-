@@ -142,11 +142,15 @@ tiles.
 ## Logo
 
 `assets/logo.svg` (redrawn 2026-11-11 from Jose's reference picture, our
-own drawing): a white bunny sitting on a pink shadow, hugging a lipstick
-(charcoal tube, pink bullet), closed happy eyes, a "w" smile, blush cheeks,
-white hearts around it. Outline `--bunny-line` #DB6B7E, 3.05:1 on cream
+own drawing; 2026-11-12 it became the film's hero): a white bunny sitting
+on a pink shadow, hugging a lipstick (charcoal tube, pink bullet), closed
+happy eyes, a "w" smile, blush cheeks, a small pearl tiara with a gold
+band (#C99A3A), a soft pink cape (#F6C4CC) with a dark edge (#3E3537) and
+a heart clasp, pale pink hearts around it. The app icons sit on a white to
+ivory tile (#FFFFFF to #F7EFE6), not blush: the founder asked to keep the
+white. Outline `--bunny-line` #DB6B7E, 3.05:1 on cream
 (the 3:1 graphics minimum). Every part has an id (`ears`, `body`, `face`,
-`eye-l`, `bullet`, `hearts`...): the launch show animates them, so keep the
+`eye-l`, `bullet`, `hearts`, `cape`, `tiara`, `collar`, `clasp`...): the launch show animates them, so keep the
 ids when editing. Re-render the icons with `node tools/make-icons.cjs`. It
 reads at 32 px. Never use PETA or Leaping Bunny marks anywhere in the app.
 
@@ -165,6 +169,25 @@ night) and `--night-glass` (buttons over the stage). Labels in
 other an outline. The focus ring on night is `--pink`. Letterbox bars
 (6vh, at most 56 px) frame the show like a film. Reduced motion: the
 finished hero pose, held 1.6 s, then a 0.6 s fade.
+
+The film (version 2, remade 2026-11-12) is the founder's story: it starts
+in a dark, slightly gothic lab (cold blue, storybook, never frightening)
+and ends in white and gold. It fills a phone screen (cropped to fit, no
+letterbox bars). On a wide screen it is a centred 9:16 column whose side
+edges fade into the stage behind, which turns from night to white
+(`--day` #FFFFFF, `--day-2` #FBF6EE) when the white Welcome stage starts;
+Skip then sits on `--night-veil` with white text. On a phone held
+sideways only the word "Welcome" shows.
+The Welcome frame is real text on a white veil (`--day-veil`) over the
+bottom 46% of the screen: "C.F.B. PRESENTS" in Inter 600 capitals,
+0.34em, `--fs-cap2`, `--gold-ink` #9A6B14; "Welcome" in Fraunces italic
+500, about 66 px on a phone, in a gold foil gradient (`--gold-deep`
+#8A5E12, `--gold` #C99A3A, `--gold-pale` #F4DC9A and back); a thin gold
+rule with a diamond; the slogan in Fraunces `--fs-call` with "best on
+skin." italic in `--berry` #B4586A. The film's last 1.15 s fades to white
+and holds; the drawn logo appears where the film's hero floated, holds
+0.9 s over the Welcome text, and flies to Home. Gold is for this frame
+only. Never show PETA's logo or bunny-ears mark, in the film or anywhere.
 
 ## Don'ts
 

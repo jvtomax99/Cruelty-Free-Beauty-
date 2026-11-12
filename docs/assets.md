@@ -53,7 +53,7 @@ After adding an asset, load it on the page. For 3D models, fix the size and dire
 Keep a CREDITS.md file in the repo. For every asset, list the name, where it came from, its license, whether it was bought, the price, and which store account bought it. Remind me to keep my receipts.
 
 ## 12. Folders and names
-Keep assets in clear folders: assets/models, assets/textures, assets/images, assets/icons, assets/fonts, assets/sounds. Use short, plain file names that say what the thing is (oak-tree.glb, not model_final_v2.glb).
+Keep assets in clear folders: assets/models, assets/textures, assets/images, assets/icons, assets/fonts, assets/sounds, assets/video. Use short, plain file names that say what the thing is (oak-tree.glb, not model_final_v2.glb).
 
 ## 13. Keep it light
 Keep file sizes small. Choose low-poly versions when they look good enough, compress textures and images, and tell me if any single asset is over 5 MB.

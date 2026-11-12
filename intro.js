@@ -1,4 +1,7 @@
-/* C.F.B. launch show: a stage reveal for the bunny, about 6 s after one tap.
+/* C.F.B. launch show: a stage reveal for the bunny after one tap.
+   Version 2 is a rendered 24 s film (assets/video/launch.mp4: the rescue, the show, then Welcome) played over
+   the drawn show; see "the film" below.
+   The drawn show (version 1, about 6 s, described next) plays alone whenever the film can't.
    The head of index.html decides before paint whether it plays (html.intro-on): every launch,
    unless ?intro=0, the Profile switch is off, or the link opens one brand (#brand/...); ?intro=1 forces it.
    The gate ("Enter with sound" / "Enter quietly") gives the tap phones need before sound.
@@ -20,6 +23,7 @@
   const bg = $(".in-bg"), flash = $(".in-flash"), bars = el.querySelectorAll(".in-bars i");
   const gate = $(".in-gate"), skipBtn = $(".in-skip");
   const card = { box: $(".in-card"), name: $(".in-name"), label: $(".in-label"), slogan: $(".in-slogan") };
+  const wel = { box: $(".in-welcome"), label: $(".in-w-label"), word: $(".in-w-word"), rule: $(".in-w-rule"), slogan: $(".in-w-slogan") };
   const reduce = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const DAY_THEME = themeMeta ? themeMeta.content : "#FBF6F2";
@@ -83,12 +87,16 @@
     wide = W / H > 1.15; el.classList.toggle("is-wide", wide);
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
     if (svg) Object.assign(svg.style, { width: D + "px", height: D + "px", left: (W - D) / 2 + "px", top: (H - D) / 2 + "px" });
-    if (state === "show" && now > T.exit - 0.3) target = logoTarget();   // turned mid-landing: aim at the new spot
+    if (state === "show" && (target || now > T.exit - 0.3)) target = logoTarget();   // turned mid-landing: aim at the new spot
     if (state !== "idle") draw();
   }
   addEventListener("resize", resize);
   /* the hero framing: the bunny high on a phone (the card goes under it), left on a wide screen (the card goes right) */
   function heroCam(push) {
+    if (day) {                               // after the film: exactly where its hero floats, so one turns into the other
+      const fw = wide ? H * 9 / 16 : Math.max(W, H * 9 / 16), k = fw * FILM.heroW / 880;
+      return { x: 590, y: 590 - (FILM.heroY - 0.5) * fw * 16 / 9 / k, k };
+    }
     const s = wide ? 1060 : 1000, k = Math.min(W, H) / s * (1 + push);
     const sx = wide ? W * 0.33 : W / 2, sy = wide ? H * 0.5 : H * 0.38;
     return { x: 590 - (sx - W / 2) / k, y: 600 - (sy - H / 2) / k, k };
@@ -180,11 +188,69 @@
 
   /* ---------- one frame ---------- */
   let state = "idle", t0 = 0, now = 0, skipAt = null, sound = null, still = false;
+  const store = window.CFB && window.CFB.store;
+
+  /* ---------- the film: version 2, a rendered cut played over the scene above ----------
+     When the film is ready at the tap it plays; the drawn show stays underneath, parked on its hero pose, and
+     takes over for the landing on Home. The film starts in the dark lab and ends on a white stage, so from
+     FILM.light on the night behind it turns white (is-day) and the Welcome text (real text, .in-welcome) comes in
+     at FILM.card; in the film's last FILM.tail seconds it fades to white and the drawn logo appears where the film's
+     hero floated (FILM.heroW, FILM.heroY: the logo's width and centre as shares of the film frame), holds, and
+     flies to Home. The drawn show plays alone when the film can't start within 0.8 s of the
+     tap, on reduced motion, or with data saver on. If the film breaks or freezes part-way, the app opens at once. */
+  const vid = el.querySelector(".in-film");
+  const FILM = { src: "assets/video/launch.mp4", light: 21.3, card: 21.9, tail: 1.15, hold: 0.9, heroW: 0.6, heroY: 0.45 };
+  let filmOn = false, filmAt = -1, filmMoved = 0, filmEnd = 0, day = false;
+  const setDay = on => { if (day !== on) { day = on; el.classList.toggle("is-day", on); if (themeMeta && state !== "idle") themeMeta.content = on ? "#FFFFFF" : "#1C0F13"; } };
+  const saver = () => { const c = navigator.connection; return !!(c && c.saveData); };
+  function filmLoad() {                          // called when the gate opens, so the film buffers while it shows
+    if (!vid) return;
+    vid.pause(); vid.classList.remove("is-on"); filmOn = false; filmEnd = 0; setDay(false); el.classList.remove("is-film");
+    if (reduce() || saver()) return;
+    try {
+      if (!vid.getAttribute("src")) { vid.preload = "auto"; vid.src = FILM.src; vid.load(); }
+      else if (vid.error) vid.load();                          // it failed last time (offline, say): try again
+      else if (vid.readyState > 0) vid.currentTime = 0;        // a replay: back to the first frame
+    } catch (_) {}
+  }
+  const filmReady = () => !!vid && !vid.error && !!vid.getAttribute("src") && vid.readyState >= 3 && !vid.seeking && isFinite(vid.duration);
+  /* Start it inside the tap (phones only start video from one, and an iPhone loads nothing before it).
+     False means the film can't be tried at all. True means play() was called: begin() follows on "playing". */
+  let filmWait = false, filmPlayed = false;
+  function filmTry(withSound) {
+    if (!vid || vid.error || !vid.getAttribute("src") || reduce() || saver()) return null;
+    try { vid.muted = !withSound; vid.volume = 1; filmWait = true; return vid.play() || Promise.resolve(); } catch (_) { filmWait = false; return null; }
+  }
+  function filmBegin() {
+    filmOn = true; filmPlayed = true; filmAt = -1; filmMoved = performance.now(); vid.classList.add("is-on");
+    el.classList.add("is-film");                              // the drawn scene hides under the film
+    target = null; state = "show"; skipBtn.hidden = false; skipBtn.focus({ preventScroll: true });
+    paused = true; now = T.exit - FILM.hold; kick();           // the drawn show waits under it on its hero pose
+  }
+  /* the film is over, skipped or stuck: the drawn bunny, already in its hero pose underneath, flies to Home
+     (fast: at once, and the film goes silent; else after a short hold, while the film's last chord rings out) */
+  function filmHandover(fast) {
+    if (!filmOn) return;
+    filmOn = false; filmEnd = fast ? Math.max(vid.currentTime, 0.001) : Infinity;   // never 0: 0 means "no film this run"
+    setDay(!fast || filmEnd >= FILM.light);                    // skipped in the dark lab: the landing stays on the night stage
+    vid.classList.remove("is-on"); el.classList.remove("is-film");
+    if (fast) { vid.muted = true; vid.pause(); }               // a natural end lets the last chord ring out
+    target = logoTarget(); paused = false;
+    const from = fast ? T.exit : T.exit - FILM.hold;
+    t0 = performance.now() - from * 1000; now = from; skipAt = fast ? from : null;
+  }
+  if (vid) {
+    vid.addEventListener("error", () => filmHandover(true));
+    // back from another app or tab: the phone paused the film; carry on rather than treat it as stuck
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && filmOn) { filmMoved = performance.now(); const p = vid.play(); if (p && p.catch) p.catch(() => {}); } });
+    vid.addEventListener("ended", () => filmHandover(false));
+  }
   const BEAM_GATE = 0.32;
   function draw() {
     const t = state === "gate" ? -1 : now;
     const wall = performance.now() / 1000;
     if (!svg) return;
+    if (filmOn) setDay(vid.currentTime >= FILM.light);
     const c = state === "gate" ? cameraAt(-0.2) : cameraAt(t);
     const vw = D / c.k;
     svg.setAttribute("viewBox", `${c.x - vw / 2} ${c.y - vw / 2} ${vw} ${vw}`);
@@ -237,6 +303,20 @@
     card.label.style.opacity = seg(t, T.card + 0.2, T.card + 0.45);
     const wr = eInOut(seg(t, T.card + 0.4, T.card + 1.05));
     card.slogan.style.clipPath = `inset(-10% ${((1 - wr) * 100).toFixed(1)}% -10% 0)`;
+    // the film's Welcome frame: in on the film's own beat, kept under the drawn logo, out as the bunny leaves for Home
+    const ft = filmOn ? vid.currentTime : filmEnd, wIn = seg(ft, FILM.card, FILM.card + 0.45);
+    wel.box.style.opacity = (wIn * cardOut).toFixed(3);
+    if (filmOn || filmEnd) {
+      card.box.style.opacity = 0; flash.style.opacity = 0;
+      bars.forEach(b => { b.style.transform = "scaleY(0)"; });            // the film fills the screen: no letterbox
+      const rise = eOut(seg(ft, FILM.card + 0.05, FILM.card + 0.6));
+      wel.word.style.opacity = rise; wel.word.style.transform = `translateY(${((1 - rise) * 14).toFixed(1)}px)`;
+      wel.label.style.opacity = seg(ft, FILM.card + 0.25, FILM.card + 0.6);
+      wel.rule.style.transform = `scaleX(${eInOut(seg(ft, FILM.card + 0.4, FILM.card + 0.9)).toFixed(3)})`;
+      wel.slogan.style.opacity = seg(ft, FILM.card + 0.55, FILM.card + 1);
+    }
+    if (day) { P.stage.setAttribute("opacity", 0); P.rings.setAttribute("opacity", 0); }   // no pink spotlight on the white stage
+    else P.stage.removeAttribute("opacity");
 
     const sk = 1 - seg(t, T.exit, T.exit + 0.2);
     skipBtn.style.opacity = sk; skipBtn.style.pointerEvents = sk < 1 ? "none" : "";
@@ -252,7 +332,7 @@
 
     // the canvas: dust in the beam, sparkles, hearts in the door light, fireworks, confetti
     const g = cx2; g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, W, H);
-    if (still) return;
+    if (still || filmOn || filmEnd) return;
     g.globalCompositeOperation = "lighter";
     if (beam > 0.05) {
       for (const d of DUST) {
@@ -307,6 +387,13 @@
   function loop() {
     raf = 0;
     if (state === "idle") return;
+    if (state === "show" && filmOn) {
+      // the film's own clock: near its end the drawn show takes over; frozen for 1.5 s (a dead connection), the same, fast
+      const ft = vid.currentTime, wall = performance.now();
+      if (ft !== filmAt) { filmAt = ft; filmMoved = wall; }
+      if (ft >= vid.duration - FILM.tail) filmHandover(false);
+      else if (wall - filmMoved > 1500) filmHandover(true);
+    }
     if (state === "show" && !paused) {
       now = (performance.now() - t0) / 1000;
       if (skipAt !== null) now = T.exit + (now - skipAt) * 1.6;    // a skip runs the landing a little faster
@@ -318,7 +405,7 @@
   const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
 
   /* every pending timer, so a skip or a replay never inherits an old one */
-  let timers = [], replayed = false, pendingCtx = null;
+  let timers = [], replayed = false, pendingCtx = null, startAt = 0;
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
   const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
 
@@ -330,6 +417,7 @@
     gate.classList.remove("is-gone"); skipBtn.hidden = true;
     if (app) app.inert = true;
     if (themeMeta) themeMeta.content = "#1C0F13";
+    filmLoad();
     resize(); kick();
     const b = gate.querySelector("[data-sound=on]"); if (b) b.focus({ preventScroll: true });
   }
@@ -337,7 +425,10 @@
     if (state !== "gate") return;
     state = "starting";                                     // further taps now skip; they can't start it twice
     gate.classList.add("is-gone"); gate.inert = true;
-    pendingCtx = withSound ? Sound.context() : null;        // made inside the tap: iOS only starts sound from one
+    startAt = performance.now();
+    const trying = svg ? filmTry(withSound) : null;         // play() is called here, inside the tap
+    const sure = !!trying && filmReady();                   // already buffered: no need for the drawn show's sound
+    pendingCtx = withSound && !sure ? Sound.context() : null;   // made inside the tap: iOS only starts sound from one
     const go = () => {
       if (state !== "starting") return;
       const ctx = pendingCtx; pendingCtx = null;
@@ -350,6 +441,23 @@
       later(() => { target = logoTarget(); }, (T.exit - 0.3 + lead) * 1000);
       kick();
     };
+    if (trying) {
+      // the film starts (normally at once; on an iPhone after it loads a little), or within 0.8 s the drawn show does
+      const begin = () => {
+        if (!filmWait || state !== "starting") return;
+        filmWait = false;
+        if (pendingCtx) { pendingCtx.close().catch(() => {}); pendingCtx = null; }
+        filmBegin();
+      };
+      const giveUp = () => {
+        if (!filmWait) return;
+        filmWait = false; vid.removeEventListener("playing", begin); vid.pause();
+        if (state === "starting") go();
+      };
+      vid.addEventListener("playing", begin, { once: true });
+      trying.catch(giveUp); later(giveUp, 800);
+      return;
+    }
     // the logo is normally loaded long before the tap; on a slow first visit, wait at most 1.5 s
     if (svg) go(); else Promise.race([ready, new Promise(r => setTimeout(r, 1500))]).then(go);
   }
@@ -361,6 +469,8 @@
   }
   function skip() {
     if (state !== "show") return;
+    if (filmOn) return filmHandover(true);
+    if (vid && !vid.paused) { vid.muted = true; vid.pause(); }   // a skip while the film's last chord rings
     if (still) return finish();
     if (sound) { sound.fade(); sound = null; }
     if (now < T.exit) { target = logoTarget(); skipAt = (performance.now() - t0) / 1000; }
@@ -369,6 +479,12 @@
     if (state === "idle") return;
     clearTimers();
     state = "idle"; paused = false; still = false;
+    filmWait = false;
+    if (filmPlayed) {                                      // now that it has played, ask the offline worker to keep the film
+      filmPlayed = false;
+      try { if (navigator.serviceWorker) navigator.serviceWorker.ready.then(r => { if (r.active) r.active.postMessage("save-film"); }).catch(() => {}); } catch (_) {}
+    }
+    if (vid) { if (filmOn || !natural) { vid.muted = true; vid.pause(); } filmOn = false; filmEnd = 0; vid.classList.remove("is-on"); el.classList.remove("is-film"); }
     if (sound && !natural) sound.fade();                   // at the natural end the landing chime rings out on its own
     sound = null;
     if (pendingCtx) { pendingCtx.close().catch(() => {}); pendingCtx = null; }
@@ -376,6 +492,7 @@
     el.style.transition = ""; el.style.opacity = "";
     bg.style.webkitMaskImage = bg.style.maskImage = "";
     if (app) app.inert = false;
+    setDay(false);
     if (themeMeta) themeMeta.content = DAY_THEME;
     // focus back into the app: the Replay button after a replay, else the screen's heading
     const f = replayed ? document.getElementById("intro-replay") : document.querySelector(".app [data-screen]:not([hidden]) h1");
@@ -387,7 +504,11 @@
   gate.querySelectorAll("[data-sound]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); start(b.dataset.sound === "on"); }));
   skipBtn.addEventListener("click", e => { e.stopPropagation(); skip(); });
   // a tap anywhere: with sound on the gate, skip after it
-  el.addEventListener("click", () => { if (state === "gate") start(true); else if (state === "starting") finish(); else skip(); });
+  el.addEventListener("click", () => {
+    if (state === "gate") return start(true);
+    if (performance.now() - startAt < 400) return;         // the second half of a double tap must not skip the show
+    if (state === "starting") finish(); else skip();
+  });
   addEventListener("keydown", e => { if (e.key !== "Escape") return; if (state === "gate") start(false); else if (state === "starting") finish(); else skip(); });
 
   /* ---------- the music: made in code (Web Audio), original ----------
@@ -467,7 +588,6 @@
   };
 
   /* ---------- Profile: replay, and the launch switch ---------- */
-  const store = window.CFB && window.CFB.store;
   const sw = document.getElementById("intro-switch");
   if (sw && store) {
     sw.checked = store.get("intro", "on") !== "off";
@@ -479,6 +599,7 @@
   /* tests and the Profile replay */
   window.CFBIntro = {
     replay: () => { if (state === "idle") open(true); },
+    film: () => ({ on: filmOn, day, ready: filmReady(), time: vid ? vid.currentTime : 0, muted: vid ? vid.muted : true, paused: vid ? vid.paused : true }),
     seek: s => ready.then(() => { if (state === "idle") open(); state = "show"; paused = true; gate.classList.add("is-gone"); now = s; if (s > T.exit) target = target || logoTarget(); draw(); }),
     T
   };

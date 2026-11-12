@@ -99,10 +99,37 @@ me**.
   Every launch; Skip and a tap skip it; `?intro=0` skips, `?intro=1`
   forces; never on a link to one brand. Profile: "Play the opening when
   the app starts" switch and "Replay the opening". Not in this version: a
-  shorter cut for later launches, rendered video, voice-over, haptics.
+  shorter cut for later launches, voice-over, haptics.
   - Done when: the gate shows on every launch, both buttons play the show
     and land on a working Home in under 7 s, Skip works at any moment, and
     `?intro=0` skips it.
+  - **Version 2, the film** (remade 2026-11-12 as the founder's own story).
+    A rendered 24-second film (`assets/video/launch.mp4`), eight beats: a
+    dark, slightly gothic lab with small animals in cages; the hero bunny
+    arrives; eyeliner, then mascara, then lipstick open the cages; everyone
+    walks into the light as the surroundings turn white; the show in white
+    and gold with the hero holding the lipstick; then the hero alone on a
+    white stage. "Welcome" comes in under the hero as real text (gold
+    Fraunces italic, "C.F.B. presents" above, the slogan below), the film
+    fades to white, the drawn logo stands where the hero floated ("the hero
+    turns into the app logo"), and it flies to Home. Reggaeton score with a
+    Puerto Rican feel (Jose): a gothic pulse in the lab, the beat drops when
+    the cages open. The hero's look: round white bunny, closed happy eyes,
+    one small pearl tiara, a soft pink cape with a dark edge and a heart
+    clasp, a charcoal lipstick with a rose bullet; the logo and app icons
+    are redrawn to match. It plays in full on every open. The drawn show
+    (version 1) plays instead when the film can't start within 0.8 s of the
+    tap, on reduced motion, or with data saver on. If the film breaks or
+    freezes for 1.5 s part-way, the app opens at once. "Enter quietly"
+    plays it muted. On a computer the film is a centred column. The offline
+    worker saves the film once it has played. Not in this version: a
+    widescreen cut, a shorter cut for later opens, voice-over.
+    - Done when: one tap on the gate plays the film, "Welcome" shows under
+      the hero, and it lands on a working Home; Skip reaches Home in under
+      1.5 s at any moment; with the film blocked, version 1 lands on Home in
+      under 7 s (under 8 s when the film is merely still loading). Not yet
+      checked on a real iPhone: the test browser can't stand in for one
+      (Jose to try it).
 - **What changed** (founder's ask, 2026-11-11). When a recheck finds that a
   brand's PETA, Leaping Bunny, parent company or China status changed, the
   app says so the next time it is opened: a card on Home (brands the person
@@ -185,6 +212,11 @@ only if it can be shown to work across skin tones.
 - [x] New bunny logo (sitting, hugging a lipstick, hearts) and icons
 - [x] The gate, the shots, the music, skip, the landing on Home's logo
 - [x] Profile switch and replay
+- [x] Version 2: the rendered 20-second film, with version 1 as the
+      fallback (2026-11-11)
+- [x] Version 2 remade as the founder's rescue story: 24 seconds, the
+      Welcome frame, the logo and icons redrawn as the film's hero
+      (2026-11-12)
 
 ### What changed (added 2026-11-11, the founder's ask)
 - [x] `changes` list in the data, checked by `check-brands`
@@ -202,6 +234,31 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-12 (Jose, buttons): the remade film is 24 seconds, all eight
+  beats. Frames 2 and 3 of the storyboard were repainted first (a neater
+  cape, a visible eyeliner pencil).
+  Music: take B of two (harpsichord and music box in the lab, then the
+  dembow beat), picked by ear. Icon tile: white to ivory. The arrival
+  shot's wide cape flap stays (Claude offered a retake).
+- 2026-11-11 (the founder, through Jose): the pink stage film "isn't me".
+  The film is now her own story: a dark, slightly gothic lab; the hero
+  frees the animals with eyeliner, mascara and lipstick; they walk into the
+  light; the show in white and gold; the hero turns into the app logo with
+  "Welcome" underneath. She approved the storyboard; Jose approved
+  rendering it and changing the logo and icons to the new bunny. Jose
+  asked for the cape to be "based on" PETA's Approved logo: only its
+  colours and line were used; the mark itself must never appear.
+- 2026-11-11 (Jose, buttons): the film plays in full, 20 seconds, on every
+  open (Claude recommended the full film once and a short ending after;
+  Jose chose every open). The music has a Puerto Rican feel, "think of Bad
+  Bunny": the reggaeton take, picked by ear over a plena and salsa take.
+  The 5-second test clip was approved before the rest was made.
+  The founder saw the finished film and liked it (Jose, 2026-11-11).
+- 2026-11-11 (Jose): the launch show is "too simplistic". Version 2 is to
+  be glamorous and close to the Star Rail reveal: real animated video
+  (key art animated by a video model, Runway credits bought by Jose, so the
+  $0 budget doesn't apply to this piece), about 20 seconds. Version 1 stays
+  as the fallback. (Built the same day; the handoff file is gone.)
 - 2026-11-11 (Jose): a launch show, built now, styled on a game's
   character reveal (the video he sent) and his other apps' intros. The new
   logo is our own redraw of his bunny picture (sitting, hugging a

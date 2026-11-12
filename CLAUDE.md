@@ -19,6 +19,10 @@ differs, this file wins.
   words that speak for the founder with them.
 - **Offline worker.** Bump `CACHE_VERSION` in `sw.js` in every change to a
   file it precaches, or returning users keep the old app.
+- **Launch film.** `assets/video/launch.mp4` (24 s), cut by
+  `tools/make-launch-video.sh`. It is not in the worker's precache list; if
+  the film changes, bump `MEDIA` in `sw.js`. Runway credits are Jose's: ask
+  before spending more. Never show PETA's logo or bunny-ears mark.
 - **Brand sites.** Read them with curl or Playwright from Bash (a subagent's
   WebFetch skips the proxy and fails). Verify every quote before saving.
   Exponent and ACTAsia refuse automated readers; cite the certifiers' own

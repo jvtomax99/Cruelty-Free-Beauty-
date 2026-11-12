@@ -33,6 +33,13 @@
   --veil: rgba(20,9,12,.75);      /* launch show: the vignette's edge */
   --spot-line: rgba(255,227,232,.4);   /* launch show: outlines on night */
   --night-glass: rgba(28,15,19,.4);    /* launch show: buttons over the stage */
+  --day: #FFFFFF;         /* launch film: the white stage it ends on */
+  --day-2: #FBF6EE;       /* launch film: the white stage's edges */
+  --night-veil: rgba(28,15,19,.62);    /* launch film: Skip over the white stage (white text, 7:1 or more) */
+  --day-veil: rgba(255,255,255,.82);   /* launch film: the veil under the Welcome text */
+  --gold-deep: #8A5E12; --gold: #C99A3A; --gold-pale: #F4DC9A;   /* launch film: the Welcome foil */
+  --gold-ink: #9A6B14;    /* launch film: small gold text on white (4.6:1) */
+  --berry: #B4586A;       /* launch film: the slogan's italic on white */
 
   /* type */
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
@@ -417,9 +424,22 @@ html.intro-on .intro {
     radial-gradient(130% 90% at 50% 45%, transparent 45%, var(--veil) 100%),
     radial-gradient(90% 70% at 50% 40%, var(--night-2), var(--night) 72%);
 }
+/* the film ends in daylight: the night stage turns white behind it (intro.js sets is-day as the film brightens) */
+.in-bg::after { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .5s ease; background: radial-gradient(90% 60% at 50% 40%, var(--day), var(--day-2)); }
+.intro.is-day .in-bg::after { opacity: 1; }
 .in-scene { position: absolute; inset: 0; pointer-events: none; }
 .in-scene svg { position: absolute; transform-origin: 50% 50%; will-change: transform; }
 .in-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+/* the rendered film: fills a phone; on a wide screen a centred column whose edges melt into the night */
+.in-film { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none; background: var(--night); transition: opacity .28s ease; }
+.in-film.is-on { opacity: 1; }
+.intro.is-wide .in-film {
+  left: 50%; width: auto; aspect-ratio: 9 / 16; transform: translateX(-50%); background: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+.in-scene, .in-fx { transition: opacity .28s ease; }
+.intro.is-film .in-scene, .intro.is-film .in-fx { opacity: 0; }
 .in-flash { position: absolute; inset: 0; opacity: 0; pointer-events: none; background: radial-gradient(circle at 50% 45%, var(--paper), var(--spot) 55%, var(--glow)); }
 .in-bars i { position: absolute; left: 0; right: 0; height: min(6vh, 56px); background: var(--night); transform: scaleY(0); }
 .in-bars i:first-child { top: 0; transform-origin: top; }
@@ -437,6 +457,31 @@ html.intro-on .intro {
 .in-slogan { margin-top: var(--sp-3); font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 450; color: var(--star); text-shadow: 0 0 18px var(--halo); }
 .in-slogan em { font-style: italic; color: var(--pink); }
 .intro.is-wide .in-card { left: 56%; right: 4%; top: 50%; bottom: auto; transform: translateY(-50%); text-align: left; }
+/* the film's Welcome frame: real text on a white veil over the film's last shot, then under the drawn logo */
+.in-welcome {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 46%; padding: 0 var(--sp-4) max(9vh, calc(env(safe-area-inset-bottom) + 40px));
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; opacity: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--day-veil) 34%, var(--day) 70%);
+}
+.in-w-label { font-size: var(--fs-cap2); font-weight: 600; letter-spacing: .34em; text-transform: uppercase; color: var(--gold-ink); }
+.in-w-word {
+  margin-top: var(--sp-2); padding: 0 .12em .08em; font-family: var(--font-display); font-style: italic; font-weight: 500; line-height: 1.05;
+  font-size: clamp(56px, 17.2vw, 84px); letter-spacing: var(--tr-title); color: var(--gold-ink);
+  background: linear-gradient(100deg, var(--gold-deep) 0%, var(--gold) 28%, var(--gold-pale) 50%, var(--gold) 72%, var(--gold-deep) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.in-w-rule { position: relative; width: min(52vw, 220px); height: 1px; margin-top: var(--sp-3); background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent); }
+.in-w-rule i { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; background: var(--gold); transform: translate(-50%, -50%) rotate(45deg); }
+.in-w-slogan { margin-top: var(--sp-3); font-family: var(--font-display); font-size: var(--fs-call); font-weight: 450; color: var(--ink); }
+.in-w-slogan em { font-style: italic; color: var(--berry); }
+.intro.is-wide .in-w-word { font-size: clamp(56px, 9.6vh, 84px); }
+/* a phone held sideways: no room under the hero for the whole block, so only the word */
+@media (max-height: 520px) {
+  .in-welcome { height: 34%; padding-bottom: var(--sp-3); }
+  .in-w-label, .in-w-rule, .in-w-slogan { display: none; }
+  .intro.is-wide .in-w-word { font-size: var(--fs-hero); margin-top: 0; }
+}
+.intro.is-day .in-skip { background: var(--night-veil); border-color: transparent; color: var(--day); }
 
 .in-gate {
   position: absolute; left: 0; right: 0; bottom: max(11vh, calc(env(safe-area-inset-bottom) + 40px));
