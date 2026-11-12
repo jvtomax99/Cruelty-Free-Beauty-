@@ -197,7 +197,7 @@
       <div class="facts">
         ${card("PETA", petaStatus, "", sourceLine(p, "PETA's page"), p.status === "yes" ? "ok" : p.status === "no" ? "no" : "")}
         ${card("Leaping Bunny", lbStatus, "", sourceLine(lb, "Leaping Bunny"), lb.status === "yes" ? "ok" : "")}
-        ${card("Parent company", parStatus, parNote, sourceLine(par, "Source"), par.testsOnAnimals === "yes" ? "no" : par.testsOnAnimals === "no" && par.name ? "ok" : "")}
+        ${card("Parent company", parStatus, parNote, sourceLine(par, "Source"), par.testsOnAnimals === "yes" && par.name && par.name !== b.name ? (state.mode === "strict" ? "no" : "") : par.testsOnAnimals === "no" && par.name ? "ok" : "")}
         ${card("Mainland China", chStatus, chNote, sourceLine(ch, "Brand's page"), ch.status === "no" ? "ok" : ch.status === "yes" && state.mode === "strict" ? "no" : "")}
         ${card("Vegan", veganStatus, "", b.vegan === "all" ? sourceLine(p, "PETA's page") : "")}
         ${card("Price", priceStatus, b.priceSource ? b.priceSource.note : "", b.priceSource ? sourceLine(b.priceSource, "Brand's site") : "")}

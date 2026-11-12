@@ -131,7 +131,8 @@ tiles.
 - **Verdict box and fact lines:** the box takes the chip's fill, its title
   the chip's colour and mark. On a brand page each fact line is green with
   ✓ when it counts for the brand, red with ✕ when it counts against
-  (PETA says it tests, parent tests, mainland China sales under Strict), and
+  (PETA says it tests; under Strict, a parent that tests or mainland China
+  sales), and
   plain ink when unknown or not about animal testing (vegan, price).
 - **Quiz:** one question per screen, Fraunces 22 question, 56 px paper
   answer cards (chosen: blush-2), a rose progress bar on blush, Back as a
