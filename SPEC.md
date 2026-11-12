@@ -214,6 +214,9 @@ only if it can be shown to work across skin tones.
 - [x] Profile switch and replay
 - [x] Version 2: the rendered 20-second film, with version 1 as the
       fallback (2026-11-11)
+- [x] Version 2 remade as the founder's rescue story: 24 seconds, the
+      Welcome frame, the logo and icons redrawn as the film's hero
+      (2026-11-12)
 
 ### What changed (added 2026-11-11, the founder's ask)
 - [x] `changes` list in the data, checked by `check-brands`
@@ -231,6 +234,17 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-12 (Jose, buttons): the remade film is 24 seconds, all eight
+  beats. Frames 2 and 3 of the storyboard were repainted first (a neater
+  cape, a visible eyeliner pencil).
+- 2026-11-11 (the founder, through Jose): the pink stage film "isn't me".
+  The film is now her own story: a dark, slightly gothic lab; the hero
+  frees the animals with eyeliner, mascara and lipstick; they walk into the
+  light; the show in white and gold; the hero turns into the app logo with
+  "Welcome" underneath. She approved the storyboard; Jose approved
+  rendering it and changing the logo and icons to the new bunny. Jose
+  asked for the cape to be "based on" PETA's Approved logo: only its
+  colours and line were used; the mark itself must never appear.
 - 2026-11-11 (Jose, buttons): the film plays in full, 20 seconds, on every
   open (Claude recommended the full film once and a short ending after;
   Jose chose every open). The music has a Puerto Rican feel, "think of Bad

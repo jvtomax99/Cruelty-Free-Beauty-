@@ -424,7 +424,7 @@ html.intro-on .intro {
     radial-gradient(90% 70% at 50% 40%, var(--night-2), var(--night) 72%);
 }
 /* the film ends in daylight: the night stage turns white behind it (intro.js sets is-day as the film brightens) */
-.in-bg::after { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; background: radial-gradient(90% 60% at 50% 40%, var(--day), var(--day-2)); }
+.in-bg::after { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .5s ease; background: radial-gradient(90% 60% at 50% 40%, var(--day), var(--day-2)); }
 .intro.is-day .in-bg::after { opacity: 1; }
 .in-scene { position: absolute; inset: 0; pointer-events: none; }
 .in-scene svg { position: absolute; transform-origin: 50% 50%; will-change: transform; }

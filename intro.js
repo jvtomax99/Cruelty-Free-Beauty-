@@ -199,7 +199,7 @@
      flies to Home. The drawn show plays alone when the film can't start within 0.8 s of the
      tap, on reduced motion, or with data saver on. If the film breaks or freezes part-way, the app opens at once. */
   const vid = el.querySelector(".in-film");
-  const FILM = { src: "assets/video/launch.mp4", light: 16.6, card: 21.9, tail: 1.15, hold: 0.9, heroW: 0.86, heroY: 0.43 };
+  const FILM = { src: "assets/video/launch.mp4", light: 21.3, card: 21.9, tail: 1.15, hold: 0.9, heroW: 0.6, heroY: 0.45 };
   let filmOn = false, filmAt = -1, filmMoved = 0, filmEnd = 0, day = false;
   const setDay = on => { if (day !== on) { day = on; el.classList.toggle("is-day", on); if (themeMeta && state !== "idle") themeMeta.content = on ? "#FFFFFF" : "#1C0F13"; } };
   const saver = () => { const c = navigator.connection; return !!(c && c.saveData); };

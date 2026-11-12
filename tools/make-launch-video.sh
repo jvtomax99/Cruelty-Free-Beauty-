@@ -8,7 +8,7 @@
 # lipstick open the cages, everyone walks into the light, the white and gold show, the Welcome stage.
 # The last 1.15 s is a held white: intro.js fades the film out over it, shows the drawn logo where the hero
 # floated and flies it to Home. If the timings here change, change FILM in intro.js to match
-# (light: when the walk whites out, card: when the Welcome text comes in).
+# (light: when the white Welcome stage starts, card: when the Welcome text comes in).
 set -euo pipefail
 SRC="${1:?give the folder with the source clips}"
 OUT="$(cd "$(dirname "$0")/.." && pwd)/assets/video"
