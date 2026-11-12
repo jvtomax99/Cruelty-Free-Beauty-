@@ -157,6 +157,36 @@ me**.
     app has updated, with its date and source link, hearted brands first; "Got it"
     hides it and it stays in "Recent changes" and on the brand page.
 
+- **The Garden** (added 2026-11-12, planned, not built). A study game: an
+  open sanctuary garden in 3D that grows with what the person learns. Five
+  habitats, one per topic: Meadow (cruelty-free or vegan), Burrow hill
+  (PETA or Leaping Bunny), Old oak (parent companies), Pond (China today),
+  Orchard (read a brand). Rounds of 5 questions; a missed question comes
+  back sooner than a right one (5 minutes, then 1, 3, 7, 16, 35 days); "I
+  guessed" counts as a miss. About 40 written questions come from the
+  Learn answers, each with its source and checked date, written by one
+  helper and checked against the source by another. The Orchard's
+  questions are built from `data/brands.json` each time, never stored, and
+  skip a brand whose check is over 90 days old. A habitat goes from bare to
+  blooming and animals move in as its topic is learned. Progress stays on
+  the phone (`cfb-garden`).
+  Rules: no fences, cages or enclosures; nothing ever dies, leaves or looks
+  sad; the garden grows only from learning, never from scanning, saving or
+  buying; the words are "moved in" and "at home here", never "rescued" or
+  "saved"; no certifier's mark in the scene. The 3D loads only when the
+  Garden is opened, and plain habitat cards show instead where 3D can't
+  run (no WebGL, reduced motion, data saver).
+  Not in this version: walking around, feeding or petting, naming animals,
+  streaks, reminders, an exam mode, sharing, Spanish, sound.
+  - Done when (the quiz): a round of 5 can be played from Home, each
+    answer shows right or wrong with its source and date, a missed question
+    comes back sooner than a right one, and progress survives a reload and
+    works offline.
+  - Done when (the 3D garden and its animals): learning a topic visibly
+    changes its habitat and brings in a resident; tapping a habitat starts
+    its round; Home, Brands and Scan load no 3D code; the Garden opens
+    offline after one visit; with 3D blocked, the cards show instead.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
@@ -236,7 +266,16 @@ only if it can be shown to work across skin tones.
 - [x] `lookup-certifiers --diff` prints what looks changed, for a person
       to confirm
 
+### The Garden (added 2026-11-12)
+- [ ] Look sample and one test animal approved by Jose and the founder
+- [ ] Phase A: question bank, rounds, progress, habitat cards
+- [ ] Phase B: the 3D garden, loaded on demand
+- [ ] Phase C: the animals (Meshy, Jose's credits) and their motion
+
 ## Open questions (TO FILL)
+
+- Has the founder seen and accepted the Garden (a study game in her app)?
+  Jose to show her the look sample.
 
 - Does the founder accept the neutral wording ("No longer in Leaping
   Bunny's guide", never "dropped")? Jose to ask.
@@ -246,6 +285,12 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-12 (Jose, buttons): a study simulator like his CPA and CCHI
+  apps. He asked for a zoo; after Claude's objection (enclosures, and the
+  film's "no cage" rule) he chose an open sanctuary garden, grown by a new
+  quiz bank and not by using the app, in full 3D loaded on demand. Meshy
+  and other credits are his and OK'd for this, over the $0 budget. Plan
+  approved the same day; the founder has not seen it.
 - 2026-11-12 (Jose): a new direction for the opening, replacing the
   rescue film the same day. The app helps people buy makeup that is
   cruelty-free, and the opening should show that: love of makeup, a moment
