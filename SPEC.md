@@ -237,6 +237,9 @@ only if it can be shown to work across skin tones.
 - 2026-11-12 (Jose, buttons): the remade film is 24 seconds, all eight
   beats. Frames 2 and 3 of the storyboard were repainted first (a neater
   cape, a visible eyeliner pencil).
+  Music: take B of two (harpsichord and music box in the lab, then the
+  dembow beat), picked by ear. Icon tile: white to ivory. The arrival
+  shot's wide cape flap stays (Claude offered a retake).
 - 2026-11-11 (the founder, through Jose): the pink stage film "isn't me".
   The film is now her own story: a dark, slightly gothic lab; the hero
   frees the animals with eyeliner, mascara and lipstick; they walk into the
