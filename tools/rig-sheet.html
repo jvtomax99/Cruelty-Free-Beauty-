@@ -1,24 +1,33 @@
-<!doctype html><meta charset="utf-8"><style>body{margin:0;background:#fff}canvas{display:block}</style>
+<!doctype html><meta charset="utf-8"><title>Rig sheet</title><style>body{margin:0;background:#fff}canvas{display:block}</style>
+<!-- For setting the rig numbers in sanctuary3d-life.js (SPECIES). Serve the repo and open
+     tools/rig-sheet.html?m=beagle&p=;hp:0.9;hy:0.8;legs:0.4,tail:0.6
+     One row per pose (poses are split by ";", the first is usually empty = standing still):
+     side (nose to the left), front, and a three-quarter view. The first row carries a grid:
+     a line every 0.1, red every 0.5, in the model's stood-up space (1 tall, facing +Z).
+     Pose keys: hp hy hr (head down, turn, roll), eb es (ears back, sideways), legs, tail, tailUp, blink. -->
 <script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.min.js","three/addons/":"../assets/vendor/three/addons/"}}</script>
-<canvas id="c" width="1500" height="520"></canvas>
+<canvas id="c"></canvas>
 <script type="module">
 import * as THREE from "three"; import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"; import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
-const q = new URLSearchParams(location.search), name = q.get("m"), yaw = +(q.get("yaw") || 0);
-const r = new THREE.WebGLRenderer({ canvas: document.getElementById("c"), antialias: true, preserveDrawingBuffer: true }); r.setClearColor(0xffffff); r.autoClear = false;
-const scene = new THREE.Scene(); scene.add(new THREE.HemisphereLight(0xffffff, 0x999999, 2.2));
+import { prepare, rigMaterial, SPECIES } from "../sanctuary3d-life.js";
+const q = new URLSearchParams(location.search), name = q.get("m"), poses = (q.get("p") || "").split(";").map((s) => Object.fromEntries(s.split(",").filter(Boolean).map((kv) => { const [k, v] = kv.split(":"); return [k, +v]; })));
+const W = 400, H = 400, canvas = document.getElementById("c"); canvas.width = W * 3; canvas.height = H * poses.length;
+const r = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true }); r.setClearColor(0xffffff); r.autoClear = false; r.clear();
 const l = new GLTFLoader(); l.setMeshoptDecoder(MeshoptDecoder);
-const g = await l.loadAsync("../assets/sanctuary/" + name + ".glb");
-g.scene.rotation.y = yaw; g.scene.updateMatrixWorld(true);
-let box = new THREE.Box3().setFromObject(g.scene), size = box.getSize(new THREE.Vector3()), mid = box.getCenter(new THREE.Vector3());
-const holder = new THREE.Group(); holder.add(g.scene); g.scene.position.set(-mid.x, -box.min.y, -mid.z); holder.scale.setScalar(1 / size.y); scene.add(holder);
-window.__dims = { x: +(size.x / size.y).toFixed(3), z: +(size.z / size.y).toFixed(3), meshes: 0, tris: 0 }; g.scene.traverse(o => { if (o.isMesh) { __dims.meshes++; __dims.tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
-// grid every 0.1 on three planes
-const grid = new THREE.Group(); const mat = new THREE.LineBasicMaterial({ color: 0x3355ff, transparent: true, opacity: .35 }), mat2 = new THREE.LineBasicMaterial({ color: 0xff2222 });
-const pts = (a) => new THREE.BufferGeometry().setFromPoints(a.map(p => new THREE.Vector3(...p)));
-for (let i = -15; i <= 15; i++) { const v = i / 10, m = i % 5 === 0 ? mat2 : mat;
-  grid.add(new THREE.Line(pts([[-2, v, 0], [2, v, 0]]), m), new THREE.Line(pts([[v, -2, 0], [v, 2, 0]]), m), new THREE.Line(pts([[0, v, -2], [0, v, 2]]), m), new THREE.Line(pts([[0, -2, v], [0, 2, v]]), m), new THREE.Line(pts([[-2, 0, v], [2, 0, v]]), m), new THREE.Line(pts([[v, 0, -2], [v, 0, 2]]), m)); }
+const model = await prepare(l, "../assets/sanctuary/", name);
+const scene = new THREE.Scene(); scene.add(new THREE.HemisphereLight(0xffffff, 0x999999, 2.4));
+const mesh = new THREE.Mesh(model.geo, rigMaterial(model.mat, model.sp, model.lid)); mesh.frustumCulled = false; scene.add(mesh);
+const grid = new THREE.Group(), mat = new THREE.LineBasicMaterial({ color: 0x3355ff, transparent: true, opacity: .35 }), mat2 = new THREE.LineBasicMaterial({ color: 0xff2222 });
+const pts = (a) => new THREE.BufferGeometry().setFromPoints(a.map((p) => new THREE.Vector3(...p)));
+for (let i = -15; i <= 15; i++) { const v = i / 10, m = i % 5 === 0 ? mat2 : mat; grid.add(new THREE.Line(pts([[0, v, -2], [0, v, 2]]), m), new THREE.Line(pts([[0, -2, v], [0, 2, v]]), m), new THREE.Line(pts([[-2, v, 0], [2, v, 0]]), m), new THREE.Line(pts([[v, -2, 0], [v, 2, 0]]), m)); }
 scene.add(grid);
-const views = [[[5, 0.5, 0], "side: +Z is LEFT"], [[0, 0.5, 5], "front (from +Z): +X is RIGHT"], [[0, 5, 0.001], "top"]];
-views.forEach(([p], i) => { const c = new THREE.OrthographicCamera(-0.85, 0.85, 1.25, -0.2, 0.1, 20); c.position.set(...p); c.lookAt(0, i === 2 ? 0 : 0.5, 0); if (i === 2) { c.top = 0.9; c.bottom = -0.9; c.updateProjectionMatrix(); } r.setViewport(i * 500, 0, 500, 520); r.render(scene, c); });
+const box = new THREE.Box3().setFromBufferAttribute(model.geo.attributes.position);
+window.__info = { eyes: model.geo.userData.eyes, why: model.geo.userData.why, min: box.min.toArray().map((v) => +v.toFixed(2)), max: box.max.toArray().map((v) => +v.toFixed(2)), tris: (model.geo.index ? model.geo.index.count : model.geo.attributes.position.count) / 3 };
+const half = Math.max(0.75, (box.max.z - box.min.z) / 2 + 0.1, 0.65);
+poses.forEach((p, row) => {
+  const u = mesh.material.userData.rig; u.uHead.value.set(p.hp || 0, p.hy || 0, p.hr || 0); u.uEar.value.set(p.eb || 0, p.eb || 0, p.es || 0, -(p.es || 0)); const s = p.legs || 0; u.uLeg.value.set(s, -s, -s, s); u.uTail.value.set(p.tail || 0, p.tailUp || 0); u.uBlink.value = p.blink || 0;
+  grid.visible = row === 0;
+  [[-5, 0.5, 0], [0, 0.5, 5], [-3.2, 2.2, 3.6]].forEach((at, i) => { const c = new THREE.OrthographicCamera(-half, half, half + 0.05, -half + 0.05, 0.1, 30); c.position.set(...at); c.lookAt(0, 0.5, 0); r.setViewport(i * W, (poses.length - 1 - row) * H, W, H); r.setScissor(i * W, (poses.length - 1 - row) * H, W, H); r.setScissorTest(true); r.clearDepth(); r.render(scene, c); });
+});
 window.__done = true;
 </script>

@@ -23,22 +23,27 @@ function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B7
    facing +Z, centred. They were set by eye on posed test renders (tools/test-sanctuary.cjs
    only checks behaviour). size is the height in the world. ---------- */
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
+/* neck: [pivot, direction the head lies in, fade]. ear: [pivot, direction, fade, half the gap
+   between the ears, how far out from the middle an ear starts (hanging ears), reach, swivel].
+   legs: [hip height, fade, front z, hind z, the z that splits front from hind, how far the belly keeps clear, the x between the front pair, and between the hind pair].
+   tail: [pivot, direction, fade]. eye: [lowest, highest, radius, how dark counts as an eye]; eyeAt: where the eyes are when the picture can't say. cut: [z, y, to] tucks away
+   everything behind z and below y (a tail the animal shouldn't have). */
 export const SPECIES = {
-  "rabbit-clover": { size: 3.2, r: 0.85, gait: "hop", hop: 1.5, neck: [V(0, 0.4, 0.03), V(0, 0.8, 0.6), 0.12], ear: [V(0, 0.66, 0.02), V(0, 1, -0.1), 0.1, 0.085, 0], eye: [0.44, 0.6, 0.085], headUp: -0.1 },
-  "rabbit-tan": { size: 2.2, r: 0.95, gait: "hop", hop: 1.6, neck: [V(0, 0.3, 0.22), V(0, 0.45, 0.9), 0.14], ear: [V(0, 0.56, 0.2), V(0, 1, -0.25), 0.1, 0.07, 0], eye: [0.3, 0.5, 0.075] },
-  "rabbit-grey": { size: 1.9, r: 1.45, gait: "hop", hop: 1.4, lazy: 2.2, neck: [V(0, 0.3, 0.46), V(0, 0.3, 0.95), 0.2], ear: [V(0, 0.58, 0.42), V(0, 0.85, -0.5), 0.12, 0.2, 0], eye: [0.24, 0.5, 0.1] },
-  duck: { size: 2.0, r: 1.15, yaw: -Math.PI / 2, gait: "swim", speed: 0.8, neck: [V(0, 0.56, 0.24), V(0, 0.85, 0.5), 0.12], tail: [V(0, 0.42, -0.42), V(0, 0.25, -1), 0.12], eye: [0.7, 0.92, 0.06], draft: 0.16 },
-  duckling: { size: 0.95, r: 0.55, yaw: -Math.PI / 2, gait: "swim", speed: 0.95, neck: [V(0, 0.52, 0.2), V(0, 0.8, 0.6), 0.12], eye: [0.66, 0.9, 0.07], draft: 0.14 },
-  "guinea-pig": { size: 1.25, r: 0.95, yaw: -Math.PI / 2, gait: "scurry", speed: 2.4, neck: [V(0, 0.42, 0.42), V(0, 0.15, 1), 0.22], eye: [0.5, 0.85, 0.07] },
-  beagle: { size: 3.5, r: 1.2, yaw: -Math.PI / 2, gait: "walk", speed: 1.9, stride: 1.5, neck: [V(0, 0.56, 0.24), V(0, 0.6, 0.8), 0.12], ear: [V(0, 0.86, 0.3), V(0, -1, 0), 0.16, 0.2, 0.13], legs: [0.36, 0.2, 0.27, -0.32, 0], tail: [V(0, 0.5, -0.4), V(0, 0.55, -0.85), 0.1], eye: [0.74, 0.92, 0.055], wag: 1 },
-  deer: { size: 5.0, r: 1.2, yaw: -Math.PI / 2, gait: "walk", speed: 1.5, stride: 1.9, neck: [V(0, 0.56, 0.16), V(0, 0.75, 0.66), 0.14], ear: [V(0, 0.76, 0.2), V(0, 0.4, 0), 0.05, 0.16, 0.1], legs: [0.44, 0.22, 0.2, -0.26, -0.02], tail: [V(0, 0.52, -0.36), V(0, 0.3, -0.95), 0.08], eye: [0.72, 0.86, 0.045], shy: 1 },
+  "rabbit-clover": { size: 3.2, r: 0.85, gait: "hop", hop: 1.5, neck: [V(0, 0.5, 0.08), V(0, 0.9, 0.45), 0.1], ear: [V(0, 0.74, 0.03), V(0, 1, -0.1), 0.08, 0.09, 0, 0.36, 0], eye: [0.58, 0.71, 0.045], dip: 0.55 },
+  "rabbit-tan": { size: 2.2, r: 0.95, gait: "hop", hop: 1.6, neck: [V(0, 0.4, 0.24), V(0, 0.35, 0.94), 0.12], ear: [V(0, 0.62, 0.3), V(0, 1, -0.1), 0.08, 0.07, 0, 0.46, 0], eye: [0.44, 0.56, 0.045, 0.42], dip: 0.4 },
+  "rabbit-grey": { size: 1.9, r: 1.45, gait: "hop", hop: 1.4, lazy: 2.2, neck: [V(-0.045, 0.4, 0.5), V(0, 0.2, 0.98), 0.15], ear: [V(-0.045, 0.67, 0.56), V(0, 1, 0), 0.04, 0.2, 0, 0.5, 0], eye: [0.42, 0.56, 0.06, 0.3], eyeAt: [0.19, 0.49, 0.83], dip: 0.25, turn: 0.3, earK: 0.15 },
+  duck: { size: 2.0, r: 1.15, yaw: -Math.PI / 2, gait: "swim", speed: 0.8, neck: [V(0, 0.6, 0.2), V(0, 1, 0.15), 0.08], tail: [V(0, 0.5, -0.4), V(0, 0.3, -1), 0.12], eye: [0.78, 0.92, 0.04, 0.3], draft: 0.25, dip: 0.9 },
+  duckling: { size: 0.95, r: 0.55, yaw: -Math.PI / 2, gait: "swim", speed: 0.95, neck: [V(0, 0.6, 0.28), V(0, 1, 0.2), 0.08], eye: [0.76, 0.9, 0.04, 0.3], draft: 0.2, dip: 0.8 },
+  "guinea-pig": { size: 1.7, r: 0.95, yaw: -Math.PI / 2, gait: "scurry", speed: 2.4, neck: [V(0, 0.5, 0.38), V(0, 0.15, 1), 0.2], eye: [0.72, 0.88, 0.05], cut: [-0.5, 0.22, V(0, 0.14, -0.44)], dip: 0.22 },
+  beagle: { size: 3.5, r: 1.2, yaw: -Math.PI / 2, gait: "walk", speed: 1.9, stride: 1.5, neck: [V(0, 0.56, 0.2), V(0, 0.8, 0.6), 0.1], ear: [V(0, 0.9, 0.2), V(0, -1, 0), 0.16, 0.2, 0.24, 0.37, 0], legs: [0.3, 0.12, 0.18, -0.4, -0.08, 0.24, 0.01, -0.1], tail: [V(0, 0.5, -0.38), V(0, 0.4, -0.9), 0.08], eye: [0.78, 0.89, 0.04], wag: 1, dip: 1.0 },
+  deer: { size: 5.0, r: 1.2, yaw: -Math.PI / 2, gait: "walk", speed: 1.5, stride: 1.9, neck: [V(0.04, 0.47, 0.15), V(0, 0.7, 0.7), 0.1], ear: [V(0.04, 0.86, 0.15), V(1, 0, 0), 0.05, 0.12, 0, 0.2, 1], legs: [0.38, 0.12, 0.12, -0.26, -0.07, 0.14, 0, 0.13], tail: [V(0, 0.5, -0.33), V(0, 0.3, -1), 0.05], eye: [0.68, 0.8, 0.035], shy: 1, dip: 1.35 },
 };
 
 /* ---------- The soft skeleton ---------- */
 const VERT_PARS = `
 uniform vec3 uNeck, uNeckDir, uHead; uniform float uNeckLen;
-uniform vec3 uEarP, uEarDir; uniform float uEarLen, uEarX, uEarIn; uniform vec4 uEar;
-uniform float uHip, uLegLen, uMidZ; uniform vec2 uLegZ; uniform vec4 uLeg;
+uniform vec3 uEarP, uEarDir; uniform float uEarLen, uEarX, uEarIn, uEarR, uEarY; uniform vec4 uEar;
+uniform float uHip, uLegLen, uMidZ, uLegW; uniform vec2 uLegZ, uLegX; uniform vec4 uLeg;
 uniform vec3 uTailP, uTailDir; uniform float uTailLen; uniform vec2 uTail;
 uniform float uBreath;
 attribute float aEye; varying float vEye;
@@ -50,30 +55,39 @@ const VERT = `
 vEye = aEye;
 {
   vec3 p = transformed;
-  float wh = uNeckLen > 0.0 ? smoothstep(0.0, uNeckLen, dot(p - uNeck, uNeckDir)) : 0.0;
+  /* ears first: an ear belongs to the head wherever it hangs */
+  float sd = step(uEarP.x, p.x), sg = mix(-1.0, 1.0, sd), we = 0.0, er = 0.0; vec3 eo = uEarP + vec3(sg * uEarX, 0.0, 0.0);
+  if (uEarLen > 0.0) {
+    float along = dot(p - eo, vec3(uEarDir.x * sg, uEarDir.yz));
+    er = step(0.0, along) * (1.0 - smoothstep(uEarR * 0.8, uEarR, distance(p, eo)));
+    if (uEarIn > 0.0) er *= smoothstep(uEarIn * 0.55, uEarIn, abs(p.x - uEarP.x));
+    we = er * smoothstep(0.0, uEarLen, along);
+  }
+  float wh = uNeckLen > 0.0 ? max(smoothstep(0.0, uNeckLen, dot(p - uNeck, uNeckDir)), we) : 0.0;
   float wt = uTailLen > 0.0 ? smoothstep(0.0, uTailLen, dot(p - uTailP, uTailDir)) * (1.0 - wh) : 0.0;
   if (uLegLen > 0.0) {
-    float wl = smoothstep(uHip, uHip - uLegLen, p.y) * (1.0 - wh) * (1.0 - wt), f = step(uMidZ, p.z), s = step(0.0, p.x);
-    p = rgX(p, vec3(p.x, uHip, mix(uLegZ.y, uLegZ.x, f)), mix(mix(uLeg.z, uLeg.w, s), mix(uLeg.x, uLeg.y, s), f) * wl);
+    float f = step(uMidZ, p.z), s = step(mix(uLegX.y, uLegX.x, f), p.x), lz = mix(uLegZ.y, uLegZ.x, f);
+    float belly = mix(1.0 - smoothstep(lz + uLegW * 0.6, lz + uLegW, p.z), smoothstep(lz - uLegW, lz - uLegW * 0.6, p.z), f);   // the belly between the legs stays put
+    float wl = smoothstep(uHip, uHip - uLegLen, p.y) * belly * (1.0 - wh) * (1.0 - wt);
+    p = rgX(p, vec3(p.x, uHip, lz), mix(mix(uLeg.z, uLeg.w, s), mix(uLeg.x, uLeg.y, s), f) * wl);
   }
   p.x *= 1.0 + uBreath * (1.0 - wh) * (1.0 - wt);
-  if (uEarLen > 0.0) {
-    float sd = step(uEarP.x, p.x), we = smoothstep(0.0, uEarLen, dot(p - uEarP, uEarDir));
-    if (uEarIn > 0.0) we *= smoothstep(uEarIn * 0.55, uEarIn, abs(p.x - uEarP.x));
-    vec3 o = uEarP + vec3(mix(-uEarX, uEarX, sd), 0.0, 0.0);
-    p = rgX(p, o, mix(uEar.x, uEar.y, sd) * we); p = rgZ(p, o, mix(uEar.z, uEar.w, sd) * we);
+  if (we > 0.0) {
+    float back = mix(uEar.x, uEar.y, sd) * we;
+    if (uEarY > 0.5) p = rgY(p, eo, -back * sg); else p = rgX(p, eo, back);
+    p = rgZ(p, eo, mix(uEar.z, uEar.w, sd) * we);
   }
   p = rgZ(p, uNeck, uHead.z * wh); p = rgX(p, uNeck, uHead.x * wh); p = rgY(p, uNeck, uHead.y * wh);
   if (uTailLen > 0.0) { p = rgY(p, uTailP, uTail.x * wt); p = rgX(p, uTailP, uTail.y * wt); }
   transformed = p;
 }
 `;
-function rigMaterial(base, sp, lid) {
+export function rigMaterial(base, sp, lid) {
   const m = base.clone();
   const u = m.userData.rig = {
     uNeck: { value: sp.neck[0] }, uNeckDir: { value: sp.neck[1].clone().normalize() }, uNeckLen: { value: sp.neck[2] }, uHead: { value: new THREE.Vector3() },
-    uEarP: { value: sp.ear ? sp.ear[0] : V(0, 0, 0) }, uEarDir: { value: sp.ear ? sp.ear[1].clone().normalize() : V(0, 1, 0) }, uEarLen: { value: sp.ear ? sp.ear[2] : 0 }, uEarX: { value: sp.ear ? sp.ear[3] : 0 }, uEarIn: { value: sp.ear ? sp.ear[4] : 0 }, uEar: { value: new THREE.Vector4() },
-    uHip: { value: sp.legs ? sp.legs[0] : 0 }, uLegLen: { value: sp.legs ? sp.legs[1] : 0 }, uLegZ: { value: new THREE.Vector2(sp.legs ? sp.legs[2] : 0, sp.legs ? sp.legs[3] : 0) }, uMidZ: { value: sp.legs ? sp.legs[4] : 0 }, uLeg: { value: new THREE.Vector4() },
+    uEarP: { value: sp.ear ? sp.ear[0] : V(0, 0, 0) }, uEarDir: { value: sp.ear ? sp.ear[1].clone().normalize() : V(0, 1, 0) }, uEarLen: { value: sp.ear ? sp.ear[2] : 0 }, uEarX: { value: sp.ear ? sp.ear[3] : 0 }, uEarIn: { value: sp.ear ? sp.ear[4] : 0 }, uEarR: { value: sp.ear ? sp.ear[5] : 1 }, uEarY: { value: sp.ear ? sp.ear[6] : 0 }, uEar: { value: new THREE.Vector4() },
+    uHip: { value: sp.legs ? sp.legs[0] : 0 }, uLegLen: { value: sp.legs ? sp.legs[1] : 0 }, uLegZ: { value: new THREE.Vector2(sp.legs ? sp.legs[2] : 0, sp.legs ? sp.legs[3] : 0) }, uMidZ: { value: sp.legs ? sp.legs[4] : 0 }, uLegW: { value: sp.legs ? sp.legs[5] : 1 }, uLegX: { value: new THREE.Vector2(sp.legs ? sp.legs[6] : 0, sp.legs ? sp.legs[7] : 0) }, uLeg: { value: new THREE.Vector4() },
     uTailP: { value: sp.tail ? sp.tail[0] : V(0, 0, 0) }, uTailDir: { value: sp.tail ? sp.tail[1].clone().normalize() : V(0, 0, -1) }, uTailLen: { value: sp.tail ? sp.tail[2] : 0 }, uTail: { value: new THREE.Vector2() },
     uBreath: { value: 0 }, uBlink: { value: 0 }, uLid: { value: lid },
   };
@@ -98,24 +112,26 @@ export function prepare(loader, base, name) {
     for (let i = 0; i < n; i++) { v.fromBufferAttribute(sg.attributes.position, i).applyMatrix4(mw); pos.set([v.x, v.y, v.z], i * 3); box.expandByPoint(v); v.fromBufferAttribute(sg.attributes.normal, i).applyMatrix3(nm).normalize(); nor.set([v.x, v.y, v.z], i * 3); t2.fromBufferAttribute(sg.attributes.uv, i); if (map) map.transformUv(t2); uv.set([t2.x, t2.y], i * 2); }
     const k = 1 / (box.max.y - box.min.y), cx = (box.min.x + box.max.x) / 2, cz = (box.min.z + box.max.z) / 2;
     for (let i = 0; i < n; i++) { pos[i * 3] = (pos[i * 3] - cx) * k; pos[i * 3 + 1] = (pos[i * 3 + 1] - box.min.y) * k; pos[i * 3 + 2] = (pos[i * 3 + 2] - cz) * k; }
+    if (sp.cut) for (let i = 0; i < n; i++) if (pos[i * 3 + 2] < sp.cut[0] && pos[i * 3 + 1] < sp.cut[1]) { pos[i * 3] = sp.cut[2].x; pos[i * 3 + 1] = sp.cut[2].y; pos[i * 3 + 2] = sp.cut[2].z; }
     const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3)); geo.setAttribute("normal", new THREE.BufferAttribute(nor, 3)); geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2)); if (sg.index) geo.setIndex(sg.index.clone());
     /* eyes: dark texels on the head, inside the species' eye band; one centre each side */
     const eye = new Float32Array(n), lid = new THREE.Color(0.8, 0.75, 0.7);
     try {
       const img = map.image, S = 256, c = document.createElement("canvas"); c.width = c.height = S; const cx2 = c.getContext("2d", { willReadFrequently: true }); cx2.drawImage(img, 0, 0, S, S); const px = cx2.getImageData(0, 0, S, S).data;
       const at = (i) => { const x = clamp(Math.floor((uv[i * 2] % 1 + 1) % 1 * S), 0, S - 1), y = clamp(Math.floor((uv[i * 2 + 1] % 1 + 1) % 1 * S), 0, S - 1), j = (y * S + x) * 4; return [px[j] / 255, px[j + 1] / 255, px[j + 2] / 255]; };
-      const nd = sp.neck[1].clone().normalize(), [y0, y1, rad] = sp.eye, sum = [[0, 0, 0, 0], [0, 0, 0, 0]];
+      const nd = sp.neck[1].clone().normalize(), [y0, y1, rad] = sp.eye, mx = sp.neck[0].x, sum = [[0, 0, 0, 0], [0, 0, 0, 0]];
       for (let i = 0; i < n; i++) {
-        const x = pos[i * 3], y = pos[i * 3 + 1], z = pos[i * 3 + 2]; if (y < y0 || y > y1 || Math.abs(x) < 0.03) continue;
+        const x = pos[i * 3], y = pos[i * 3 + 1], z = pos[i * 3 + 2]; if (y < y0 || y > y1 || Math.abs(x - mx) < 0.03) continue;
         if ((x - sp.neck[0].x) * nd.x + (y - sp.neck[0].y) * nd.y + (z - sp.neck[0].z) * nd.z < sp.neck[2] * 0.6) continue;
-        const [r, gg, b] = at(i); if (r * 0.3 + gg * 0.59 + b * 0.11 > 0.16) continue;
-        const s = sum[x > 0 ? 1 : 0]; s[0] += x; s[1] += y; s[2] += z; s[3]++;
+        const [r, gg, b] = at(i); if (r * 0.3 + gg * 0.59 + b * 0.11 > (sp.eye[3] || 0.16)) continue;
+        const s = sum[x > mx ? 1 : 0]; s[0] += x; s[1] += y; s[2] += z; s[3]++;
       }
-      const cs = sum.filter((s) => s[3] > 3).map((s) => [s[0] / s[3], s[1] / s[3], s[2] / s[3]]); let lr = 0, lg = 0, lb = 0, ln = 0;
+      /* eyes too small in the picture to find sit where they were measured (eyeAt) */
+      let cs = sum.filter((s) => s[3] > 1).map((s) => [s[0] / s[3], s[1] / s[3], s[2] / s[3]]); if (cs.length < 2 && sp.eyeAt) cs = [-1, 1].map((sd) => [mx + sp.eyeAt[0] * sd, sp.eyeAt[1], sp.eyeAt[2]]); let lr = 0, lg = 0, lb = 0, ln = 0;
       for (let i = 0; i < n; i++) for (const e of cs) { const d = Math.hypot(pos[i * 3] - e[0], pos[i * 3 + 1] - e[1], pos[i * 3 + 2] - e[2]); if (d < rad) eye[i] = Math.max(eye[i], 1 - smooth(rad * 0.7, rad, d)); else if (d < rad * 1.7) { const q = at(i); if (q[0] + q[1] + q[2] > 0.9) { lr += q[0]; lg += q[1]; lb += q[2]; ln++; } } }
       if (ln) lid.setRGB(lr / ln, lg / ln, lb / ln, THREE.SRGBColorSpace);
       geo.userData.eyes = cs.length;
-    } catch (_) { geo.userData.eyes = 0; }   // no blinking is better than no animal
+    } catch (e) { geo.userData.eyes = 0; geo.userData.why = String(e); }   // no blinking is better than no animal
     geo.setAttribute("aEye", new THREE.BufferAttribute(eye, 1)); geo.computeBoundingSphere(); geo.boundingSphere.radius *= 1.5;   // room for the pose
     const mat = src.material; mat.roughness = Math.max(mat.roughness, 0.85); mat.metalness = 0; mat.envMapIntensity = 0.35; if (mat.map) mat.map.anisotropy = 4;
     return { geo, mat, lid, sp, name };
@@ -221,18 +237,18 @@ class Animal {
   update(dt) {
     const g = this.goal, T = this.life.time, R = this.rand, sp = this.sp; this.t += dt; this.breath += dt;
     for (const p of POSE) g[p] = p === "sq" ? 1 : 0; this.wob = 0; if (this.state !== "move") { this.speed = 0; this.lift = 0; this.legs = [0, 0, 0, 0]; }
-    if (this.t >= this.dur && this.state !== "move") this.next();
+    if (this.t >= this.dur) { if (this.state === "move") { this.queue = []; this.speed = 0; this.lift = 0; this.set("rest", 2 + R() * 3, { sleepy: false }); } else this.next(); }
     const s = this.state;
     if (s === "move") this.move(dt);
     else if (s === "rest") { g.hp = this.sleepy ? 0.22 : 0.06; g.eLb = g.eRb = this.sleepy ? 0.45 : 0.1; g.sq = 0.97; if (sp.wag && !this.sleepy) g.tail = Math.sin(T * 3) * 0.15; }
     else if (s === "look") { g.eLb = g.eRb = -0.12; g.hp = -0.06; g.eLs = Math.sin(T * 0.9 + this.breath) * 0.12; if (sp.wag) g.tail = Math.sin(T * 9) * 0.4; }
     else if (s === "sniff") { g.hp = 0.14 + Math.sin(T * 17) * 0.035 + (this.friend ? -0.05 : 0.1); g.hy = Math.sin(T * 1.3 + this.breath) * 0.22; g.eLb = g.eRb = 0.1; if (sp.wag) g.tail = Math.sin(T * 12) * 0.5; }
-    else if (s === "graze") { const chew = Math.sin(T * 9) * 0.03, dip = sp.gait === "swim" ? 1.05 : sp.legs ? 1.0 : 0.5; g.hp = dip + chew; g.hy = Math.sin(T * 0.6 + this.breath) * 0.15; g.eLb = g.eRb = 0.25; if (sp.gait === "swim") { g.pitch = 0.3; if (R() < dt * 0.8) this.life.ripple(this.x + Math.sin(this.yaw) * this.r, this.z + Math.cos(this.yaw) * this.r, 0.5); } if (this.t > 2.2 && Math.sin(T * 0.7 + this.breath) > 0.93) { g.hp = -0.05; g.eLb = g.eRb = -0.15; } }   // lifts its head now and then to check
-    else if (s === "groom") { g.hy = this.side * 0.95; g.hp = 0.45 + Math.sin(T * 11) * 0.06; g.hr = this.side * 0.2; g.eLb = g.eRb = 0.35; g.sq = 0.95; }
+    else if (s === "graze") { const chew = Math.sin(T * 9) * 0.03; g.hp = sp.dip + chew; g.hy = Math.sin(T * 0.6 + this.breath) * 0.15; g.eLb = g.eRb = 0.25; if (sp.gait === "swim") { g.pitch = 0.3; if (R() < dt * 0.8) this.life.ripple(this.x + Math.sin(this.yaw) * this.r, this.z + Math.cos(this.yaw) * this.r, 0.5); } if (this.t > 2.2 && Math.sin(T * 0.7 + this.breath) > 0.93) { g.hp = -0.05; g.eLb = g.eRb = -0.15; } }   // lifts its head now and then to check
+    else if (s === "groom") { g.hy = this.side * Math.min(0.95, sp.turn || 0.95); g.hp = 0.45 + Math.sin(T * 11) * 0.06; g.hr = this.side * 0.2; g.eLb = g.eRb = 0.35; g.sq = 0.95; }
     else if (s === "hello") { const u = this.t; g.hp = -0.32 + Math.sin(T * 16) * 0.03 * smooth(0.4, 0.9, u); g.eLb = g.eRb = -0.2; g.eLs = -0.1; g.eRs = 0.1; g.hr = Math.sin(u * 1.8) * 0.12; if (sp.wag) g.tail = Math.sin(T * 14) * 0.7; g.sq = 1 + Math.sin(Math.min(u, 0.5) / 0.5 * Math.PI) * 0.04; }
     /* the head follows what it is looking at, as far as a neck turns; an ear flicks now and then */
     const la = (s === "look" || s === "hello" || (s === "rest" && !this.sleepy && this.lookAt)) ? (this.lookAt === "cam" ? [this.life.cam.position.x, this.life.cam.position.z] : this.lookAt) : null;
-    if (la) g.hy = clamp(wrap(Math.atan2(la[0] - this.x, la[1] - this.z) - this.yaw), -1.05, 1.05);
+    if (la) g.hy = clamp(wrap(Math.atan2(la[0] - this.x, la[1] - this.z) - this.yaw), -(sp.turn || 1.05), sp.turn || 1.05);
     if (s === "sniff" && this.friend) g.hy = clamp(wrap(Math.atan2(this.friend.x - this.x, this.friend.z - this.z) - this.yaw), -0.9, 0.9);
     if (s !== "move" && R() < dt * 0.22) this.flick = [R() < 0.5 ? "eLs" : "eRs", 0.22, (R() - 0.5) * 0.9];
     if (this.flick) { this.flick[1] -= dt; g[this.flick[0]] += this.flick[2]; if (this.flick[1] <= 0) this.flick = null; }
@@ -244,7 +260,7 @@ class Animal {
     /* ease the pose (fast parts fast, heavy parts slow) and hand it to the shader */
     const P = this.pose, e = (k) => 1 - Math.exp(-k * dt);
     for (const p of POSE) P[p] += (g[p] - P[p]) * e(p === "sq" || p === "pitch" ? 16 : p === "hp" || p === "hy" || p === "hr" ? 7 : 12);
-    const U = this.u; U.uHead.value.set(P.hp + (sp.headUp || 0) * 0, P.hy, P.hr); U.uEar.value.set(P.eLb, P.eRb, P.eLs, P.eRs); U.uLeg.value.fromArray(this.legs); U.uTail.value.set(P.tail, P.tailUp);
+    const U = this.u; U.uHead.value.set(P.hp + (sp.headUp || 0) * 0, P.hy, P.hr); { const ek = sp.earK || 1; U.uEar.value.set(P.eLb * ek, P.eRb * ek, P.eLs * ek, P.eRs * ek); } U.uLeg.value.fromArray(this.legs); U.uTail.value.set(P.tail, P.tailUp);
     U.uBreath.value = Math.sin(this.breath * (s === "rest" ? 1.5 : s === "move" ? 4.5 : 2.4)) * (s === "rest" ? 0.022 : 0.014);
     this.place();
   }
@@ -265,7 +281,7 @@ export class Life {
   free(a, x, z) {
     const h = a.hab;
     if (h.pool) { if (Math.hypot(x - h.pool.x, z - h.pool.z) > h.pool.r - a.r - 0.35) return false; for (const p of h.avoid || []) if (Math.hypot(x - p[0], z - p[1]) < p[2] + a.r) return false; }
-    else { if (Math.hypot(x - h.x, z - h.z) > h.r - a.r * 0.5) return false; if (this.wet(x, z, a.r * 0.8)) return false; for (const ob of this.obstacles) if (Math.hypot(x - ob.x, z - ob.z) < ob.r + a.r * 0.8) return false; }
+    else { if (Math.hypot(x - h.x, z - h.z) > h.r - a.r * 0.5) return false; if (this.wet(x, z, a.r * 0.8)) return false; for (const ob of h.obs || this.obstacles) if (Math.hypot(x - ob.x, z - ob.z) < ob.r + a.r * 0.8) return false; }
     for (const b of this.animals) { if (b === a || b.hab !== h || !b.visible) continue; const sep = (a.r + b.r) * 0.92; if (Math.hypot(x - b.x, z - b.z) < sep) return false; if (b.state === "move" && b.land && b.sub !== "wait" && b.sub !== "turn" && Math.hypot(x - b.land[0], z - b.land[1]) < sep) return false; if (b.state === "move" && b.to && Math.hypot(x - b.to[0], z - b.to[1]) < sep * 0.9 && a.id > b.id) return false; }
     return true;
   }
@@ -277,7 +293,7 @@ export class Life {
     for (const a of this.animals) {
       if (!a.visible) continue; const h = a.hab;
       if (h.pool) { if (Math.hypot(a.x - h.pool.x, a.z - h.pool.z) > h.pool.r - a.r * 0.5) bad.push(a.name + " left the water"); }
-      else { if (Math.hypot(a.x - h.x, a.z - h.z) > h.r + 0.05) bad.push(a.name + " left " + h.id); if (this.wet(a.x, a.z, 0)) bad.push(a.name + " is in the water"); for (const ob of this.obstacles) if (Math.hypot(a.x - ob.x, a.z - ob.z) < ob.r + a.r * 0.45) bad.push(a.name + " is inside " + (ob.what || "something")); }
+      else { if (Math.hypot(a.x - h.x, a.z - h.z) > h.r + 0.05) bad.push(a.name + " left " + h.id); if (this.wet(a.x, a.z, 0)) bad.push(a.name + " is in the water"); for (const ob of h.obs || this.obstacles) if (Math.hypot(a.x - ob.x, a.z - ob.z) < ob.r + a.r * 0.45) bad.push(a.name + " is inside " + (ob.what || "something")); }
       for (const b of this.animals) if (b.id > a.id && b.visible && b.hab === h && Math.hypot(a.x - b.x, a.z - b.z) < (a.r + b.r) * 0.62) bad.push(a.name + " and " + b.name + " overlap");
     }
     return bad;
