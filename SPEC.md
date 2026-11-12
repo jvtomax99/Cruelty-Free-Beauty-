@@ -172,6 +172,12 @@ me**.
   skip a brand whose check is over 90 days old. A habitat goes from bare to
   blooming and animals move in as its topic is learned. Progress stays on
   the phone (`cfb-garden`).
+  Residents (Jose, 2026-11-12): a mix of animals, not only rabbits: dogs,
+  cats, rabbits, guinea pigs, hamsters, mice, birds. Planned homes: Meadow
+  rabbits, Burrow hill guinea pigs and hamsters, Old oak a cat and birds,
+  Pond a dog and ducks, Orchard a dog, a cat and mice. They are the
+  garden's residents, nothing more: the app says an animal is used in
+  cosmetics testing only with a source beside it.
   Rules: no fences, cages or enclosures; nothing ever dies, leaves or looks
   sad; the garden grows only from learning, never from scanning, saving or
   buying; the words are "moved in" and "at home here", never "rescued" or
