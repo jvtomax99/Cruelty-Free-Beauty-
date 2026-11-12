@@ -1,8 +1,9 @@
 # ARCHITECTURE: C.F.B.
 
 A static installable web app. No build step, no server, no packages. GitHub
-Pages serves the repo root from `main` (Pages is not turned on yet; plan:
-phase 3). The site lives under `/Cruelty-Free-Beauty-/`, so every path is
+Pages serves the repo root from `main`, live at
+`jvtomax99.github.io/Cruelty-Free-Beauty-/` (checked 2026-11-12), so every
+merge into `main` goes live within a minute or two. The site lives under `/Cruelty-Free-Beauty-/`, so every path is
 relative.
 
 ## Files
