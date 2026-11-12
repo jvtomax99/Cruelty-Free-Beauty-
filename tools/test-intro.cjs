@@ -61,10 +61,12 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.click('.in-skip');
   check(await gone(page, 1500), 'Skip mid-show reaches Home in under 1.5 s');
 
+  await page.evaluate(() => localStorage.clear());        // as on a first visit, so the next two checks test their own rule
   await page.goto(BASE + '?intro=0');
   check(!await showing(page), '?intro=0 skips the show');
   await page.goto(BASE + '#brand/tarte'); await page.reload();
   check(!await showing(page), 'a link to one brand skips the show');
+  await page.goto(BASE); await page.click('[data-sound=off]'); await page.waitForTimeout(500); await page.click('.in-skip'); await gone(page, 1500);
   await page.goto(BASE + '#home'); await page.reload();
   check(!await showing(page) && await page.evaluate(() => localStorage.getItem('cfb-intro-seen')) === '1', 'after the first visit the opening does not play again at launch');
   await page.goto(BASE + '?intro=1');
@@ -120,7 +122,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   const filmReady = (p) => p.waitForFunction(() => window.CFBIntro && window.CFBIntro.film().ready, null, { timeout: 15000 }).then(() => true, () => false);
   const countCtx = (p) => p.addInitScript(() => { const A = window.AudioContext; window.__ctxs = 0; window.AudioContext = function () { window.__ctxs++; return new A(); }; });
 
-  // every open: the whole film with sound, then Home
+  // a first visit: the whole film with sound, its words on their beats, then Home
   const [fc, fp] = await openFilm();
   await countCtx(fp);
   await fp.goto(BASE);
@@ -159,7 +161,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(await gone(fp, 8000), `film: the whole film plays and lands on Home (${((Date.now() - f0) / 1000).toFixed(1)} s)`);
   const fr = await fp.evaluate(() => ({ inert: document.querySelector('.app').inert, hit: !!document.elementFromPoint(innerWidth / 2, innerHeight / 2).closest('.app'), focus: document.activeElement.id }));
   check(!fr.inert && fr.hit && fr.focus === 'hello-line', 'film: Home takes taps afterwards and focus is on its heading');
-  // the next open plays the whole film again (Jose, 2026-11-11), and quiet stays quiet
+  // a later open goes straight to Home; forced with ?intro=1 it plays again, and quiet stays quiet
   await fp.reload();
   check(!await showing(fp), 'film, next open: straight to Home, the opening is for the first visit');
   await fp.goto(BASE + '?intro=1');
@@ -193,6 +195,16 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(await bp.evaluate(() => ({ hit: !!document.elementFromPoint(innerWidth / 2, innerHeight / 2).closest('.app'), slogan: document.getElementById('hello-line').innerText.replace(/\s+/g, ' ').trim() })).then((r) => r.hit && r.slogan === 'Cruelty-free looks beautiful on you.'), 'Home takes taps and carries the same line: "Cruelty-free looks beautiful on you."');
   await bc.close();
 
+  // Skip during the held ending
+  const [hc, hp] = await openFilm();
+  await hp.goto(BASE); await filmReady(hp);
+  await hp.click('[data-sound=off]'); await hp.waitForTimeout(600);
+  await hp.evaluate(() => { document.querySelector('.in-film').currentTime = 13.4; });
+  await hp.waitForFunction(() => window.CFBIntro.film().ended, null, { timeout: 5000 }).catch(() => {});
+  await hp.click('.in-skip');
+  check(await gone(hp, 1000), 'film: Skip during the held ending reaches Home in under 1 s');
+  await hc.close();
+
   // the film gets stuck part-way (a dead connection): the app must still open
   const [sc, sp] = await openFilm();
   await sp.goto(BASE); await filmReady(sp);
@@ -208,6 +220,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await dp.click('[data-sound=off]'); await dp.waitForTimeout(600);
   check(!(await film(dp)).on, 'film not loaded at the tap: the drawn show plays');
   check(await gone(dp, 8000), 'film not loaded at the tap: Home in under 8 s');
+  check(await dp.evaluate(() => localStorage.getItem('cfb-intro-seen')) === null, 'film not loaded at the tap: the next visit may try the film again');
   await dc.close();
 
   // like an iPhone: nothing of the film loads until the tap; it must still start, a moment later

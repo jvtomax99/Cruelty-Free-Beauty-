@@ -86,6 +86,7 @@
   function resize() {
     W = innerWidth; H = innerHeight; D = Math.ceil(Math.hypot(W, H)); DPR = Math.min(2, window.devicePixelRatio || 1);
     wide = W / H > 1.15; el.classList.toggle("is-wide", wide);
+    el.classList.toggle("is-col", W / H > 0.62);            // wider than a phone: the film is a centred column, not a crop
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
     if (svg) Object.assign(svg.style, { width: D + "px", height: D + "px", left: (W - D) / 2 + "px", top: (H - D) / 2 + "px" });
     if (state === "show" && (target || now > T.exit - 0.3)) target = logoTarget();   // turned mid-landing: aim at the new spot
@@ -197,7 +198,7 @@
      tap, on reduced motion, or with data saver on. If the film breaks or freezes part-way, the app opens at once. */
   const vid = el.querySelector(".in-film");
   const FILM = { src: "assets/video/launch.mp4", ask: [1.6, 3.2], phone: [3.1, 8.1], swap: 6.0, tap: 7.3, kind: [9.2, 10.35], line: 10.9, go: 11.8, wait: 3 };
-  let filmOn = false, filmAt = -1, filmMoved = 0, filmEnd = 0, leaving = false;
+  let filmOn = false, filmAt = -1, filmMoved = 0, filmEnd = 0, leaving = false, again = false;
   const saver = () => { const c = navigator.connection; return !!(c && c.saveData); };
   function filmLoad() {                          // called when the gate opens, so the film buffers while it shows
     if (!vid) return;
@@ -227,7 +228,6 @@
   function filmDone() {
     if (!filmOn) return;
     filmOn = false; filmEnd = vid.duration || 1e6;
-    F.go.tabIndex = 0;
     later(() => leave(false), FILM.wait * 1000);
   }
   /* out of the film (the button, the wait, Skip, a broken or frozen film): the whole opening fades away to Home */
@@ -316,9 +316,8 @@
       F.tap.style.opacity = bump(ft, FILM.tap - 0.25, FILM.tap, FILM.tap + 0.4).toFixed(3);
       show(F.kind, FILM.kind[0], FILM.kind[1]);
       show(F.line, FILM.line, 0);
-      const go = show(F.go, FILM.go, 0); F.go.style.pointerEvents = go > 0.9 ? "auto" : "none";
+      const go = show(F.go, FILM.go, 0); F.go.style.pointerEvents = go > 0.9 ? "auto" : "none"; F.go.tabIndex = go > 0.9 ? 0 : -1;
     } else for (const k in F) if (F[k].style.opacity) { F[k].style.opacity = ""; F[k].style.visibility = ""; }
-    P.stage.removeAttribute("opacity");
     const sk = 1 - seg(t, T.exit, T.exit + 0.2);
     skipBtn.style.opacity = sk; skipBtn.style.pointerEvents = sk < 1 ? "none" : "";
 
@@ -389,7 +388,7 @@
     raf = 0;
     if (state === "idle") return;
     if (state === "show" && filmOn) {
-      // the film's own clock: near its end the drawn show takes over; frozen for 1.5 s (a dead connection), the same, fast
+      // the film's own clock: at its end the last frame holds with the button; frozen for 1.5 s (a dead connection), the app opens
       const ft = vid.currentTime, wall = performance.now();
       if (ft !== filmAt) { filmAt = ft; filmMoved = wall; }
       if (ft >= vid.duration - 0.05) filmDone();
@@ -453,6 +452,7 @@
       const giveUp = () => {
         if (!filmWait) return;
         filmWait = false; vid.removeEventListener("playing", begin); vid.pause();
+        again = !vid.error;                                  // the film was only slow to load: let the next visit try it again
         if (state === "starting") go();
       };
       vid.addEventListener("playing", begin, { once: true });
@@ -479,7 +479,8 @@
     if (state === "idle") return;
     clearTimers();
     state = "idle"; paused = false; still = false; leaving = false; F.go.tabIndex = -1;
-    if (store) store.set("intro-seen", "1");               // it plays on the first visit only; Replay is in Profile
+    if (store && !again) store.set("intro-seen", "1");     // it plays on the first visit only; Replay is in Profile
+    again = false;
     filmWait = false;
     if (filmPlayed) {                                      // now that it has played, ask the offline worker to keep the film
       filmPlayed = false;

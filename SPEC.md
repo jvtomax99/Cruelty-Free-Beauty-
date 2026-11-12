@@ -121,7 +121,10 @@ me**.
     its cards are real text over the film; the cards are marked "Example"
     and name no product or brand. A voice in English with a Latina accent
     speaks her thoughts; it reads fully with the sound off. It plays on
-    the first visit only and from "Replay the opening" in Profile. When it
+    the first visit only and from "Replay the opening" in Profile. (If the
+    film was only slow to load and the drawn show played instead, the
+    next visit tries the film again.) On a screen wider than a phone the
+    film is a centred column, not a crop. When it
     ends, the last frame holds with the button; the button, or 3 seconds,
     opens Home. The drawn show (version 1) plays instead when the film
     can't start within 0.8 s of the tap, on reduced motion, or with data

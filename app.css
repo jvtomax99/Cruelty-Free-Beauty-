@@ -398,15 +398,12 @@ main {
 }
 /* ---------- Opening show settings (Profile) ---------- */
 .intro-set { text-align: left; }
-.switch-row { display: flex; align-items: center; gap: var(--sp-2); min-height: 44px; margin-top: var(--sp-2); font-size: var(--fs-sub); color: var(--ink); cursor: pointer; }
-.switch-row input { width: 22px; height: 22px; accent-color: var(--rose); flex: none; }
 .pill-btn {
   min-height: 44px; margin-top: var(--sp-2); padding: 0 var(--sp-4); border-radius: var(--r-pill); border: 1px solid var(--line);
   background: var(--blush); color: var(--rose-ink); font: 600 var(--fs-sub)/1 var(--font-body); cursor: pointer;
   transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
 }
 .pill-btn:active, .pill-btn.is-pressed { transform: scale(.97); background: var(--blush-2); }
-.pill-btn:focus-visible, .switch-row input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 /* ---------- Launch show (intro.js): pink after dark ----------
    Shown only while html.intro-on (set in the head before paint). Home is drawn underneath. */
@@ -428,7 +425,7 @@ html.intro-on .intro {
 /* the rendered film: fills a phone; on a wide screen a centred column whose edges melt into the night */
 .in-film { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none; background: var(--night); transition: opacity .28s ease; }
 .in-film.is-on { opacity: 1; }
-.intro.is-wide .in-film {
+.intro.is-col .in-film {
   left: 50%; width: auto; aspect-ratio: 9 / 16; transform: translateX(-50%); background: none;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
@@ -455,11 +452,11 @@ html.intro-on .intro {
 /* the film's words (intro.js shows each on its beat). .in-over sits exactly on the film, so sizes are in its own
    units (cqw = 1% of the film's width) and the layout is the same on a phone and in the wide screen's column */
 .in-over { position: absolute; inset: 0; pointer-events: none; container-type: size; }
-.intro.is-wide .in-over { left: 50%; right: auto; width: auto; aspect-ratio: 9 / 16; height: 100%; transform: translateX(-50%); }
+.intro.is-col .in-over { left: 50%; right: auto; width: auto; aspect-ratio: 9 / 16; height: 100%; transform: translateX(-50%); }
 .in-over > * { opacity: 0; visibility: hidden; }
 .in-ask, .in-kind, .in-line {
   position: absolute; left: 0; right: 0; top: 0; padding: max(11cqh, calc(env(safe-area-inset-top) + 76px)) 6cqw 9cqh; text-align: center;
-  font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 8.4cqw, 44px); line-height: 1.14; letter-spacing: var(--tr-title);
+  font-family: var(--font-display); font-weight: 500; font-size: clamp(17px, 8.4cqw, 44px); line-height: 1.14; letter-spacing: var(--tr-title);
   color: var(--gold-pale); background: linear-gradient(180deg, var(--night-veil), transparent);
 }
 .in-ask em, .in-kind em, .in-line em { font-style: italic; }
@@ -467,7 +464,7 @@ html.intro-on .intro {
 .in-kind em { color: var(--berry); }
 .in-phone {
   position: absolute; left: 11.5cqw; right: 11.5cqw; top: max(13.5cqh, calc(env(safe-area-inset-top) + 108px)); bottom: 5cqh;
-  padding: 2.4cqw; border-radius: 10cqw; background: var(--night); box-shadow: 0 4cqw 12cqw rgba(0,0,0,.55);
+  padding: 2.4cqw; border-radius: 10cqw; background: var(--night); box-shadow: 0 4cqw 12cqw var(--veil);
 }
 .in-screen { position: relative; height: 100%; overflow: hidden; border-radius: 7.8cqw; background: var(--bg); }
 .in-pcard {
@@ -491,9 +488,9 @@ html.intro-on .intro {
 .in-why::after { content: " \203A"; }
 .in-tap { position: absolute; right: 1.2cqw; top: 9cqw; width: 14cqw; height: 14cqw; border-radius: 50%; border: 3px solid var(--pink); background: var(--halo); opacity: 0; }
 .in-go {
-  position: absolute; left: 6cqw; right: 6cqw; bottom: max(4.5cqh, calc(env(safe-area-inset-bottom) + 20px)); min-height: 56px; padding: 0 var(--sp-4);
+  position: absolute; left: 6cqw; right: 6cqw; bottom: max(4.5cqh, calc(env(safe-area-inset-bottom) + 20px)); min-height: clamp(44px, 14.5cqw, 56px); padding: 0 var(--sp-2); white-space: nowrap;
   border: 1px solid var(--gold-pale); border-radius: var(--r-md); background: var(--rose); color: var(--paper); cursor: pointer;
-  font: 600 var(--fs-head)/1 var(--font-body); box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  font: 600 clamp(12px, 4.4cqw, 17px)/1 var(--font-body); box-shadow: 0 6px 24px var(--night-glass);
 }
 .in-go:focus-visible { outline: 3px solid var(--gold-pale); outline-offset: 3px; }
 
