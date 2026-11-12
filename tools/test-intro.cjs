@@ -226,7 +226,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   // offline worker: once saved, the film is served in pieces (phones need that) and survives going offline
   let saved = false;
   for (let i = 0; i < 30 && !saved; i++) {
-    saved = await wp.evaluate(async () => (await (await caches.open('cfb-media-v1')).keys()).length > 0 && !!navigator.serviceWorker.controller);
+    saved = await wp.evaluate(async () => (await (await caches.open('cfb-media-v2')).keys()).length > 0 && !!navigator.serviceWorker.controller);
     if (!saved) await wp.waitForTimeout(500);
   }
   check(saved, 'offline worker: the film is saved after the first play');

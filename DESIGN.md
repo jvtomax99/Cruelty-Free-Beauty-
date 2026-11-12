@@ -99,7 +99,13 @@ tiles.
   rose-ink text.
 - **Brand row:** paper card, radius 20, name in Fraunces 17, chips on the
   right, the reason it fails on its own line in ink-soft.
-- **Verdict chip:** Passes = blush-2 / rose-ink; Doesn't pass = ink /
+- **What changed:** a paper card on Home under the search bar, only when
+  there is news; each change is a brand row with what the list showed, then
+  the date and source link in footnote size; one hairline "Got it" button.
+  On a brand page: a paper note with a 3 px rose left edge. No red, no
+  warning icon: it reports, it doesn't accuse.
+- **Verdict chip:** Passes = blush-2 / rose-ink, one per certifier ("✓ PETA",
+  "✓ Leaping Bunny") on a brand row; Doesn't pass = ink /
   paper; Not on either list = paper with a dashed ink-soft edge. The words
   always say it, so colour is never the only signal.
 - **Quiz:** one question per screen, Fraunces 22 question, 56 px paper

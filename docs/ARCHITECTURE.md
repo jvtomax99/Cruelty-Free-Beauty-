@@ -13,6 +13,7 @@ relative.
 | `app.css` | All styles. Tokens in `:root` at the top; DESIGN.md explains them |
 | `app.js` | Screens by `#hash` (Back retraces), greeting by time of day, press feedback (`LIFTS`, `.is-pressed` held 260 ms), saved settings (`CFB.store`, localStorage inside try/catch), registers the worker |
 | `brands.js` | Brands screen and brand pages (`#brand/<id>`): loads `data/brands.json`, works out each verdict (Strict / Certified, saved as `cfb-mode`), search, filters. Also shared helpers: `CFB.match` (a label's brand name to our brand), `CFB.saved` (hearts, `cfb-saved`) |
+| `changes.js` | "What changed": reads `changes` from `data/brands.json` (through `CFB.data`), shows the ones this phone hasn't seen on Home (hearted brands first; seen ones saved as `cfb-changes-seen`), the last 12 months under the Brands list, and a line on the brand's page (`CFB.changeLine`). Its words say what a list showed, never why |
 | `scan.js` | Scan screen (`#scan`): camera or photo, barcode to brand through Open Beauty Facts (only the number is sent), matched by `CFB.match`, verdict by `CFB.verdict`. Falls back to typing the brand. Recent scans (`cfb-scans`, 10) and brands we haven't checked (`cfb-unlisted`, 50) stay on the phone. Camera stops on leaving the screen |
 | `assets/vendor/barcode-detector/` | Barcode reader for phones without one built in (iPhone): `barcode-detector` 3.2.3 plus `zxing_reader.wasm` 3.1.6, MIT and Apache 2.0; its README says how to update |
 | `profile.js` | Profile screen: 8-question quiz, profile (saved as `cfb-profile`, only on the phone), routine of brands per step using `CFB.verdict` and the brand data from `brands.js`; Saved brands list |
@@ -25,7 +26,7 @@ relative.
 | `assets/icons/` | App icons, made from the logo by `tools/make-icons.cjs` |
 | `assets/fonts/` | Fraunces (headings) and Inter (text), WOFF2, OFL |
 | `data/brands.json` | The 30 brands. Each claim (PETA, Leaping Bunny, parent company, China sales) has its own `url` and `checked` date; values yes / no / unknown (parent also n/a). The cruelty-free verdict is never stored: the app works it out per strictness. `search` holds the names the recheck looks up. `sells` (foundation, concealer, blush, bronzer, lip) and `shadeFinder` come from the brand's own site, each dated. `price` ($ / $$ / $$$) comes from the median single-product price on the brand's own site, explained in `priceSource` |
-| `tools/lookup-certifiers.cjs` | Looks brands up on PETA (WordPress JSON plus the page's icons) and Leaping Bunny (the query its Shopping Guide page runs, so it needs Playwright) and prints what each says. Never edits the data |
+| `tools/lookup-certifiers.cjs` | With `--diff`, compares the lookup with the stored statuses and prints what looks changed plus a `changes` entry to paste. Looks brands up on PETA (WordPress JSON plus the page's icons) and Leaping Bunny (the query its Shopping Guide page runs, so it needs Playwright) and prints what each says. Never edits the data |
 | `tools/check-brands.cjs` | Checks `data/brands.json`: missing or invalid fields, claims without a source or date, checks over 90 days old; `--links` also opens every link |
 | `tools/make-icons.cjs` | Re-renders the icons after a logo change (needs Playwright) |
 | `.github/site-check.cjs` | The pull-request check (copied from Lions-Roar-): missing files, links starting with "/", script errors at phone and desktop width |
@@ -47,9 +48,15 @@ confirms it.
 - `node tools/test-profile.cjs`: the quiz and routine in a real browser (undertone, picks checked against the data, reload, clear, offline).
 - `node tools/test-scan.cjs` (add `--live` for real Open Beauty Facts lookups): photo, fake camera and typed barcodes through the vendored reader, every result type, brand matching on real Open Beauty Facts names, saved list, offline.
 - `node tools/test-intro.cjs` after any change to the launch show or the logo.
+- `node tools/test-changes.cjs`: the "What changed" notices with made-up changes (order, hearted first, "Got it", brand page, ignored entries).
 - `node tools/test-directory.cjs`: the directory in a real browser (counts, search, filters, brand page, Back, offline).
 - Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
-  a recheck pull request.
+  a recheck pull request. A status that changed also gets an entry in
+  `changes` (brand id, claim, from, to, date, source link, optional short
+  note stating a fact, never a reason; `law: true` when PETA says "working
+  for regulatory change"), which is what the app announces. A data-only
+  change still needs the `CACHE_VERSION` bump, or installed apps never
+  get it.
 - `node --check` on each `.js` file.
 - Preview: Playwright screenshots at 390 px then 1440 px, served from the
   parent folder so the URL includes `/Cruelty-Free-Beauty-/`.

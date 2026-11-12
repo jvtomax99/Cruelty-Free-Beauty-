@@ -66,6 +66,9 @@ me**.
   date or is marked unknown (2026-11-11: brands rarely publish China sales
   or owners), and
   search finds any of them by name on a phone.
+  Browsing lists only brands that pass, each row naming its certifier; a
+  brand that doesn't pass appears only when searched or scanned, with the
+  reason (founder, 2026-11-11).
 - **Brand page.** Done when it shows both certifications, the parent
   company, China, vegan, where to buy, sources and the checked date, and
   says "unknown" plainly wherever evidence is missing.
@@ -100,25 +103,49 @@ me**.
   - Done when: the gate shows on every launch, both buttons play the show
     and land on a working Home in under 7 s, Skip works at any moment, and
     `?intro=0` skips it.
-  - **Version 2, the film** (2026-11-11). A rendered 20-second film of the
-    bunny's stage entrance (`assets/video/launch.mp4`): the spotlight, the
-    hop onto the stage, flash cuts, the lipstick, the doorway, the bunny
-    crowd under a giant screen, the bulb ring, fireworks, the final
-    portrait. Reggaeton score with a Puerto Rican feel (Jose). The name and
-    slogan are real text over the last shots; the film ends on a pink-white
-    flash and the drawn logo flies to Home as in version 1. It plays in
-    full on every open. The drawn show (version 1) plays instead when the
-    film can't start within 0.8 s of the tap, on reduced motion, or with
-    data saver on. If the film breaks or freezes for 1.5 s part-way, the
-    app opens at once. "Enter quietly" plays it muted. On a computer the
-    film is a centred column. The offline worker saves the film once it
-    has played. Not in this version: a widescreen
-    cut, a shorter cut for later opens, voice-over.
-    - Done when: one tap on the gate plays the film and lands on a working
-      Home; Skip reaches Home in under 1.5 s at any moment; with the film
-      blocked, version 1 lands on Home in under 7 s (under 8 s when the
-      film is merely still loading). Not yet checked on a real iPhone:
-      the test browser can't stand in for one (Jose to try it).
+  - **Version 2, the film** (remade 2026-11-12 as the founder's own story).
+    A rendered 24-second film (`assets/video/launch.mp4`), eight beats: a
+    dark, slightly gothic lab with small animals in cages; the hero bunny
+    arrives; eyeliner, then mascara, then lipstick open the cages; everyone
+    walks into the light as the surroundings turn white; the show in white
+    and gold with the hero holding the lipstick; then the hero alone on a
+    white stage. "Welcome" comes in under the hero as real text (gold
+    Fraunces italic, "C.F.B. presents" above, the slogan below), the film
+    fades to white, the drawn logo stands where the hero floated ("the hero
+    turns into the app logo"), and it flies to Home. Reggaeton score with a
+    Puerto Rican feel (Jose): a gothic pulse in the lab, the beat drops when
+    the cages open. The hero's look: round white bunny, closed happy eyes,
+    one small pearl tiara, a soft pink cape with a dark edge and a heart
+    clasp, a charcoal lipstick with a rose bullet; the logo and app icons
+    are redrawn to match. It plays in full on every open. The drawn show
+    (version 1) plays instead when the film can't start within 0.8 s of the
+    tap, on reduced motion, or with data saver on. If the film breaks or
+    freezes for 1.5 s part-way, the app opens at once. "Enter quietly"
+    plays it muted. On a computer the film is a centred column. The offline
+    worker saves the film once it has played. Not in this version: a
+    widescreen cut, a shorter cut for later opens, voice-over.
+    - Done when: one tap on the gate plays the film, "Welcome" shows under
+      the hero, and it lands on a working Home; Skip reaches Home in under
+      1.5 s at any moment; with the film blocked, version 1 lands on Home in
+      under 7 s (under 8 s when the film is merely still loading). Not yet
+      checked on a real iPhone: the test browser can't stand in for one
+      (Jose to try it).
+- **What changed** (founder's ask, 2026-11-11). When a recheck finds that a
+  brand's PETA, Leaping Bunny, parent company or China status changed, the
+  app says so the next time it is opened: a card on Home (brands the person
+  hearted first), a line on the brand's page, and "Recent changes" under
+  the Brands list for 12 months. The words say only what the list showed on
+  the date we looked ("No longer in Leaping Bunny's guide"), never why, and
+  good news shows too. Changes live in `data/brands.json` ("changes") and
+  go live only through the recheck pull request Jose reads.
+  A first finding (from "unknown") says "Newly confirmed", not "now". The
+  date shown is when we checked, not when the list changed. The compare
+  tool covers PETA and Leaping Bunny; parent and China changes are entered
+  by hand. An installed app shows a change one or two opens after the
+  update, because of how the offline worker swaps versions.
+  - Done when: a change added to `data/brands.json` shows on Home once the
+    app has updated, with its date and source link, hearted brands first; "Got it"
+    hides it and it stays in "Recent changes" and on the brand page.
 
 ## Not in v1
 
@@ -127,7 +154,8 @@ me**.
 - Exact shade matching across brands (no free shade data).
 - Reviews, photo uploads, accounts, sign-in.
 - Store stock or "near me".
-- Brand-change alerts.
+- Notifications while the app is closed, or by email (they need a push or
+  mail service; the in-app "What changed" notice is in v1).
 - An app-store app.
 - Skincare, hair and household products.
 - Paid or affiliate links (undecided; the data has a link-type field so
@@ -141,7 +169,7 @@ Prices for the 10 brands whose sites block automated readers (e.l.f.,
 Too Faced, Urban Decay, Kosas, Juvia's Place, NYX, Maybelline, L'Oréal
 Paris, Estée Lauder, Benefit): checked by hand, or by the founder.
 
-Brand-change alerts, Spanish (EN | ES switch
+Notifications while the app is closed, Spanish (EN | ES switch
 like Lions-Roar-), near me, skincare, reviews, a camera undertone helper
 only if it can be shown to work across skin tones.
 
@@ -187,7 +215,16 @@ only if it can be shown to work across skin tones.
 - [x] Version 2: the rendered 20-second film, with version 1 as the
       fallback (2026-11-11)
 
+### What changed (added 2026-11-11, the founder's ask)
+- [x] `changes` list in the data, checked by `check-brands`
+- [x] Home card, brand page line, "Recent changes" under Brands
+- [x] `lookup-certifiers --diff` prints what looks changed, for a person
+      to confirm
+
 ## Open questions (TO FILL)
+
+- Does the founder accept the neutral wording ("No longer in Leaping
+  Bunny's guide", never "dropped")? Jose to ask.
 
 - The founder's name (stays out of the repo until Jose fills it in).
 - 1 to 3 websites whose look the founder likes (for DESIGN.md).

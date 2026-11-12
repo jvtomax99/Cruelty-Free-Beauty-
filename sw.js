@@ -7,8 +7,8 @@
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v13";
-const MEDIA = "cfb-media-v1";
+const CACHE_VERSION = "cfb-v15";
+const MEDIA = "cfb-media-v2";
 const FILM = "assets/video/launch.mp4";
 const PRECACHE = [
   "./",
@@ -17,6 +17,7 @@ const PRECACHE = [
   "app.js",
   "learn.js",
   "brands.js",
+  "changes.js",
   "profile.js",
   "scan.js",
   "assets/vendor/barcode-detector/barcode-detector.js",

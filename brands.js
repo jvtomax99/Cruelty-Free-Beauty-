@@ -15,7 +15,7 @@
   let brands = [];
   const state = {
     mode: store.get("mode", "strict") === "certified" ? "certified" : "strict",
-    q: "", vegan: false, price: new Set(), showAll: false,
+    q: "", vegan: false, price: new Set(),
   };
 
   /* ---------- Verdict ----------
@@ -32,7 +32,8 @@
       }
       return { pass: false, kind: "none", reason: "Not on PETA's or Leaping Bunny's list, so its cruelty-free status isn't verified.", notes };
     }
-    const by = peta === "yes" && lb === "yes" ? "PETA and Leaping Bunny" : peta === "yes" ? "PETA" : "Leaping Bunny";
+    const certs = [peta === "yes" && "PETA", lb === "yes" && "Leaping Bunny"].filter(Boolean);
+    const by = certs.join(" and ");
     if (mode === "strict") {
       if (b.parent.testsOnAnimals === "yes" && b.parent.name && b.parent.name !== b.name) {
         const law = /regulatory/i.test(b.parent.note || "");
@@ -44,7 +45,7 @@
       if (b.parent.testsOnAnimals === "unknown") notes.push("Parent company not confirmed.");
       if (b.chinaRetail.status === "unknown") notes.push(b.chinaRetail.checked ? "Brand doesn't say where it sells." : "Where it sells not checked yet.");
     }
-    return { pass: true, kind: "pass", reason: `Certified by ${by}.`, notes };
+    return { pass: true, kind: "pass", reason: `Certified by ${by}.`, notes, certs };
   }
   const CHIP = { pass: "Passes", fail: "Doesn't pass", none: "Not on either list" };
 
@@ -122,32 +123,26 @@
     const rows = brands.map((b) => ({ b, v: verdict(b, state.mode) }));
     const passing = rows.filter((r) => r.v.pass).length;
     const hits = rows.filter((r) => matches(r.b));
-    // Browsing shows brands that pass; a search shows every match, so "is my brand OK?" always gets an answer.
-    const showFailing = state.q || state.showAll;
-    const shown = hits.filter((r) => showFailing || r.v.pass)
+    // Browsing shows only brands that pass (founder, 2026-11-11); a search shows every match,
+    // so "is my brand OK?" always gets an answer, with the reason when it isn't.
+    const shown = hits.filter((r) => state.q || r.v.pass)
       .sort((x, y) => (y.v.pass - x.v.pass) || x.b.name.localeCompare(y.b.name));
-    const hiddenFailing = hits.length - shown.length;
 
     const filtered = state.q || state.vegan || state.price.size;
-    $("brand-count").textContent = `${passing} of ${brands.length} brands pass ${modeName}` + (filtered ? `. Showing ${shown.length}.` : ".");
+    $("brand-count").textContent = `${passing} brands pass ${modeName}` + (filtered ? `. Showing ${shown.length}.` : ".");
 
     $("brand-list").innerHTML = shown.length ? shown.map(({ b, v }) => `
       <li><a class="brand-row" href="#brand/${encodeURIComponent(b.id)}">
         <span class="brand-name">${esc(b.name)}</span>
         <span class="brand-meta">
-          <span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>
+          ${v.pass ? v.certs.map((c) => `<span class="verdict v-pass"><span aria-hidden="true">✓&nbsp;</span><span class="sr-only">Certified by </span>${c}</span>`).join("") : `<span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>`}
           ${b.vegan === "all" ? '<span class="tag">Vegan</span>' : ""}
           ${b.price ? `<span class="tag" title="${PRICE[b.price]}">${esc(b.price)}</span>` : ""}
         </span>
         ${v.pass ? "" : `<span class="brand-why">${esc(v.reason)}</span>`}
       </a></li>`).join("")
       : `<li class="none">${state.q ? `No brand called “${esc(state.q)}” on our list yet.` : "No brands match these filters."}</li>`;
-
-    const more = $("brand-more");
-    if (!state.q && (hiddenFailing > 0 || state.showAll)) {
-      more.hidden = false;
-      more.textContent = state.showAll ? "Hide the brands that don't pass" : `Show the ${hiddenFailing} brands that don't pass`;
-    } else more.hidden = true;
+    $("brand-hint").hidden = !!state.q;
   }
 
   /* ---------- One brand ---------- */
@@ -190,6 +185,7 @@
 
     page.innerHTML = `
       <div class="brand-top"><h1 id="brand-h" tabindex="-1">${esc(b.name)}</h1>${saveButton(b)}</div>
+      ${window.CFB.changeLine ? window.CFB.changeLine(b.id) : ""}
       <div class="verdict-box v-${v.kind}">
         <p class="verdict-title">${v.pass ? `Passes ${modeName}` : CHIP[v.kind]}</p>
         <p>${esc(v.reason)}</p>
@@ -218,7 +214,6 @@
     renderList();
   }));
   $("brand-q").addEventListener("input", (e) => { state.q = e.target.value.trim(); renderList(); });
-  $("brand-more").addEventListener("click", () => { state.showAll = !state.showAll; renderList(); });
 
   // Shared with profile.js: the same verdict, the current strictness, and the data once loaded.
   window.CFB.verdict = verdict;
@@ -227,8 +222,10 @@
   window.CFB.saved = saved;
   window.CFB.saveButton = saveButton;
   window.CFB.CHIP = CHIP;
-  window.CFB.brands = fetch("data/brands.json")
-    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  // The whole file, for changes.js ("changes"); an empty one if it couldn't load.
+  const file = fetch("data/brands.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  window.CFB.data = file.catch(() => ({ brands: [], changes: [] }));
+  window.CFB.brands = file
     .then((d) => {
       brands = d.brands;
       renderList();
