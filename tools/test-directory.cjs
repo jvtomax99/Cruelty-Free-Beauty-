@@ -67,7 +67,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   // Brand page: Tarte passes Certified but fails Strict over its parent
   await page.evaluate(() => window.scrollTo(0, 400));
   await page.click('.mode-btn[data-mode=certified]');
-  await page.click('a[href="#brand/tarte"]');
+  await page.click('#brand-list a[href="#brand/tarte"]');
   await page.waitForSelector('#brand-page .facts');
   const tarte = await page.textContent('#brand-page');
   for (const t of ['PETA', 'Leaping Bunny', 'Parent company', 'Mainland China', 'Vegan', 'Price', 'Where to buy', 'Checked 11 Nov 2026', 'Unknown', 'carries this brand']) check(tarte.includes(t), `Tarte page shows "${t}"`);
@@ -86,7 +86,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.goto(APP + '#home', { waitUntil: 'networkidle' });   // fresh history: home, list, brand
   await page.click('.tab[href="#brands"] >> visible=true');
   await page.waitForSelector('#brand-list .brand-row');
-  await page.click('a[href="#brand/glossier"]');
+  await page.click('#brand-list a[href="#brand/glossier"]');
   await page.waitForSelector('#brand-page .facts');
   check(/Where it sells not checked yet/.test(await page.textContent('#brand-page')), 'unchecked China says "not checked yet", not "brand doesn\'t say"');
   await page.click('.back');
@@ -113,6 +113,31 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.waitForSelector('#brand-list .brand-row', { timeout: 8000 }).catch(() => {});
   check(await rows() === strict.length, 'offline: the brand list still loads');
   await ctx.setOffline(false);
+
+  // Home's rail of brands that pass: 8 then "See all", hearted first, follows Strict / Certified.
+  await page.goto(APP + '#home', { waitUntil: 'load' });
+  await page.evaluate(() => { localStorage.setItem('cfb-saved', '[]'); localStorage.setItem('cfb-mode', 'strict'); });
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForSelector('#home-rail-list .hr-card');
+  const rail = () => page.evaluate(() => ({ cards: [...document.querySelectorAll('#home-rail-list .hr-card:not(.hr-more) .hr-name')].map((x) => x.textContent),
+    more: (document.querySelector('.hr-more') || {}).textContent || '', count: document.getElementById('home-rail-count').textContent, hidden: document.getElementById('home-rail').hidden }));
+  let r = await rail();
+  check(!r.hidden && r.cards.length === Math.min(8, strict.length) && r.count === `${strict.length} · Strict`, `Home rail: ${r.cards.length} cards, "${r.count}"`);
+  check(strict.length <= 8 || r.more.trim() === `See all ${strict.length}`, `Home rail ends with "See all ${strict.length}" ("${r.more.trim()}")`);
+  const last = strict[strict.length - 1];
+  await page.evaluate((id) => localStorage.setItem('cfb-saved', JSON.stringify([id])), last.id);
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForSelector('#home-rail-list .hr-card');
+  r = await rail();
+  check(r.cards[0] === last.name, `Home rail: a hearted brand comes first ("${r.cards[0]}")`);
+  await page.click('.tab[href="#brands"] >> visible=true');
+  await page.click('.mode-btn[data-mode=certified]');
+  await page.click('.tab[href="#home"] >> visible=true');
+  await page.waitForSelector('[data-screen=home]:not([hidden])');   // the screen changes a moment after the tap
+  r = await rail();
+  check(/· Certified$/.test(r.count), `Home rail follows the strictness ("${r.count}")`);
+  await page.click('.tab[href="#brands"] >> visible=true');
+  await page.click('.mode-btn[data-mode=strict]');
 
   check(errors.length === 0, `no script errors${errors.length ? ': ' + errors.join('; ') : ''}`);
   await browser.close();

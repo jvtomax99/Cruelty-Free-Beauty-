@@ -85,13 +85,30 @@ tiles.
 ## Components
 
 - **Brand bar:** logo 44 px, "C.F.B." wordmark in Fraunces rose, "Cruelty-Free Beauty" under it.
-- **Hello:** time-of-day label in small capitals, then the slogan at 40.
+- **Hello banner (Home, 2026-11-12, sample awaiting the founder):** the
+  Interpreter Hub's banner in our colours. A dressing-table photo
+  (`assets/images/home-banner.webp`) full width on phones (452 px tall), a
+  radius-20 card on computers (380). The time-of-day label and the slogan
+  at 40 sit top left in ink over a cream shade (`--veil-cream`), never
+  white text. The bunny (84 px, a slow bob) sits bottom left with a paper
+  speech bubble that links to Scan. The photo fades into the page at the
+  bottom and Search overlaps it by 26 px.
+- **Quick tiles:** four across, paper-to-blush, radius 20, bright rim
+  (`--qt-edge`), a 52 px pin over a 13 px semibold label (64 px pin on
+  computers). These replace the four big blush tiles on Home.
+- **Rail:** a Fraunces 20 heading, a count, "View all" in rose, then
+  cards that scroll sideways (156 px wide, paper-to-blush). A 48 px tile
+  with the brand's initial pokes over each card's top edge where the Hub
+  has a pin; never a brand's logo.
+- **Pins:** glossy pictures in one family of materials only: white
+  porcelain, blush enamel, rose gold, a touch of cocoa. 256 px WebP with a
+  clear background, in `assets/pins/`. No rainbow of colours: that is the
+  Hub's look, not ours.
 - **Search:** paper, 52 px tall, hairline border, finish shadow.
-- **Tile:** blush, radius 20, icon top left, title (Fraunces 20) pinned
-  low, subtitle in rose-ink 13.
 - **Card:** paper with a hairline and the finish.
-- **Tab bar (phones):** floating glass capsule, 52 px tabs, the active one
-  in blush-2. **Side rail (computers)** replaces it.
+- **Tab bar (phones):** floating glass capsule, 56 px tabs, each a 28 px
+  pin over its label (32 px in the side rail); the active one in blush-2
+  with its pin a touch larger. **Side rail (computers)** replaces it.
 - **Empty state:** the logo, a Fraunces line, one honest sentence.
 - **Strict / Certified switch:** blush pill track, the chosen side paper
   with the finish (44 px tall).
@@ -111,10 +128,15 @@ tiles.
 - **Quiz:** one question per screen, Fraunces 22 question, 56 px paper
   answer cards (chosen: blush-2), a rose progress bar on blush, Back as a
   rose text button.
-- **Profile card:** blush panel, summary in rose-ink semibold, undertone
-  chips to change it by hand.
-- **Routine step:** paper card like the fact card; brand name in Fraunces
-  17 (links to its page), the reason in ink-soft, "Find your shade" link.
+- **Profile hero:** a paper-to-blush panel with a blush glow top right,
+  a small-caps rose-ink label, the mirror pin (84 px, slow bob), the
+  summary as paper chips, undertone chips to change it by hand. Before
+  the quiz it shows the five step pins in a row instead.
+- **Routine step:** its 44 px pin beside the step name (Fraunces 17) and
+  a blush count ("3 brands"); when every step gives the same brands, the
+  five pins sit in a row under the one heading.
+  Inside: a paper card like the fact card; brand name in Fraunces 17
+  (links to its page), the reason in ink-soft, "Find your shade" link.
 - **Save button:** paper pill with a hairline, heart icon and "Save";
   on: blush-2 with the heart filled pink, "Saved". Beside the brand name.
 - **Scan screen:** the camera in a radius-20 frame with a paper aim box and

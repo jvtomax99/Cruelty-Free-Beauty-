@@ -20,6 +20,8 @@
   const LABEL = Object.fromEntries(QUESTIONS.map((q) => [q.key, Object.fromEntries(q.options)]));
   const STEPS = [["foundation", "Foundation"], ["concealer", "Concealer"], ["blush", "Blush"], ["bronzer", "Bronzer"], ["lip", "Lip"]];
   const UNDERTONE = { cool: "Cool", warm: "Warm", neutral: "Neutral" };
+  const pin = (key, size) => `<img class="rt-pin" src="assets/pins/${key}.webp" alt="" width="${size}" height="${size}">`;
+  const allPins = (size) => `<div class="rt-pins" aria-hidden="true">${STEPS.map(([k]) => pin(k, size)).join("")}</div>`;
 
   // Majority of the three tests; a tie (or no majority) is neutral.
   function undertoneFrom(a) {
@@ -126,16 +128,19 @@
         </li>`;
       }).join("") : `<li class="rt-none">No brand on our list fits ${same ? "your routine" : "this step"}${p.budget !== "any" ? " at this budget. Try “Any” budget." : "."}</li>`;
       return `<div class="rt-step">
-        <h3>${name}</h3>
+        <div class="rt-top">${same ? "" : pin(key, 44)}<h3>${name}</h3>${list.length ? `<span class="rt-count">${list.length} ${list.length === 1 ? "brand" : "brands"}</span>` : ""}</div>
+        ${same ? allPins(40) : ""}
         ${shadeTip && list.length ? `<p class="rt-tip">Tell the shade finder: ${esc(depth.toLowerCase())} depth, ${esc(tone.toLowerCase())} undertone.</p>` : ""}
         <ul>${items}</ul>
       </div>`;
     }).join("");
 
     app.innerHTML = `
-      <div class="pf-card">
+      <div class="pf-card pf-hero">
+        <img class="pf-pin" src="assets/pins/profile.webp" alt="" width="84" height="84">
+        <div class="pf-eyebrow">Your beauty profile</div>
         <h2 tabindex="-1" id="pf-h">Your profile</h2>
-        <p class="pf-sum">${summary.map(esc).join(" · ")}</p>
+        <ul class="pf-sum">${summary.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
         <p class="pf-tone">Undertone ${p.undertoneSet ? "set by you" : "from your three tests"}. A starting point; check in daylight.</p>
         <div class="pf-tones" role="group" aria-label="Change undertone">
           ${Object.entries(UNDERTONE).map(([v, l]) => `<button type="button" class="chip" data-tone="${v}" aria-pressed="${p.undertone === v}">${l}</button>`).join("")}
@@ -161,7 +166,9 @@
 
   function renderIntro() {
     app.innerHTML = `
-      <div class="pf-intro">
+      <div class="pf-intro pf-hero">
+        <div class="pf-eyebrow">Eight questions, five steps</div>
+        ${allPins(52)}
         <p>Eight quick questions: skin type, depth, three undertone tests, finish, budget and vegan. Then a routine from brands that pass your setting.</p>
         <button type="button" class="pf-start" id="pf-start">Start the quiz</button>
         <p class="pf-private">Your answers stay on this phone. Nothing is sent anywhere.</p>

@@ -116,10 +116,10 @@ const OBF_NAMES = [
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); });
 
   await page.goto(BASE, { waitUntil: 'networkidle' });
-  await page.click('.tile[href="#scan"]');
+  await page.click('.qt-tile[href="#scan"]');
   await page.waitForSelector('[data-screen=scan]:not([hidden])');
   const scanTitle = await page.title();
-  check(scanTitle === 'C.F.B. · Scan', `Home tile "Scan a product" opens the Scan screen (title "${scanTitle}")`);
+  check(scanTitle === 'C.F.B. · Scan', `Home's Scan tile opens the Scan screen (title "${scanTitle}")`);
 
   // 2. Brand matching against real Open Beauty Facts names.
   const got = await page.evaluate(async (names) => { await window.CFB.brands; return names.map(([n]) => (window.CFB.match(n) || {}).id || null); }, OBF_NAMES);

@@ -1,6 +1,6 @@
 # Credits
 
-Every asset in the app, where it came from, and its license. One thing was paid for: the Runway credits that made the launch film (keep the receipt).
+Every asset in the app, where it came from, and its license. Two things were paid for, both with Runway credits: the launch film, and Home's banner picture and the pins (keep the receipt).
 
 | Asset | Source | License | Bought? | Price | Account |
 |---|---|---|---|---|---|
@@ -13,3 +13,4 @@ Every asset in the app, where it came from, and its license. One thing was paid 
 | Barcode reader `assets/vendor/barcode-detector/barcode-detector.js` | `barcode-detector` 3.2.3 (Ze-Zheng Wu), npm | MIT | No | $0 | None |
 | Barcode reader engine `assets/vendor/barcode-detector/zxing_reader.wasm` | `zxing-wasm` 3.1.6 (Ze-Zheng Wu), npm; built from zxing-cpp | MIT (zxing-wasm), Apache 2.0 (zxing-cpp); licence files in the same folder | No | $0 | None |
 | Product names from scans | Open Beauty Facts, looked up live, not stored in the repo | ODbL (credited with a link on each result) | No | $0 | None |
+| Home banner picture `assets/images/home-banner.webp` and the ten pins `assets/pins/*.webp` (home, brands, scan, profile, learn, foundation, concealer, blush, bronzer, lip; made 2026-11-12, cut out and compressed here) | Generated in Runway from our own written descriptions | Jose's Runway outputs (Standard plan) | Credits already bought | 44 credits, about $0.44 | Jose's Runway account |

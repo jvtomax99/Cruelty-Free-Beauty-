@@ -48,6 +48,8 @@
     return { pass: true, kind: "pass", reason: `Certified by ${by}.`, notes, certs };
   }
   const CHIP = { pass: "Passes", fail: "Doesn't pass", none: "Not on either list" };
+  // One chip per certifier for a brand that passes; the Brands list and Home's rail both use it.
+  const certChips = (v) => v.certs.map((c) => `<span class="verdict v-pass"><span aria-hidden="true">✓&nbsp;</span><span class="sr-only">Certified by </span>${c}</span>`).join("");
 
   /* ---------- Match a brand name from a label (Open Beauty Facts or typed) ----------
      A wrong match shows a wrong verdict, so this is strict: the WHOLE name must equal one of the
@@ -135,7 +137,7 @@
       <li><a class="brand-row" href="#brand/${encodeURIComponent(b.id)}">
         <span class="brand-name">${esc(b.name)}</span>
         <span class="brand-meta">
-          ${v.pass ? v.certs.map((c) => `<span class="verdict v-pass"><span aria-hidden="true">✓&nbsp;</span><span class="sr-only">Certified by </span>${c}</span>`).join("") : `<span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>`}
+          ${v.pass ? certChips(v) : `<span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>`}
           ${b.vegan === "all" ? '<span class="tag">Vegan</span>' : ""}
           ${b.price ? `<span class="tag" title="${PRICE[b.price]}">${esc(b.price)}</span>` : ""}
         </span>
@@ -222,6 +224,7 @@
   window.CFB.saved = saved;
   window.CFB.saveButton = saveButton;
   window.CFB.CHIP = CHIP;
+  window.CFB.certChips = certChips;
   // The whole file, for changes.js ("changes"); an empty one if it couldn't load.
   const file = fetch("data/brands.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
   window.CFB.data = file.catch(() => ({ brands: [], changes: [] }));
