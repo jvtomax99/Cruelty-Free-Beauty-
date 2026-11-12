@@ -192,6 +192,18 @@ other an outline. The focus ring on night is `--pink`. Letterbox bars
 (6vh, at most 56 px) frame the show like a film. Reduced motion: the
 finished hero pose, held 1.6 s, then a 0.6 s fade.
 
+The gate (2026-11-12, Jose: the dark spotlight stage "looks low detail
+and doesn't scream glamorous"): the film's own frame at 0.6 s, the
+lipstick held up before the bulb mirror (`assets/images/gate.webp`), so
+the tap flows straight into the film. It drifts slowly (scale 1 to 1.06
+over 14 s) and the glint on the lipstick breathes. Top: "C.F.B. presents"
+in `--gold-pale` small capitals, then "Cruelty-Free *Beauty*" in Fraunces
+500 at 34, `--star` with the italic in `--gold-pale`, and a short gold
+rule. Bottom: two 56 px pills with a `--gold-pale` hairline, the main one
+`--rose` with `--star` text, the other night glass. On a wide screen the
+frame is a centred column with soft edges, like the film. The drawn stage
+is still underneath as the fallback show.
+
 The film (version 2, remade twice on 2026-11-12) is set in a glamorous
 dressing room at dusk: bronze shadow, warm mirror bulbs, gold rim light,
 ivory satin, marble, pearls, soft pink accents only; one sunlit garden

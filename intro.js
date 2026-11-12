@@ -27,7 +27,7 @@
   const F = { ask: $(".in-ask"), phone: $(".in-phone"), c1: $(".in-c1"), c2: $(".in-c2"), tap: $(".in-tap"), kind: $(".in-kind"), line: $(".in-line"), go: $(".in-go") };
   const reduce = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   const themeMeta = document.querySelector('meta[name="theme-color"]');
-  const DAY_THEME = themeMeta ? themeMeta.content : "#FBF6F2";
+  const DAY_THEME = "#FBF6F2";   // the head script may already have set the night colour
 
   /* ---------- timing (seconds after the tap) ---------- */
   const T = { lip: 0.7, w1: 1.525, w2: 2.225, w3: 2.9, flash: 3.52, card: 3.85, exit: 5.4, end: 6.2 };
@@ -415,6 +415,7 @@
     root.classList.add("intro-on");
     el.style.opacity = ""; el.hidden = false;
     gate.classList.remove("is-gone"); skipBtn.hidden = true;
+    el.classList.add("is-gate");
     if (app) app.inert = true;
     if (themeMeta) themeMeta.content = "#1C0F13";
     filmLoad();
@@ -424,7 +425,7 @@
   function start(withSound) {
     if (state !== "gate") return;
     state = "starting";                                     // further taps now skip; they can't start it twice
-    gate.classList.add("is-gone"); gate.inert = true;
+    gate.classList.add("is-gone"); gate.inert = true; el.classList.remove("is-gate");
     startAt = performance.now();
     const trying = svg ? filmTry(withSound) : null;         // play() is called here, inside the tap
     const sure = !!trying && filmReady();                   // already buffered: no need for the drawn show's sound
@@ -597,7 +598,7 @@
   window.CFBIntro = {
     replay: () => { if (state === "idle") open(true); },
     film: () => ({ on: filmOn, ended: !!filmEnd, ready: filmReady(), time: vid ? vid.currentTime : 0, muted: vid ? vid.muted : true, paused: vid ? vid.paused : true }),
-    seek: s => ready.then(() => { if (state === "idle") open(); state = "show"; paused = true; gate.classList.add("is-gone"); now = s; if (s > T.exit) target = target || logoTarget(); draw(); }),
+    seek: s => ready.then(() => { if (state === "idle") open(); state = "show"; paused = true; gate.classList.add("is-gone"); el.classList.remove("is-gate"); now = s; if (s > T.exit) target = target || logoTarget(); draw(); }),
     T
   };
   if (root.classList.contains("intro-on")) open();
