@@ -11,6 +11,7 @@
 
   const ANSWERS = [
     {
+      topic: "meadow",   // its habitat in the Garden (garden.js)
       q: "Cruelty-free or vegan: what's the difference?",
       a: [
         "Cruelty-free is about testing: no new animal testing by the company or its suppliers after a fixed cut-off date. (Almost every ingredient, even water, was tested on animals at some point in the past, so the promise is about the future.) Vegan is about ingredients: nothing in it comes from an animal.",
@@ -20,6 +21,7 @@
       src: [LB_FAQ, PETA_VEGAN]
     },
     {
+      topic: "burrow",   // its habitat in the Garden (garden.js)
       q: "PETA or Leaping Bunny: aren't they the same?",
       a: [
         "No. They're two programs with different checks, so C.F.B. never treats one as the other.",
@@ -29,6 +31,7 @@
       src: [LB_STD, LB_FAQ, PETA_LIST, PETA_FAQ]
     },
     {
+      topic: "oak",   // its habitat in the Garden (garden.js)
       q: "What about brands owned by a company that tests?",
       a: [
         "Some cruelty-free brands belong to parent companies that do test on animals.",
@@ -38,6 +41,7 @@
       src: [LB_FAQ, PETA_FAQ]
     },
     {
+      topic: "pond",   // its habitat in the Garden (garden.js)
       q: "Does selling in China mean a brand tests on animals?",
       a: [
         "Not automatically, any more. Leaping Bunny says brands importing to sell in mainland China used to have to test, but recent changes to China's rules make it possible, in specific cases, to sell there and stay Leaping Bunny certified. It runs a China program with regulatory experts that checks the paperwork and keeps watching after sales start.",
@@ -48,9 +52,10 @@
       src: [LB_FAQ, PETA_FAQ]
     },
     {
+      topic: "orchard",   // its habitat in the Garden (garden.js)
       q: "My brand isn't listed. Does that mean it tests?",
       a: [
-        "No. PETA says a company may be missing because it won't answer PETA's questions about its full policy, or because it doesn't sell in the regions PETA covers (the U.S., Canada, India and Germany).",
+        "No. PETA says a company may be missing because it won't answer PETA's questions about its full policy, or because it doesn't sell in a region PETA counts as eligible (these include the U.S., Canada, India and Germany).",
         "C.F.B. shows \"unknown\" when we can't find proof either way, and never treats a missing listing as a yes or a no."
       ],
       src: [PETA_LIST]
@@ -68,6 +73,7 @@
         <div class="sources">Sources, checked ${CHECKED}:
           <ul>${x.src.map(s => `<li><a href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.t)}</a></li>`).join("")}</ul>
         </div>
+        <a class="pill-btn gd-go" href="#practice/${x.topic}">Practise this</a>
       </div>
     </details>`).join("");
 })();

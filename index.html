@@ -135,6 +135,15 @@
         <ul class="hr-track" id="home-rail-list"></ul>
       </section>
 
+      <a class="card gd-home" href="#garden">
+        <span class="gd-home-text">
+          <span class="gd-home-h">Your garden</span>
+          <span class="gd-home-p">It grows with what you learn.</span>
+          <span class="gd-home-line" id="gd-home-line"></span>
+        </span>
+        <span class="gd-home-go">Practise</span>
+      </a>
+
       <section class="card" aria-labelledby="promise-h">
         <h2 id="promise-h">Our promise</h2>
         <p>Every brand here shows its proof, so you never take our word for it.</p>
@@ -237,6 +246,28 @@
       </div>
     </section>
 
+    <!-- ---------- The Garden (garden.js): five habitats, then a round of questions ---------- -->
+    <section class="screen" data-screen="garden" aria-labelledby="garden-h" hidden>
+      <div class="screen-head">
+        <h1 id="garden-h" tabindex="-1">Your garden</h1>
+        <p>It grows with what you learn. Five questions at a time.</p>
+      </div>
+      <div class="gd-top">
+        <span class="gd-total" id="garden-total"></span>
+        <a class="pill-btn gd-go" id="garden-all" href="#practice/all" hidden>Practise 5</a>
+      </div>
+      <div class="gd-list" id="garden-list"></div>
+      <p class="pf-private">Your progress stays on this phone.</p>
+    </section>
+
+    <section class="screen" data-screen="practice" aria-labelledby="practice-h" hidden>
+      <a class="back" href="#garden"><svg aria-hidden="true"><use href="#i-chev"/></svg>The garden</a>
+      <div class="screen-head gd-head">
+        <h1 id="practice-h" tabindex="-1">Practice</h1>
+      </div>
+      <div class="quiz" id="practice-box"></div>
+    </section>
+
     <!-- ---------- Learn ---------- -->
     <section class="screen" data-screen="learn" aria-labelledby="learn-h" hidden>
       <div class="screen-head">
@@ -244,6 +275,7 @@
         <p>The words on every label, explained, with sources.</p>
       </div>
       <div class="learn" id="learn-list"></div>
+      <a class="pill-btn gd-go gd-learn" href="#garden">Practise in your garden</a>
     </section>
 
   </main>
@@ -264,6 +296,7 @@
 <script src="home.js"></script>
 <script src="profile.js"></script>
 <script src="scan.js"></script>
+<script src="garden.js"></script>
 <script src="intro.js"></script>
 </body>
 </html>

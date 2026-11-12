@@ -674,3 +674,47 @@ ul.pf-sum li { display: inline-flex; align-items: center; min-height: 28px; padd
   .tab-pin { transition: none; }
   .hb-pal, .qt-tile, .hr-card { transition: none; }
 }
+
+/* ---------- The Garden: habitats and rounds (garden.js) ---------- */
+a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: none; }
+.learn .gd-go { margin-top: var(--sp-3); }
+.gd-learn { margin-top: var(--sp-4); }
+.gd-home { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-3); color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease); }
+.gd-home:active, .gd-home.is-pressed { transform: scale(.985); background: var(--blush); }
+.gd-home-text { display: grid; gap: var(--sp-px); min-width: 0; }
+.gd-home-h { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); }
+.gd-home-p { color: var(--ink-soft); font-size: var(--fs-sub); }
+.gd-home-line { color: var(--rose-ink); font-size: var(--fs-foot); font-weight: 600; margin-top: var(--sp-1); }
+.gd-home-go { margin-left: auto; flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-4); border-radius: var(--r-pill); background: var(--rose); color: var(--paper); font-weight: 600; font-size: var(--fs-sub); }
+.gd-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+.gd-top .pill-btn { margin-top: 0; }
+.gd-total { color: var(--rose-ink); font-weight: 600; font-size: var(--fs-sub); }
+.gd-list { display: grid; gap: var(--sp-3); margin-top: var(--sp-4); }
+.gd-card { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-px) var(--sp-3); padding: var(--sp-4); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--finish); color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease); }
+.gd-card:active, .gd-card.is-pressed { transform: scale(.985); background: var(--blush); }
+.gd-name { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); }
+.gd-state { align-self: center; padding: 0 var(--sp-2); min-height: 24px; display: inline-flex; align-items: center; border-radius: var(--r-pill); background: var(--blush); color: var(--rose-ink); font-size: var(--fs-cap2); font-weight: 600; letter-spacing: var(--tr-sm); white-space: nowrap; }
+.gd-card.is-bloom .gd-state { background: var(--ok-bg); color: var(--ok); }
+.gd-sub, .gd-count { grid-column: 1 / -1; color: var(--ink-soft); font-size: var(--fs-sub); }
+.gd-count { font-size: var(--fs-foot); }
+.gd-bar { grid-column: 1 / -1; display: block; height: 6px; margin: var(--sp-2) 0 var(--sp-1); background: var(--blush); border-radius: var(--r-pill); overflow: hidden; }
+.gd-bar span { display: block; height: 100%; background: var(--rose); border-radius: var(--r-pill); transition: width var(--t-screen) var(--ease); }
+.gd-card.is-bloom .gd-bar span { background: var(--ok); }
+.gd-head { margin-top: var(--sp-1); }
+.gd-options .quiz-opt { padding-top: var(--sp-3); padding-bottom: var(--sp-3); }
+.gd-options .quiz-opt:disabled { cursor: default; color: var(--ink-soft); transform: none; }
+.gd-options .quiz-opt.is-right { background: var(--ok-bg); border-color: var(--ok-bg); color: var(--ok); }
+.gd-options .quiz-opt.is-wrong { background: var(--no-bg); border-color: var(--no-bg); color: var(--no); }
+.gd-options .quiz-opt.is-right::before { content: "\2713\00a0"; content: "\2713\00a0" / "Right answer: "; }
+.gd-options .quiz-opt.is-wrong::before { content: "\2715\00a0"; content: "\2715\00a0" / "Your answer: "; }
+.gd-result { margin-top: var(--sp-4); padding: var(--sp-4); border-radius: var(--r-lg); background: var(--paper); border: 1px solid var(--line); color: var(--ink); font-size: var(--fs-sub); }
+.gd-verdict { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); }
+.gd-result.is-ok .gd-verdict { color: var(--ok); }
+.gd-result.is-no .gd-verdict { color: var(--no); }
+.gd-result p { margin-top: var(--sp-1); }
+.gd-answer { font-weight: 600; }
+.gd-date { display: block; margin-top: calc(-1 * var(--sp-2)); color: var(--ink-soft); font-size: var(--fs-cap); }
+.gd-note { margin-top: var(--sp-3); color: var(--ink-soft); font-size: var(--fs-foot); }
+.gd-done { margin-top: 0; }
+.gd-backlink { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { .gd-card, .gd-home, .gd-bar span { transition: none; } }

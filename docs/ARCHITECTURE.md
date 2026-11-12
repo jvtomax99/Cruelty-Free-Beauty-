@@ -10,7 +10,7 @@ relative.
 
 | Path | What |
 |---|---|
-| `index.html` | The shell: icon sprite, side rail (computers), the four screens (`data-screen` home, brands, profile, learn), tab bar (phones) |
+| `index.html` | The shell: icon sprite, side rail (computers), the screens (`data-screen` home, brands, brand, scan, profile, garden, practice, learn), tab bar (phones) |
 | `app.css` | All styles. Tokens in `:root` at the top; DESIGN.md explains them |
 | `app.js` | Screens by `#hash` (Back retraces), greeting by time of day, press feedback (`LIFTS`, `.is-pressed` held 260 ms), saved settings (`CFB.store`, localStorage inside try/catch), registers the worker |
 | `brands.js` | Brands screen and brand pages (`#brand/<id>`): loads `data/brands.json`, works out each verdict (Strict / Certified, saved as `cfb-mode`), search, filters. Also shared helpers: `CFB.match` (a label's brand name to our brand), `CFB.saved` (hearts, `cfb-saved`) |
@@ -22,6 +22,8 @@ relative.
 | `profile.js` | Profile screen: 8-question quiz, profile (saved as `cfb-profile`, only on the phone), routine of brands per step using `CFB.verdict` and the brand data from `brands.js`; Saved brands list |
 | `intro.js` | The launch show: gate, shots, sparkles (one canvas), music (Web Audio), skip, the landing on Home's logo, Profile's replay; it plays on the first visit only (`cfb-intro-seen`). A script in `index.html`'s head decides before paint (`html.intro-on`). `CFBIntro.seek(t)` shows any moment for tests. Version 2: when `assets/video/launch.mp4` is ready at the tap it plays in a `<video>` over the drawn scene (which waits on its hero pose), then the drawn logo does the landing; the drawn show alone is the fallback (film can't start within 0.8 s of the tap, reduced motion, data saver); a film that breaks or freezes 1.5 s part-way opens the app at once. `CFBIntro.film()` reports its state for tests |
 | `assets/video/` | The opening film (13.8 s, with voice; `intro.js` lays its words, phone cards and button over it on the times in `FILM`). Cut from the rendered shots by `tools/make-launch-video.sh <folder>`; the source shots are not in the repo |
+| `garden.js` | The Garden, a study game (`#garden`, and a round at `#practice/<habitat or all>`). Five habitats, one per topic (`TOPICS`). The bank is the written questions plus one question per brand, built here from the brand data through `CFB.verdict` (Strict) and never stored; a brand whose check is over 90 days old, or with no source link, is left out. Rounds of 5: missed and due first, then new, then the soonest due. A right answer waits 5 minutes, then 1, 3, 7, 16, 35 days (`WAITS`); right twice is "learned"; a right answer before it is due doesn't count twice; a miss or "I guessed" resets it. Progress is `cfb-garden` on the phone (`{v, items: {id: {s, due, k}}}`; `k` is the verdict a brand answer was learned with, so a recheck that changes it starts that question over). `CFB.garden` (`tally`, `topics`, `ready`) is for the 3D garden, which isn't built yet |
+| `data/questions.json` | The Garden's written questions. `sources` holds each page with the date it was last read; in every question the first option is the right one and `src` names its sources. Each was checked against the live page by a second reader (2026-11-12) |
 | `learn.js` | The Learn answers and their sources (`ANSWERS`, `CHECKED` date) |
 | `sw.js` | Offline worker: every file from one versioned cache, so a launch never mixes old and new files. A bumped `CACHE_VERSION` downloads the new version whole in the background; it shows a launch or two later (tested 2026-11-11). Bump it by hand in every change to a precached file. The launch film is not precached (too big to make the install wait): it lives in its own cache (`MEDIA`), saved when the page asks once the film has played, served in byte ranges (iPhones need that), and kept across app updates; bump `MEDIA` if the film changes |
 | `manifest.webmanifest` | Install name, colours, icons |
@@ -37,7 +39,7 @@ relative.
 ## How data moves
 
 Nothing leaves the phone except a scanned barcode number, sent to Open
-Beauty Facts to learn the brand. Settings and, later, quiz answers live in
+Beauty Facts to learn the brand. Settings, quiz answers and the Garden's progress live in
 localStorage under `cfb-` keys. Brand data is `data/brands.json`, precached by
 the worker so the list will work offline once the Brands screen reads it
 (phase 3). Research flow: `lookup-certifiers`
@@ -52,6 +54,8 @@ confirms it.
 - `node tools/test-scan.cjs` (add `--live` for real Open Beauty Facts lookups): photo, fake camera and typed barcodes through the vendored reader, every result type, brand matching on real Open Beauty Facts names, saved list, offline.
 - `node tools/test-intro.cjs` after any change to the launch show or the logo.
 - `node tools/test-changes.cjs`: the "What changed" notices with made-up changes (order, hearted first, "Got it", brand page, ignored entries).
+- `node tools/check-questions.cjs` after any change to `data/questions.json` (sources, dates, repeated options).
+- `node tools/test-garden.cjs`: the Garden's quiz in a real browser (a round, right and wrong, "I guessed", what comes back when, learned counts, brand questions against the Strict rule, reload, broken saved progress, offline).
 - `node tools/test-directory.cjs`: the directory in a real browser (counts, search, filters, brand page, Back, offline).
 - Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
   a recheck pull request. A status that changed also gets an entry in

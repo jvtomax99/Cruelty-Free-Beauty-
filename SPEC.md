@@ -163,7 +163,9 @@ me**.
   (PETA or Leaping Bunny), Old oak (parent companies), Pond (China today),
   Orchard (read a brand). Rounds of 5 questions; a missed question comes
   back sooner than a right one (5 minutes, then 1, 3, 7, 16, 35 days); "I
-  guessed" counts as a miss. About 40 written questions come from the
+  guessed" counts as a miss. A question is "learned" once it is answered
+  right twice, at least 5 minutes apart; a right answer before it is due
+  again doesn't count twice. The written questions (33) come from the
   Learn answers, each with its source and checked date, written by one
   helper and checked against the source by another. The Orchard's
   questions are built from `data/brands.json` each time, never stored, and
@@ -268,7 +270,10 @@ only if it can be shown to work across skin tones.
 
 ### The Garden (added 2026-11-12)
 - [ ] Look sample and one test animal approved by Jose and the founder
-- [ ] Phase A: question bank, rounds, progress, habitat cards
+- [x] Phase A: question bank, rounds, progress, habitat cards (2026-11-12:
+      33 written questions, not the 40 planned, because the Learn answers
+      hold no more checked facts; plus one question per brand, 30 today.
+      On the work branch, not live: the founder hasn't seen it)
 - [ ] Phase B: the 3D garden, loaded on demand
 - [ ] Phase C: the animals (Meshy, Jose's credits) and their motion
 
