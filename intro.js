@@ -87,7 +87,7 @@
     wide = W / H > 1.15; el.classList.toggle("is-wide", wide);
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
     if (svg) Object.assign(svg.style, { width: D + "px", height: D + "px", left: (W - D) / 2 + "px", top: (H - D) / 2 + "px" });
-    if (state === "show" && now > T.exit - 0.3) target = logoTarget();   // turned mid-landing: aim at the new spot
+    if (state === "show" && (target || now > T.exit - 0.3)) target = logoTarget();   // turned mid-landing: aim at the new spot
     if (state !== "idle") draw();
   }
   addEventListener("resize", resize);
@@ -209,6 +209,7 @@
     if (reduce() || saver()) return;
     try {
       if (!vid.getAttribute("src")) { vid.preload = "auto"; vid.src = FILM.src; vid.load(); }
+      else if (vid.error) vid.load();                          // it failed last time (offline, say): try again
       else if (vid.readyState > 0) vid.currentTime = 0;        // a replay: back to the first frame
     } catch (_) {}
   }
@@ -230,7 +231,7 @@
      (fast: at once, and the film goes silent; else after a short hold, while the film's last chord rings out) */
   function filmHandover(fast) {
     if (!filmOn) return;
-    filmOn = false; filmEnd = fast ? vid.currentTime : Infinity;
+    filmOn = false; filmEnd = fast ? Math.max(vid.currentTime, 0.001) : Infinity;   // never 0: 0 means "no film this run"
     setDay(!fast || filmEnd >= FILM.light);                    // skipped in the dark lab: the landing stays on the night stage
     vid.classList.remove("is-on"); el.classList.remove("is-film");
     if (fast) { vid.muted = true; vid.pause(); }               // a natural end lets the last chord ring out

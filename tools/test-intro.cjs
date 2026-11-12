@@ -154,6 +154,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await fp.click('[data-sound=off]'); await fp.waitForTimeout(900);
   f = await film(fp);
   check(f.on && f.muted && f.time < 3 && !f.day, `film, next open: plays from the start again (${f.time.toFixed(1)} s), muted for "Enter quietly"`);
+  await fp.evaluate(() => { document.querySelector('.in-film').currentTime = 9; }); await fp.waitForTimeout(400);   // well into the film, so the Replay check below means something
   await fp.click('.in-skip'); await gone(fp, 1500);
   check(await fp.evaluate(() => window.__ctxs) === 0, 'film: "Enter quietly" makes no sound object');
   // Replay plays the whole film; Skip leaves it at once

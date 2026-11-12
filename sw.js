@@ -7,7 +7,7 @@
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v15";
+const CACHE_VERSION = "cfb-v16";
 const MEDIA = "cfb-media-v2";
 const FILM = "assets/video/launch.mp4";
 const PRECACHE = [
@@ -61,7 +61,7 @@ self.addEventListener("fetch", e => {
   e.respondWith(url.pathname === SCOPE + FILM ? film(req, url) : fromCache(req, url));
 });
 
-/* The launch film. Saved whole the first time it is asked for; after that it is served from
+/* The launch film. Saved whole when the page asks (after it has played once); after that it is served from
    the cache in the pieces the browser asks for (iPhones only play video served that way). */
 let filling = null;
 function fill(href) {
@@ -81,7 +81,7 @@ async function film(req, url) {
   const href = url.origin + url.pathname;
   const cache = await caches.open(MEDIA);
   const saved = await cache.match(href);
-  if (!saved) { fill(href); return fetch(req); }      // not saved yet: play from the network, save for next time
+  if (!saved) return fetch(req);                      // not saved yet: play from the network; the page asks for the save after it has played
   const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") || "");
   if (!range) return saved;
   const blob = await saved.blob(), size = blob.size;

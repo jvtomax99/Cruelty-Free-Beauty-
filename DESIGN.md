@@ -175,7 +175,9 @@ in a dark, slightly gothic lab (cold blue, storybook, never frightening)
 and ends in white and gold. It fills a phone screen (cropped to fit, no
 letterbox bars). On a wide screen it is a centred 9:16 column whose side
 edges fade into the stage behind, which turns from night to white
-(`--day` #FFFFFF, `--day-2` #FBF6EE) when the white Welcome stage starts.
+(`--day` #FFFFFF, `--day-2` #FBF6EE) when the white Welcome stage starts;
+Skip then sits on `--night-veil` with white text. On a phone held
+sideways only the word "Welcome" shows.
 The Welcome frame is real text on a white veil (`--day-veil`) over the
 bottom 46% of the screen: "C.F.B. PRESENTS" in Inter 600 capitals,
 0.34em, `--fs-cap2`, `--gold-ink` #9A6B14; "Welcome" in Fraunces italic

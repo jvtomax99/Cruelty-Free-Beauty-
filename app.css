@@ -35,6 +35,7 @@
   --night-glass: rgba(28,15,19,.4);    /* launch show: buttons over the stage */
   --day: #FFFFFF;         /* launch film: the white stage it ends on */
   --day-2: #FBF6EE;       /* launch film: the white stage's edges */
+  --night-veil: rgba(28,15,19,.62);    /* launch film: Skip over the white stage (white text, 7:1 or more) */
   --day-veil: rgba(255,255,255,.82);   /* launch film: the veil under the Welcome text */
   --gold-deep: #8A5E12; --gold: #C99A3A; --gold-pale: #F4DC9A;   /* launch film: the Welcome foil */
   --gold-ink: #9A6B14;    /* launch film: small gold text on white (4.6:1) */
@@ -474,6 +475,13 @@ html.intro-on .intro {
 .in-w-slogan { margin-top: var(--sp-3); font-family: var(--font-display); font-size: var(--fs-call); font-weight: 450; color: var(--ink); }
 .in-w-slogan em { font-style: italic; color: var(--berry); }
 .intro.is-wide .in-w-word { font-size: clamp(56px, 9.6vh, 84px); }
+/* a phone held sideways: no room under the hero for the whole block, so only the word */
+@media (max-height: 520px) {
+  .in-welcome { height: 34%; padding-bottom: var(--sp-3); }
+  .in-w-label, .in-w-rule, .in-w-slogan { display: none; }
+  .intro.is-wide .in-w-word { font-size: var(--fs-hero); margin-top: 0; }
+}
+.intro.is-day .in-skip { background: var(--night-veil); border-color: transparent; color: var(--day); }
 
 .in-gate {
   position: absolute; left: 0; right: 0; bottom: max(11vh, calc(env(safe-area-inset-bottom) + 40px));
