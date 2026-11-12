@@ -98,15 +98,29 @@
         <div><div class="wordmark">C.F.B.</div><div class="wordmark-sub">Cruelty-Free Beauty</div></div>
       </header>
 
-      <div class="hello">
-        <div class="hello-time" id="hello-time">Hello</div>
-        <h1 class="hello-line" id="hello-line" tabindex="-1">Cruelty-free looks <em>beautiful on you.</em></h1>
+      <div class="hb">
+        <img class="hb-photo" src="assets/images/home-banner.webp" alt="" width="768" height="1376">
+        <div class="hello">
+          <div class="hello-time" id="hello-time">Hello</div>
+          <h1 class="hello-line" id="hello-line" tabindex="-1">Cruelty-free looks <em>beautiful on you.</em></h1>
+        </div>
+        <a class="hb-pal" href="#scan">
+          <img src="assets/logo.svg" alt="" width="84" height="84">
+          <span class="hb-say">Shopping today? <b>Scan it first.</b></span>
+        </a>
       </div>
 
       <a class="search" href="#brands">
         <svg aria-hidden="true"><use href="#i-search"/></svg>
         <span>Search brands</span>
       </a>
+
+      <div class="qt">
+        <a class="qt-tile" href="#brands"><img src="assets/pins/brands.webp" alt="" width="52" height="52"><span>Brands</span></a>
+        <a class="qt-tile" href="#scan"><img src="assets/pins/scan.webp" alt="" width="52" height="52"><span>Scan</span></a>
+        <a class="qt-tile" href="#profile"><img src="assets/pins/profile.webp" alt="" width="52" height="52"><span>My profile</span></a>
+        <a class="qt-tile" href="#learn"><img src="assets/pins/learn.webp" alt="" width="52" height="52"><span>Learn</span></a>
+      </div>
 
       <section class="card changes" id="changes-card" aria-labelledby="changes-h" hidden>
         <h2 id="changes-h">What changed</h2>
@@ -116,28 +130,14 @@
         <button type="button" class="more" id="changes-ok">Got it</button>
       </section>
 
-      <div class="tiles">
-        <a class="tile" href="#brands">
-          <span class="tile-icon"><svg aria-hidden="true"><use href="#t-brands"/></svg></span>
-          <span class="tile-title">Find brands</span>
-          <span class="tile-sub">Checked, with the proof</span>
-        </a>
-        <a class="tile" href="#profile">
-          <span class="tile-icon"><svg aria-hidden="true"><use href="#t-profile"/></svg></span>
-          <span class="tile-title">My beauty profile</span>
-          <span class="tile-sub">What suits your skin</span>
-        </a>
-        <a class="tile" href="#scan">
-          <span class="tile-icon"><svg aria-hidden="true"><use href="#t-scan"/></svg></span>
-          <span class="tile-title">Scan a product</span>
-          <span class="tile-sub">Point at the barcode</span>
-        </a>
-        <a class="tile" href="#learn">
-          <span class="tile-icon"><svg aria-hidden="true"><use href="#t-learn"/></svg></span>
-          <span class="tile-title">Learn</span>
-          <span class="tile-sub">Vegan, PETA, Leaping Bunny</span>
-        </a>
-      </div>
+      <section class="hr" id="home-rail" aria-labelledby="home-rail-h" hidden>
+        <div class="hr-head">
+          <h2 id="home-rail-h">Brands that pass</h2>
+          <span class="hr-count" id="home-rail-count"></span>
+          <a class="hr-all" href="#brands">View all</a>
+        </div>
+        <ul class="hr-track" id="home-rail-list"></ul>
+      </section>
 
       <section class="card" aria-labelledby="promise-h">
         <h2 id="promise-h">Our promise</h2>
@@ -265,6 +265,7 @@
 <script src="learn.js"></script>
 <script src="brands.js"></script>
 <script src="changes.js"></script>
+<script src="home.js"></script>
 <script src="profile.js"></script>
 <script src="scan.js"></script>
 <script src="intro.js"></script>

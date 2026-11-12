@@ -67,7 +67,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   // Brand page: Tarte passes Certified but fails Strict over its parent
   await page.evaluate(() => window.scrollTo(0, 400));
   await page.click('.mode-btn[data-mode=certified]');
-  await page.click('a[href="#brand/tarte"]');
+  await page.click('#brand-list a[href="#brand/tarte"]');
   await page.waitForSelector('#brand-page .facts');
   const tarte = await page.textContent('#brand-page');
   for (const t of ['PETA', 'Leaping Bunny', 'Parent company', 'Mainland China', 'Vegan', 'Price', 'Where to buy', 'Checked 11 Nov 2026', 'Unknown', 'carries this brand']) check(tarte.includes(t), `Tarte page shows "${t}"`);
@@ -86,7 +86,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.goto(APP + '#home', { waitUntil: 'networkidle' });   // fresh history: home, list, brand
   await page.click('.tab[href="#brands"] >> visible=true');
   await page.waitForSelector('#brand-list .brand-row');
-  await page.click('a[href="#brand/glossier"]');
+  await page.click('#brand-list a[href="#brand/glossier"]');
   await page.waitForSelector('#brand-page .facts');
   check(/Where it sells not checked yet/.test(await page.textContent('#brand-page')), 'unchecked China says "not checked yet", not "brand doesn\'t say"');
   await page.click('.back');

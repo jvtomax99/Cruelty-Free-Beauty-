@@ -38,6 +38,10 @@
   --gold-deep: #8A5E12; --gold: #C99A3A; --gold-pale: #F4DC9A;   /* opening film: gold for its words and card edges */
   --gold-ink: #9A6B14;    /* opening film: small gold text on white (4.6:1) */
   --berry: #B4586A;       /* opening film: the italic in the garden line */
+  --veil-cream: rgba(251,246,242,.9);    /* Home banner: the cream shade behind the words */
+  --veil-cream-2: rgba(251,246,242,.55);
+  --veil-cream-0: rgba(251,246,242,0);
+  --qt-edge: rgba(255,255,255,.9);       /* quick tiles and rail cards: the bright rim */
 
   /* type */
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
@@ -517,3 +521,93 @@ html.intro-on .intro {
 }
 .in-btn:focus-visible, .in-skip:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .in-gate, .in-btn, .in-skip, .pill-btn, .mode-btn { transition: none; } }
+
+
+/* ---------- Home: hello banner, quick tiles, brand rail (Interp's layout in C.F.B.'s colours) ---------- */
+.hb {
+  position: relative; display: flex; flex-direction: column; overflow: hidden; isolation: isolate;
+  margin: var(--sp-3) calc(-1 * var(--sp-4)) 0; padding: var(--sp-5) var(--sp-4) var(--sp-6); min-height: 452px;
+}
+.hb-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 100% 70%; z-index: -2; }
+.hb::before {   /* cream shade under the words (left), and the fade into the page (bottom) */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(to top, var(--bg) 0, var(--veil-cream-0) 26%),
+    linear-gradient(to bottom, var(--bg) 0, var(--veil-cream-0) 9%),
+    radial-gradient(130% 46% at 0% 16%, var(--veil-cream) 45%, var(--veil-cream-0) 80%),
+    linear-gradient(98deg, var(--veil-cream) 0, var(--veil-cream-2) 46%, var(--veil-cream-0) 72%);
+}
+.hb .hello { margin: 0; }
+.hb-pal {
+  display: flex; align-items: flex-end; gap: var(--sp-1); margin-top: auto; align-self: flex-start;
+  color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease);
+}
+.hb-pal img { width: 84px; height: 84px; flex: none; animation: palBob 4.6s ease-in-out infinite; }
+.hb-say {
+  position: relative; margin-bottom: var(--sp-5); padding: var(--sp-2) var(--sp-3); max-width: 190px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--sp-1);
+  box-shadow: var(--float); font-size: var(--fs-sub); line-height: 1.3; color: var(--ink-soft);
+}
+.hb-say b { display: block; color: var(--rose-ink); font-weight: 600; }
+.hb-pal:active, .hb-pal.is-pressed { transform: scale(.97); }
+@keyframes palBob { 50% { transform: translateY(-4px) rotate(-1.5deg); } }
+.hb + .search { position: relative; margin-top: calc(-1 * var(--sp-5)); }
+
+.qt { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2); margin-top: var(--sp-4); }
+.qt-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-1);
+  min-height: 98px; padding: var(--sp-2) var(--sp-1); border-radius: var(--r-lg); border: 1px solid var(--qt-edge);
+  background: linear-gradient(160deg, var(--paper), var(--blush)); box-shadow: var(--finish);
+  color: var(--ink); text-decoration: none; text-align: center;
+  font-size: var(--fs-foot); font-weight: 600; letter-spacing: var(--tr-sm); line-height: 1.2;
+  transition: transform var(--t-press) var(--ease), box-shadow var(--t-press) var(--ease);
+}
+.qt-tile img { width: 52px; height: 52px; }
+.qt-tile:active, .qt-tile.is-pressed { transform: scale(.95); box-shadow: var(--pressed); }
+
+.hr { margin-top: var(--sp-5); }
+.hr-head { display: flex; align-items: baseline; gap: var(--sp-2); }
+.hr-head h2 { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); }
+.hr-count { font-size: var(--fs-foot); color: var(--ink-soft); }
+.hr-all { margin-left: auto; display: inline-flex; align-items: center; min-height: 44px; color: var(--rose); font-size: var(--fs-sub); font-weight: 550; text-decoration: none; }
+.hr-track {
+  display: flex; gap: var(--sp-3); list-style: none; margin: 0 calc(-1 * var(--sp-4)); padding: var(--sp-5) var(--sp-4) var(--sp-4);
+  overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-left: var(--sp-4); scrollbar-width: none;
+}
+.hr-track::-webkit-scrollbar { display: none; }
+.hr-track li { flex: none; scroll-snap-align: start; }
+.hr-card {
+  position: relative; display: flex; flex-direction: column; gap: var(--sp-2); width: 156px; min-height: 132px;
+  padding: var(--sp-6) var(--sp-3) var(--sp-3); border-radius: var(--r-lg); border: 1px solid var(--qt-edge);
+  background: linear-gradient(170deg, var(--paper) 30%, var(--blush)); box-shadow: var(--finish);
+  color: var(--ink); text-decoration: none;
+  transition: transform var(--t-press) var(--ease), box-shadow var(--t-press) var(--ease);
+}
+.hr-card:active, .hr-card.is-pressed { transform: scale(.97); box-shadow: var(--pressed); }
+.hr-mono {   /* the brand's initial, poking over the card's top edge like Interp's pins; never a brand logo */
+  position: absolute; top: calc(-1 * var(--sp-4)); left: var(--sp-3); width: 48px; height: 48px; border-radius: var(--r-md);
+  display: grid; place-items: center; background: linear-gradient(150deg, var(--blush), var(--pink));
+  border: 2px solid var(--paper); box-shadow: var(--finish);
+  font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 600; color: var(--rose-ink);
+}
+.hr-name { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; letter-spacing: var(--tr-head); line-height: 1.2; }
+.hr-chips { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-top: auto; }
+.hr-more { justify-content: center; align-items: center; padding-top: var(--sp-3); color: var(--rose); }
+.hr + .card { margin-top: var(--sp-3); }
+
+@media (min-width: 900px) {
+  .hb { margin: 0; border-radius: var(--r-lg); min-height: 380px; padding: var(--sp-6); box-shadow: var(--finish); }
+  .hb-photo { object-position: 100% 70%; }
+  .hb::before { background: linear-gradient(98deg, var(--veil-cream) 0, var(--veil-cream-2) 40%, var(--veil-cream-0) 62%); }
+  .hb .hello { max-width: 420px; }
+  .hb + .search { margin: calc(-1 * var(--sp-5)) var(--sp-5) 0; width: auto; }
+  .qt { gap: var(--sp-3); }
+  .qt-tile { min-height: 124px; font-size: var(--fs-sub); }
+  .qt-tile img { width: 64px; height: 64px; }
+  .hr-track { margin: 0; padding-left: 0; padding-right: 0; scroll-padding-left: 0; }
+  .hr-card { width: 176px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hb-pal img { animation: none; }
+  .hb-pal, .qt-tile, .hr-card { transition: none; }
+}
