@@ -125,20 +125,6 @@ main {
 .search svg { width: 22px; height: 22px; flex: none; }
 .search:active, .search.is-pressed { transform: scale(.985); background: var(--blush); }
 
-/* ---------- Tiles ---------- */
-.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); margin-top: var(--sp-4); }
-.tile {
-  display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-2);
-  min-height: 150px; padding: var(--sp-4); border: 0; border-radius: var(--r-lg);
-  background: var(--blush); box-shadow: var(--finish); text-align: left; text-decoration: none; color: var(--ink); cursor: pointer;
-  transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease), box-shadow var(--t-press) var(--ease);
-}
-.tile:active, .tile.is-pressed { transform: scale(.97); background: var(--blush-2); box-shadow: var(--pressed); }
-.tile-icon { width: 40px; height: 40px; border-radius: var(--r-md); display: grid; place-items: center; }
-.tile-icon svg { width: 32px; height: 32px; }
-.tile-title { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; line-height: 1.15; letter-spacing: var(--tr-head); margin-top: auto; }
-.tile-sub { font-size: var(--fs-foot); color: var(--rose-ink); line-height: 1.35; }
-
 /* duotone icons: a soft pink block spilling past a cocoa outline */
 .ic-fill { fill: var(--pink); opacity: .8; }
 .ic-line { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
@@ -195,7 +181,6 @@ main {
   color: var(--ink-soft); text-decoration: none; font-size: var(--fs-cap2); font-weight: 550; letter-spacing: var(--tr-sm);
   transition: background-color var(--t-press) var(--ease), color var(--t-press) var(--ease), transform var(--t-press) var(--ease);
 }
-.tab svg { width: 24px; height: 24px; }
 .tab[aria-current="page"] { background: var(--blush-2); color: var(--rose-ink); }
 .tab:active, .tab.is-pressed { transform: scale(.94); }
 
@@ -215,13 +200,11 @@ main {
   main { max-width: 980px; padding: var(--sp-6) var(--sp-5); }
   main .brandbar { display: none; }
   .hello { margin-top: 0; }
-  .tiles { grid-template-columns: repeat(4, 1fr); }
-  .tile { min-height: 180px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .screen { animation: none; }
-  .tile, .tab, .search, .learn summary, .learn summary .chev { transition: none; }
+  .tab, .search, .learn summary, .learn summary .chev { transition: none; }
 }
 
 /* ---------- Brands: switch, search, filters, list ---------- */
@@ -318,7 +301,6 @@ main {
 .quiz-back { min-height: 44px; margin-top: var(--sp-3); padding: 0 var(--sp-2); border: 0; background: none; color: var(--rose); font: 600 var(--fs-sub)/1 var(--font-body); cursor: pointer; }
 
 /* ---------- Profile: card and routine ---------- */
-.pf-intro p:first-child { color: var(--ink-soft); font-size: var(--fs-sub); }
 .pf-start { width: 100%; min-height: 52px; margin-top: var(--sp-4); border: 0; border-radius: var(--r-md); background: var(--rose); color: var(--paper); font: 600 var(--fs-call)/1 var(--font-body); box-shadow: var(--finish); cursor: pointer; }
 .pf-private { margin-top: var(--sp-3); color: var(--ink-soft); font-size: var(--fs-foot); text-align: center; }
 .pf-card { padding: var(--sp-4); background: var(--blush); border-radius: var(--r-lg); }
@@ -594,7 +576,7 @@ html.intro-on .intro {
 .hr-name { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; letter-spacing: var(--tr-head); line-height: 1.2; }
 .hr-chips { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-top: auto; }
 .hr-more { justify-content: center; align-items: center; padding-top: var(--sp-3); color: var(--rose); }
-.hr + .card { margin-top: var(--sp-3); }
+.hr:not([hidden]) + .card { margin-top: var(--sp-3); }
 
 /* ---------- Pins in the tab bar and side rail ---------- */
 .tab-pin { width: 28px; height: 28px; transition: transform var(--t-press) var(--ease); }
@@ -612,8 +594,7 @@ html.intro-on .intro {
 .pf-pin { position: absolute; top: var(--sp-3); right: var(--sp-3); width: 84px; height: 84px; animation: palBob 5.2s ease-in-out infinite; }
 ul.pf-sum { list-style: none; display: flex; flex-wrap: wrap; gap: var(--sp-1); padding: 0; margin: var(--sp-3) 0 0; max-width: calc(100% - 84px); }
 ul.pf-sum li { display: inline-flex; align-items: center; min-height: 28px; padding: 0 var(--sp-3); border-radius: var(--r-pill); background: var(--paper); border: 1px solid var(--line); font-size: var(--fs-foot); font-weight: 600; color: var(--rose-ink); }
-.pf-intro.pf-hero p:first-child { color: inherit; }
-.pf-intro.pf-hero > p { color: var(--ink-soft); font-size: var(--fs-sub); }
+.pf-intro.pf-hero > p:not(.pf-private) { color: var(--ink-soft); font-size: var(--fs-sub); }
 .rt-pins { display: flex; gap: var(--sp-2); margin: var(--sp-3) 0; }
 .rt-pin { flex: none; }
 .pf-hero .rt-pins { justify-content: space-between; margin: var(--sp-4) 0; }
@@ -631,7 +612,9 @@ ul.pf-sum li { display: inline-flex; align-items: center; min-height: 28px; padd
   .qt { gap: var(--sp-3); }
   .qt-tile { min-height: 124px; font-size: var(--fs-sub); }
   .qt-tile img { width: 64px; height: 64px; }
-  .hr-track { margin: 0; padding-left: 0; padding-right: 0; scroll-padding-left: 0; }
+  .hr-track { margin: 0; padding-left: 0; padding-right: 0; scroll-padding-left: 0; scrollbar-width: thin; scrollbar-color: var(--blush-2) transparent; }   /* a mouse needs a bar to drag */
+  .hr-track::-webkit-scrollbar { display: block; height: 8px; }
+  .hr-track::-webkit-scrollbar-thumb { background: var(--blush-2); border-radius: var(--r-pill); }
   .hr-card { width: 176px; }
 }
 @media (prefers-reduced-motion: reduce) {

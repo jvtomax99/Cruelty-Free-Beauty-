@@ -105,8 +105,6 @@ tiles.
   clear background, in `assets/pins/`. No rainbow of colours: that is the
   Hub's look, not ours.
 - **Search:** paper, 52 px tall, hairline border, finish shadow.
-- **Tile:** blush, radius 20, icon top left, title (Fraunces 20) pinned
-  low, subtitle in rose-ink 13.
 - **Card:** paper with a hairline and the finish.
 - **Tab bar (phones):** floating glass capsule, 56 px tabs, each a 28 px
   pin over its label (32 px in the side rail); the active one in blush-2
@@ -137,8 +135,8 @@ tiles.
 - **Routine step:** its 44 px pin beside the step name (Fraunces 17) and
   a blush count ("3 brands"); when every step gives the same brands, the
   five pins sit in a row under the one heading.
-- **Routine step:** paper card like the fact card; brand name in Fraunces
-  17 (links to its page), the reason in ink-soft, "Find your shade" link.
+  Inside: a paper card like the fact card; brand name in Fraunces 17
+  (links to its page), the reason in ink-soft, "Find your shade" link.
 - **Save button:** paper pill with a hairline, heart icon and "Save";
   on: blush-2 with the heart filled pink, "Saved". Beside the brand name.
 - **Scan screen:** the camera in a radius-20 frame with a paper aim box and

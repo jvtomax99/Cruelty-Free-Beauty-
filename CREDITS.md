@@ -1,6 +1,6 @@
 # Credits
 
-Every asset in the app, where it came from, and its license. One thing was paid for: the Runway credits that made the launch film (keep the receipt).
+Every asset in the app, where it came from, and its license. Two things were paid for, both with Runway credits: the launch film, and Home's banner picture and the pins (keep the receipt).
 
 | Asset | Source | License | Bought? | Price | Account |
 |---|---|---|---|---|---|

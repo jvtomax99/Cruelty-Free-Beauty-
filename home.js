@@ -4,6 +4,7 @@
   "use strict";
   const MAX = 8;
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const initial = (name) => (Array.from(String(name || "").trim())[0] || "•").toUpperCase();   // whole character, never half an emoji
   const box = document.getElementById("home-rail");
   let brands = [];
 
@@ -18,9 +19,9 @@
     document.getElementById("home-rail-count").textContent = `${pass.length} · ${mode === "strict" ? "Strict" : "Certified"}`;
     document.getElementById("home-rail-list").innerHTML = pass.slice(0, MAX).map(({ b, v }) => `
       <li><a class="hr-card" href="#brand/${encodeURIComponent(b.id)}">
-        <span class="hr-mono" aria-hidden="true">${esc(b.name.trim()[0].toUpperCase())}</span>
+        <span class="hr-mono" aria-hidden="true">${esc(initial(b.name))}</span>
         <span class="hr-name">${esc(b.name)}</span>
-        <span class="hr-chips">${v.certs.map((c) => `<span class="verdict v-pass"><span aria-hidden="true">✓&nbsp;</span><span class="sr-only">Certified by </span>${c}</span>`).join("")}</span>
+        <span class="hr-chips">${window.CFB.certChips(v)}</span>
       </a></li>`).join("") +
       (pass.length > MAX ? `<li><a class="hr-card hr-more" href="#brands"><span class="hr-name">See all ${pass.length}</span></a></li>` : "");
     box.hidden = false;
