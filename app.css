@@ -33,13 +33,11 @@
   --veil: rgba(20,9,12,.75);      /* launch show: the vignette's edge */
   --spot-line: rgba(255,227,232,.4);   /* launch show: outlines on night */
   --night-glass: rgba(28,15,19,.4);    /* launch show: buttons over the stage */
-  --day: #FFFFFF;         /* launch film: the white stage it ends on */
-  --day-2: #FBF6EE;       /* launch film: the white stage's edges */
-  --night-veil: rgba(28,15,19,.62);    /* launch film: Skip over the white stage (white text, 7:1 or more) */
-  --day-veil: rgba(255,255,255,.82);   /* launch film: the veil under the Welcome text */
-  --gold-deep: #8A5E12; --gold: #C99A3A; --gold-pale: #F4DC9A;   /* launch film: the Welcome foil */
-  --gold-ink: #9A6B14;    /* launch film: small gold text on white (4.6:1) */
-  --berry: #B4586A;       /* launch film: the slogan's italic on white */
+  --night-veil: rgba(28,15,19,.62);    /* opening film: the shade behind words over the dressing room */
+  --day-veil: rgba(255,255,255,.82);   /* opening film: the veil behind words over the garden */
+  --gold-deep: #8A5E12; --gold: #C99A3A; --gold-pale: #F4DC9A;   /* opening film: gold for its words and card edges */
+  --gold-ink: #9A6B14;    /* opening film: small gold text on white (4.6:1) */
+  --berry: #B4586A;       /* opening film: the italic in the garden line */
 
   /* type */
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
@@ -424,9 +422,6 @@ html.intro-on .intro {
     radial-gradient(130% 90% at 50% 45%, transparent 45%, var(--veil) 100%),
     radial-gradient(90% 70% at 50% 40%, var(--night-2), var(--night) 72%);
 }
-/* the film ends in daylight: the night stage turns white behind it (intro.js sets is-day as the film brightens) */
-.in-bg::after { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .5s ease; background: radial-gradient(90% 60% at 50% 40%, var(--day), var(--day-2)); }
-.intro.is-day .in-bg::after { opacity: 1; }
 .in-scene { position: absolute; inset: 0; pointer-events: none; }
 .in-scene svg { position: absolute; transform-origin: 50% 50%; will-change: transform; }
 .in-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -457,31 +452,50 @@ html.intro-on .intro {
 .in-slogan { margin-top: var(--sp-3); font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 450; color: var(--star); text-shadow: 0 0 18px var(--halo); }
 .in-slogan em { font-style: italic; color: var(--pink); }
 .intro.is-wide .in-card { left: 56%; right: 4%; top: 50%; bottom: auto; transform: translateY(-50%); text-align: left; }
-/* the film's Welcome frame: real text on a white veil over the film's last shot, then under the drawn logo */
-.in-welcome {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 46%; padding: 0 var(--sp-4) max(9vh, calc(env(safe-area-inset-bottom) + 40px));
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; opacity: 0; pointer-events: none;
-  background: linear-gradient(180deg, transparent, var(--day-veil) 34%, var(--day) 70%);
+/* the film's words (intro.js shows each on its beat). .in-over sits exactly on the film, so sizes are in its own
+   units (cqw = 1% of the film's width) and the layout is the same on a phone and in the wide screen's column */
+.in-over { position: absolute; inset: 0; pointer-events: none; container-type: size; }
+.intro.is-wide .in-over { left: 50%; right: auto; width: auto; aspect-ratio: 9 / 16; height: 100%; transform: translateX(-50%); }
+.in-over > * { opacity: 0; visibility: hidden; }
+.in-ask, .in-kind, .in-line {
+  position: absolute; left: 0; right: 0; top: 0; padding: max(11cqh, calc(env(safe-area-inset-top) + 76px)) 6cqw 9cqh; text-align: center;
+  font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 8.4cqw, 44px); line-height: 1.14; letter-spacing: var(--tr-title);
+  color: var(--gold-pale); background: linear-gradient(180deg, var(--night-veil), transparent);
 }
-.in-w-label { font-size: var(--fs-cap2); font-weight: 600; letter-spacing: .34em; text-transform: uppercase; color: var(--gold-ink); }
-.in-w-word {
-  margin-top: var(--sp-2); padding: 0 .12em .08em; font-family: var(--font-display); font-style: italic; font-weight: 500; line-height: 1.05;
-  font-size: clamp(56px, 17.2vw, 84px); letter-spacing: var(--tr-title); color: var(--gold-ink);
-  background: linear-gradient(100deg, var(--gold-deep) 0%, var(--gold) 28%, var(--gold-pale) 50%, var(--gold) 72%, var(--gold-deep) 100%);
-  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+.in-ask em, .in-kind em, .in-line em { font-style: italic; }
+.in-kind { color: var(--gold-deep); background: linear-gradient(180deg, var(--day-veil), transparent); }
+.in-kind em { color: var(--berry); }
+.in-phone {
+  position: absolute; left: 11.5cqw; right: 11.5cqw; top: max(13.5cqh, calc(env(safe-area-inset-top) + 108px)); bottom: 5cqh;
+  padding: 2.4cqw; border-radius: 10cqw; background: var(--night); box-shadow: 0 4cqw 12cqw rgba(0,0,0,.55);
 }
-.in-w-rule { position: relative; width: min(52vw, 220px); height: 1px; margin-top: var(--sp-3); background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent); }
-.in-w-rule i { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; background: var(--gold); transform: translate(-50%, -50%) rotate(45deg); }
-.in-w-slogan { margin-top: var(--sp-3); font-family: var(--font-display); font-size: var(--fs-call); font-weight: 450; color: var(--ink); }
-.in-w-slogan em { font-style: italic; color: var(--berry); }
-.intro.is-wide .in-w-word { font-size: clamp(56px, 9.6vh, 84px); }
-/* a phone held sideways: no room under the hero for the whole block, so only the word */
-@media (max-height: 520px) {
-  .in-welcome { height: 34%; padding-bottom: var(--sp-3); }
-  .in-w-label, .in-w-rule, .in-w-slogan { display: none; }
-  .intro.is-wide .in-w-word { font-size: var(--fs-hero); margin-top: 0; }
+.in-screen { position: relative; height: 100%; overflow: hidden; border-radius: 7.8cqw; background: var(--bg); }
+.in-pcard {
+  position: absolute; left: 4cqw; right: 4cqw; top: 50%; padding: 5.5cqw 4.6cqw 4.6cqw; border-radius: 5cqw; text-align: left;
+  background: var(--paper); border: 1px solid var(--gold); box-shadow: var(--finish); color: var(--ink); translate: 0 -50%;
 }
-.intro.is-day .in-skip { background: var(--night-veil); border-color: transparent; color: var(--day); }
+.in-pcard.is-picked { border: 2px solid var(--pink); box-shadow: 0 0 0 4px var(--blush), var(--finish); }
+.in-ex { position: absolute; top: -2.6cqw; right: 4cqw; padding: .8cqw 2.4cqw; border-radius: var(--r-pill); background: var(--ink); color: var(--paper); font-size: clamp(9px, 2.8cqw, 13px); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.in-try { display: block; margin-bottom: 2.6cqw; font-size: clamp(10px, 3.1cqw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--gold-ink); }
+.in-chip { display: inline-block; padding: 1.8cqw 3.8cqw; border-radius: var(--r-pill); font-size: clamp(14px, 4.6cqw, 22px); font-weight: 650; }
+.in-chip.is-pass { background: var(--blush-2); color: var(--rose-ink); }
+.in-chip.is-fail { background: var(--ink); color: var(--paper); }
+.in-heart { float: right; font-size: clamp(22px, 8cqw, 40px); line-height: 1; color: var(--line); }
+.in-pcard.is-picked .in-heart { color: var(--pink); }
+.in-pcard dl { margin: 1.4cqw 0 0; }
+.in-pcard dt { margin-top: 3cqw; font-size: clamp(9px, 2.9cqw, 13px); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.in-pcard dd { margin: .4cqw 0 0; font-family: var(--font-display); font-size: clamp(16px, 5.2cqw, 25px); font-weight: 600; line-height: 1.2; }
+.in-pcard dd::before { content: "\2713\00a0"; }
+.in-pcard dd.is-no::before { content: "\2715\00a0"; }
+.in-why { display: block; margin-top: 4cqw; font-size: clamp(12px, 4cqw, 19px); font-weight: 600; color: var(--rose); }
+.in-why::after { content: " \203A"; }
+.in-tap { position: absolute; right: 1.2cqw; top: 9cqw; width: 14cqw; height: 14cqw; border-radius: 50%; border: 3px solid var(--pink); background: var(--halo); opacity: 0; }
+.in-go {
+  position: absolute; left: 6cqw; right: 6cqw; bottom: max(4.5cqh, calc(env(safe-area-inset-bottom) + 20px)); min-height: 56px; padding: 0 var(--sp-4);
+  border: 1px solid var(--gold-pale); border-radius: var(--r-md); background: var(--rose); color: var(--paper); cursor: pointer;
+  font: 600 var(--fs-head)/1 var(--font-body); box-shadow: 0 6px 24px rgba(0,0,0,.35);
+}
+.in-go:focus-visible { outline: 3px solid var(--gold-pale); outline-offset: 3px; }
 
 .in-gate {
   position: absolute; left: 0; right: 0; bottom: max(11vh, calc(env(safe-area-inset-bottom) + 40px));

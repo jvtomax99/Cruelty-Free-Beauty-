@@ -14,7 +14,7 @@
 <link rel="preload" href="assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="app.css">
 <!-- launch show: decide before paint so Home never flashes first (intro.js; ?intro=0 skips, ?intro=1 forces) -->
-<script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");setTimeout(function(){if(!window.CFBIntro)d.classList.remove("intro-on")},5000)}})();</script>
+<script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}try{off=off||localStorage.getItem("cfb-intro-seen")==="1"}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");setTimeout(function(){if(!window.CFBIntro)d.classList.remove("intro-on")},5000)}})();</script>
 </head>
 <body>
 
@@ -29,13 +29,25 @@
   <div class="in-card" aria-hidden="true">
     <div class="in-name">C.F.B.</div>
     <div class="in-label">Cruelty-Free Beauty</div>
-    <div class="in-slogan">Cruelty free looks <em>best on skin.</em></div>
+    <div class="in-slogan">Cruelty-free looks <em>beautiful on you.</em></div>
   </div>
-  <div class="in-welcome" aria-hidden="true">
-    <div class="in-w-label">C.F.B. presents</div>
-    <div class="in-w-word">Welcome</div>
-    <div class="in-w-rule"><i></i></div>
-    <div class="in-w-slogan">Cruelty free looks <em>best on skin.</em></div>
+  <!-- the film's words: real text laid over the film on its own beats (intro.js, FILM) -->
+  <div class="in-over">
+    <div class="in-ask" aria-hidden="true">Was this tested<br>on animals?</div>
+    <div class="in-phone" aria-hidden="true"><div class="in-screen">
+      <div class="in-pcard in-c1"><span class="in-ex">Example</span>
+        <span class="in-chip is-fail">Doesn't pass</span>
+        <dl><dt>Brand</dt><dd class="is-ok">Certified cruelty-free</dd><dt>Parent company</dt><dd class="is-no">Tests on animals</dd></dl>
+        <span class="in-why">See why</span></div>
+      <div class="in-pcard in-c2"><span class="in-ex">Example</span>
+        <span class="in-try">Try instead</span>
+        <span class="in-chip is-pass">Passes</span><span class="in-heart">&#9829;</span>
+        <dl><dt>Brand and parent company</dt><dd class="is-ok">Cruelty-free</dd></dl>
+        <span class="in-why">See why</span><i class="in-tap"></i></div>
+    </div></div>
+    <div class="in-kind" aria-hidden="true">Beauty that's<br><em>kind to them.</em></div>
+    <div class="in-line" aria-hidden="true">Cruelty-free looks<br><em>beautiful on you</em></div>
+    <button class="in-go" type="button" tabindex="-1">Find cruelty-free makeup</button>
   </div>
   <div class="in-gate">
     <div class="in-presents">C.F.B. presents</div>
@@ -88,7 +100,7 @@
 
       <div class="hello">
         <div class="hello-time" id="hello-time">Hello</div>
-        <h1 class="hello-line" id="hello-line" tabindex="-1">Cruelty free looks <em>best on skin.</em></h1>
+        <h1 class="hello-line" id="hello-line" tabindex="-1">Cruelty-free looks <em>beautiful on you.</em></h1>
       </div>
 
       <a class="search" href="#brands">
@@ -224,7 +236,7 @@
       <div id="saved-app"></div>
       <div class="card intro-set">
         <h2>Opening show</h2>
-        <label class="switch-row"><input type="checkbox" id="intro-switch" checked> Play the opening when the app starts</label>
+        <p>It plays the first time the app is opened. Watch it again any time.</p>
         <button class="pill-btn" type="button" id="intro-replay">Replay the opening</button>
       </div>
     </section>
