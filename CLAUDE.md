@@ -23,6 +23,11 @@ differs, this file wins.
   `tools/make-launch-video.sh`. It is not in the worker's precache list; if
   the film changes, bump `MEDIA` in `sw.js`. Runway credits are Jose's: ask
   before spending more. Never show PETA's logo or bunny-ears mark.
+- **The Sanctuary's 3D world.** `sanctuary3d.js`, `assets/sanctuary/` and
+  `assets/vendor/three/` are saved by the worker on first use, in their own
+  cache: bump `WORLD` in `sw.js` in every change to any of them. Meshy
+  credits are Jose's and shared with his other projects: say what a batch
+  will cost before making it.
 - **Brand sites.** Read them with curl or Playwright from Bash (a subagent's
   WebFetch skips the proxy and fails). Verify every quote before saving.
   Exponent and ACTAsia refuse automated readers; cite the certifiers' own

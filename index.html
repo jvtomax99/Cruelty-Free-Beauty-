@@ -14,6 +14,7 @@
 <link rel="preload" href="assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="app.css">
 <!-- launch show: decide before paint so Home never flashes first (intro.js; ?intro=0 skips, ?intro=1 forces) -->
+<script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
 <script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}try{off=off||localStorage.getItem("cfb-intro-seen")==="1"}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content="#1C0F13";setTimeout(function(){if(!window.CFBIntro){d.classList.remove("intro-on");if(m)m.content="#FBF6F2"}},5000)}})();</script>
 </head>
 <body>
@@ -137,7 +138,7 @@
 
       <a class="card gd-home" href="#garden">
         <span class="gd-home-text">
-          <span class="gd-home-h">Your garden</span>
+          <span class="gd-home-h">Your Sanctuary</span>
           <span class="gd-home-p">It grows with what you learn.</span>
           <span class="gd-home-line" id="gd-home-line"></span>
         </span>
@@ -246,14 +247,21 @@
       </div>
     </section>
 
-    <!-- ---------- The Garden (garden.js): five habitats, then a round of questions ---------- -->
+    <!-- ---------- Your Sanctuary (garden.js; the 3D world is sanctuary3d.js, loaded on demand) ---------- -->
     <section class="screen" data-screen="garden" aria-labelledby="garden-h" hidden>
-      <div class="screen-head">
-        <h1 id="garden-h" tabindex="-1">Your garden</h1>
-        <p>It grows with what you learn. Five questions at a time.</p>
+      <div class="sx" id="sx">
+        <canvas class="sx-canvas" id="sx-canvas" role="img" aria-label="A garden island: a cream cottage, a pond fed by a waterfall, and rabbits in a clover meadow"></canvas>
+        <button class="sx-back" type="button" id="sx-back" aria-label="Back"><svg aria-hidden="true"><use href="#i-chev"/></svg></button>
+        <div class="screen-head sx-head">
+          <h1 id="garden-h" tabindex="-1">Your Sanctuary</h1>
+          <p>A little kindness. A world of life.</p>
+        </div>
+        <span class="gd-total sx-pill" id="garden-total"></span>
+        <p class="sx-loading">Opening your sanctuary…</p>
+        <div class="sx-card" id="sx-card" hidden></div>
       </div>
       <div class="gd-top">
-        <span class="gd-total" id="garden-total"></span>
+        <h2 class="gd-all-h">All habitats</h2>
         <a class="pill-btn gd-go" id="garden-all" href="#practice/all" hidden>Practise 5</a>
       </div>
       <div class="gd-list" id="garden-list"></div>
@@ -261,7 +269,7 @@
     </section>
 
     <section class="screen" data-screen="practice" aria-labelledby="practice-h" hidden>
-      <a class="back" href="#garden"><svg aria-hidden="true"><use href="#i-chev"/></svg>The garden</a>
+      <a class="back" href="#garden"><svg aria-hidden="true"><use href="#i-chev"/></svg>The sanctuary</a>
       <div class="screen-head gd-head">
         <h1 id="practice-h" tabindex="-1">Practice</h1>
       </div>
@@ -275,7 +283,7 @@
         <p>The words on every label, explained, with sources.</p>
       </div>
       <div class="learn" id="learn-list"></div>
-      <a class="pill-btn gd-go gd-learn" href="#garden">Practise in your garden</a>
+      <a class="pill-btn gd-go gd-learn" href="#garden">Practise in your sanctuary</a>
     </section>
 
   </main>

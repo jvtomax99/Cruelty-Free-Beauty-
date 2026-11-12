@@ -46,6 +46,9 @@
   --veil-cream-2: rgba(251,246,242,.55);
   --veil-cream-0: rgba(251,246,242,0);
   --qt-edge: rgba(255,255,255,.9);       /* quick tiles and rail cards: the bright rim */
+  --sage: #DDE9CC;        /* the Sanctuary: the second button's fill (ok on it 6.1:1) */
+  --sage-2: #CFDFBA;      /* that button, pressed */
+  --sx-peek: 58px;        /* how much of the page shows under the Sanctuary's 3D stage */
 
   /* type */
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
@@ -74,7 +77,7 @@
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  margin: 0; min-height: 100dvh; background: var(--bg);
+  margin: 0; min-height: 100dvh; background: var(--bg); overflow-x: clip;   /* the Sanctuary's stage is as wide as the window; a scrollbar's width must not add a sideways scroll */
   color: var(--ink); font-family: var(--font-body); font-size: var(--fs-call);
   line-height: 1.5; letter-spacing: var(--tr-body);
   -webkit-font-smoothing: antialiased;
@@ -686,7 +689,8 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
 .gd-home-p { color: var(--ink-soft); font-size: var(--fs-sub); }
 .gd-home-line { color: var(--rose-ink); font-size: var(--fs-foot); font-weight: 600; margin-top: var(--sp-1); }
 .gd-home-go { margin-left: auto; flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-4); border-radius: var(--r-pill); background: var(--rose); color: var(--paper); font-weight: 600; font-size: var(--fs-sub); }
-.gd-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+.gd-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin-top: var(--sp-4); }
+.gd-all-h { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); }
 .gd-top .pill-btn { margin-top: 0; }
 .gd-total { color: var(--rose-ink); font-weight: 600; font-size: var(--fs-sub); }
 .gd-list { display: grid; gap: var(--sp-3); margin-top: var(--sp-4); }
@@ -713,8 +717,73 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
 .gd-result.is-no .gd-verdict { color: var(--no); }
 .gd-result p { margin-top: var(--sp-1); }
 .gd-answer { font-weight: 600; }
+.gd-own { display: inline-flex; align-items: center; min-height: 44px; }
+#practice-next, #practice-guess, #practice-guessed { scroll-margin-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + var(--sp-6)); }
 .gd-date { display: block; margin-top: calc(-1 * var(--sp-2)); color: var(--ink-soft); font-size: var(--fs-cap); }
 .gd-note { margin-top: var(--sp-3); color: var(--ink-soft); font-size: var(--fs-foot); }
 .gd-done { margin-top: 0; }
 .gd-backlink { display: flex; align-items: center; justify-content: center; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) { .gd-card, .gd-home, .gd-bar span { transition: none; } }
+
+/* ---------- Your Sanctuary: the 3D stage (sanctuary3d.js draws into the canvas) ----------
+   Without .is-on (no WebGL, data saver, ?3d=0) only the heading and the count show, in the page's flow. */
+.sx-canvas, .sx-back, .sx-loading, .sx-card { display: none; }
+.sx:not(.is-on) .gd-total { display: block; margin-top: calc(-1 * var(--sp-2)); }
+.sx.is-on {
+  position: relative; overflow: hidden; height: calc(100dvh - var(--sx-peek)); min-height: 420px;
+  margin: calc(-1 * (env(safe-area-inset-top) + var(--sp-4))) calc(-1 * var(--sp-4)) 0;
+  background: linear-gradient(180deg, var(--blush-2) 0%, var(--blush) 42%, var(--bg) 100%);
+}
+.sx.is-on .sx-canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; opacity: 0; transition: opacity .6s var(--ease); }
+.sx.is-ready .sx-canvas { opacity: 1; }
+.sx.is-on::before { content: ""; position: absolute; inset: 0 0 auto; height: 150px; z-index: 1; pointer-events: none; background: linear-gradient(180deg, var(--veil-cream) 0, var(--veil-cream-2) 45%, var(--veil-cream-0) 100%); }
+.sx.is-on .sx-back {
+  display: grid; place-items: center; position: absolute; z-index: 2; left: var(--sp-3); top: calc(env(safe-area-inset-top) + var(--sp-3));
+  width: 44px; height: 44px; padding: 0; border: 1px solid var(--glass-line); border-radius: var(--r-pill); background: var(--glass); color: var(--rose-ink); cursor: pointer;
+  transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
+}
+.sx-back svg { width: 22px; height: 22px; transform: rotate(90deg); }
+.sx-back:active, .sx-back.is-pressed { transform: scale(.94); background: var(--blush); }
+.sx.is-on .sx-head { position: absolute; z-index: 2; left: calc(var(--sp-3) + 44px + var(--sp-2)); top: calc(env(safe-area-inset-top) + var(--sp-3)); margin: 0; pointer-events: none; }
+.sx.is-on .sx-head h1 { font-size: var(--fs-t2); color: var(--rose-ink); line-height: 1.15; }
+.sx.is-on .sx-head p { margin-top: 0; font-size: var(--fs-foot); }
+.sx.is-on .sx-pill {
+  position: absolute; z-index: 2; right: var(--sp-3); top: calc(env(safe-area-inset-top) + var(--sp-3) + 6px);
+  display: inline-flex; align-items: center; min-height: 32px; padding: 0 var(--sp-3); border-radius: var(--r-pill);
+  background: var(--paper); border: 1px solid var(--line); box-shadow: var(--finish); font-size: var(--fs-foot);
+}
+.sx-pill:empty { visibility: hidden; }
+.sx.is-loading .sx-loading { display: block; position: absolute; inset: 46% var(--sp-4) auto; text-align: center; color: var(--ink-soft); font-size: var(--fs-sub); }
+.sx.is-ready .sx-card:not([hidden]) {
+  display: flex; align-items: center; gap: var(--sp-3); position: absolute; z-index: 2; left: var(--sp-3); right: var(--sp-3);
+  bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + var(--sp-5) + var(--sp-3) - var(--sx-peek));
+  max-width: 520px; margin: 0 auto; padding: var(--sp-3); border-radius: var(--r-lg);
+  background: var(--paper); border: 1px solid var(--line); box-shadow: var(--float);
+}
+.sx-face { flex: none; width: 56px; height: 56px; border-radius: var(--r-pill); object-fit: cover; background: var(--sage); }
+.sx-text { min-width: 0; flex: 1; }
+.sx-name { font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; letter-spacing: var(--tr-head); color: var(--rose-ink); line-height: 1.15; }
+.sx-desc { color: var(--ink); font-size: var(--fs-sub); }
+.sx-line { color: var(--ink-soft); font-size: var(--fs-foot); }
+.sx-btn {
+  flex: none; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 var(--sp-5); border: 0; border-radius: var(--r-pill);
+  background: var(--rose); color: var(--paper); font: 600 var(--fs-sub)/1 var(--font-body); text-decoration: none; cursor: pointer;
+  transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
+}
+.sx-btn:active, .sx-btn.is-pressed { transform: scale(.97); background: var(--rose-ink); }
+.sx-btn-2 { background: var(--sage); color: var(--ok); }
+.sx-btn-2:active, .sx-btn-2.is-pressed { background: var(--sage-2); }
+/* meeting Clover: the card grows a second row for its two buttons */
+.sx.is-meet .sx-card:not([hidden]) { flex-wrap: wrap; }
+.sx.is-meet .sx-face { width: 72px; height: 72px; }
+.sx-actions { display: flex; gap: var(--sp-2); flex-basis: 100%; }
+.sx-actions .sx-btn { flex: 1; }
+@media (min-width: 900px) {
+  .sx.is-on { left: 50%; width: calc(100vw - 248px); margin: calc(-1 * var(--sp-6)) 0 0; transform: translateX(-50%); }
+  .sx.is-on .sx-head h1 { font-size: var(--fs-t1); }
+  .sx.is-on .sx-head p { font-size: var(--fs-sub); }
+  .sx.is-ready .sx-card:not([hidden]) { bottom: var(--sp-5); }
+  .sx.is-on .sx-back, .sx.is-on .sx-head, .sx.is-on .sx-pill { top: var(--sp-4); }
+  .sx.is-on .sx-back { left: var(--sp-4); } .sx.is-on .sx-head { left: calc(var(--sp-4) + 44px + var(--sp-3)); } .sx.is-on .sx-pill { right: var(--sp-4); top: calc(var(--sp-4) + 6px); }
+}
+@media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back { transition: none; } }

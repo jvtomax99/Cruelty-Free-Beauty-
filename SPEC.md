@@ -157,8 +157,10 @@ me**.
     app has updated, with its date and source link, hearted brands first; "Got it"
     hides it and it stays in "Recent changes" and on the brand page.
 
-- **The Garden** (added 2026-11-12, planned, not built). A study game: an
-  open sanctuary garden in 3D that grows with what the person learns. Five
+- **The Garden, shown as "Your Sanctuary"** (added 2026-11-12; the quiz
+  and the first habitat are built, on the work branch, not live). A study
+  game: an open sanctuary garden in 3D that grows with what the person
+  learns. Five
   habitats, one per topic: Meadow (cruelty-free or vegan), Burrow hill
   (PETA or Leaping Bunny), Old oak (parent companies), Pond (China today),
   Orchard (read a brand). Rounds of 5 questions; a missed question comes
@@ -183,9 +185,29 @@ me**.
   buying; the words are "moved in" and "at home here", never "rescued" or
   "saved"; no certifier's mark in the scene. The 3D loads only when the
   Garden is opened, and plain habitat cards show instead where 3D can't
-  run (no WebGL, reduced motion, data saver).
-  Not in this version: walking around, feeding or petting, naming animals,
-  streaks, reminders, an exam mode, sharing, Spanish, sound.
+  run (no WebGL, data saver).
+  The world (Jose's redesign, 2026-11-12, from two reference pictures):
+  one island that fills the screen, with sculpted land (hills, a terrace,
+  an earth-and-stone edge), a pond fed by a two-step waterfall, a
+  footbridge, stone paths, a cream cottage with a dusty rose roof, rounded
+  trees, flowers in drifts. The interface is a small title ("Your
+  Sanctuary", "A little kindness. A world of life."), the learned count,
+  and one compact card. First habitat: **Bunny Meadow** (the Meadow's
+  topic). Its card has Visit; the close view has "Meet Clover" ("Curious,
+  playful, and very fond of clover."), Say hello (she hops, turns to you,
+  hearts rise) and Practise (the Meadow's round). Clover is there from the
+  start; a second rabbit moves in at a third of the topic learned and a
+  third at two thirds, and they stay even if the count later drops. A
+  third of the flowers are there from the start and the rest bloom with
+  progress. Drag turns the island, pinch or wheel zooms, a tap on a
+  rabbit or the meadow opens it. With reduced motion the world is still
+  shown, but nothing idles and the camera jumps instead of gliding. The
+  other four topics are cards under the world until their habitats are
+  built.
+  Not in this version: the other four habitats in 3D, dogs, cats and the
+  other animals, walking around, feeding or petting, naming animals,
+  streaks, reminders, an exam mode, sharing, Spanish, sound, a day and
+  night switch, a photo button.
   - Done when (the quiz): a round of 5 can be played from Home, each
     answer shows right or wrong with its source and date, a missed question
     comes back sooner than a right one, and progress survives a reload and
@@ -280,11 +302,17 @@ only if it can be shown to work across skin tones.
       33 written questions, not the 40 planned, because the Learn answers
       hold no more checked facts; plus one question per brand, 30 today.
       On the work branch, not live: the founder hasn't seen it)
-- [ ] Phase B: the 3D garden, loaded on demand
-- [ ] Phase C: the animals (Meshy, Jose's credits) and their motion
+- [x] The 3D world and its first habitat, Bunny Meadow, loaded on demand
+      (2026-11-12; checked in the cloud browser only: speed on a real
+      phone is not verified, and the founder hasn't seen it)
+- [ ] The other four habitats in 3D, with their animals (dogs, cats,
+      guinea pigs, hamsters, mice, birds)
+- [ ] A real-phone check of speed and battery (Jose)
 
 ## Open questions (TO FILL)
 
+- Are "Your Sanctuary", "A little kindness. A world of life." and
+  Clover's line the founder's words to keep? Jose to ask.
 - Has the founder seen and accepted the Garden (a study game in her app)?
   Jose to show her the look sample.
 

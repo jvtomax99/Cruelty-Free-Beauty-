@@ -7,8 +7,13 @@
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v23";
+const CACHE_VERSION = "cfb-v24";
 const MEDIA = "cfb-media-v3";
+/* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
+   download. Each file is saved the first time the Sanctuary asks for it, and the world then opens
+   offline. Bump WORLD in every change to sanctuary3d.js, assets/sanctuary/ or assets/vendor/three/. */
+const WORLD = "cfb-world-v1";
+const WORLD_PATHS = ["sanctuary3d.js", "assets/sanctuary/", "assets/vendor/three/"];
 const FILM = "assets/video/launch.mp4";
 const PRECACHE = [
   "./",
@@ -63,7 +68,7 @@ self.addEventListener("install", e => {
 self.addEventListener("activate", e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION && k !== MEDIA).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION && k !== MEDIA && k !== WORLD).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -73,7 +78,8 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
-  e.respondWith(url.pathname === SCOPE + FILM ? film(req, url) : fromCache(req, url));
+  const rel = url.pathname.startsWith(SCOPE) ? url.pathname.slice(SCOPE.length) : "";
+  e.respondWith(url.pathname === SCOPE + FILM ? film(req, url) : WORLD_PATHS.some(p => rel.startsWith(p)) ? world(req, url) : fromCache(req, url));
 });
 
 /* The launch film. Saved whole when the page asks (after it has played once); after that it is served from
@@ -112,6 +118,15 @@ async function film(req, url) {
       "Accept-Ranges": "bytes"
     }
   });
+}
+
+async function world(req, url) {
+  const cache = await caches.open(WORLD), href = url.origin + url.pathname;
+  const saved = await cache.match(href);
+  if (saved) return saved;
+  const res = await fetch(req);
+  if (res.status === 200) cache.put(href, res.clone()).catch(() => {});
+  return res;
 }
 
 async function fromCache(req, url) {

@@ -1,4 +1,4 @@
-// Checks the Garden's quiz in a real browser (SPEC "The Garden", the quiz's "Done when").
+// Checks the Sanctuary's quiz in a real browser (SPEC "The Garden", the quiz's "Done when").
 //   node tools/test-garden.cjs      (serves the repo's parent folder on port 8771)
 // Right answers and brand verdicts are worked out here from the data files, independently of garden.js.
 const { chromium } = require('playwright');
@@ -8,7 +8,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const BASE = `http://localhost:8771/${path.basename(path.resolve(__dirname, '..'))}/`;
-const APP = BASE + '?intro=0';
+const APP = BASE + '?intro=0&3d=0';   // the quiz only; tools/test-sanctuary.cjs covers the 3D world
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json', '.wasm': 'application/wasm' };
 const server = http.createServer((req, res) => {
   let p = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
@@ -75,12 +75,16 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(links.length === a1.q.src.length && a1.q.src.every((k) => links.includes(file.sources[k].u)), 'the answer links every source of the question');
   check(/checked \d+ [A-Z][a-z]{2} \d{4}/.test(await page.textContent('#practice-result .sources')), 'each source shows the date it was checked');
   check((await page.textContent('#practice-result')).includes(a1.q.why), 'the answer explains why');
+  // Next and "I guessed" must be on screen and tappable, clear of the floating tab bar
+  const tappable = (sel) => page.evaluate((q) => { const b = document.querySelector(q).getBoundingClientRect(), hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2); return b.bottom <= innerHeight && !!hit && !!hit.closest(q); }, sel);
+  check(await tappable('#practice-next') && await tappable('#practice-guess'), 'Next and "I guessed" are on screen and not under the tab bar');
   await page.click('#practice-next');
 
   const a2 = await answer(true);
   await page.click('#practice-guess');
   check((await saved()).items[a2.id].s === 0, '"I guessed" turns a right answer into a miss');
   check(!(await page.$('#practice-guess')), '"I guessed" can only be pressed once');
+  check(await page.evaluate(() => document.activeElement && document.activeElement.id === 'practice-next'), 'after "I guessed" the keyboard is on Next');
   await page.click('#practice-next');
 
   const a3 = await answer(false);
@@ -158,6 +162,35 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check((await page.textContent('#practice-h')) === 'Burrow hill', 'Learn\'s "Practise this" opens that answer\'s habitat');
   await page.goBack();
   check(await page.evaluate(() => location.hash === '#learn'), 'Back returns to Learn');
+
+  // The round's link back goes back in history, so the phone's Back button then leaves the Sanctuary
+  await page.goto(APP + '#home'); await page.click('.gd-home'); await page.waitForSelector('.gd-card');
+  await page.click('.gd-card >> nth=3'); await page.waitForSelector('#practice-q'); await answer(true);
+  await page.click('[data-screen="practice"] .back'); await page.waitForSelector('.gd-card');
+  await page.goBack();
+  check(await page.evaluate(() => location.hash === '#home'), 'after "The sanctuary", Back goes to Home, not into a new round');
+
+  // An in-app source is named, not linked (a link would leave the round)
+  await page.goto(APP + '#practice/oak'); await page.waitForSelector('#practice-q');
+  let own = null; for (let i = 0; i < 5 && own === null; i++) { const a = await answer(true); if (a.q && a.q.src.includes('APP')) own = await page.$$eval('#practice-result .sources a', (as) => as.length); else await page.click('#practice-next'); }
+  check(own === 0, 'a question about the app\'s own rule names its source without a link');
+
+  // A resident that has moved in stays, even when the count drops
+  await page.evaluate((ids) => { const s = { v: 1, items: {}, best: {} }; for (const id of ids) s.items[id] = { s: 2, due: Date.now() + 9e8, k: 'w' }; localStorage.setItem('cfb-garden', JSON.stringify(s)); }, file.questions.filter((q) => q.topic === 'meadow').map((q) => q.id));
+  await page.goto(APP + '#garden'); await page.reload(); await page.waitForSelector('.gd-card');
+  check(await page.evaluate(() => window.CFB.garden.residents('meadow')) === 3, 'the Meadow fully learned: three residents');
+  await page.evaluate(() => { const s = JSON.parse(localStorage.getItem('cfb-garden')); for (const k in s.items) s.items[k] = { s: 0, due: Date.now(), k: 'w' }; localStorage.setItem('cfb-garden', JSON.stringify(s)); });
+  await page.reload(); await page.waitForSelector('.gd-card');
+  check(await page.evaluate(() => window.CFB.garden.residents('meadow')) === 3 && (await page.textContent('.gd-card >> nth=0')).includes(`0 of ${MEADOW} learned`), 'after missing them all the count says 0, and nobody has left');
+
+  // Saved progress that parses but makes no sense is cleaned, not trusted
+  for (const junk of ['{"v":1,"items":[]}', '{"v":1,"items":{"v1":5,"v2":{"s":"x","due":"y"},"v3":{"s":2}}}']) {
+    await page.evaluate((j) => localStorage.setItem('cfb-garden', j), junk);
+    await page.goto(APP + '#garden'); await page.reload(); await page.waitForSelector('.gd-card');
+    const bar = await page.$eval('.gd-card >> nth=0 >> .gd-bar span', (e) => e.style.width);
+    await page.click('.gd-card >> nth=0'); await page.waitForSelector('#practice-q'); const a = await answer(true);
+    check(bar === '0%' && (await saved()).items[a.id] && (await saved()).items[a.id].s === 1, `damaged progress (${junk.slice(0, 22)}…) starts clean and saves again`);
+  }
 
   // Stored nonsense must not break the screen
   await page.evaluate(() => localStorage.setItem('cfb-garden', '{oops'));

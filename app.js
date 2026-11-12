@@ -39,7 +39,7 @@
     lastShown = name;
     current = isBrand || isRound ? null : name;   // a brand page or a round keeps no scroll of its own
     if (isBrand || isRound) return;   // brands.js and garden.js set those titles
-    document.title = name === "home" ? "C.F.B. · Cruelty-Free Beauty" : "C.F.B. · " + name[0].toUpperCase() + name.slice(1);
+    document.title = name === "home" ? "C.F.B. · Cruelty-Free Beauty" : "C.F.B. · " + (name === "garden" ? "Your Sanctuary" : name[0].toUpperCase() + name.slice(1));
   }
   window.addEventListener("hashchange", show);
   window.CFB.show = show;   // brands.js calls it once the brand data has loaded
@@ -53,7 +53,7 @@
   /* ---------- Press feedback on touch ----------
      :hover never fires on a phone, and :active flickers off before the eye sees it,
      so a touched control holds .is-pressed for 260 ms (Interp's pattern). */
-  const LIFTS = ".qt-tile, .hr-card, .hb-pal, .tab, .search, .learn summary, .brand-row, .chip, .mode-btn, .quiz-opt, .save-btn, .scan-link, .pf-start, .in-btn, .in-skip, .pill-btn, .gd-card, .gd-home, .gd-go";
+  const LIFTS = ".qt-tile, .hr-card, .hb-pal, .tab, .search, .learn summary, .brand-row, .chip, .mode-btn, .quiz-opt, .save-btn, .scan-link, .pf-start, .in-btn, .in-skip, .pill-btn, .gd-card, .gd-home, .gd-go, .sx-btn, .sx-back";
   const HOLD_MS = 260;
   document.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse") return;
