@@ -29,6 +29,8 @@ here.
 | `--rail-bg` | cream at 60% | Side rail on computers |
 | `--scrim` | ink at 35% | Dims the camera view around the barcode frame |
 | `--bunny-line` | #DB6B7E | The logo's outline |
+| `--ok` / `--ok-bg` | #2E5A3C / #E3EFE4 | Cruelty-free: green words with a ✓ (6.7:1 on its fill) |
+| `--no` / `--no-bg` | #9A3A2E / #F8E2DD | Not cruelty-free: red words with a ✕ (5.6:1 on its fill) |
 | `--night`, `--night-2`, `--spot`, `--glow`, `--star`, `--halo`, `--veil`, `--spot-line`, `--night-glass` | see "Launch show" | The launch show only |
 
 Measured contrast (WCAG, 4.5:1 needed for text): ink on cream 12.6,
@@ -121,10 +123,17 @@ tiles.
   the date and source link in footnote size; one hairline "Got it" button.
   On a brand page: a paper note with a 3 px rose left edge. No red, no
   warning icon: it reports, it doesn't accuse.
-- **Verdict chip:** Passes = blush-2 / rose-ink, one per certifier ("✓ PETA",
-  "✓ Leaping Bunny") on a brand row; Doesn't pass = ink /
-  paper; Not on either list = paper with a dashed ink-soft edge. The words
-  always say it, so colour is never the only signal.
+- **Verdict chip:** like the film (founder, 2026-11-12): Passes = ok-bg / ok
+  with a ✓, one per certifier ("✓ PETA", "✓ Leaping Bunny") on a brand row;
+  Doesn't pass = no-bg / no with a ✕; Not on either list = paper with a
+  dashed ink-soft edge and no mark (unverified is not the same as testing).
+  The words always say it, so colour is never the only signal.
+- **Verdict box and fact lines:** the box takes the chip's fill, its title
+  the chip's colour and mark. On a brand page each fact line is green with
+  ✓ when it counts for the brand, red with ✕ when it counts against
+  (PETA says it tests; under Strict, a parent that tests or mainland China
+  sales), and
+  plain ink when unknown or not about animal testing (vegan, price).
 - **Quiz:** one question per screen, Fraunces 22 question, 56 px paper
   answer cards (chosen: blush-2), a rose progress bar on blush, Back as a
   rose text button.
@@ -216,8 +225,8 @@ Fraunces 500 with the second line italic: `--gold-pale` #F4DC9A on a
 `--night-veil` shade over the dressing room, `--gold-deep` #8A5E12 with
 `--berry` italic on a `--day-veil` over the garden. The phone is drawn in
 CSS; its cards are `--paper` with a thin `--gold` edge, an "Example" tag,
-the app's own chips ("Passes" blush, "Doesn't pass" ink), a label and a
-Fraunces status line for brand and for parent company, and "See why" in
+the app's own chips ("Passes" green, "Doesn't pass" red), a label and a
+Fraunces status line for brand and for parent company (green ✓ or red ✕), and "See why" in
 `--rose`. The chosen card gets a `--pink` outline and a filled heart. The
 button is `--rose` with a `--gold-pale` hairline, at least 56 px tall.
 Skip stays top right throughout. Never show PETA's logo or bunny-ears

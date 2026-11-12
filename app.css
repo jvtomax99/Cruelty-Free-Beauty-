@@ -38,6 +38,10 @@
   --gold-deep: #8A5E12; --gold: #C99A3A; --gold-pale: #F4DC9A;   /* opening film: gold for its words and card edges */
   --gold-ink: #9A6B14;    /* opening film: small gold text on white (4.6:1) */
   --berry: #B4586A;       /* opening film: the italic in the garden line */
+  --ok: #2E5A3C;          /* cruelty-free: green words with a check (founder, 2026-11-12) */
+  --ok-bg: #E3EFE4;       /* its soft fill (ok on it 6.7:1) */
+  --no: #9A3A2E;          /* not cruelty-free: red words with an X */
+  --no-bg: #F8E2DD;       /* its soft fill (no on it 5.6:1) */
   --veil-cream: rgba(251,246,242,.9);    /* Home banner: the cream shade behind the words */
   --veil-cream-2: rgba(251,246,242,.55);
   --veil-cream-0: rgba(251,246,242,0);
@@ -242,9 +246,13 @@ main {
 .brand-why { grid-column: 1 / -1; color: var(--ink-soft); font-size: var(--fs-foot); line-height: 1.35; }
 .verdict, .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 var(--sp-2); border-radius: var(--r-pill); font-size: var(--fs-cap2); font-weight: 600; letter-spacing: var(--tr-sm); white-space: nowrap; }
 .tag { background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line); }
-.v-pass { background: var(--blush-2); color: var(--rose-ink); }
-.v-fail { background: var(--ink); color: var(--paper); }
+.v-pass { background: var(--ok-bg); color: var(--ok); }
+.v-fail { background: var(--no-bg); color: var(--no); }
 .v-none { background: var(--paper); color: var(--ink-soft); border: 1px dashed var(--ink-soft); }
+/* The marks, like the film: a check for cruelty-free, an X for not. The words still say it, so the
+   mark is hidden from screen readers where the browser allows ("/ ''"). */
+.v-pass::before, .verdict-box.v-pass .verdict-title::before, .fact-status.is-ok::before { content: "\2713\00a0"; content: "\2713\00a0" / ""; }
+.v-fail::before, .verdict-box.v-fail .verdict-title::before, .fact-status.is-no::before { content: "\2715\00a0"; content: "\2715\00a0" / ""; }
 .none { padding: var(--sp-5) var(--sp-4); text-align: center; color: var(--ink-soft); font-size: var(--fs-sub); }
 .more {
   display: block; width: 100%; min-height: 48px; margin-top: var(--sp-3); border: 1px solid var(--line); border-radius: var(--r-md);
@@ -267,14 +275,20 @@ main {
 #brand-page h1 { font-family: var(--font-display); font-size: var(--fs-large); font-weight: 550; letter-spacing: var(--tr-title); line-height: 1.1; margin: var(--sp-2) 0 var(--sp-4); }
 #brand-page .lede { color: var(--ink-soft); }
 .verdict-box { padding: var(--sp-4); border-radius: var(--r-lg); }
+.verdict-box.v-pass, .verdict-box.v-fail { color: var(--ink); }
+.verdict-box.v-pass::before, .verdict-box.v-fail::before { content: none; }
 .verdict-box.v-none { border-style: dashed; }
 .verdict-title { font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 600; margin-bottom: var(--sp-1); }
+.verdict-box.v-pass .verdict-title { color: var(--ok); }
+.verdict-box.v-fail .verdict-title { color: var(--no); }
 .verdict-box p + p { font-size: var(--fs-sub); }
 .verdict-notes { margin-top: var(--sp-1); opacity: .9; }
 .facts { display: grid; gap: var(--sp-3); margin-top: var(--sp-4); }
 .fact { padding: var(--sp-4); background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--finish); }
 .fact h2 { font-size: var(--fs-cap); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--rose-ink); }
 .fact-status { margin-top: var(--sp-1); font-size: var(--fs-head); font-weight: 600; }
+.fact-status.is-ok { color: var(--ok); }
+.fact-status.is-no { color: var(--no); }
 .fact-note { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-sub); }
 .src { margin-top: var(--sp-2); color: var(--ink-soft); font-size: var(--fs-foot); }
 .src a, .buy a { color: var(--rose); font-weight: 600; }
@@ -462,8 +476,8 @@ html.intro-on .intro {
 .in-ex { position: absolute; top: -2.6cqw; right: 4cqw; padding: .8cqw 2.4cqw; border-radius: var(--r-pill); background: var(--ink); color: var(--paper); font-size: clamp(9px, 2.8cqw, 13px); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
 .in-try { display: block; margin-bottom: 2.6cqw; font-size: clamp(10px, 3.1cqw, 14px); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--gold-ink); }
 .in-chip { display: inline-block; padding: 1.8cqw 3.8cqw; border-radius: var(--r-pill); font-size: clamp(14px, 4.6cqw, 22px); font-weight: 650; }
-.in-chip.is-pass { background: var(--blush-2); color: var(--rose-ink); }
-.in-chip.is-fail { background: var(--ink); color: var(--paper); }
+.in-chip.is-pass { background: var(--ok-bg); color: var(--ok); }
+.in-chip.is-fail { background: var(--no-bg); color: var(--no); }
 .in-heart { float: right; font-size: clamp(22px, 8cqw, 40px); line-height: 1; color: var(--line); }
 .in-pcard.is-picked .in-heart { color: var(--pink); }
 .in-pcard dl { margin: 1.4cqw 0 0; }
@@ -471,6 +485,8 @@ html.intro-on .intro {
 .in-pcard dd { margin: .4cqw 0 0; font-family: var(--font-display); font-size: clamp(16px, 5.2cqw, 25px); font-weight: 600; line-height: 1.2; }
 .in-pcard dd::before { content: "\2713\00a0"; }
 .in-pcard dd.is-no::before { content: "\2715\00a0"; }
+.in-pcard dd.is-ok { color: var(--ok); }
+.in-pcard dd.is-no { color: var(--no); }
 .in-why { display: block; margin-top: 4cqw; font-size: clamp(12px, 4cqw, 19px); font-weight: 600; color: var(--rose); }
 .in-why::after { content: " \203A"; }
 .in-tap { position: absolute; right: 1.2cqw; top: 9cqw; width: 14cqw; height: 14cqw; border-radius: 50%; border: 3px solid var(--pink); background: var(--halo); opacity: 0; }

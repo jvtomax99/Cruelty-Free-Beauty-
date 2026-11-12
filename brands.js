@@ -49,7 +49,7 @@
   }
   const CHIP = { pass: "Passes", fail: "Doesn't pass", none: "Not on either list" };
   // One chip per certifier for a brand that passes; the Brands list and Home's rail both use it.
-  const certChips = (v) => v.certs.map((c) => `<span class="verdict v-pass"><span aria-hidden="true">✓&nbsp;</span><span class="sr-only">Certified by </span>${c}</span>`).join("");
+  const certChips = (v) => v.certs.map((c) => `<span class="verdict v-pass"><span class="sr-only">Certified by </span>${c}</span>`).join("");
 
   /* ---------- Match a brand name from a label (Open Beauty Facts or typed) ----------
      A wrong match shows a wrong verdict, so this is strict: the WHOLE name must equal one of the
@@ -153,8 +153,9 @@
     const link = c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(label)}</a> · ` : "";
     return `<p class="src">${link}Checked ${day(c.checked)}${isDue(c.checked) ? ' · <span class="due">Check due</span>' : ""}</p>`;
   }
-  function card(title, status, detail, src) {
-    return `<div class="fact"><h2>${esc(title)}</h2><p class="fact-status">${esc(status)}</p>${detail ? `<p class="fact-note">${esc(detail)}</p>` : ""}${src}</div>`;
+  // tone "ok" = green with a check, "no" = red with an X, "" = plain (unknown, or not about animal testing)
+  function card(title, status, detail, src, tone = "") {
+    return `<div class="fact"><h2>${esc(title)}</h2><p class="fact-status${tone ? " is-" + tone : ""}">${esc(status)}</p>${detail ? `<p class="fact-note">${esc(detail)}</p>` : ""}${src}</div>`;
   }
 
   function renderBrand(id) {
@@ -194,10 +195,10 @@
         ${v.notes.length ? `<p class="verdict-notes">${esc(v.notes.join(" "))}</p>` : ""}
       </div>
       <div class="facts">
-        ${card("PETA", petaStatus, "", sourceLine(p, "PETA's page"))}
-        ${card("Leaping Bunny", lbStatus, "", sourceLine(lb, "Leaping Bunny"))}
-        ${card("Parent company", parStatus, parNote, sourceLine(par, "Source"))}
-        ${card("Mainland China", chStatus, chNote, sourceLine(ch, "Brand's page"))}
+        ${card("PETA", petaStatus, "", sourceLine(p, "PETA's page"), p.status === "yes" ? "ok" : p.status === "no" ? "no" : "")}
+        ${card("Leaping Bunny", lbStatus, "", sourceLine(lb, "Leaping Bunny"), lb.status === "yes" ? "ok" : "")}
+        ${card("Parent company", parStatus, parNote, sourceLine(par, "Source"), par.testsOnAnimals === "yes" && par.name && par.name !== b.name ? (state.mode === "strict" ? "no" : "") : par.testsOnAnimals === "no" && par.name ? "ok" : "")}
+        ${card("Mainland China", chStatus, chNote, sourceLine(ch, "Brand's page"), ch.status === "no" ? "ok" : ch.status === "yes" && state.mode === "strict" ? "no" : "")}
         ${card("Vegan", veganStatus, "", b.vegan === "all" ? sourceLine(p, "PETA's page") : "")}
         ${card("Price", priceStatus, b.priceSource ? b.priceSource.note : "", b.priceSource ? sourceLine(b.priceSource, "Brand's site") : "")}
         <div class="fact"><h2>Where to buy</h2>${buy}</div>
