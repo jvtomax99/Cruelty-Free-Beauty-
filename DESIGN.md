@@ -108,8 +108,9 @@ tiles.
 - **Tile:** blush, radius 20, icon top left, title (Fraunces 20) pinned
   low, subtitle in rose-ink 13.
 - **Card:** paper with a hairline and the finish.
-- **Tab bar (phones):** floating glass capsule, 52 px tabs, the active one
-  in blush-2. **Side rail (computers)** replaces it.
+- **Tab bar (phones):** floating glass capsule, 56 px tabs, each a 28 px
+  pin over its label (32 px in the side rail); the active one in blush-2
+  with its pin a touch larger. **Side rail (computers)** replaces it.
 - **Empty state:** the logo, a Fraunces line, one honest sentence.
 - **Strict / Certified switch:** blush pill track, the chosen side paper
   with the finish (44 px tall).
@@ -129,8 +130,13 @@ tiles.
 - **Quiz:** one question per screen, Fraunces 22 question, 56 px paper
   answer cards (chosen: blush-2), a rose progress bar on blush, Back as a
   rose text button.
-- **Profile card:** blush panel, summary in rose-ink semibold, undertone
-  chips to change it by hand.
+- **Profile hero:** a paper-to-blush panel with a blush glow top right,
+  a small-caps rose-ink label, the mirror pin (84 px, slow bob), the
+  summary as paper chips, undertone chips to change it by hand. Before
+  the quiz it shows the five step pins in a row instead.
+- **Routine step:** its 44 px pin beside the step name (Fraunces 17) and
+  a blush count ("3 brands"); when every step gives the same brands, the
+  five pins sit in a row under the one heading.
 - **Routine step:** paper card like the fact card; brand name in Fraunces
   17 (links to its page), the reason in ink-soft, "Find your shade" link.
 - **Save button:** paper pill with a hairline, heart icon and "Save";

@@ -51,7 +51,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
 
   // Quiz 1: warm by majority (green veins, gold, burns), $$ budget, not vegan-only
   await takeQuiz(['Combination', 'Medium', 'Green', 'Gold', 'Burns', 'Natural', '$$ Mid', 'No, either is fine']);
-  const sum = await page.textContent('.pf-sum');
+  const sum = (await page.locator('.pf-sum li').allTextContents()).join(' · ');   // the summary is a row of chips now
   check(/Combination skin · Medium · Warm undertone · Natural finish · \$\$ Mid/.test(sum), `profile summary: "${sum}"`);
   for (const step of ['foundation', 'concealer', 'blush', 'bronzer', 'lip']) {
     const got = await stepNames(step), want = expected(step, { budget: '$$', vegan: 'no' }, strict);

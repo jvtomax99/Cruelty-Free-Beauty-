@@ -210,6 +210,7 @@ main {
     background: var(--rail-bg); border-right: 1px solid var(--line);
   }
   .rail .brandbar { margin-bottom: var(--sp-5); }
+  .rail .tab-pin { width: 32px; height: 32px; }
   .rail .tab { flex-direction: row; justify-content: flex-start; gap: var(--sp-3); height: 48px; padding: 0 var(--sp-3); font-size: var(--fs-sub); border-radius: var(--r-md); }
   main { max-width: 980px; padding: var(--sp-6) var(--sp-5); }
   main .brandbar { display: none; }
@@ -595,6 +596,32 @@ html.intro-on .intro {
 .hr-more { justify-content: center; align-items: center; padding-top: var(--sp-3); color: var(--rose); }
 .hr + .card { margin-top: var(--sp-3); }
 
+/* ---------- Pins in the tab bar and side rail ---------- */
+.tab-pin { width: 28px; height: 28px; transition: transform var(--t-press) var(--ease); }
+.tab[aria-current="page"] .tab-pin { transform: scale(1.12) translateY(-1px); }
+.tabbar .tab { height: 56px; }
+
+/* ---------- My beauty profile: hero panel and pinned routine steps ---------- */
+.pf-hero {
+  position: relative; overflow: hidden; padding: var(--sp-5) var(--sp-4); border-radius: var(--r-lg); border: 1px solid var(--qt-edge);
+  background: radial-gradient(120% 90% at 100% 0%, var(--blush-2), var(--veil-cream-0) 62%), linear-gradient(165deg, var(--paper), var(--blush));
+  box-shadow: var(--finish);
+}
+.pf-eyebrow { font-size: var(--fs-cap); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--rose-ink); }
+.pf-hero h2 { margin-top: var(--sp-1); font-size: var(--fs-t1); letter-spacing: var(--tr-title); }
+.pf-pin { position: absolute; top: var(--sp-3); right: var(--sp-3); width: 84px; height: 84px; animation: palBob 5.2s ease-in-out infinite; }
+ul.pf-sum { list-style: none; display: flex; flex-wrap: wrap; gap: var(--sp-1); padding: 0; margin: var(--sp-3) 0 0; max-width: calc(100% - 84px); }
+ul.pf-sum li { display: inline-flex; align-items: center; min-height: 28px; padding: 0 var(--sp-3); border-radius: var(--r-pill); background: var(--paper); border: 1px solid var(--line); font-size: var(--fs-foot); font-weight: 600; color: var(--rose-ink); }
+.pf-intro.pf-hero p:first-child { color: inherit; }
+.pf-intro.pf-hero > p { color: var(--ink-soft); font-size: var(--fs-sub); }
+.rt-pins { display: flex; gap: var(--sp-2); margin: var(--sp-3) 0; }
+.rt-pin { flex: none; }
+.pf-hero .rt-pins { justify-content: space-between; margin: var(--sp-4) 0; }
+.rt-top { display: flex; align-items: center; gap: var(--sp-3); }
+.rt-top h3 { flex: 1; min-width: 0; }
+.rt-count { flex: none; display: inline-flex; align-items: center; min-height: 24px; padding: 0 var(--sp-2); border-radius: var(--r-pill); background: var(--blush); color: var(--rose-ink); font-size: var(--fs-cap2); font-weight: 600; }
+.rt-step:has(.rt-top > .rt-pin) h3 { font-family: var(--font-display); font-size: var(--fs-head); letter-spacing: var(--tr-head); text-transform: none; color: var(--ink); }
+
 @media (min-width: 900px) {
   .hb { margin: 0; border-radius: var(--r-lg); min-height: 380px; padding: var(--sp-6); box-shadow: var(--finish); }
   .hb-photo { object-position: 100% 70%; }
@@ -608,6 +635,7 @@ html.intro-on .intro {
   .hr-card { width: 176px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hb-pal img { animation: none; }
+  .hb-pal img, .pf-pin { animation: none; }
+  .tab-pin { transition: none; }
   .hb-pal, .qt-tile, .hr-card { transition: none; }
 }

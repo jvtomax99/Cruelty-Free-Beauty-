@@ -116,7 +116,7 @@ const OBF_NAMES = [
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); });
 
   await page.goto(BASE, { waitUntil: 'networkidle' });
-  await page.click('.tile[href="#scan"]');
+  await page.click('.qt-tile[href="#scan"]');
   await page.waitForSelector('[data-screen=scan]:not([hidden])');
   const scanTitle = await page.title();
   check(scanTitle === 'C.F.B. · Scan', `Home tile "Scan a product" opens the Scan screen (title "${scanTitle}")`);

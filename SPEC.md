@@ -317,8 +317,10 @@ only if it can be shown to work across skin tones.
   own colours: a photo hello banner with the bunny and a speech bubble,
   four pin tiles, a sideways rail of brands that pass. Sample Home first;
   the founder still has to see it, and the bubble's words ("Shopping
-  today? Scan it first.") are hers to approve. Next, once approved: pins
-  in the tab bar, and My beauty profile with a hero and one row per
-  routine step. Art: Runway, Jose's credits (20 used), which he OK'd over
-  the $0 budget for this.
+  today? Scan it first.") are hers to approve. Same day, on Jose's "keep
+  going": pins in the tab bar and side rail, and My beauty profile with a
+  hero panel, the summary as chips, and a pin on each routine step. No
+  words of the profile changed. Art: Runway, Jose's credits (44 used),
+  which he OK'd over the $0 budget for this. Not in main until the
+  founder has seen it.
 - Paid or affiliate links: ever?
