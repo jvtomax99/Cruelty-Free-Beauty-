@@ -19,6 +19,7 @@ import numpy as np
 
 D = sys.argv[1]
 FW, FH, OUT_W, N = 610, 625, 260, 12
+HAIR = np.array([40.0, 32.0, 30.0])            # her hair in shadow
 
 def box(x, r=2):
     o = np.zeros_like(x); n = 0
@@ -35,17 +36,22 @@ def clean(cut, orig):
     pad = Image.new("L", (m.width + 2, m.height + 2), 0); pad.paste(m, (1, 1)); ImageDraw.floodfill(pad, (0, 0), 128)
     hole = (np.array(pad)[1:-1, 1:-1] == 0)
     hole = np.array(Image.fromarray((hole * 255).astype("uint8")).filter(ImageFilter.MaxFilter(13)).filter(ImageFilter.GaussianBlur(1.5))).astype(float) / 255
-    w = (hole * (1 - a))[..., None]; rgb = rgb * (1 - w) + orig * 0.62 * w; a = np.maximum(a, hole)
-    # see-through edge pixels take the colour of the solid pixels next to them
-    solid = a > 0.98
+    lum = orig.mean(-1, keepdims=True) / 255
+    w = (hole * (1 - a))[..., None]; rgb = rgb * (1 - w) + HAIR * (0.75 + lum) * w; a = np.maximum(a, hole)
+    # the outline: smoothed (no lumps), pulled in a few pixels (the film blurs hair into the backdrop there) and made crisp
+    blur = lambda x, r: np.array(Image.fromarray((x * 255).astype("uint8")).filter(ImageFilter.GaussianBlur(r))).astype(float) / 255
+    edge = np.clip((blur(a, 3.2) - 0.56) / 0.16, 0, 1); edge = edge * edge * (3 - 2 * edge)
+    # pixels near the outline take the colour of the hair a little further in, so no backdrop brown is left on the rim
+    deep = np.array(Image.fromarray((a * 255).astype("uint8")).filter(ImageFilter.MinFilter(13))).astype(float) / 255
+    solid = deep > 0.98
     acc = np.where(solid[..., None], rgb, 0); wgt = solid.astype(float)
-    for _ in range(10):
+    for _ in range(12):
         acc = box(acc); wgt = box(wgt)
         acc = np.where(solid[..., None], rgb, acc); wgt = np.where(solid, 1.0, wgt)
     near = acc / np.maximum(wgt, 1e-4)[..., None]
-    k = np.clip((1 - a) * 1.6, 0, 1)[..., None] * (wgt > 0.02)[..., None]
+    k = (1 - blur(deep, 2.0))[..., None] * (wgt > 0.02)[..., None]
     rgb = rgb * (1 - k) + near * k
-    a = np.clip((a - 0.12) / 0.80, 0, 1); a = a * a * (3 - 2 * a)
+    a = edge
     return np.dstack([rgb, a])
 
 def fit(im):                                   # ffmpeg rounds the crop to an even height (624); the sheets use 625
@@ -59,7 +65,7 @@ for n, o in enumerate(origs):
 
 y = np.arange(FH)[:, None, None] / FH
 low = np.clip((y - 0.72) / 0.08, 0, 1); low = low * low * (3 - 2 * low)            # below here: frame 0's shoulders
-fade = np.clip((0.97 - y) / 0.17, 0, 1); fade = fade * fade * (3 - 2 * fade)      # the bottom fades out
+fade = np.clip((0.985 - y) / 0.13, 0, 1); fade = fade * fade * (3 - 2 * fade)      # the bottom fades out
 frames = frames[:N]                             # after these she looks down at the bunny for good
 out = []
 for f in frames:

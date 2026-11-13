@@ -617,7 +617,7 @@ html.intro-on .intro {
   color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease);
 }
 .hb-host {   /* the girl from the opening film, cut out: a strip of 12 frames (tools/make-host.py) stepped through */
-  --host-n: 12; width: 130px; aspect-ratio: 260 / 263; flex: none; margin-left: calc(-1 * var(--sp-1));
+  --host-n: 12; width: 130px; aspect-ratio: 260 / 270; flex: none; margin-left: calc(-1 * var(--sp-1));
   background: url("assets/images/host.webp") 0 0 / calc(var(--host-n) * 100%) 100% no-repeat;
   filter: drop-shadow(var(--cut-shadow));
   animation: hostPlay 7s infinite, palBob 4.6s ease-in-out infinite;
