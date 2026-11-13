@@ -337,7 +337,7 @@ only if it can be shown to work across skin tones.
       to confirm
 
 ### The Garden (added 2026-11-12)
-- [ ] Look sample and one test animal approved by Jose and the founder
+- [ ] Look sample and one test animal approved by Jose
 - [x] Phase A: question bank, rounds, progress, habitat cards (2026-11-12:
       33 written questions, not the 40 planned, because the Learn answers
       hold no more checked facts; plus one question per brand, 30 today.
@@ -348,52 +348,51 @@ only if it can be shown to work across skin tones.
 - [x] The other four habitats in 3D with their animals, the animals'
       own behaviour, the breeze, ripples and butterflies, the camera and
       the per-habitat progress (2026-11-13; `node tools/test-sanctuary.cjs`
-      passes in the cloud browser; live 2026-11-13 on Jose's word, the
-      founder's sign-off still owed)
+      passes in the cloud browser; live 2026-11-13 on Jose's word)
 - [x] The floating island: a deep landmass with ledges and a hollow, the
       blossom tree and its roots, the waterfall down the outside, the
       cottage's raised lawn and winding path, glowing mushrooms and seed
       pods, falling petals, animals that go to smell a flower (2026-11-13;
       `node tools/test-sanctuary.cjs` and `node tools/test-garden.cjs`
       pass in the cloud browser; about 470,000 triangles with everything
-      unlocked, up from 394,000; the founder's sign-off still owed)
+      unlocked, up from 394,000)
 - [ ] A real-phone check of speed and battery (Jose). The island is
       heavier than before, so this matters more now
 
 ## Open questions (TO FILL)
 
 - Are "Your Sanctuary", "A little kindness. A world of life." and
-  Clover's line the founder's words to keep? Jose to ask.
+  Clover's line the words to keep? Jose decides.
 - The sixteen animals' names and one-line personalities, the habitat
   names (Leafy Garden, Wooded Meadow, Willow Pond) and the words for each
   shelter's gain were written by Claude on 2026-11-13 and speak for the
   founder. They are in `HOME` (`garden.js`) and `ROSTER`
-  (`sanctuary3d.js`). Jose to check them with her.
+  (`sanctuary3d.js`). Jose to check them.
 - Models that should be better (2026-11-13): the ducklings read as rubber
   ducks, the deer has small antlers nobody asked for, the guinea pig came
   with a tail (hidden in code), and the beagle and deer are more cartoon
   than the rabbits. Remake them, or keep?
 - The cliff under the island is lit face by face (faceted), the one
   break from DESIGN's "rounded, never faceted": smooth, it read as a
-  blur on a phone. Jose and the founder to say if it stays (one word in
-  `mass()` in `sanctuary3d.js` turns it back).
+  blur on a phone. Jose to say if it stays (one word in `mass()` in
+  `sanctuary3d.js` turns it back).
 - Tripo's and Meshy's terms in `CREDITS.md` are still TO FILL.
 - Left from the review of the five habitats (2026-11-13): on a computer
   the mouse wheel over the world zooms and cannot scroll the page (the
   scrollbar and keys can); each animal makes a little garbage every frame
   (about 50 small objects a frame with all sixteen); the grey rabbit's
   ears are stiff because they lie on its back.
-- Has the founder seen and accepted the Garden (a study game in her app)?
-  Jose to show her the look sample.
-
-- Does the founder accept the neutral wording ("No longer in Leaping
-  Bunny's guide", never "dropped")? Jose to ask.
+- Does the neutral wording stay ("No longer in Leaping Bunny's guide",
+  never "dropped")? Jose decides.
 
 - The founder's name (stays out of the repo until Jose fills it in).
-- 1 to 3 websites whose look the founder likes (for DESIGN.md).
+- 1 to 3 websites whose look Jose likes (for DESIGN.md).
 
 ## Decided
 
+- 2026-11-13 (Jose): he has full control of the app. Plans, the look,
+  brand rules and the words in the app are his to approve; nothing waits
+  for the founder's sign-off any more.
 - 2026-11-12 (Jose, buttons): a study simulator like his CPA and CCHI
   apps. He asked for a zoo; after Claude's objection (enclosures, and the
   film's "no cage" rule) he chose an open sanctuary garden, grown by a new
@@ -447,7 +446,8 @@ only if it can be shown to work across skin tones.
   every launch. A tap first, then the show with sound. Founder to see the
   logo and the show.
 - 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
-  quiz; $0 asset budget; soft luxury look; Fraunces headings.
+  quiz; $0 asset budget; soft luxury look; Fraunces headings (replaced by
+  Instrument Serif and Manrope, 2026-11-13).
 - 2026-11-11 (Jose): default strictness is Strict. Brand rechecks run as a
   monthly scheduled Claude task that opens a pull request for Jose to
   approve. Affiliate links undecided; the data leaves room for them.

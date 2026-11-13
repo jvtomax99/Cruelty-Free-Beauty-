@@ -33,7 +33,7 @@ relative.
 | `manifest.webmanifest` | Install name, colours, icons |
 | `assets/logo.svg` | The bunny logo (original). Every part has an id; `intro.js` animates them |
 | `assets/icons/` | App icons, made from the logo by `tools/make-icons.cjs` |
-| `assets/fonts/` | Fraunces (headings) and Inter (text), WOFF2, OFL |
+| `assets/fonts/` | Instrument Serif (headings, normal and italic) and Manrope (text), WOFF2, OFL. |
 | `data/brands.json` | The 30 brands. Each claim (PETA, Leaping Bunny, parent company, China sales) has its own `url` and `checked` date; values yes / no / unknown (parent also n/a). The cruelty-free verdict is never stored: the app works it out per strictness. `search` holds the names the recheck looks up. `sells` (foundation, concealer, blush, bronzer, lip) and `shadeFinder` come from the brand's own site, each dated. `price` ($ / $$ / $$$) comes from the median single-product price on the brand's own site, explained in `priceSource` |
 | `tools/lookup-certifiers.cjs` | With `--diff`, compares the lookup with the stored statuses and prints what looks changed plus a `changes` entry to paste. Looks brands up on PETA (WordPress JSON plus the page's icons) and Leaping Bunny (the query its Shopping Guide page runs, so it needs Playwright) and prints what each says. Never edits the data |
 | `tools/check-brands.cjs` | Checks `data/brands.json`: missing or invalid fields, claims without a source or date, checks over 90 days old; `--links` also opens every link |

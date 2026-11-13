@@ -113,7 +113,16 @@
     return true;
   }
 
-  function renderList() {
+  // The brand's first letter for its tile (a whole character, never half an emoji); never a brand logo.
+  const initial = (name) => (Array.from(String(name || "").trim())[0] || "•").toUpperCase();
+  // The tile's finish (porcelain, blush or rose), fixed per brand by its name so it never
+  // changes with the filters.
+  const finish = (name) => Array.from(String(name)).reduce((n, c) => n + c.codePointAt(0), 0) % 3;
+
+  // `arriving`: the rows fade up one after another. Only when the list first draws or the screen
+  // opens, never while typing or filtering.
+  function renderList(arriving) {
+    $("brand-list").classList.toggle("is-arriving", arriving === true);
     const modeName = state.mode === "strict" ? "Strict" : "Certified";
     document.querySelectorAll(".mode-btn").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.mode === state.mode)));
     $("mode-help").textContent = state.mode === "strict"
@@ -133,15 +142,20 @@
     const filtered = state.q || state.vegan || state.price.size;
     $("brand-count").textContent = `${passing} brands pass ${modeName}` + (filtered ? `. Showing ${shown.length}.` : ".");
 
+    // A row with three chips has no room for the price band's word on a phone: it keeps the
+    // signs and says the word to screen readers only.
     $("brand-list").innerHTML = shown.length ? shown.map(({ b, v }) => `
-      <li><a class="brand-row" href="#brand/${encodeURIComponent(b.id)}">
-        <span class="brand-name">${esc(b.name)}</span>
-        <span class="brand-meta">
-          ${v.pass ? certChips(v) : `<span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>`}
-          ${b.vegan === "all" ? '<span class="tag">Vegan</span>' : ""}
-          ${b.price ? `<span class="tag" title="${PRICE[b.price]}">${esc(b.price)}</span>` : ""}
+      <li><a class="brand-row br-rich" href="#brand/${encodeURIComponent(b.id)}">
+        <span class="br-mono br-f${finish(b.name)}" aria-hidden="true">${esc(initial(b.name))}</span>
+        <span class="br-body">
+          <span class="brand-name">${esc(b.name)}</span>
+          <span class="brand-meta">
+            ${v.pass ? certChips(v) : `<span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>`}
+            ${b.vegan === "all" ? '<span class="tag">Vegan</span>' : ""}
+            ${b.price ? `<span class="br-price"><span class="sr-only">Price: </span><span aria-hidden="true">${esc(b.price)}</span> <span class="${v.pass && v.certs.length + (b.vegan === "all") > 2 ? "sr-only" : ""}">${PRICE[b.price]}</span></span>` : ""}
+          </span>
+          ${v.pass ? "" : `<span class="brand-why">${esc(v.reason)}</span>`}
         </span>
-        ${v.pass ? "" : `<span class="brand-why">${esc(v.reason)}</span>`}
       </a></li>`).join("")
       : `<li class="none">${state.q ? `No brand called “${esc(state.q)}” on our list yet.` : "No brands match these filters."}</li>`;
     $("brand-hint").hidden = !!state.q;
@@ -206,7 +220,10 @@
   }
 
   /* ---------- Wiring ---------- */
-  document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "brand" && brands.length) renderBrand(e.detail.id); });
+  document.addEventListener("cfb:screen", (e) => {
+    if (e.detail.name === "brand" && brands.length) renderBrand(e.detail.id);
+    if (e.detail.name === "brands") $("brand-list").classList.add("is-arriving");
+  });
 
   document.querySelectorAll(".mode-btn").forEach((x) => x.addEventListener("click", () => {
     state.mode = x.dataset.mode; store.set("mode", state.mode); renderList();
@@ -226,13 +243,16 @@
   window.CFB.saveButton = saveButton;
   window.CFB.CHIP = CHIP;
   window.CFB.certChips = certChips;
+  window.CFB.initial = initial;
+  window.CFB.finish = finish;
+  window.CFB.PRICE = PRICE;
   // The whole file, for changes.js ("changes"); an empty one if it couldn't load.
   const file = fetch("data/brands.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
   window.CFB.data = file.catch(() => ({ brands: [], changes: [] }));
   window.CFB.brands = file
     .then((d) => {
       brands = d.brands;
-      renderList();
+      renderList(true);
       if (location.hash.startsWith("#brand/")) window.CFB.show();   // a brand link opened directly
       return brands;
     })
