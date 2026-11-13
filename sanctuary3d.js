@@ -380,7 +380,7 @@ function root(out, surf, o, R, lead = []) {
     root(out, surf, { th, u0: u, u1: Math.min(0.99, u + len), r0: r * 0.55, r1: 0.04, drift: side * (0.1 + R() * 0.28) / Math.max(0.35, 1 - u), ease: 1.7, wig: 0.06 + R() * 0.08, seed: o.seed * 3.1 + k * 17.7 + 1, kids: o.r0 > 0.7 ? 1 : 0, hang: R() < 0.35 ? 1 + R() * 2 : 0, low: o.low }, R);
   }
 }
-const ROOT_LIGHT = C(0xe2bd90), ROOT_DARK = C(0x62402c), TRUNK_LIGHT = C(0xcc9c6c), TRUNK_DARK = C(0x5c3c2a);
+const ROOT_LIGHT = C(0xd6a877), ROOT_DARK = C(0x5c3c2a), TRUNK_LIGHT = C(0xcc9c6c), TRUNK_DARK = C(0x5c3c2a);
 /* A ribbon of falling water along `pts` (each [Vector3, half-width, how solid 0 to 1]), bowed a little so it has body from the side. */
 function fallGeo(pts) {
   const pos = [], uv = [], col = [], idx = [], ACROSS = 4, d = new THREE.Vector3(); let len = 0;
