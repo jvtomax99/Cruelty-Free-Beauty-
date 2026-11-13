@@ -7,6 +7,7 @@
   const initial = (name) => window.CFB.initial(name);   // brands.js's, shared with the Brands list
   const box = document.getElementById("home-rail");
   let brands = [];
+  let drawn = "", drawnAt = 0;   // the rail as last drawn, and when
 
   // `arriving`: the cards fade up one after another when Home opens, not when a heart redraws them.
   function draw(arriving) {
@@ -19,8 +20,7 @@
     if (!pass.length) { box.hidden = true; return; }
     document.getElementById("home-rail-count").textContent = `${pass.length} · ${mode === "strict" ? "Strict" : "Certified"}`;
     const list = document.getElementById("home-rail-list");
-    list.classList.toggle("is-arriving", arriving === true);
-    list.innerHTML = pass.slice(0, MAX).map(({ b, v }) => `
+    const html = pass.slice(0, MAX).map(({ b, v }) => `
       <li><a class="hr-card" href="#brand/${encodeURIComponent(b.id)}">
         <span class="hr-mono br-f${window.CFB.finish(b.name)}" aria-hidden="true">${esc(initial(b.name))}</span>
         <span class="hr-name">${esc(b.name)}</span>
@@ -29,6 +29,12 @@
       </a></li>`).join("") +
       (pass.length > MAX ? `<li><a class="hr-card hr-more" href="#brands"><span class="hr-name">See all ${pass.length}</span></a></li>` : "");
     box.hidden = false;
+    // First load asks twice in a row (data arrives, Home opens): the second, within a second and
+    // with nothing changed, would only restart the fade.
+    if (html === drawn && Date.now() - drawnAt < 1000) return;
+    drawn = html; drawnAt = Date.now();
+    list.classList.toggle("is-arriving", arriving === true);
+    list.innerHTML = html;
   }
 
   window.CFB.brands.then((list) => { brands = list || []; draw(true); });
