@@ -61,7 +61,7 @@ const W = () => window.CFB.garden.world;
   const box = await page.$eval('#sx', (e) => { const b = e.getBoundingClientRect(); return { w: b.width, h: b.height, vw: innerWidth, vh: innerHeight }; });
   check(box.w === box.vw && box.h > box.vh * 0.85, 'the world fills the screen');
   check(await tappable('#sx-visit') && await tappable('#sx-prev') && await tappable('#sx-next'), 'Visit and the two arrows are at least 44 px tall and not under the tab bar');
-  check(await page.isVisible('.tabbar a[href="#learn"], nav a[href="#learn"]') && await page.isVisible('nav a[href="#brands"], .tabbar a[href="#brands"]'), 'Learn and Brands stay within reach under the world');
+  check(await page.isVisible('.tabbar a[href="#learn"]') && await page.isVisible('.tabbar a[href="#brands"]'), 'Learn and Brands stay within reach under the world');
 
   // The arrows step through the five habitats
   const stepped = [];

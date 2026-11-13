@@ -168,10 +168,19 @@ tiles.
   (Fraunces 22, 28 on a computer) with one line under it, the learned
   count as a paper pill, and one paper card at the bottom (radius 20,
   `--float`). No labels on the world itself.
-- **The card**: Clover's round portrait (56, or 72 when meeting her), the
-  name in Fraunces 20 rose-ink, one soft line, and pill buttons 44 tall:
-  rose for the main action (Visit, Say hello), sage with green words for
-  the second (Practise).
+- **The card** has three states, all the same paper card. The whole
+  island: the habitat's name in Fraunces 20 rose-ink and one soft line,
+  then a row with a 44 px round arrow each side of a rose Visit pill. A
+  visit: the name, who is at home, the progress and what comes next, and
+  a rose Practise pill. An animal: its round portrait (72, on sage), "Meet
+  <name>", its line, and two pills: rose Say hello, sage Practise with
+  green words. Pills are 44 tall.
+- **On the world itself** the only marks are a small berry pin over the
+  habitat the card names (whole-island view only) and the hearts of a
+  hello. No labels.
+- **Motion in the world** is slow and never in step: one breeze, each
+  animal on its own clock, long pauses. The camera eases (about a second)
+  to a habitat or an animal and never spins on its own.
 - **The world's colours** live in `PAL` in `sanctuary3d.js`: warm sunlit
   greens, cream stone, a dusty rose roof, pink and white flowers, teal
   water, earth for the island's side. Sun from the upper left, warm; a
