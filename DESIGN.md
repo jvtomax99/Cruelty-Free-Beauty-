@@ -99,13 +99,14 @@ tiles.
   radius-20 card on computers (380). The time-of-day label and the slogan
   at 40 sit top left in ink over a cream shade (`--veil-cream`), never
   white text. The girl from the opening film (`assets/images/host.webp`,
-  her head and shoulders cut out, 130 px wide, fading out at the bottom,
-  a soft drop shadow and a slow bob) sits bottom left with a paper speech
-  bubble that links to Scan. She moves with her own motion from the film:
-  every 7 s she smiles, blinks and glances down, then comes back (12
-  frames, 15 a second, there and back); still on the first frame under
-  reduced motion. 2026-11-13, Jose: the bunny there looked basic; he
-  chose the cut-out over a round portrait, then asked for her animated.
+  130 px wide, a soft drop shadow) sits bottom left, her shoulders running
+  down behind the Search field, with a paper speech bubble beside her
+  face that links to Scan. She was re-shot on a plain backdrop so her
+  hair has a clean outline (cut out of the film itself it kept the
+  stage's brown and a soft, lumpy edge). She moves: 3.9 s of a blink, a
+  wider smile and a glance aside (39 frames, 10 a second), then rests
+  3 s on the first frame; still under reduced motion. 2026-11-13, Jose:
+  the bunny there looked basic; he asked for her as a cut-out, animated.
   The bunny stays in the brand bar. The photo fades into the page at the
   bottom and Search overlaps it by 26 px.
 - **Quick tiles:** four across, paper-to-blush, radius 20, bright rim
