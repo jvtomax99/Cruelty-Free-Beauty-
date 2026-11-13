@@ -6,7 +6,8 @@
    and she reacts to a scan result (cfb:scan) and a Sanctuary answer (cfb:answer). Those happen on other
    screens, so the newest one is kept in memory and played when Home is next on view.
    She only makes faces: she never words a verdict (CFB.verdict does) and nothing is stored.
-   Reduced motion: she rests on the base. Data saver: the strip is never downloaded. */
+   Reduced motion: she rests on the base. Data saver: the page never asks for the strip (the offline
+   worker still saves it with the rest of the app, as it saved the old loop). */
 (function () {
   "use strict";
   const CFB = window.CFB;
@@ -41,9 +42,9 @@
   let live = false, shown = "rest";
   let run = null;                   // the sequence playing: { name, pri, steps, t0, timer }
   let gaze = "rest", gazeTimer = 0, blinkTimer = 0, waiting = null, lastTap = "wink";
-  let rand = Math.random;
+  let rand = Math.random, home = true;   // home: Home is the screen on view
 
-  const seen = () => live && !document.hidden && el.offsetParent !== null && !document.documentElement.classList.contains("intro-on");
+  const seen = () => live && home && !document.hidden && el.offsetParent !== null && !document.documentElement.classList.contains("intro-on");
   function show(name) {
     const i = FRAMES.indexOf(name);
     if (i < 0 || !face) return;
@@ -83,6 +84,7 @@
   /* Blinks: 2 to 6 s apart, picked afresh each time, so never on a beat. Now and then a double one. */
   function blinkSoon() {
     clearTimeout(blinkTimer);
+    if (!home || document.hidden || still.matches) return;      // started again when Home or the page comes back
     blinkTimer = setTimeout(() => {
       if (seen() && !still.matches && gaze === "rest") play(rand() < 0.15 ? "blink2" : "blink", P.IDLE);
       blinkSoon();
@@ -91,7 +93,7 @@
 
   /* Gaze: towards the pointer, by the stronger axis; on her own face she looks at you. */
   function look(x, y) {
-    if (!seen() || still.matches) return;
+    if (!home || !seen() || still.matches) return;
     const r = el.getBoundingClientRect();
     const dx = x - (r.left + r.width * 0.5), dy = y - (r.top + r.height * 0.36);
     const near = Math.hypot(dx, dy) < r.width * 0.3;
@@ -128,19 +130,24 @@
   document.addEventListener("pointerdown", (e) => look(e.clientX, e.clientY), { passive: true });
   /* A tap on her (not on her bubble) plays a smile or a wink, turn about, and doesn't follow the link. */
   el.addEventListener("click", (e) => {
-    if (!seen() || still.matches || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    if (!seen() || still.matches || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
     e.preventDefault();
     lastTap = lastTap === "wink" ? "smile" : "wink";
     play(lastTap, P.REACT);
   });
   document.addEventListener("cfb:scan", (e) => { const n = ON_SCAN[e.detail && e.detail.kind]; if (n) react(n); });
   document.addEventListener("cfb:answer", (e) => react(e.detail && e.detail.right ? "smile" : "worried"));
-  document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "home") arrive(); else if (live) rest(); });
+  document.addEventListener("cfb:screen", (e) => {
+    home = e.detail.name === "home";
+    if (!live) return;
+    if (home) { blinkSoon(); arrive(); } else { rest(); clearTimeout(blinkTimer); }
+  });
   document.addEventListener("cfb:intro-done", arrive);
-  document.addEventListener("visibilitychange", () => { if (document.hidden && live) rest(); });
+  document.addEventListener("visibilitychange", () => { if (!live) return; if (document.hidden) { rest(); clearTimeout(blinkTimer); } else blinkSoon(); });
   const calm = () => { if (still.matches) { rest(); clearTimeout(blinkTimer); } else if (live) blinkSoon(); else start(); };
   if (still.addEventListener) still.addEventListener("change", calm);
 
+  home = !!(el.closest("[data-screen]") && !el.closest("[data-screen]").hidden);
   start();
   CFB.hostFace = {
     FRAMES, SEQ, play: (name) => play(name, P.REACT), look, rest,

@@ -78,16 +78,26 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
       return buf;
     };
     const restShot = await snap('rest');
+    // the rest frame over the base against the base alone: no seam where the window sits
+    await page.evaluate(() => document.querySelector('.hb-host').classList.remove('is-live'));
+    const bare = await page.screenshot({ clip: box });
+    await page.evaluate(() => document.querySelector('.hb-host').classList.add('is-live'));
     const differ = async (a, b) => page.evaluate(async ([a, b, fx, fy, fw, fh]) => {
       const px = async (u) => { const i = new Image(); await new Promise((r) => { i.onload = r; i.src = u; }); const c = document.createElement('canvas'); c.width = i.width; c.height = i.height; const g = c.getContext('2d'); g.drawImage(i, 0, 0); return g.getImageData(0, 0, c.width, c.height); };
-      const A = await px(a), B = await px(b); let out = 0, inn = 0;
+      const A = await px(a), B = await px(b); let out = 0, inn = 0, rim = 0, worst = 0;
       for (let y = 0; y < A.height; y++) for (let x = 0; x < A.width; x++) {
         const k = (y * A.width + x) * 4;
-        if (Math.abs(A.data[k] - B.data[k]) + Math.abs(A.data[k + 1] - B.data[k + 1]) + Math.abs(A.data[k + 2] - B.data[k + 2]) < 24) continue;
+        const d = Math.abs(A.data[k] - B.data[k]) + Math.abs(A.data[k + 1] - B.data[k + 1]) + Math.abs(A.data[k + 2] - B.data[k + 2]);
+        const edge = Math.min(Math.abs(x - fx), Math.abs(x - (fx + fw - 1)), Math.abs(y - fy), Math.abs(y - (fy + fh - 1))) <= 2 && x >= fx - 2 && x <= fx + fw + 1 && y >= fy - 2 && y <= fy + fh + 1;
+        if (edge) { worst = Math.max(worst, d); if (d >= 24) rim++; }
+        if (d < 24) continue;
         if (x >= fx - 1 && x <= fx + fw && y >= fy - 1 && y <= fy + fh) inn++; else out++;
       }
-      return { out, inn };
+      return { out, inn, rim, worst };
     }, ['data:image/png;base64,' + a.toString('base64'), 'data:image/png;base64,' + b.toString('base64'), fr.x - box.x, fr.y - box.y, fr.w, fr.h]);
+    const seam = await differ(bare, restShot);
+    // (inside the window the two are the same face saved twice, so a few pixels differ by the saving alone)
+    check(seam.rim === 0 && seam.out === 0, `no seam where her face window sits: along its edge the rest frame and the base alone differ by at most ${seam.worst} of 765`);
     let moved = [], same = [];
     for (const name of FRAMES.slice(1)) {
       const d = await differ(restShot, await snap(name));
@@ -119,6 +129,11 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
     }
     check(taps.sort().join() === 'smile,wink' && new URL(page.url()).hash === '', `two taps on her: ${taps.join(' and ')}, still on Home, back at rest`);
 
+    await page.click('#host-say');
+    await page.waitForFunction(() => location.hash !== '');
+    check(true, `her bubble still links (${new URL(page.url()).hash})`);
+    await page.goto(APP); await live(page);
+
     // 5. A reaction beats a gaze: the pointer moves while she laughs, and she finishes laughing first.
     await clear(page);
     await page.evaluate(() => window.CFB.hostFace.play('happy'));
@@ -137,12 +152,12 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
 
     // 7. A real scan: her face on Home afterwards, by the verdict's kind. She says nothing about it.
     const kinds = await page.evaluate(async () => { const all = await window.CFB.brands, out = {}; for (const b of all) { const k = window.CFB.verdict(b, window.CFB.mode()).kind; if (!out[k]) out[k] = b.name; } return out; });
-    const OBF = { 1: kinds.pass, 2: kinds.fail, 3: 'Glowfield Labs' };
+    const OBF = { 1: kinds.pass, 2: kinds.fail, 3: 'Glowfield Labs', 4: kinds.none };
     await ctx.route('https://world.openbeautyfacts.org/**', (route) => {
       const code = +(route.request().url().match(/product\/(\d+)\.json/) || [])[1];
       route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ status: 1, product: { product_name: 'Thing', brands: OBF[code] } }) });
     });
-    for (const [code, want, peak] of [[1, 'happy', 'laugh'], [2, 'sad', 'sad'], [3, 'surprised', 'surprised']]) {
+    for (const [code, want, peak] of [[1, 'happy', 'laugh'], [2, 'sad', 'sad'], [3, 'surprised', 'surprised'], [4, 'surprised', 'surprised']]) {
       await page.goto(APP + '#scan'); await live(page);
       await page.fill('#scan-code', '000000000000' + code);
       await page.click('#scan-code-form button');
@@ -153,7 +168,7 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
       await page.waitForFunction((peak) => window.__hostProbe.some((p) => p.name === peak), peak, { timeout: 5000 }).catch(() => {});
       const saw = await frames(page);
       const words = await page.$eval('#host-say', (e) => e.textContent);
-      check(w === want && saw.includes(peak), `a scan of ${OBF[code]} (${['', 'passes', "doesn't pass", 'not listed'][code]}): she waits with "${w}" and plays it on Home (${saw.join(' ')})`);
+      check(w === want && saw.includes(peak), `a scan of ${OBF[code]} (${['', 'passes', "doesn't pass", 'not listed', 'on no list'][code]}): she waits with "${w}" and plays it on Home (${saw.join(' ')})`);
       check(!/cruelty|passes|doesn't pass|certified|tests on animals|approved|safe|not on/i.test(words), `her bubble words no verdict: "${words.replace(/\s+/g, ' ').trim()}"`);
       await idle(page);
     }
@@ -233,7 +248,7 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
     const { ctx, page } = await phone({ width: 1440, height: 900 });
     await live(page);
     const r = await page.evaluate(() => { const a = document.querySelector('.hb-host').getBoundingClientRect(), b = document.querySelector('.hb-face').getBoundingClientRect(); return [(b.x - a.x) / a.width, (b.y - a.y) / a.height, b.width / a.width]; });
-    check(Math.abs(r[0] - 114 / 480) < 0.004 && Math.abs(r[1] - 117 / 541) < 0.004 && Math.abs(r[2] - 252 / 480) < 0.004, 'at 1440 px her face sits in the same place over the base');
+    check(Math.abs(r[0] - 114 / 480) < 0.004 && Math.abs(r[1] - 117 / 540) < 0.004 && Math.abs(r[2] - 252 / 480) < 0.004, 'at 1440 px her face sits in the same place over the base');
     await ctx.close();
   }
 

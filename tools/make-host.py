@@ -98,7 +98,8 @@ def main():
     rest = np.array(rest_im).astype(float)
     rgb, alpha = key(rest_im)
     ys, xs = np.where(alpha > 0.02); bx0, bx1, by0, by1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
-    out_h = round((by1 - by0) * OUT_W / (bx1 - bx0)); k = OUT_W / (bx1 - bx0)
+    full_h = round((by1 - by0) * OUT_W / (bx1 - bx0)); k = OUT_W / (bx1 - bx0)
+    out_h = full_h - full_h % 3                                 # a whole number of pixels at 160 px wide (a row or two off her foot)
     # the window in the saved base's pixels, on a 3 px grid so it lands on whole pixels at 160 px wide
     wx0, wy0 = [int(round((v - o) * k / 3)) * 3 for v, o in ((WIN[0], bx0), (WIN[1], by0))]
     wx1, wy1 = [int(round((v - o) * k / 3)) * 3 for v, o in ((WIN[2], bx0), (WIN[3], by0))]
@@ -106,7 +107,7 @@ def main():
     assert alpha[WIN[1]:WIN[3], WIN[0]:WIN[2]].min() == 1, "the face window must lie wholly inside her"
 
     def small(a):                                               # the same cut and the same shrink for every picture
-        return Image.fromarray(a.clip(0, 255).astype("uint8")).crop((bx0, by0, bx1, by1)).resize((OUT_W, out_h), Image.LANCZOS)
+        return Image.fromarray(a.clip(0, 255).astype("uint8")).crop((bx0, by0, bx1, by1)).resize((OUT_W, full_h), Image.LANCZOS).crop((0, 0, OUT_W, out_h))
 
     os.makedirs("assets/host", exist_ok=True)
     base = small(rgb); base.putalpha(small(alpha * 255).convert("L"))
