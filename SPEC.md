@@ -224,8 +224,9 @@ me**.
   pictures he sent as a direction; three look like other artists' work, so
   they are not in the repo and nothing from them ships): a low warm sun
   and lavender shade, never grey. Trees after his lantern-tree picture: a
-  trunk that bends and twists, flat pads of leaves in layers, blossom
-  dotted over the kinds that flower. The great tree has boulders in its
+  trunk that bends and twists, bark drawn in code on every trunk and
+  root, flat pads of leaves in layers, and blossom on the kinds that
+  flower: dotted over the pads, which are blushed pink across the top. The great tree has boulders in its
   roots and five lanterns on chains; four other trees carry one lantern
   each (three and two on a phone with little memory). The cottage's windows are lit, lanterns and windows throw a soft
   pool of light on the ground, glints ride down the waterfall, and no two
@@ -377,7 +378,8 @@ only if it can be shown to work across skin tones.
       windows, pools of light, glints on the falls, colour variation
       and the roots reworked into wound strands with fine roots hanging
       under the overhangs (2026-11-13; both browser tests pass in the
-      cloud browser; about 506,000 triangles with everything unlocked,
+      cloud browser; then bark on trunks and roots, more blossom and a
+      stronger glow; about 512,000 triangles with everything unlocked,
       475,000 before)
 - [ ] A real-phone check of speed and battery (Jose). The island is
       heavier than before, so this matters more now
@@ -395,10 +397,6 @@ only if it can be shown to work across skin tones.
   ducks, the deer has small antlers nobody asked for, the guinea pig came
   with a tail (hidden in code), and the beagle and deer are more cartoon
   than the rabbits. Remake them, or keep?
-- The small blossom trees are now green with pink blossom on top, like
-  the lantern-tree picture, where they used to be pink all over: the
-  island has less pink in the first view. Jose to say if some should go
-  back to full blossom.
 - The cliff under the island is lit face by face (faceted), the one
   break from DESIGN's "rounded, never faceted": smooth, it read as a
   blur on a phone. Jose to say if it stays (one word in `mass()` in

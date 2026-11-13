@@ -208,7 +208,9 @@ tiles.
   greens, cream stone, a dusty rose roof, pink and white flowers, teal
   water. The mass under the garden is warm brown soil with blocks of
   muted stone and sage moss on whatever lies flat, darker toward the tip
-  and in its folds; roots are pale wood, light on top and dark underneath.
+  and in its folds; trunks and roots are one warm wood, light on top and
+  dark underneath, with bark drawn over it (ridges along the limb, dark
+  grooves between). Blossom trees are green underneath and blush on top.
   It is golden hour: a low warm sun from the upper left, and everything
   it misses is lavender, never grey (violet light from the sky, from
   below and from the right). Shadows are long.
@@ -218,7 +220,8 @@ tiles.
   animals must stay lighter or pinker than the grass they stand on.
 - **Glow** is rare and warm: the mushrooms in the hollow, the lanterns
   (five under the great tree, one in a tree by four habitats) and the
-  cottage's windows: unlit bright shapes, a soft halo each, and a faint
+  cottage's windows: unlit bright shapes, a soft halo each (drawn a
+  little larger from far away, so they show on the whole island), and a
   pool of warm light on the ground under them. The only other sparkle is a
   few glints carried down the waterfall.
 - **Habitat cards and rounds** reuse the quiz's parts: `.quiz-opt`
