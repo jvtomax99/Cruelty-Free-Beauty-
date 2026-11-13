@@ -155,7 +155,7 @@ const C = (hex) => new THREE.Color(hex);
 const PAL = {
   grassA: C(0x9ccb6a), grassB: C(0x7fb656), grassC: C(0xbfdc86), grassShade: C(0x6fa252),
   sand: C(0xdccfa6), bed: C(0x5f9f98), earth: C(0x9a6f52), earthDark: C(0x7a543d), earthLight: C(0xba8f6c), stone: C(0xb9aa98), stoneDark: C(0x93857a), moss: C(0x8fb565),
-  path: C(0xe6d6bd), water: C(0x3fb2b6), sun: C(0xffe3bf), sky: C(0xfff1e6), ground: C(0xb7c79a),
+  path: C(0xe6d6bd), water: C(0x3fb2b6), sun: C(0xffc58a), sky: C(0xcfc4ff), ground: C(0x8d7fc0), fill: C(0xa99bff),   // golden hour: a warm sun, and violet from the sky, from below and from the right
 };
 
 /* ---------- Textures drawn in code ---------- */
@@ -320,7 +320,7 @@ function mass(low) {
 /* A limb: a tube along `pts` whose radius follows `rad` (one per point), added to `out`. Few
    sides, not quite round, pale on top and dark underneath in its own vertices, so trunk and
    roots read as round and solid at any size. */
-function limb(out, pts, rad, sides, light, dark, seed = 0, ridge = null) {   // ridge: [how many, how deep, how far they wind round]
+function limb(out, pts, rad, sides, light, dark, seed = 0, ridge = null) {   // ridge: [how many, how deep, how far they wind round]; give each ridge three sides or more, or it cannot wind
   const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal"), n = Math.max(2, (pts.length - 1) * 2), base = out.pos.length / 3;
   const T = new THREE.Vector3(), N = new THREE.Vector3(), B = new THREE.Vector3(), P = new THREE.Vector3(), prev = new THREE.Vector3(), q = new THREE.Quaternion(), c = new THREE.Color();
   for (let i = 0; i <= n; i++) {
@@ -350,7 +350,7 @@ function root(out, surf, o, R, lead = [], leadRad = []) {
     pts.push(new THREE.Vector3(p.x + p.nx * off, p.y + p.ny * off, p.z + p.nz * off)); rad.push(r); at.push([th, u, r]);
   }
   if (o.hang) { const e = pts[pts.length - 1], d = pts[pts.length - 2]; pts.push(new THREE.Vector3(e.x + (e.x - d.x) * 0.3, e.y - o.hang * 0.5, e.z + (e.z - d.z) * 0.3), new THREE.Vector3(e.x + (e.x - d.x) * 0.35 + (R() - 0.5), e.y - o.hang, e.z + (e.z - d.z) * 0.35 + (R() - 0.5))); rad.push(o.r1 * 0.8, 0.03); }
-  limb(out, pts, rad, o.r0 > 0.75 ? 8 : o.r0 > 0.4 ? 6 : 5, ROOT_LIGHT, ROOT_DARK, o.seed, o.r0 > 0.75 ? [4, 0.15, 5] : null);
+  limb(out, pts, rad, o.r0 > 0.75 ? 9 : o.r0 > 0.4 ? 6 : 5, ROOT_LIGHT, ROOT_DARK, o.seed, o.r0 > 0.75 ? [3, 0.15, 5] : null);
   for (let k = 0; k < (o.kids || 0); k++) {
     const i = Math.round(n * (0.18 + 0.6 * ((k + R()) / o.kids))), [th, u, r] = at[clamp(i, 1, n - 1)], side = (k % 2 ? 1 : -1) * (R() < 0.8 ? 1 : -1), len = (0.12 + R() * 0.2) * (o.r0 > 0.7 ? 1.3 : 1);
     if (r < 0.16 || u > 0.93) continue;
@@ -455,7 +455,7 @@ const BARK_LIGHT = C(0xb98d66), BARK_DARK = C(0x5a3f31);
 function treeGeo(seed, kind) {
   const r = rng(seed), parts = [], pad = [], oak = kind === "oak" || kind === "willow", V = (x, y, z) => new THREE.Vector3(x, y, z);
   const lean = (r() - 0.5) * 0.16, bend = (r() < 0.5 ? -1 : 1) * (0.05 + r() * 0.05), trunkH = oak ? 0.46 : 0.5, tw = oak ? 0.05 : 0.034, wood = limbs();
-  limb(wood, [V(0, -0.03, 0), V(bend, trunkH * 0.3, bend * 0.4), V(-bend * 0.7 + lean * 0.5, trunkH * 0.66, -bend * 0.3), V(lean, trunkH + 0.04, 0)], [tw * 2.1, tw * 1.2, tw * 0.9, tw * 0.6], 8, BARK_LIGHT, BARK_DARK, seed, [4, 0.2, 6]);
+  limb(wood, [V(0, -0.03, 0), V(bend, trunkH * 0.3, bend * 0.4), V(-bend * 0.7 + lean * 0.5, trunkH * 0.66, -bend * 0.3), V(lean, trunkH + 0.04, 0)], [tw * 2.1, tw * 1.2, tw * 0.9, tw * 0.6], 9, BARK_LIGHT, BARK_DARK, seed, [3, 0.2, 6]);
   /* the pads: [x, y, z, radius] from the top of the trunk */
   const PADS = oak ? [[0, 0.27, 0, 0.3], [0.2, 0.13, 0.1, 0.23], [-0.2, 0.16, -0.08, 0.23], [0.02, 0.1, -0.22, 0.2]] : [[0, 0.24, 0, 0.22], [0.15, 0.12, 0.06, 0.17], [-0.14, 0.14, -0.08, 0.16]];
   const turn = r() * 6.28, lumps = oak ? 13 : 9;
@@ -469,7 +469,7 @@ function treeGeo(seed, kind) {
     for (let j = 0; j < 4; j++) { const g = mergeVertices(new THREE.IcosahedronGeometry(0.075, 1)); g.scale(0.85, 1.9, 0.85); g.translate(Math.cos(a) * d + lean, trunkH + 0.26 - j * 0.125 - r() * 0.03, Math.sin(a) * d); parts.push(g); pad.push([g.attributes.position.count, trunkH + 0.2, 0]); }
   }
   if (kind === "blossom" || kind === "apple") for (let i = 0; i < (kind === "blossom" ? 40 : 10); i++) {   // blossom on top of the pads
-    const q = PADS[i % PADS.length], a = r() * 6.28, d = Math.sqrt(r()) * q[3] * 0.95, g = mergeVertices(new THREE.IcosahedronGeometry(0.024 + r() * 0.014, 0));
+    const q = PADS[i % PADS.length], a = r() * 6.28, d = Math.sqrt(r()) * q[3] * 0.95, g0 = new THREE.IcosahedronGeometry(0.024 + r() * 0.014, 0); g0.attributes.normal.array.set(g0.attributes.position.array); g0.normalizeNormals(); const g = mergeVertices(g0);
     g.scale(1, 0.6, 1); g.translate(q[0] + Math.cos(a) * d, q[1] + q[3] * 0.36 * (1 - Math.pow(d / q[3], 2)) + 0.008, q[2] + Math.sin(a) * d); parts.push(g); pad.push([g.attributes.position.count, q[1], 1 + (i % 3)]);
   }
   const crown = mergeGeometries(parts), p = crown.attributes.position, col = [], c = new THREE.Color(), v = new THREE.Vector3();
@@ -483,7 +483,7 @@ function treeGeo(seed, kind) {
     const up = smooth(-0.06, 0.07, v.y - py); c.copy(lo).lerp(midC, smooth(0, 0.6, up)).lerp(hi, smooth(0.55, 1, up) * (0.5 + n2 * 0.7)); c.lerp(lo, smooth(0.55, 0.35, n) * 0.3); col.push(c.r, c.g, c.b);
   }
   crown.setAttribute("color", new THREE.Float32BufferAttribute(col, 3)); crown.computeVertexNormals();
-  return { trunk: limbMesh(wood, null).geometry, crown };
+  return { trunk: limbMesh(wood, null).geometry, crown, pads: PADS };
 }
 /* The footbridge: planks on a low arch, a rail each side on round posts. Long axis is X, about 1 unit long. */
 function bridgeGeo() {
@@ -580,11 +580,11 @@ export async function mount(canvas, opts = {}) {
   const cam = new THREE.PerspectiveCamera(32, 1, 0.5, 500);
 
   /* Golden hour. A low warm sun, and everything it does not reach is lavender, never grey: the sky's light is violet-blue and so is what comes up from below. */
-  scene.add(new THREE.HemisphereLight(0xcfc4ff, 0x8d7fc0, 0.74));
-  const sun = new THREE.DirectionalLight(0xffc58a, 3.5); sun.position.set(-38, 31, 27); sun.castShadow = true;
+  scene.add(new THREE.HemisphereLight(PAL.sky, PAL.ground, 0.74));
+  const sun = new THREE.DirectionalLight(PAL.sun, 3.5); sun.position.set(-38, 31, 27); sun.castShadow = true;
   sun.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048); sun.shadow.radius = 4; sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.06;
   Object.assign(sun.shadow.camera, { left: -38, right: 38, top: 38, bottom: -38, near: 5, far: 130 }); scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xa99bff, 0.42); fill.position.set(26, 12, 18); scene.add(fill);   // a cool violet light from the right, on the sides the sun misses
+  const fill = new THREE.DirectionalLight(PAL.fill, 0.42); fill.position.set(26, 12, 18); scene.add(fill);   // a cool violet light from the right, on the sides the sun misses
 
   const mottle = mottleTex(), world = new THREE.Group(); scene.add(world);
   const land = terrain(mottle); world.add(land);
@@ -766,8 +766,8 @@ export async function mount(canvas, opts = {}) {
     let x = x0, z = z0; const lim = edgeR(Math.atan2(z, x)) - 3, d0 = Math.hypot(x, z); if (d0 > lim) { x *= lim / d0; z *= lim / d0; }
     const t = treeGeo(seed, kind), g = new THREE.Group(), a = new THREE.Mesh(t.trunk, barkMat), b = new THREE.Mesh(t.crown, leafMat);
     a.castShadow = b.castShadow = true; a.receiveShadow = b.receiveShadow = true; g.add(a, b); g.scale.setScalar(tall); g.position.set(x, Y(x, z) - 0.15, z); g.rotation.y = seed; world.add(g);
-    if (kind === "apple") { const tr = rng(seed + 5), list = []; for (let i = 0; i < 16; i++) { const an = tr() * 6.28, e = 0.5 + tr() * 1.5; list.push({ x: Math.cos(an) * Math.sin(e) * 0.3, y: 0.7 + Math.cos(e) * 0.07, z: Math.sin(an) * Math.sin(e) * 0.3, s: 0.02 + tr() * 0.006, ry: 0 }); } g.add(instanced(appleGeo, appleMat, list)); }
-    trees.push({ g, x, z, tall, rad: tall * (kind === "willow" ? 0.4 : 0.34) }); obstacles.push({ x, z, r: tall * 0.075 + 0.25, what: "a tree" });
+    if (kind === "apple") { const tr = rng(seed + 5), list = []; for (let i = 0; i < 16; i++) { const q = t.pads[i % t.pads.length], an = tr() * 6.28, d = q[3] * (0.72 + tr() * 0.2); list.push({ x: q[0] + Math.cos(an) * d, y: q[1] - 0.012 + (tr() - 0.5) * 0.03, z: q[2] + Math.sin(an) * d, s: 0.02 + tr() * 0.006, ry: 0 }); } g.add(instanced(appleGeo, appleMat, list)); }   // apples round the rims of its pads
+    trees.push({ g, x, z, tall, pads: t.pads, rad: tall * (kind === "willow" ? 0.4 : 0.34) }); obstacles.push({ x, z, r: tall * 0.105 + 0.3, what: "a tree" });
   }
 
   /* the blossom tree: the one great tree, on its prow beside the pond. Its roots are the island's
@@ -776,13 +776,13 @@ export async function mount(canvas, opts = {}) {
   const woodMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, envMapIntensity: 0.2 });
   const hx = HERO.x, hz = HERO.z, hy = Y(hx, hz), V3 = (x, y, z) => new THREE.Vector3(hx + x, hy + y, hz + z);
   { const wood = limbs(), R = rng(404);
-    limb(wood, [V3(0.1, -1.2, 0), V3(0.9, 1.6, 0.2), V3(1.3, 3.6, 0.5), V3(0.2, 5.6, 0.6), V3(-1.4, 7.2, 0.4), V3(-1.5, 8.9, 0.1)], [2.5, 1.6, 1.25, 1.05, 0.9, 0.7], 14, TRUNK_LIGHT, TRUNK_DARK, 1, [7, 0.17, 8]);   // it bends twice, and its bark winds round it
-    for (const [cx, cy, cz, k] of HERO_CROWN) limb(wood, [V3(-1.2, 6.9, 0.4), V3(mix(-1.3, cx, 0.5), mix(7.2, cy, 0.55) - 0.2, mix(0.4, cz, 0.5)), V3(cx, cy - 0.3, cz)], [0.75 * k, 0.5 * k, 0.22], 6, TRUNK_LIGHT, TRUNK_DARK, cx, [3, 0.14, 5]);   // a bough to each pad
+    limb(wood, [V3(0.1, -1.2, 0), V3(0.9, 1.6, 0.2), V3(1.3, 3.6, 0.5), V3(0.2, 5.6, 0.6), V3(-1.4, 7.2, 0.4), V3(-1.5, 8.9, 0.1)], [2.5, 1.6, 1.25, 1.05, 0.9, 0.7], 15, TRUNK_LIGHT, TRUNK_DARK, 1, [5, 0.17, 8]);   // it bends twice, and its bark winds round it
+    for (const [cx, cy, cz, k] of HERO_CROWN) limb(wood, [V3(-1.2, 6.9, 0.4), V3(mix(-1.3, cx, 0.5), mix(7.2, cy, 0.55) - 0.2, mix(0.4, cz, 0.5)), V3(cx, cy - 0.3, cz)], [0.75 * k, 0.5 * k, 0.22], 6, TRUNK_LIGHT, TRUNK_DARK, cx, [2, 0.14, 5]);   // a bough to each pad
     /* boulders at its foot, and two roots that go over them and hold them */
     { const stones = [[2.9, 1.3, 1.6], [-2.6, 2.2, 1.4], [0.7, 3.4, 1.1], [3.6, -1.8, 1.0], [-3.4, -1.0, 0.9]].map(([dx, dz, sz]) => ({ x: hx + dx, y: Y(hx + dx, hz + dz) - sz * 0.25, z: hz + dz, ry: dx * 5, s: sz, sy: 1.05, color: tintOf(hx + dx, hz + dz) }));
       world.add(instanced(rockGeo(17), rockMat, stones, true));
       for (const b of stones.slice(0, 2)) { const dx = b.x - hx - 0.9, dz = b.z - hz - 0.2, d = Math.hypot(dx, dz), ux = dx / d, uz = dz / d, far = (m) => [b.x + ux * m, b.z + uz * m], [x1, z1] = far(b.s * 1.25), [x2, z2] = far(b.s * 1.25 + 1.8);
-        limb(wood, [V3(0.9 + ux * 0.4, 1.5, 0.2 + uz * 0.4), new THREE.Vector3(b.x - ux * b.s * 0.5, b.y + b.s * 0.62, b.z - uz * b.s * 0.5), new THREE.Vector3(b.x + ux * b.s * 0.45, b.y + b.s * 0.6, b.z + uz * b.s * 0.45), new THREE.Vector3(x1, Y(x1, z1) + 0.15, z1), new THREE.Vector3(x2, Y(x2, z2) - 0.5, z2)], [0.75, 0.55, 0.48, 0.34, 0.1], 7, ROOT_LIGHT, ROOT_DARK, b.s * 7, [3, 0.1, 4]); } }
+        limb(wood, [V3(0.9 + ux * 0.4, 1.5, 0.2 + uz * 0.4), new THREE.Vector3(b.x - ux * b.s * 0.5, b.y + b.s * 0.62, b.z - uz * b.s * 0.5), new THREE.Vector3(b.x + ux * b.s * 0.45, b.y + b.s * 0.6, b.z + uz * b.s * 0.45), new THREE.Vector3(x1, Y(x1, z1) + 0.15, z1), new THREE.Vector3(x2, Y(x2, z2) - 0.5, z2)], [0.75, 0.55, 0.48, 0.34, 0.1], 9, ROOT_LIGHT, ROOT_DARK, b.s * 7, [3, 0.1, 4]); } }
     /* over the turf to the edge, then down */
     const over = (thE, r0, wob) => {
       const e = edgeR(thE) - 0.5, ex = Math.cos(thE) * e, ez = Math.sin(thE) * e, d = Math.hypot(ex - hx, ez - hz), n = Math.max(2, Math.round(d / 1.6)), pts = [V3(0.9 + (ex - hx) / d * 0.3, 1.7, 0.2 + (ez - hz) / d * 0.3)], rad = [r0 * 1.2];
@@ -881,15 +881,22 @@ export async function mount(canvas, opts = {}) {
   const lanterns = [], paneMat = new THREE.MeshBasicMaterial({ color: 0xffc35a, toneMapped: false });
   const hang = (parent, x, y, z, len, sz, k = 1) => {
     const [fg, pg] = lanternGeo(len, sz), g = new THREE.Group(), sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0.8, depthWrite: false, blending: THREE.AdditiveBlending }));
-    sp.position.set(0, -len - 0.63 * sz, 0); sp.scale.set(4.4 * sz, 4.4 * sz, 1); sp.renderOrder = 4; g.add(new THREE.Mesh(fg, builtMat), new THREE.Mesh(pg, paneMat), sp);
-    g.position.set(x, y, z); g.scale.setScalar(k); parent.add(g); lanterns.push({ g, ph: x * 1.7 + z }); glows.push({ sp, o: 0.8, ph: x + z });
+    sp.position.set(0, -len - 0.63 * sz, 0); sp.scale.set(3.8 * sz, 3.8 * sz, 1); sp.renderOrder = 4; g.add(new THREE.Mesh(fg, builtMat), new THREE.Mesh(pg, paneMat), sp);
+    g.position.set(x, y, z); g.scale.setScalar(k); parent.add(g); const wx = x + parent.position.x, wz = z + parent.position.z; lanterns.push({ g, ph: wx * 1.7 + wz }); glows.push({ sp, o: 0.8, ph: wx + wz });
   };
-  const poolGeo = new THREE.PlaneGeometry(1, 1); poolGeo.rotateX(-Math.PI / 2);
   const poolMat = new THREE.MeshBasicMaterial({ map: glowTex, color: 0xffb060, transparent: true, opacity: 0.3, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -2 });
-  const pool = (x, z, rad) => { const m = new THREE.Mesh(poolGeo, poolMat); m.position.set(x, Y(x, z) + 0.14, z); m.scale.set(rad, 1, rad); m.renderOrder = 2; world.add(m); };
-  for (const [dx, dy, dz, len] of [[-5.6, 8.9, 1.7, 2.6], [-2.5, 9.6, 3.6, 3.8], [4.0, 9.3, 2.2, 2.4], [0.9, 11.0, 1.0, 4.4], [-3.6, 10.6, -1.6, 2.0]].slice(0, low ? 3 : 5)) hang(world, hx + dx, hy + dy, hz + dz, len, 1.25);
-  pool(hx - 4.2, hz + 2.6, 7); pool(hx + 3.6, hz + 2.4, 5.5); pool(-8.9, -7.4, 6);   // under the great tree, and from the cottage's windows
-  for (const i of [0, 4, 8, 17].slice(0, low ? 2 : 4)) { const t = trees[i], a = i * 2.4 + 1; hang(t.g, Math.cos(a) * 0.17, 0.56, Math.sin(a) * 0.17, 1.4, 1.1, 1 / t.tall); pool(t.x + Math.cos(a - t.g.rotation.y) * t.tall * 0.17, t.z + Math.sin(a - t.g.rotation.y) * t.tall * 0.17, 6); }
+  /* a pool of light: a small sheet laid over the ground's own shape, so it neither sinks into a slope nor floats off it */
+  const pool = (x, z, rad) => { const N = 8, pos = [], uv = [], idx = []; for (let i = 0; i <= N; i++) for (let j = 0; j <= N; j++) { const px = x + (i / N - 0.5) * rad, pz = z + (j / N - 0.5) * rad; pos.push(px, Y(px, pz) + 0.12, pz); uv.push(i / N, j / N); if (i < N && j < N) { const a = i * (N + 1) + j; idx.push(a, a + 1, a + N + 1, a + 1, a + N + 2, a + N + 1); } }
+    const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); const m = new THREE.Mesh(g, poolMat); m.renderOrder = 2; world.add(m); return m; };
+  /* under the great tree: each from the end of a bough, inside a pad of leaves. The first three are over turf (a slow phone gets only those); the last two hang out over the cove and the waterfall. */
+  for (const [dx, dy, dz, len] of [[4.0, 9.6, 1.9, 2.6], [0.9, 11.2, 0.4, 4.2], [-2.2, 9.9, 3.2, 3.6], [-5.4, 9.3, 1.6, 2.6], [2.4, 12.4, -2.2, 3.2]].slice(0, low ? 3 : 5)) hang(world, hx + dx, hy + dy, hz + dz, len, 1.25);
+  pool(hx + 3.4, hz + 1.6, 6); pool(hx - 1.6, hz - 2.6, 6); pool(-8.9, -7.4, 6);   // on the grass under the great tree, and from the cottage's windows
+  /* one in a tree by four of the habitats: from the end of whichever bough has the lowest ground under it, on a chain cut so the lantern clears that ground */
+  for (const i of [0, 4, 8, 17].slice(0, low ? 2 : 4)) {
+    const t = trees[i], ry = t.g.rotation.y, at = (q) => [t.x + (q[0] * Math.cos(ry) + q[2] * Math.sin(ry)) * t.tall, t.z + (-q[0] * Math.sin(ry) + q[2] * Math.cos(ry)) * t.tall];
+    const q = t.pads.slice(1).reduce((best, c) => (Y(...at(c)) < Y(...at(best)) ? c : best)), [wx, wz] = at(q), top = t.g.position.y + (q[1] - 0.02) * t.tall, len = clamp(top - 1.35 - (Y(wx, wz) + 1.0), 0.5, 2.6);
+    hang(t.g, q[0], q[1] - 0.02, q[2], len, 1.1, 1 / t.tall); t.pool = pool(wx, wz, 6);
+  }
   /* ---------- Models (see CREDITS.md): the cottage, and the animals (sanctuary3d-life.js) ---------- */
   const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
   const blob = blobTex(), blobMat = new THREE.MeshBasicMaterial({ map: blob, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }), blobGeo = new THREE.PlaneGeometry(1, 1); blobGeo.rotateX(-Math.PI / 2);
@@ -984,7 +991,7 @@ export async function mount(canvas, opts = {}) {
   /* A tree standing between where the camera is going and what it is going to look at steps aside. */
   function screen() {
     const sp = Math.sin(goal.pol), cx = goal.tx + Math.sin(goal.az) * sp * goal.dist, cz = goal.tz + Math.cos(goal.az) * sp * goal.dist, vx = goal.tx - cx, vz = goal.tz - cz, L2 = vx * vx + vz * vz || 1;
-    for (const t of trees) { const u = ((t.x - cx) * vx + (t.z - cz) * vz) / L2, off = Math.hypot(t.x - cx - vx * u, t.z - cz - vz * u); const hide = mode !== "world" && u > 0.02 && u < 0.97 && off < t.rad + 1.5; if (t.g.visible === hide) { t.g.visible = !hide; dirty = true; renderer.shadowMap.needsUpdate = true; } }   // its shadow goes with it
+    for (const t of trees) { const u = ((t.x - cx) * vx + (t.z - cz) * vz) / L2, off = Math.hypot(t.x - cx - vx * u, t.z - cz - vz * u); const hide = mode !== "world" && u > 0.02 && u < 0.97 && off < t.rad + 1.5; if (t.g.visible === hide) { t.g.visible = !hide; if (t.pool) t.pool.visible = !hide; dirty = true; renderer.shadowMap.needsUpdate = true; } }   // its shadow goes with it
   }
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return;

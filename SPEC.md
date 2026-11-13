@@ -224,7 +224,7 @@ me**.
   trunk that bends and twists, flat pads of leaves in layers, blossom
   dotted over the kinds that flower. The great tree has boulders in its
   roots and five lanterns on chains; four other trees carry one lantern
-  each. The cottage's windows are lit, lanterns and windows throw a soft
+  each (three and two on a phone with little memory). The cottage's windows are lit, lanterns and windows throw a soft
   pool of light on the ground, glints ride down the waterfall, and no two
   rocks, shrubs or blocks of cliff are quite the same colour. It stays
   daytime: no night mode.
