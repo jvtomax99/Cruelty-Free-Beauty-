@@ -159,7 +159,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.goto(APP + '#learn'); await page.click('.learn summary >> nth=1');
   await page.click('.learn details >> nth=1 >> .gd-go');
   await page.waitForSelector('#practice-q');
-  check((await page.textContent('#practice-h')) === 'Burrow hill', 'Learn\'s "Practise this" opens that answer\'s habitat');
+  check((await page.textContent('#practice-h')) === 'Leafy Garden', 'Learn\'s "Practise this" opens that answer\'s habitat');
   await page.goBack();
   check(await page.evaluate(() => location.hash === '#learn'), 'Back returns to Learn');
 

@@ -158,7 +158,8 @@ me**.
     hides it and it stays in "Recent changes" and on the brand page.
 
 - **The Garden, shown as "Your Sanctuary"** (added 2026-11-12; the quiz
-  and all five habitats are built, on the work branch, not live). A study
+  and all five habitats are built; put live 2026-11-13 on Jose's word,
+  before the founder had seen it). A study
   game: an open sanctuary garden in 3D that grows with what the person
   learns. Five habitats, one per topic: Bunny Meadow (cruelty-free or
   vegan), Leafy Garden (PETA or Leaping Bunny), Wooded Meadow (parent
@@ -320,15 +321,15 @@ only if it can be shown to work across skin tones.
 - [x] Phase A: question bank, rounds, progress, habitat cards (2026-11-12:
       33 written questions, not the 40 planned, because the Learn answers
       hold no more checked facts; plus one question per brand, 30 today.
-      On the work branch, not live: the founder hasn't seen it)
+      Live 2026-11-13; the founder hadn't seen it yet)
 - [x] The 3D world and its first habitat, Bunny Meadow, loaded on demand
       (2026-11-12; checked in the cloud browser only: speed on a real
-      phone is not verified, and the founder hasn't seen it)
+      phone is not verified)
 - [x] The other four habitats in 3D with their animals, the animals'
       own behaviour, the breeze, ripples and butterflies, the camera and
       the per-habitat progress (2026-11-13; `node tools/test-sanctuary.cjs`
-      passes in the cloud browser; on the work branch, not live: the
-      founder hasn't seen it)
+      passes in the cloud browser; live 2026-11-13 on Jose's word, the
+      founder's sign-off still owed)
 - [ ] A real-phone check of speed and battery (Jose)
 
 ## Open questions (TO FILL)

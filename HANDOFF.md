@@ -1,8 +1,8 @@
 # HANDOFF: Your Sanctuary, what is left after part 2
 
-Written 2026-11-13. Delete this file when its work is done. Branch
-`claude/affectionate-knuth-2thai8`, pushed, no pull request, nothing live.
-The founder has seen none of it; nothing merges before she has.
+Written 2026-11-13. Delete this file when its work is done. Put live on
+2026-11-13 on Jose's word (pull request into `main`), before the founder
+had seen it: her sign-off below is still owed.
 
 ## Done (2026-11-13)
 
