@@ -223,10 +223,11 @@
       .then((w) => {
         world = w; sx.classList.remove("is-loading"); sx.classList.add("is-ready");
         syncWorld(); world.focus(sel); world.start();
+        for (const a of world.animals()) new Image().src = `assets/sanctuary/${a.id}.webp`;   // so every card has its portrait offline (the worker keeps them)
         if (location.hash.slice(1) !== "garden") world.stop();
         window.CFB.garden.world = world;
       })
-      .catch(() => { sx.classList.remove("is-on", "is-loading"); world = null; });   // the cards below carry on without it
+      .catch(() => { sx.classList.remove("is-on", "is-loading"); world = null; worldAsked = false; });   // the cards below carry on without it
   }
   function syncWorld() {
     if (!sx || !loaded) return;
@@ -238,7 +239,9 @@
   function drawCard() {
     const card = $("sx-card"); if (!card || !loaded) return;
     const t = TOPIC[sel], n = tally(sel), here = residents(sel), line = `${esc(t.sub)} · ${n.learned} of ${n.total} learned`, a = view === "animal" ? animal(who) : null;
-    if (view === "animal" && !a) view = "visit";
+    if (view === "animal" && !a) { view = "visit"; who = null; if (world) world.visit(sel); }
+    /* who is at home: the world's own list when it is there (a tap on a name meets that animal, for anyone who can't tap the picture) */
+    const home = world ? world.animals().filter((x) => x.habitat === sel && x.visible) : [];
     sx.classList.toggle("is-meet", view !== "world");
     $("sx-back").setAttribute("aria-label", view === "animal" ? `Back to ${t.name}` : view === "visit" ? "Back to the whole sanctuary" : "Back");
     card.hidden = false;
@@ -255,13 +258,13 @@
       </div>` : view === "visit" ? `
       <div class="sx-text">
         <h2 class="sx-name">${esc(t.name)}</h2>
-        <p class="sx-desc">At home here: ${esc(list(HOME[sel].who.slice(0, here)))}. Tap one to meet.</p>
         <p class="sx-line">${line}. ${esc(nextUp(sel))}</p>
       </div>
+      <div class="sx-home"><span class="sx-line">At home here:</span>${home.length ? home.map((x) => `<button class="sx-who" type="button" data-who="${esc(x.id)}" aria-label="Meet ${esc(x.name)}">${esc(x.name)}</button>`).join("") : `<span class="sx-desc">${esc(list(HOME[sel].who.slice(0, here)))}</span>`}</div>
       <div class="sx-actions">
         <a class="sx-btn" href="#practice/${t.id}" id="sx-practise">Practise</a>
       </div>` : `
-      <div class="sx-text">
+      <div class="sx-text" aria-live="polite">
         <h2 class="sx-name">${esc(t.name)}</h2>
         <p class="sx-line">${line}</p>
       </div>
@@ -292,6 +295,7 @@
     else if (e.target.closest("#sx-prev")) { step(-1); keep("sx-prev"); }
     else if (e.target.closest("#sx-next")) { step(1); keep("sx-next"); }
     else if (e.target.closest("#sx-hello")) hello();
+    else if (e.target.closest(".sx-who")) { show("animal", e.target.closest(".sx-who").dataset.who); keep("sx-hello"); }
     else if (e.target.closest("#sx-back")) { if (view === "animal") show("visit", sel); else if (view === "visit") show("world"); else if (cameFrom) history.back(); else location.hash = "#home"; }
   });
 

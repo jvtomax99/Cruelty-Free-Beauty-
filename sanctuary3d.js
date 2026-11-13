@@ -51,7 +51,7 @@ export const HABS = [
   { id: "meadow", x: -5, z: 9.5, r: 6.6, base: 1.2, az: 0.3, sh: [-9.8, 5.3, 2.3], rest: [-7.0, 7.7], food: [[-3.2, 12], [-6.6, 13], [-1.6, 7.6]] },
   { id: "pond", x: 10.5, z: 8.5, r: 6.8, az: 0.35, pool: POOLS[2], sh: [3.5, 3.7, 1.6], rest: [6.3, 5.6], food: [[8, 11], [12.6, 11.4], [13.6, 6.6]] },
   { id: "orchard", x: -18.5, z: 0.5, r: 5.6, base: 3.0, az: 0.95, sh: [-23.6, -1.1, 1.8], rest: [-21, -0.3], food: [[-17, 3], [-19.4, -2.4], [-15.8, -0.8]] },
-  { id: "burrow", x: 4.5, z: -8.5, r: 5.6, base: 2.4, az: 0.2, sh: [5.8, -13.5, 2.5], rest: [4.9, -10.2], food: [[2.2, -7.0], [6.9, -6.2]] },
+  { id: "burrow", x: 4.5, z: -8.5, r: 5.6, base: 2.4, az: 0.2, sh: [5.8, -13.5, 2.9], rest: [4.9, -10.2], food: [[2.2, -7.0], [6.9, -6.2]] },
   { id: "oak", x: 0, z: -20, r: 5.4, base: 4.9, az: 0.02, sh: [-1.7, -24.5, 2.2], rest: [-0.8, -22], food: [[2.8, -18.6], [-3, -18], [2, -22.6]] },
 ];
 const HAB = Object.fromEntries(HABS.map((h) => [h.id, h])), MEADOW = HAB.meadow, LAND = HABS.filter((h) => !h.pool);
@@ -262,7 +262,7 @@ function spikeGeo(hex, tip) {   // lavender and foxglove: a stem beaded with sma
   const parts = [], paint = (g, c) => { const n = g.attributes.position.count, a = new Float32Array(n * 3); for (let i = 0; i < n; i++) { a[i * 3] = c.r; a[i * 3 + 1] = c.g; a[i * 3 + 2] = c.b; } g.setAttribute("color", new THREE.BufferAttribute(a, 3)); return g; };
   const stem = new THREE.CylinderGeometry(0.016, 0.022, 0.6, 3, 1, true); stem.translate(0, 0.3, 0); parts.push(paint(stem, C(0x6ea24e)));
   for (let i = 0; i < 7; i++) { const t = i / 6, g = new THREE.OctahedronGeometry(0.075 * (1 - t * 0.55), 0); g.translate(Math.cos(i * 2.4) * 0.045 * (1 - t), 0.5 + t * 0.52, Math.sin(i * 2.4) * 0.045 * (1 - t)); parts.push(paint(g, C(hex).lerp(C(tip), t))); }
-  return mergeGeometries(parts.map((g) => g.toNonIndexed()));
+  return mergeGeometries(parts.map((g) => (g.index ? g.toNonIndexed() : g)));
 }
 function cloverGeo() {   // three round leaves lying almost flat
   const parts = [];
@@ -590,7 +590,7 @@ export async function mount(canvas, opts = {}) {
   ROSTER.forEach((who, i) => {
     if (!models[who.model]) return;
     const a = life.add(who.id, models[who.model], HAB[who.hab], { name: who.name, line: who.line, seed: 97 + i * 7919, x: who.at[0], z: who.at[1], yaw: who.at[2], scale: who.scale, tint: who.tint });
-    a.n = who.n; a.visible = false; byId[who.id] = a;
+    a.n = who.n; a.visible = false; a.place(); byId[who.id] = a;   // not drawn until setState says it has moved in
   });
   for (const who of ROSTER) if (who.follow && byId[who.id]) byId[who.id].follow = byId[who.follow] || null;
 
@@ -625,7 +625,7 @@ export async function mount(canvas, opts = {}) {
      "world": the island. A habitat's id: close to that habitat, from its open side.
      An animal chosen: closer still, and the view keeps it in the middle as it moves. */
   const view = { tx: 1, ty: 1, tz: 2, az: 0.18, pol: 0.93, dist: 90 }, goal = { ...view };
-  let mode = "world", chosen = null, focus = null;
+  let mode = "world", chosen = null, focus = null, shape = 0;
   const groundOf = (h) => (h.pool ? h.pool.L : h.base);
   function frameFor() {
     const a = cam.aspect, tan = Math.tan((cam.fov * Math.PI) / 360), tall = a < 1;
@@ -646,12 +646,13 @@ export async function mount(canvas, opts = {}) {
   /* A tree standing between where the camera is going and what it is going to look at steps aside. */
   function screen() {
     const sp = Math.sin(goal.pol), cx = goal.tx + Math.sin(goal.az) * sp * goal.dist, cz = goal.tz + Math.cos(goal.az) * sp * goal.dist, vx = goal.tx - cx, vz = goal.tz - cz, L2 = vx * vx + vz * vz || 1;
-    for (const t of trees) { const u = ((t.x - cx) * vx + (t.z - cz) * vz) / L2, off = Math.hypot(t.x - cx - vx * u, t.z - cz - vz * u); const hide = mode !== "world" && u > 0.02 && u < 0.97 && off < t.rad + 1.5; if (t.g.visible === hide) { t.g.visible = !hide; dirty = true; } }
+    for (const t of trees) { const u = ((t.x - cx) * vx + (t.z - cz) * vz) / L2, off = Math.hypot(t.x - cx - vx * u, t.z - cz - vz * u); const hide = mode !== "world" && u > 0.02 && u < 0.97 && off < t.rad + 1.5; if (t.g.visible === hide) { t.g.visible = !hide; dirty = true; renderer.shadowMap.needsUpdate = true; } }   // its shadow goes with it
   }
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return;
     renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
-    const f = frameFor(); if (mode === "world" && !started) Object.assign(goal, f); else { goal.dist = f.dist; goal.ty = f.ty; }
+    const f = frameFor(), turned = Math.abs(cam.aspect - shape) > 0.08; shape = cam.aspect;
+    if (!started) Object.assign(goal, f); else if (turned) { goal.dist = f.dist; goal.ty = f.ty; }   // a phone turned on its side is framed again; a browser bar sliding away keeps the person's own zoom
     if (!started) Object.assign(view, goal); dirty = true;
   }
 
@@ -690,29 +691,30 @@ export async function mount(canvas, opts = {}) {
     let near = null, nd = 2.2; for (const h of HABS) { const d = Math.hypot(hit.point.x - h.x, hit.point.z - h.z) - h.r; if (d < nd) { nd = d; near = h; } }
     return near ? { habitat: near.id } : null;
   }
-  /* One finger turns, two fingers zoom (or the wheel). A tap is a press that stays put and is
-     short: a finger wobbles more than a mouse, so touch gets more room before it counts as a drag. */
-  const ptr = new Map(); let pinch = 0, moved = 0, downAt = 0, multi = false;
-  const slack = (e) => (e.pointerType === "mouse" ? 5 : 12);
-  const onDown = (e) => { try { canvas.setPointerCapture(e.pointerId); } catch (_) {} ptr.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptr.size === 1) { moved = 0; multi = false; downAt = performance.now(); } if (ptr.size === 2) { multi = true; const [a, b] = [...ptr.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); } };
+  /* One finger turns, two fingers zoom (or the wheel). A tap is a press that stays put,
+     however long it lasts (how far from where it began, not how much it trembled): a finger wobbles more than a mouse, so touch gets more room before it counts as a drag. */
+  const ptr = new Map(); let pinch = 0, moved = 0, sx0 = 0, sy0 = 0, multi = false;
+  const slack = (e) => (e.pointerType === "mouse" ? 6 : 12);
+  const onDown = (e) => { try { canvas.setPointerCapture(e.pointerId); } catch (_) {} ptr.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptr.size === 1) { moved = 0; multi = false; sx0 = e.clientX; sy0 = e.clientY; } if (ptr.size === 2) { multi = true; const [a, b] = [...ptr.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); } };
   const onMove = (e) => {
     const p = ptr.get(e.pointerId); if (!p) return; const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY; const L = limits();
-    if (ptr.size === 1 && !multi) { const was = moved; moved += Math.abs(dx) + Math.abs(dy); if (moved > slack(e)) { const k = was > slack(e) ? 1 : 0; goal.az -= dx * 0.0055 * k; goal.pol = clamp(goal.pol - dy * 0.004 * k, L.pMin, L.pMax); screen(); wake(); } }   // the wobble that turned a tap into a drag isn't spent on turning
+    if (ptr.size === 1 && !multi) { const was = moved; moved = Math.max(moved, Math.hypot(e.clientX - sx0, e.clientY - sy0)); if (moved > slack(e)) { const k = was > slack(e) ? 1 : 0; goal.az -= dx * 0.0055 * k; goal.pol = clamp(goal.pol - dy * 0.004 * k, L.pMin, L.pMax); screen(); wake(); } }   // the wobble that turned a tap into a drag isn't spent on turning
     else if (ptr.size === 2) { const [a, b] = [...ptr.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch && d > 1) goal.dist = clamp(goal.dist * (pinch / d), L.dMin, L.dMax); pinch = d; wake(); }
   };
-  const onUp = (e) => { if (!ptr.has(e.pointerId)) return; ptr.delete(e.pointerId); pinch = 0; if (e.type === "pointerup" && !ptr.size && !multi && moved <= slack(e) && performance.now() - downAt < 600 && opts.onPick) opts.onPick(pick(e.clientX, e.clientY, e.pointerType !== "mouse")); };
+  const onUp = (e) => { if (!ptr.has(e.pointerId)) return; ptr.delete(e.pointerId); pinch = 0; if (e.type === "pointerup" && !ptr.size && !multi && moved <= slack(e) && opts.onPick) opts.onPick(pick(e.clientX, e.clientY, e.pointerType !== "mouse")); };
   const onWheel = (e) => { e.preventDefault(); const L = limits(); goal.dist = clamp(goal.dist * Math.exp(e.deltaY * 0.0012), L.dMin, L.dMax); wake(); };
-  canvas.addEventListener("pointerdown", onDown); canvas.addEventListener("pointermove", onMove); canvas.addEventListener("pointerup", onUp); canvas.addEventListener("pointercancel", onUp); canvas.addEventListener("wheel", onWheel, { passive: false });
+  canvas.addEventListener("pointerdown", onDown); canvas.addEventListener("pointermove", onMove); canvas.addEventListener("pointerup", onUp); canvas.addEventListener("pointercancel", onUp); canvas.addEventListener("lostpointercapture", onUp); canvas.addEventListener("wheel", onWheel, { passive: false });
 
   /* ---------- The loop. With reduced motion nothing idles: it draws only when something changes. ---------- */
   let raf = 0, running = false, started = false, dirty = true, last = 0, time = 0, spent = 0, frames = 0, hold = false, thin = false, drip = 2;
-  const wake = () => { dirty = true; if (running && !raf) raf = requestAnimationFrame(tick); };
+  let onscreen = true;
+  const wake = () => { dirty = true; if (running && onscreen && !raf) raf = requestAnimationFrame(tick); };
   function detail() {   // less of the small stuff from far away; the animals a little larger there, so they still read
     const far = view.dist > 62; tuftMesh.count = Math.round(tufts.length * (thin ? 0.4 : far ? 0.55 : 1)); cloverMesh.visible = view.dist < 85 && !thin;
     life.big = 1 + 0.3 * smooth(40, 95, view.dist);
   }
   function tick(now) {
-    raf = 0; if (!running) return;
+    raf = 0; if (!running || !onscreen) return;   // nothing is drawn while the world is scrolled out of sight
     const raw = (now - last) / 1000 || 0.016, dt = Math.min(0.05, raw); last = now; time += dt;
     /* quality follows the phone: if frames are slow for a while, draw fewer pixels, then less grass */
     if (!hold && !reduced && raw < 0.5) { spent += raw; frames++; if (spent > 2) { const ms = (spent / frames) * 1000; if (ms > 27) { if (ratio > 1) { ratio = Math.max(1, ratio - 0.25); renderer.setPixelRatio(ratio); renderer.setSize(canvas.clientWidth, canvas.clientHeight, false); } else thin = true; } spent = frames = 0; } }
@@ -737,13 +739,14 @@ export async function mount(canvas, opts = {}) {
     raf = requestAnimationFrame(tick);
   }
   const ro = new ResizeObserver(() => { resize(); wake(); }); ro.observe(canvas);
+  const io = new IntersectionObserver((es) => { onscreen = es[es.length - 1].isIntersecting; if (onscreen) { last = performance.now(); wake(); } }); io.observe(canvas);
   resize(); setState(null);
   const info = (a) => ({ id: a.id, name: a.name, line: a.line, habitat: a.hab.id, visible: a.visible });
 
   return {
     setState,
     start() { if (running) return; running = true; last = performance.now(); raf = requestAnimationFrame(tick); },
-    stop() { running = false; cancelAnimationFrame(raf); raf = 0; },
+    stop() { running = false; cancelAnimationFrame(raf); raf = 0; ptr.clear(); pinch = 0; },
     /* visit("pond") goes close to a habitat; visit(null) goes back to the whole island */
     visit(id) { mode = HAB[id] ? id : "world"; chosen = null; retarget(); },
     /* choose an animal: the view goes to it and stays with it. select(null) lets it go. */
@@ -761,7 +764,7 @@ export async function mount(canvas, opts = {}) {
     },
     /* for the tests and the screenshots */
     debug: {
-      view, goal, cam, life, byId, trees, flyers, obstacles, failed: failed.length,
+      view, goal, cam, life, byId, trees, flyers, obstacles, pick, failed: failed.length,
       blooms: (hab) => blooms.reduce((n, m) => n + (hab ? m.userData.items.filter((it) => it.on && HABS[it.hab].id === hab).length : m.userData.shown), 0),
       shelter: (id) => shelters[id].extra.visible,
       quality(px) { hold = true; thin = false; ratio = px; renderer.setPixelRatio(px); renderer.setSize(canvas.clientWidth, canvas.clientHeight, false); dirty = true; },
@@ -779,7 +782,7 @@ export async function mount(canvas, opts = {}) {
     },
     dispose() {
       running = false; cancelAnimationFrame(raf); ro.disconnect();
-      canvas.removeEventListener("pointerdown", onDown); canvas.removeEventListener("pointermove", onMove); canvas.removeEventListener("pointerup", onUp); canvas.removeEventListener("pointercancel", onUp); canvas.removeEventListener("wheel", onWheel);
+      canvas.removeEventListener("pointerdown", onDown); canvas.removeEventListener("pointermove", onMove); canvas.removeEventListener("pointerup", onUp); canvas.removeEventListener("pointercancel", onUp); canvas.removeEventListener("lostpointercapture", onUp); io.disconnect(); canvas.removeEventListener("wheel", onWheel);
       scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { for (const k in m) if (m[k] && m[k].isTexture) m[k].dispose(); m.dispose(); }); });
       renderer.dispose();
     },

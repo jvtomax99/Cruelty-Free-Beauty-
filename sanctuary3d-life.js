@@ -168,7 +168,7 @@ class Animal {
     return null;
   }
   /* ----- deciding ----- */
-  set(state, dur, extra) { this.state = state; this.t = 0; this.dur = dur; Object.assign(this, extra); }
+  set(state, dur, extra) { this.state = state; this.t = 0; this.dur = dur; this.friend = null; Object.assign(this, extra); }
   next() {
     if (this.queue.length) return this.queue.shift()();
     const R = this.rand, hab = this.hab, lazy = this.sp.lazy || 1, others = this.life.animals.filter((a) => a !== this && a.hab === hab && a.visible);
@@ -181,7 +181,7 @@ class Animal {
     /* going somewhere, for a reason */
     const why = R(), food = hab.food && hab.food.length ? hab.food[Math.floor(R() * hab.food.length)] : null;
     if (why < 0.46 && food) { const near = Math.hypot(food[0] - this.x, food[1] - this.z) < this.r + 0.9; const to = near ? null : this.spot(food, this.r + 0.5); if (near || to) { if (to) this.go(to); this.queue.push(() => this.face(food), () => this.set("graze", 3.5 + R() * 6)); return near ? this.next() : undefined; } }
-    if (why < 0.64 && hab.shelter) { const to = this.spot(hab.shelter, hab.shelterR || 2.2); if (to) { this.go(to); this.queue.push(() => this.set("rest", (5 + R() * 9) * lazy, { sleepy: R() < 0.5 })); return; } }
+    if (why < 0.64 && hab.rest) { const to = this.spot(hab.rest, 1.5); if (to) { this.go(to); this.queue.push(() => this.set("rest", (5 + R() * 9) * lazy, { sleepy: R() < 0.5 })); return; } }
     if (why < 0.84 && others.length) { const f = others[Math.floor(R() * others.length)], to = this.spot([f.x, f.z], this.r + f.r + 0.5); if (to && f.state !== "move") { this.go(to); this.queue.push(() => this.face([f.x, f.z]), () => { if (f.state !== "move" && f.state !== "hello") f.set("look", 2.5 + R() * 1.5, { lookAt: [this.x, this.z] }); this.set("sniff", 2 + R() * 1.6, { friend: f }); }); return; } }
     const to = this.spot(null); if (to) { this.go(to); this.queue.push(() => this.set(R() < 0.5 ? "sniff" : "look", 1.5 + R() * 2.5, { lookAt: this.interest(others) })); return; }
     this.set("rest", 3 + R() * 5, { sleepy: false });
@@ -203,7 +203,11 @@ class Animal {
   hello(camX, camZ) {
     const d = Math.hypot(camX - this.x, camZ - this.z) || 1, step = this.sp.gait === "swim" ? 1.6 : this.sp.gait === "hop" ? this.sp.hop * 1.6 : 2.2; let to = null;
     for (const f of [1, 0.6, 0.3]) { const x = this.x + (camX - this.x) / d * step * f, z = this.z + (camZ - this.z) / d * step * f; if (this.ok(x, z) && this.clear(x, z)) { to = [x, z]; break; } }
-    this.queue = [() => this.set("hello", 4.2, { lookAt: "cam" })]; if (to) { this.queue.unshift(() => this.go(to)); } this.face([camX, camZ]); this.sleepy = false; this.blink = 0;
+    const steps = [() => this.face([camX, camZ]), () => this.set("hello", 4.2, { lookAt: "cam" })]; if (to) steps.splice(1, 0, () => this.go(to));
+    this.sleepy = false; this.blink = 0;
+    /* a rabbit asked in mid-hop lands first, where it was already going to land */
+    if (this.state === "move" && this.sp.gait === "hop" && (this.sub === "air" || this.sub === "prep" || this.sub === "down") && this.land) { this.to = [this.land[0], this.land[1]]; this.queue = steps; }
+    else { this.queue = steps; this.queue.shift()(); }
   }
   /* ----- moving ----- */
   move(dt) {
@@ -281,8 +285,8 @@ export class Life {
   free(a, x, z) {
     const h = a.hab;
     if (h.pool) { if (Math.hypot(x - h.pool.x, z - h.pool.z) > h.pool.r - a.r - 0.35) return false; for (const p of h.avoid || []) if (Math.hypot(x - p[0], z - p[1]) < p[2] + a.r) return false; }
-    else { if (Math.hypot(x - h.x, z - h.z) > h.r - a.r * 0.5) return false; if (this.wet(x, z, a.r * 0.8)) return false; for (const ob of h.obs || this.obstacles) if (Math.hypot(x - ob.x, z - ob.z) < ob.r + a.r * 0.8) return false; }
-    for (const b of this.animals) { if (b === a || b.hab !== h || !b.visible) continue; const sep = (a.r + b.r) * 0.92; if (Math.hypot(x - b.x, z - b.z) < sep) return false; if (b.state === "move" && b.land && b.sub !== "wait" && b.sub !== "turn" && Math.hypot(x - b.land[0], z - b.land[1]) < sep) return false; if (b.state === "move" && b.to && Math.hypot(x - b.to[0], z - b.to[1]) < sep * 0.9 && a.id > b.id) return false; }
+    else { if (Math.hypot(x - h.x, z - h.z) > h.r - a.r * 0.5) return false; if (this.wet(x, z, a.r * 0.8)) return false; for (const ob of h.obs || this.obstacles) if (Math.hypot(x - ob.x, z - ob.z) < ob.r + a.r) return false; }
+    for (const b of this.animals) { if (b === a || b.hab !== h || !b.visible) continue; const sep = a.r + b.r; if (Math.hypot(x - b.x, z - b.z) < sep) return false; if (b.state === "move" && b.land && b.sub !== "wait" && b.sub !== "turn" && Math.hypot(x - b.land[0], z - b.land[1]) < sep) return false; if (b.state === "move" && b.to && Math.hypot(x - b.to[0], z - b.to[1]) < sep * 0.9 && a.id > b.id) return false; }
     return true;
   }
   near(x, z) { let best = null, bd = 7; for (const f of this.flyers) { const d = Math.hypot(f.x - x, f.z - z); if (d < bd) { bd = d; best = [f.x, f.z]; } } return best; }

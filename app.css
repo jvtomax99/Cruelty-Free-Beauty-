@@ -782,6 +782,12 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
 .sx-step-next svg { transform: rotate(-90deg); }
 .sx-step:active, .sx-step.is-pressed { transform: scale(.94); background: var(--blush); }
 .sx.is-ready .sx-card:not([hidden]) { flex-wrap: wrap; }
+.sx-home { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); flex-basis: 100%; }
+.sx-who {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-4); border: 1px solid var(--line); border-radius: var(--r-pill);
+  background: var(--sage); color: var(--ok); font: 600 var(--fs-sub)/1 var(--font-body); cursor: pointer; transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
+}
+.sx-who:active, .sx-who.is-pressed { transform: scale(.96); background: var(--sage-2); }
 .gd-news { margin: var(--sp-2) 0 0; padding: 0; list-style: none; color: var(--ok); font-weight: 600; }
 .gd-news li + li { margin-top: var(--sp-1); }
 /* visiting a habitat or meeting an animal: the card grows a second row for its buttons */
@@ -796,4 +802,4 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
   .sx.is-on .sx-back, .sx.is-on .sx-head, .sx.is-on .sx-pill { top: var(--sp-4); }
   .sx.is-on .sx-back { left: var(--sp-4); } .sx.is-on .sx-head { left: calc(var(--sp-4) + 44px + var(--sp-3)); } .sx.is-on .sx-pill { right: var(--sp-4); top: calc(var(--sp-4) + 6px); }
 }
-@media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back, .sx-step { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back, .sx-step, .sx-who { transition: none; } }
