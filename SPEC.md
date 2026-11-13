@@ -274,6 +274,48 @@ me**.
     568, sideways and on a computer); the quiz, saved
     progress and everything learning changes work as before.
 
+- **Home's host** (added 2026-11-13; Jose approved "Build all three"). The
+  girl on Home's hello banner becomes the app's host: a friendly face that
+  points to the next useful thing. Three parts, built in this order, one
+  pull request each.
+  *Lines.* Her bubble on Home shows one line, picked from what the phone
+  already knows, and the bubble links to the matching place. First that
+  applies wins: no beauty profile yet (the quiz); a change this phone
+  hasn't seen to a hearted brand (the "What changed" card); Sanctuary
+  questions due for review (a round); a brand scanned in the last 7 days
+  (that brand's page); otherwise a line by time of day (Scan). It reads
+  only what is already stored (`cfb-profile`, `cfb-saved`,
+  `cfb-changes-seen`, `cfb-garden`, `cfb-scans`); nothing new is saved.
+  She never words a verdict or says what a certifier's list showed: only
+  `CFB.verdict` and "What changed" do. The lines speak for the founder's
+  brand, so Jose signs off the list before it ships; the list lives in
+  `host.js` (`LINES`).
+  *Moves.* Two more clips of her: a wave when Home opens (once per visit)
+  and a happy reaction when she is tapped. Each begins and ends on the
+  idle loop's first pose. Runway, about 52 credits each; Jose approved
+  about 104 in total (ask before more). The new strips load after the
+  page and are not in the worker's install list. Still under reduced
+  motion.
+  *Places.* A small still of her (about 72 px) with one line on the Scan
+  result, the end of the profile quiz and the empty states (no saved
+  brands, no scans yet).
+  Not in this version: a name, a voice or audio, chat, her inside the
+  Sanctuary's 3D world, comments on single brands, more than one
+  appearance per screen. She is never cut out of the opening film (her
+  hair blurs into the stage there; rejected three times).
+  - Done when (lines): with made-up phone data each of the five cases
+    shows its line and its link opens the right place; the line follows
+    what changes during a visit (quiz finished, "Got it", a heart); no
+    line contains a verdict word; nothing new is stored; Home looks right
+    at 390 px and 1440 px with the longest line.
+  - Done when (moves): she waves once when Home first opens and not again
+    that visit, reacts to a tap, returns to the idle loop with no jump,
+    stays still under reduced motion, and Home's first paint downloads no
+    new strip.
+  - Done when (places): she appears once, small and still, on each of the
+    named screens with a line that links somewhere useful, and never
+    beside a second copy of herself.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
@@ -383,6 +425,12 @@ only if it can be shown to work across skin tones.
       475,000 before)
 - [ ] A real-phone check of speed and battery (Jose). The island is
       heavier than before, so this matters more now
+
+### Home's host (added 2026-11-13)
+- [ ] Lines: her bubble picks a line from what the phone knows (built;
+      waits for Jose's sign-off of the words)
+- [ ] Moves: a wave when Home opens, a reaction when tapped
+- [ ] Places: Scan result, end of the quiz, empty states
 
 ## Open questions (TO FILL)
 
