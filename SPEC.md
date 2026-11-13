@@ -225,7 +225,7 @@ me**.
   they are not in the repo and nothing from them ships): a low warm sun
   and lavender shade, never grey. Trees after his lantern-tree picture: a
   trunk that bends and twists, bark drawn in code on every trunk and
-  root, flat pads of leaves in layers, and blossom on the kinds that
+  root (not the fine hanging ones), flat pads of leaves in layers, and blossom on the kinds that
   flower: dotted over the pads, which are blushed pink across the top. The great tree has boulders in its
   roots and five lanterns on chains; four other trees carry one lantern
   each (three and two on a phone with little memory). The cottage's windows are lit, lanterns and windows throw a soft
@@ -397,6 +397,9 @@ only if it can be shown to work across skin tones.
   ducks, the deer has small antlers nobody asked for, the guinea pig came
   with a tail (hidden in code), and the beagle and deer are more cartoon
   than the rabbits. Remake them, or keep?
+- Blossom trees are green underneath with pads blushed pink on top and
+  blossom dotted over them (Jose asked for more pink on 2026-11-13; they
+  were pink all over before the restyle). Jose to say if that is enough.
 - The cliff under the island is lit face by face (faceted), the one
   break from DESIGN's "rounded, never faceted": smooth, it read as a
   blur on a phone. Jose to say if it stays (one word in `mass()` in

@@ -321,8 +321,10 @@ function mass(low) {
    sides, not quite round, pale on top and dark underneath in its own vertices, so trunk and
    roots read as round and solid at any size. */
 function limb(out, pts, rad, sides, light, dark, seed = 0, ridge = null, face = null) {   // ridge: [how many, how deep, how far they wind round]; give each ridge three sides or more, or it cannot wind
-  /* face: for a limb that lies on something, the way out of that surface at each point. The limb is then flattened onto it (wider than it is high), lit on the side that faces out and dark where it meets the surface. */
-  const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal"), n = Math.max(2, (pts.length - 1) * (pts.length > 12 ? 1 : 2)), base = out.pos.length / 3, vs = out.vs || 0.35, wrap = clamp(Math.round(rad[0] * vs * 4.5), 1, 3), last = new THREE.Vector3(); let run = 0;   // bark: `wrap` turns of the picture round the limb (out and back, so there is no seam), one length of it every 1 / vs along
+  /* face: for a limb that lies on something, the way out of that surface at each point. The limb is then flattened onto it (wider than it is high), lit on the side that faces out and dark where it meets the surface.
+     Each ring has one point more than it has sides: the first is repeated at the end, so the bark picture goes once round (`wrap` whole turns) and meets itself. On a limb that lies on something that join is underneath. */
+  const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal"), n = Math.max(2, (pts.length - 1) * (pts.length > 12 ? 1 : 2)), base = out.pos.length / 3, RING = sides + 1;
+  const vs = out.vs || 0.35, wrap = clamp(Math.round(rad[0] * vs * 4.5), 1, 3), last = new THREE.Vector3(), turn0 = face ? Math.PI : 0; let run = 0;   // bark: one length of the picture every 1 / vs along the limb
   const T = new THREE.Vector3(), N = new THREE.Vector3(), B = new THREE.Vector3(), P = new THREE.Vector3(), prev = new THREE.Vector3(), q = new THREE.Quaternion(), c = new THREE.Color(), kN = face ? 0.8 : 1, kB = face ? 1.15 : 1;
   for (let i = 0; i <= n; i++) {
     const t = i / n; curve.getPoint(t, P); curve.getTangent(t, T); if (i) run += P.distanceTo(last); last.copy(P);
@@ -330,15 +332,15 @@ function limb(out, pts, rad, sides, light, dark, seed = 0, ridge = null, face = 
     if (face) { N.copy(face[k]).lerp(face[k + 1], f - k); N.addScaledVector(T, -N.dot(T)); if (N.lengthSq() < 1e-5) { N.set(0, 1, 0); if (Math.abs(T.y) > 0.9) N.set(1, 0, 0); N.addScaledVector(T, -N.dot(T)); } N.normalize(); }
     else if (i === 0) { N.set(0, 1, 0); if (Math.abs(T.y) > 0.9) N.set(1, 0, 0); N.cross(T).normalize(); } else { q.setFromUnitVectors(prev, T); N.applyQuaternion(q).normalize(); }
     prev.copy(T); B.crossVectors(T, N).normalize();
-    for (let s = 0; s < sides; s++) {
-      const a = (s / sides) * 6.2832, ca = Math.cos(a), sa = Math.sin(a), groove = ridge ? Math.sin(a * ridge[0] + t * ridge[2] + seed) : 0, rr = r * (1 + 0.14 * Math.sin(a * 2 + t * 7 + seed) + (ridge ? ridge[1] * groove : 0));
+    for (let s = 0; s <= sides; s++) {
+      const a = ((s % sides) / sides) * 6.2832 + turn0, ca = Math.cos(a), sa = Math.sin(a), groove = ridge ? Math.sin(a * ridge[0] + t * ridge[2] + seed) : 0, rr = r * (1 + 0.14 * Math.sin(a * 2 + t * 7 + seed) + (ridge ? ridge[1] * groove : 0));
       const dx = N.x * ca * kN + B.x * sa * kB, dy = N.y * ca * kN + B.y * sa * kB, dz = N.z * ca * kN + B.z * sa * kB, nl = Math.hypot(N.x * ca * kB + B.x * sa * kN, N.y * ca * kB + B.y * sa * kN, N.z * ca * kB + B.z * sa * kN) || 1, ny = (N.y * ca * kB + B.y * sa * kN) / nl;
-      out.pos.push(P.x + dx * rr, P.y + dy * rr, P.z + dz * rr); out.nor.push((N.x * ca * kB + B.x * sa * kN) / nl, ny, (N.z * ca * kB + B.z * sa * kN) / nl); out.uv.push((1 - Math.abs((2 * s) / sides - 1)) * wrap, run * vs);
-      c.copy(dark).lerp(light, clamp((face ? 0.5 + ca * 0.36 + ny * 0.22 : 0.52 + ny * 0.55) + (h2(i * 0.37 + seed, s * 1.7) - 0.5) * 0.3 + groove * 0.28, 0, 1)); out.col.push(c.r, c.g, c.b);
+      out.pos.push(P.x + dx * rr, P.y + dy * rr, P.z + dz * rr); out.nor.push((N.x * ca * kB + B.x * sa * kN) / nl, ny, (N.z * ca * kB + B.z * sa * kN) / nl); out.uv.push((s / sides) * wrap, run * vs);
+      c.copy(dark).lerp(light, clamp((face ? 0.5 + ca * 0.36 + ny * 0.22 : 0.52 + ny * 0.55) + (h2(i * 0.37 + seed, (s % sides) * 1.7) - 0.5) * 0.3 + groove * 0.28, 0, 1)); out.col.push(c.r, c.g, c.b);
     }
     /* the start's cap point sits between ring 0 and ring 1, so every ring after the first is one further on */
-    if (i < n) { const r0 = base + i * sides + (i ? 1 : 0), r1 = base + (i + 1) * sides + 1; for (let s = 0; s < sides; s++) { const a = r0 + s, b = r0 + ((s + 1) % sides), c2 = r1 + s, d = r1 + ((s + 1) % sides); out.idx.push(a, b, c2, b, d, c2); } }
-    if (i === 0 || i === n) { const mid = out.pos.length / 3, ring = base + i * sides + (i ? 1 : 0), sg = i ? 1 : -1; out.pos.push(P.x + T.x * sg * r * 0.4, P.y + T.y * sg * r * 0.4, P.z + T.z * sg * r * 0.4); out.nor.push(T.x * sg, T.y * sg, T.z * sg); out.uv.push(wrap * 0.5, run * vs); out.col.push(dark.r, dark.g, dark.b); for (let s = 0; s < sides; s++) { const a = ring + s, b = ring + ((s + 1) % sides); if (i) out.idx.push(mid, a, b); else out.idx.push(mid, b, a); } }   // both ends are closed with a blunt point: no limb shows as a cut pipe
+    if (i < n) { const r0 = base + i * RING + (i ? 1 : 0), r1 = base + (i + 1) * RING + 1; for (let s = 0; s < sides; s++) { const a = r0 + s, c2 = r1 + s; out.idx.push(a, a + 1, c2, a + 1, c2 + 1, c2); } }
+    if (i === 0 || i === n) { const mid = out.pos.length / 3, ring = base + i * RING + (i ? 1 : 0), sg = i ? 1 : -1; out.pos.push(P.x + T.x * sg * r * 0.4, P.y + T.y * sg * r * 0.4, P.z + T.z * sg * r * 0.4); out.nor.push(T.x * sg, T.y * sg, T.z * sg); out.uv.push(wrap * 0.5, run * vs); out.col.push(dark.r, dark.g, dark.b); for (let s = 0; s < sides; s++) { const a = ring + s; if (i) out.idx.push(mid, a, a + 1); else out.idx.push(mid, a + 1, a); } }   // both ends are closed with a blunt point: no limb shows as a cut pipe
   }
 }
 const limbs = (vs = 0.35) => ({ pos: [], nor: [], col: [], uv: [], idx: [], vs });   // vs: lengths of the bark picture per unit along a limb (more for trees built 1 unit tall)
@@ -350,7 +352,7 @@ function barkTex() {
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
       const u = x / n, v = y / n, bend = 0.36 * Math.sin(TAU * (2 * v + 0.3 * Math.sin(TAU * 3 * u))) + 0.2 * Math.sin(TAU * (5 * v + 2 * u)), ridge = smooth(-0.92, -0.1, Math.sin(TAU * 4 * u + bend * 3.2));
       const grain = 0.5 + 0.5 * Math.sin(TAU * 19 * u + 4 * Math.sin(TAU * (3 * v + 4 * u))), crack = smooth(0.86, 0.97, Math.sin(TAU * (7 * v + 1.5 * Math.sin(TAU * 2 * u)))) * ridge, i = (y * n + x) * 4;
-      img.data[i] = img.data[i + 1] = img.data[i + 2] = clamp(158 + 82 * ridge + 16 * grain - 40 * crack + 10 * (h2(x, y) - 0.5), 0, 255); img.data[i + 3] = 255;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = clamp(186 + 62 * ridge + 12 * grain - 46 * crack + 8 * (h2(x, y) - 0.5), 0, 255); img.data[i + 3] = 255;
     }
     g.putImageData(img, 0, 0);
   }, { repeat: 1 });
@@ -788,7 +790,7 @@ export async function mount(canvas, opts = {}) {
 
   /* trees, no two the same shape. Each habitat's stand behind it and beside it, never between it
      and the visiting camera; one that still gets in the way of a close view steps aside (see tick). */
-  const bark = barkTex(), barkMat = new THREE.MeshStandardMaterial({ vertexColors: true, map: bark, bumpMap: low ? null : bark, bumpScale: 2.2, roughness: 1, envMapIntensity: 0.15 });
+  const bark = barkTex(), barkMat = new THREE.MeshStandardMaterial({ vertexColors: true, map: bark, bumpMap: low ? null : bark, bumpScale: 3, roughness: 1, envMapIntensity: 0.15 });
   const leafMat = sway(new THREE.MeshStandardMaterial({ vertexColors: true, map: dabTex("#ffffff", "#a8a8a8"), roughness: 0.9, envMapIntensity: 0.25 }), wind, 0.02, true);
   const trees = [], appleGeo = new THREE.IcosahedronGeometry(1, 1), appleMat = new THREE.MeshStandardMaterial({ color: 0xd9475c, roughness: 0.55 });
   for (const [x0, z0, tall, kind, seed] of [
@@ -808,7 +810,7 @@ export async function mount(canvas, opts = {}) {
   /* the blossom tree: the one great tree, on its prow beside the pond. Its roots are the island's
      other skeleton: over the turf and down the cliff either side of the waterfall, round the
      basin and the ledges, forking as they go; some come out of the earth lower down. */
-  const woodMat = new THREE.MeshStandardMaterial({ vertexColors: true, map: bark, bumpMap: low ? null : bark, bumpScale: 2.2, roughness: 0.95, envMapIntensity: 0.2 });
+  const woodMat = new THREE.MeshStandardMaterial({ vertexColors: true, map: bark, bumpMap: low ? null : bark, bumpScale: 3, roughness: 0.95, envMapIntensity: 0.2 });
   const hx = HERO.x, hz = HERO.z, hy = Y(hx, hz), V3 = (x, y, z) => new THREE.Vector3(hx + x, hy + y, hz + z);
   { const wood = limbs(), R = rng(404);
     limb(wood, [V3(0.1, -1.2, 0), V3(0.9, 1.6, 0.2), V3(1.3, 3.6, 0.5), V3(0.2, 5.6, 0.6), V3(-1.4, 7.2, 0.4), V3(-1.5, 8.9, 0.1)], [2.5, 1.6, 1.25, 1.05, 0.9, 0.7], 15, TRUNK_LIGHT, TRUNK_DARK, 1, [5, 0.17, 8]);   // it bends twice, and its bark winds round it
@@ -925,23 +927,23 @@ export async function mount(canvas, opts = {}) {
      a chain, each with a pane that is plain warm colour, one soft halo and a pool of light on
      the ground under it. They swing a little in the breeze. No lights are added to the scene. */
   const lanterns = [], paneMat = new THREE.MeshBasicMaterial({ color: 0xffc35a, toneMapped: false });
-  const hang = (parent, x, y, z, len, sz, k = 1) => {
+  const hang = (parent, x, y, z, len, sz, k = 1, halo = 4.6) => {
     const [fg, pg] = lanternGeo(len, sz), g = new THREE.Group(), sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0.95, depthWrite: false, blending: THREE.AdditiveBlending }));
-    sp.position.set(0, -len - 0.63 * sz, 0); sp.scale.set(4.6 * sz, 4.6 * sz, 1); sp.renderOrder = 4; g.add(new THREE.Mesh(fg, builtMat), new THREE.Mesh(pg, paneMat), sp);
-    g.position.set(x, y, z); g.scale.setScalar(k); parent.add(g); const wx = x + parent.position.x, wz = z + parent.position.z; lanterns.push({ g, ph: wx * 1.7 + wz }); glows.push({ sp, o: 0.95, s: 4.6 * sz, ph: wx + wz });
+    sp.position.set(0, -len - 0.63 * sz, 0); sp.scale.set(halo * sz, halo * sz, 1); sp.renderOrder = 4; g.add(new THREE.Mesh(fg, builtMat), new THREE.Mesh(pg, paneMat), sp);
+    g.position.set(x, y, z); g.scale.setScalar(k); parent.add(g); const wx = x + parent.position.x, wz = z + parent.position.z; lanterns.push({ g, ph: wx * 1.7 + wz }); glows.push({ sp, o: 0.95, s: halo * sz, ph: wx + wz });
   };
   const poolMat = new THREE.MeshBasicMaterial({ map: glowTex, color: 0xffb060, transparent: true, opacity: 0.44, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -2 });
   /* a pool of light: a small sheet laid over the ground's own shape, so it neither sinks into a slope nor floats off it */
-  const pool = (x, z, rad) => { const N = 8, pos = [], uv = [], idx = []; for (let i = 0; i <= N; i++) for (let j = 0; j <= N; j++) { const px = x + (i / N - 0.5) * rad, pz = z + (j / N - 0.5) * rad; pos.push(px, Y(px, pz) + 0.12, pz); uv.push(i / N, j / N); if (i < N && j < N) { const a = i * (N + 1) + j; idx.push(a, a + 1, a + N + 1, a + 1, a + N + 2, a + N + 1); } }
+  const pool = (x, z, rad) => { const N = Math.round(rad * 1.4), pos = [], uv = [], idx = []; for (let i = 0; i <= N; i++) for (let j = 0; j <= N; j++) { const px = x + (i / N - 0.5) * rad, pz = z + (j / N - 0.5) * rad; pos.push(px, Y(px, pz) + 0.12, pz); uv.push(i / N, j / N); if (i < N && j < N) { const a = i * (N + 1) + j; idx.push(a, a + 1, a + N + 1, a + 1, a + N + 2, a + N + 1); } }
     const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); const m = new THREE.Mesh(g, poolMat); m.renderOrder = 2; world.add(m); return m; };
   /* under the great tree: each from the end of a bough, inside a pad of leaves. The first three are over turf (a slow phone gets only those); the last two hang out over the cove and the waterfall. */
   for (const [dx, dy, dz, len] of [[4.0, 9.6, 1.9, 2.6], [0.9, 11.2, 0.4, 4.2], [-2.2, 9.9, 3.2, 3.6], [-5.4, 9.3, 1.6, 2.6], [2.4, 12.4, -2.2, 3.2]].slice(0, low ? 3 : 5)) hang(world, hx + dx, hy + dy, hz + dz, len, 1.25);
-  pool(hx + 3.4, hz + 1.6, 9); pool(hx - 1.6, hz - 2.6, 9); pool(-8.9, -7.4, 8); glows.push({ sp: lamp(-8.6, Y(-10, -11.2) + 2.6, -8.2, 5, 0.3), o: 0.3, s: 5, ph: 4 });   // on the grass under the great tree, and from the cottage's windows
+  pool(hx + 3.2, hz + 1.2, 8); pool(hx - 0.6, hz - 3.0, 7); pool(-8.9, -7.4, 8);   // on the grass under the great tree, and from the cottage's windows
   /* one in a tree by four of the habitats: from the end of whichever bough has the lowest ground under it, on a chain cut so the lantern clears that ground */
   for (const i of [0, 4, 8, 17].slice(0, low ? 2 : 4)) {
     const t = trees[i], ry = t.g.rotation.y, at = (q) => [t.x + (q[0] * Math.cos(ry) + q[2] * Math.sin(ry)) * t.tall, t.z + (-q[0] * Math.sin(ry) + q[2] * Math.cos(ry)) * t.tall];
     const q = t.pads.slice(1).reduce((best, c) => (Y(...at(c)) < Y(...at(best)) ? c : best)), [wx, wz] = at(q), top = t.g.position.y + (q[1] - 0.02) * t.tall, len = clamp(top - 1.35 - (Y(wx, wz) + 1.0), 0.5, 2.6);
-    hang(t.g, q[0], q[1] - 0.02, q[2], len, 1.1, 1 / t.tall); t.pool = pool(wx, wz, 8);
+    hang(t.g, q[0], q[1] - 0.02, q[2], len, 1.1, 1 / t.tall, 3.2); t.pool = pool(wx, wz, 7);
   }
   /* ---------- Models (see CREDITS.md): the cottage, and the animals (sanctuary3d-life.js) ---------- */
   const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
