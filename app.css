@@ -618,7 +618,7 @@ html.intro-on .intro {
 }
 .hb-host {   /* the girl from the opening film, re-shot on a plain backdrop and cut out: a strip of 39 frames
                 (tools/make-host.py) stepped through. Her shoulders run down behind the Search field */
-  --host-n: 39; width: 130px; aspect-ratio: 240 / 268; flex: none;
+  --host-n: 39; width: 160px; aspect-ratio: 300 / 335; flex: none;
   background: url("assets/images/host.webp") 0 0 / calc(var(--host-n) * 100%) 100% no-repeat;
   filter: drop-shadow(var(--cut-shadow));
   animation: hostPlay 7s infinite;

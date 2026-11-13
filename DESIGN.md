@@ -99,7 +99,7 @@ tiles.
   radius-20 card on computers (380). The time-of-day label and the slogan
   at 40 sit top left in ink over a cream shade (`--veil-cream`), never
   white text. The girl from the opening film (`assets/images/host.webp`,
-  130 px wide, a soft drop shadow) sits bottom left, her shoulders running
+  160 px wide, a soft drop shadow) sits bottom left, her shoulders running
   down behind the Search field, with a paper speech bubble beside her
   face that links to Scan. She was re-shot on a plain backdrop so her
   hair has a clean outline (cut out of the film itself it kept the

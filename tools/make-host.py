@@ -17,7 +17,7 @@ from PIL import Image, ImageFilter, ImageDraw
 import numpy as np
 
 CLIP = sys.argv[1]
-FPS, OUT_W = 10, 240
+FPS, OUT_W = 10, 300
 
 def box(x, r=1):
     o = np.zeros_like(x); n = 0
@@ -61,6 +61,6 @@ for n, g in enumerate(out):
     g = g.copy(); g[..., 3] *= 255
     im = Image.fromarray(g.clip(0, 255).astype("uint8"), "RGBA").crop((x0, y0, x1, y1)).resize((OUT_W, oh), Image.LANCZOS)
     strip.paste(im, (n * OUT_W, 0))
-strip.save("assets/images/host.webp", quality=78, method=6)
+strip.save("assets/images/host.webp", quality=76, method=6)
 print(len(out), "frames,", OUT_W, "x", oh, "each,", os.path.getsize("assets/images/host.webp") // 1024, "KB")
 if len(sys.argv) > 2: strip.save(sys.argv[2])
