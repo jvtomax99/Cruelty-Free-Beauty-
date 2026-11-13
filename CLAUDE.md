@@ -15,8 +15,9 @@ differs, this file wins.
 - **Claims need sources.** Whether a brand is cruelty-free changes (parent
   companies, sales where animal testing is required). Every such claim links
   its source and the date it was checked. Never state one from memory.
-- **The founder signs off.** Remind Jose to check plans, brand rules and any
-  words that speak for the founder with them.
+- **Jose signs off** (2026-11-13: he has full control). Plans, the look,
+  brand rules and any words that speak for the founder are his call; don't
+  ask him to check them with her.
 - **Offline worker.** Bump `CACHE_VERSION` in `sw.js` in every change to a
   file it precaches, or returning users keep the old app.
 - **Launch film.** `assets/video/launch.mp4` (13.8 s, first visit only; its words are real text in `intro.js`, timed by `FILM`), cut by
