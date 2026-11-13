@@ -112,7 +112,7 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
     const long = real.brands.reduce((a, b) => (b.name.length > a.name.length ? b : a));
     const { ctx, page } = await phone({ profile: PROFILE, scans: [{ code: '1', brand: long.id, name: long.name, t: Date.now() - 864e5 }] });
     const t = await line(page); said.push(t);
-    check(t === `You scanned ${long.name}. See its proof again.` && await href(page) === '#brand/' + encodeURIComponent(long.id), `scanned yesterday (the longest name): "${t}" -> ${await href(page)}`);
+    check(t === `You scanned ${long.name}. See its page again.` && await href(page) === '#brand/' + encodeURIComponent(long.id), `scanned yesterday (the longest name): "${t}" -> ${await href(page)}`);
     const box = await page.$eval('#host-say', (el) => { const r = el.getBoundingClientRect(); return r.right <= innerWidth && r.left >= 0; });
     check(box, 'the longest line stays inside the screen at 390 px');
     if (shots) await page.screenshot({ path: path.join(shots, 'host-scanned-390.png') });

@@ -18,7 +18,7 @@
       bold: "See what changed.", href: "#home", go: "changes"
     }),
     review: (n) => ({ soft: "Your Sanctuary is waiting.", bold: n === 1 ? "1 question to review." : `${n} questions to review.`, href: "#practice/all" }),
-    scanned: (b) => ({ soft: `You scanned ${b.name}.`, bold: "See its proof again.", href: "#brand/" + encodeURIComponent(b.id) }),
+    scanned: (b) => ({ soft: `You scanned ${b.name}.`, bold: "See its page again.", href: "#brand/" + encodeURIComponent(b.id) }),
     morning: () => ({ soft: "Shopping today?", bold: "Scan it first.", href: "#scan" }),
     afternoon: () => ({ soft: "In the aisle?", bold: "Scan the barcode.", href: "#scan" }),
     evening: () => ({ soft: "Curious about what you own?", bold: "Scan it tonight.", href: "#scan" })
@@ -61,6 +61,7 @@
   pal.addEventListener("click", (e) => {
     const card = document.getElementById("changes-card");
     if (pal.dataset.go !== "changes" || !card || card.hidden) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;   // "open in a new tab" stays the browser's
     e.preventDefault();
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     card.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });

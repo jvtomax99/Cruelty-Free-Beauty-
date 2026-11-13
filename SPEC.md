@@ -282,8 +282,8 @@ me**.
   already knows, and the bubble links to the matching place. First that
   applies wins: no beauty profile yet (the quiz); a change this phone
   hasn't seen to a hearted brand (the "What changed" card); Sanctuary
-  questions due for review (a round); a brand scanned in the last 7 days
-  (that brand's page); otherwise a line by time of day (Scan). It reads
+  questions due for review (a round); the newest scan, when it is under 7 days
+  old and of a brand we list (that brand's page); otherwise a line by time of day (Scan). It reads
   only what is already stored (`cfb-profile`, `cfb-saved`,
   `cfb-changes-seen`, `cfb-garden`, `cfb-scans`); nothing new is saved.
   She never words a verdict or says what a certifier's list showed: only
