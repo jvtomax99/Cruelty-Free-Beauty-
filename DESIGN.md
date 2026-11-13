@@ -117,8 +117,16 @@ tiles.
   with the finish (44 px tall).
 - **Filter chip:** paper pill with a hairline, 44 px; on: blush-2 with
   rose-ink text.
-- **Brand row:** paper card, radius 20, name in Fraunces 17, chips on the
-  right, the reason it fails on its own line in ink-soft.
+- **Brand row:** radius 20, paper-to-blush with the bright rim
+  (`--qt-edge`) and the finish, like the rail cards. On the Brands list: a
+  44 px tile with the brand's initial on the left (never a logo), then the
+  name in Fraunces 17, one ink-soft line in footnote size (price band in
+  the filter chips' words, then what it sells; left out when the data has
+  neither), the chips on their own row, and the reason it fails on a last
+  line. Pressed: shrinks to .985 and a 6 px rose edge grows in from the
+  left (the Hub's card edge; only on press, because a standing rose edge
+  means "What changed"). Rows fade up 6 px one after another when the
+  screen opens, never while typing or filtering.
 - **What changed:** a paper card on Home under the search bar, only when
   there is news; each change is a brand row with what the list showed, then
   the date and source link in footnote size; one hairline "Got it" button.

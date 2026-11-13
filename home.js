@@ -4,7 +4,7 @@
   "use strict";
   const MAX = 8;
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const initial = (name) => (Array.from(String(name || "").trim())[0] || "•").toUpperCase();   // whole character, never half an emoji
+  const initial = (name) => window.CFB.initial(name);   // brands.js's, shared with the Brands list
   const box = document.getElementById("home-rail");
   let brands = [];
 
