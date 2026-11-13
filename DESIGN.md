@@ -206,10 +206,17 @@ tiles.
   to a habitat or an animal and never spins on its own.
 - **The world's colours** live in `PAL` in `sanctuary3d.js`: warm sunlit
   greens, cream stone, a dusty rose roof, pink and white flowers, teal
-  water, earth for the island's side. Sun from the upper left, warm; a
-  faint blush light from the right. Forms are rounded and smooth-shaded,
-  never faceted. Flowers and animals must stay lighter or pinker than the
-  grass they stand on.
+  water. The mass under the garden is warm brown soil with blocks of
+  muted stone and sage moss on whatever lies flat, darker toward the tip
+  and in its folds; roots are pale wood, light on top and dark underneath.
+  Sun from the upper left, warm; a faint blush light from the right.
+  Forms in the garden are rounded and smooth-shaded, never faceted. The
+  one exception is the cliff: it is lit face by face, so its blocks and
+  ledges read at phone size (smooth, it turned to a blur). Flowers and
+  animals must stay lighter or pinker than the grass they stand on.
+- **Glow** is rare: the mushrooms in the hollow and the seed pods under
+  the blossom tree, pale unlit shapes with a few soft halos among them. Nothing
+  else sparkles.
 - **Habitat cards and rounds** reuse the quiz's parts: `.quiz-opt`
   buttons (green with a check when right, red with a cross for a wrong
   pick), a paper result card with the verdict in the display serif, the progress

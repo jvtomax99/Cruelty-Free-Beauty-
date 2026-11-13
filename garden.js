@@ -219,7 +219,7 @@
     if (!canWorld()) return;
     sx.classList.add("is-on", "is-loading");
     import("./sanctuary3d.js")
-      .then((m) => m.mount($("sx-canvas"), { reduced, low: (navigator.deviceMemory || 8) <= 3, onPick }))
+      .then((m) => m.mount($("sx-canvas"), { reduced, low: (navigator.deviceMemory || 8) <= 3, onPick, clear: () => { const c = $("sx-card").getBoundingClientRect(); return c.height ? Math.max(0, $("sx-canvas").getBoundingClientRect().bottom - c.top) : 0; } }))
       .then((w) => {
         world = w; sx.classList.remove("is-loading"); sx.classList.add("is-ready");
         syncWorld(); world.focus(sel); world.start();
@@ -278,7 +278,7 @@
     said = false;
     if (v === "animal") { const a = animal(id); if (!a) return; who = id; sel = a.habitat; view = "animal"; world.select(id); }
     else if (v === "visit") { sel = TOPIC[id] ? id : sel; who = null; view = "visit"; if (world) world.visit(sel); }
-    else { who = null; view = "world"; if (world) { world.visit(null); world.focus(sel); } }
+    else { who = null; view = "world"; drawCard(); if (world) { world.visit(null); world.focus(sel); } return; }   // the card first: the world frames the island above whatever card is showing
     drawCard();
   }
   function step(by) { const i = TOPICS.findIndex((t) => t.id === sel); sel = TOPICS[(i + by + TOPICS.length) % TOPICS.length].id; if (world) world.focus(sel); drawCard(); }

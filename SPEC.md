@@ -188,10 +188,23 @@ me**.
   animal; no certifier's mark in the scene. The 3D loads only when the
   Garden is opened, and plain habitat cards show instead where 3D can't
   run (no WebGL, data saver).
-  The world: one island that fills the screen, with sculpted land (hills,
-  terraces, an earth-and-stone edge), a pond fed by a two-step waterfall,
-  a footbridge, a cream cottage with a dusty rose roof, rounded trees,
-  flowers in drifts, and stone paths from the middle to every habitat.
+  The world: one floating island, seen whole from garden to tip in the
+  first view (turning it or zooming in shows parts closer; changed
+  2026-11-13 on Jose's brief; his reference picture is
+  `docs/reference/floating-island.jpg`, a direction only: nothing from it
+  ships). Under the garden is a deep, uneven mass of earth and stone, a
+  loose diamond: broad under the turf and tapering to an off-centre point,
+  with ledges, recesses, overhangs and one shaded hollow where a few
+  mushrooms glow. One great blossom tree stands on a prow beside the pond,
+  with seed pods that glow faintly under its crown; its thick roots cross
+  the turf and go down the cliff, forking, some coming out of the earth
+  lower down. The stream runs pool to pool into the pond; the pond
+  overflows through a gap in its bank, falls to a rocky basin, turns, and
+  falls again past the island's base into a little mist. On top: sculpted
+  land (hills, a raised lawn for the cream cottage with a dusty rose roof,
+  a winding path with a few shallow steps down from it), a footbridge,
+  rounded trees, flowers in drifts, and stone paths from the middle to
+  every habitat.
   Each habitat has its own ground, planting and shelter: a burrow under a
   grassy mound; a nest on the pond's bank under a willow, with reeds; a
   timber hide among apple trees; a cushion on a deck among leafy shrubs; a
@@ -206,11 +219,15 @@ me**.
   what the round changed.
   The animals live on their own: each on its own clock, resting, looking
   about, sniffing, grazing, grooming, and going somewhere for a reason
-  (food, the shelter, a friend), with pauses; they breathe, blink and move
+  (food, the shelter, a friend, a flower in bloom at the edge of their
+  ground), with pauses; they breathe, blink and move
   ears, head and tail; feet don't slide; none leaves its habitat or passes
   through a rock, plant, the water, a shelter or another animal. Around
   them: one breeze through flowers, grass and leaves, running water,
-  rings spreading on the pond, a butterfly or two going between flowers.
+  rings spreading on the pond, a butterfly or two going between flowers,
+  a petal now and then falling from the blossom tree, slow mist at the
+  foot of the waterfall. All of it is made in code, the same every time
+  the Sanctuary is opened, with no added downloads.
   The interface is a small title ("Your Sanctuary", "A little kindness. A
   world of life."), the learned count, and one compact card: on the whole
   island it names a habitat, with arrows to step through the five, and
@@ -236,6 +253,11 @@ me**.
     mouse; in ten simulated minutes no animal is anywhere it shouldn't be;
     Home, Brands and Scan load no 3D code; the Garden opens offline after
     one visit; with 3D blocked, the cards show instead.
+  - Done when (the floating island): on a phone held upright the first
+    view shows the garden, the roots, the waterfall and the underside
+    together, with the card covering none of the island (also at 320 x
+    568, sideways and on a computer); the quiz, saved
+    progress and everything learning changes work as before.
 
 ## Not in v1
 
@@ -329,7 +351,15 @@ only if it can be shown to work across skin tones.
       own behaviour, the breeze, ripples and butterflies, the camera and
       the per-habitat progress (2026-11-13; `node tools/test-sanctuary.cjs`
       passes in the cloud browser; live 2026-11-13 on Jose's word)
-- [ ] A real-phone check of speed and battery (Jose)
+- [x] The floating island: a deep landmass with ledges and a hollow, the
+      blossom tree and its roots, the waterfall down the outside, the
+      cottage's raised lawn and winding path, glowing mushrooms and seed
+      pods, falling petals, animals that go to smell a flower (2026-11-13;
+      `node tools/test-sanctuary.cjs` and `node tools/test-garden.cjs`
+      pass in the cloud browser; about 470,000 triangles with everything
+      unlocked, up from 394,000)
+- [ ] A real-phone check of speed and battery (Jose). The island is
+      heavier than before, so this matters more now
 
 ## Open questions (TO FILL)
 
@@ -344,6 +374,23 @@ only if it can be shown to work across skin tones.
   ducks, the deer has small antlers nobody asked for, the guinea pig came
   with a tail (hidden in code), and the beagle and deer are more cartoon
   than the rabbits. Remake them, or keep?
+- The cliff under the island is lit face by face (faceted), the one
+  break from DESIGN's "rounded, never faceted": smooth, it read as a
+  blur on a phone. Jose to say if it stays (one word in `mass()` in
+  `sanctuary3d.js` turns it back).
+- Tripo's and Meshy's terms in `CREDITS.md` are still TO FILL.
+- Left from the review of the five habitats (2026-11-13): on a computer
+  the mouse wheel over the world zooms and cannot scroll the page (the
+  scrollbar and keys can); each animal makes a little garbage every frame
+  (about 50 small objects a frame with all sixteen); the grey rabbit's
+  ears are stiff because they lie on its back; Clover and the grey rabbit
+  are still about 12,000 triangles each (the others about 6,000), because
+  their fur pictures are cut into many small pieces the shrinking tool
+  will not merge.
+- Animals are small in the first view (about 60% of the size they had
+  when the garden alone filled the screen): the cost of showing the whole
+  depth. Zooming in comes up to the garden. Jose to say if the first view
+  should sit closer and let the tip run under the card.
 - Does the neutral wording stay ("No longer in Leaping Bunny's guide",
   never "dropped")? Jose decides.
 
