@@ -316,8 +316,8 @@ me**.
     what changes during a visit (quiz finished, "Got it", a heart); no
     line contains a verdict word; nothing new is stored; Home looks right
     at 390 px and 1440 px with the longest line.
-  Plan for the moves (2026-11-13, waiting for Jose's OK and his pick of
-  the re-lit still). One base picture of her (cut out, about 60 KB) and
+  Plan for the moves (2026-11-13; Jose OK'd it and picked re-lit option
+  A). One base picture of her (cut out, about 60 KB) and
   one strip of about 16 face frames showing only eyes and mouth through
   a small window over the base, swapped outright, never faded (together
   lighter than today's 412 KB loop, which they replace). Frames are

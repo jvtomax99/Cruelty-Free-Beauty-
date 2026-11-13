@@ -127,11 +127,16 @@ credits for this (642 were left). Ask before going over 250.
   quiz line on every other day. Test: `node tools/test-host.cjs`.
 - Jose confirmed step 2 is the Dr Smiley-style rebuild, not two clips.
   Its plan and "Done when" are in `SPEC.md` ("Plan for the moves").
-- Two re-lit stills made from the clean still (Runway, 8 credits, 634
-  left): task `f8da62eb-1d26-4c74-b5a5-e9b3cdd9f0e4` (option A, a warm
-  rim, clean edge) and `1fa1d2c1-6bd3-4f93-807e-d75ee742b808` (option B,
-  a paler halo round the hair that may be harder to key). Waiting for
-  Jose to pick one and OK the plan. Nothing is built on them yet.
+- Jose picked re-lit **option A**: Runway task
+  `f8da62eb-1d26-4c74-b5a5-e9b3cdd9f0e4` (1024 x 1024, same flat
+  #C9D6E2 backdrop). Build the base picture and every face frame on it.
+  (Option B, `1fa1d2c1-...`, was turned down. 8 credits spent, 634 left.)
+- Jose OK'd the moves plan as written in `SPEC.md` ("Build it"): no
+  moving brows, head tilts or talking mouth in this version. Budget:
+  about 60 credits of image edits (nano-banana-2.1 at 1K is 4 each),
+  52 more only if the fallback clip is needed; ask before going over 250.
+- Next: step 2 (build it, one pull request, 390 px and 1440 px
+  screenshots, reviewer, merge when green, notify), then step 3 (places).
 - `jvtomax99/interp` clones read-only in a cloud session (public).
 
 ## Left to do
