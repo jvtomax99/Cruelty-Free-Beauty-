@@ -113,7 +113,10 @@ tiles.
   never faded or slid. Blinks at random, eyes that follow a finger, a
   smile or a wink when tapped, and a face for a scan result or a
   Sanctuary answer when Home next opens. No moving brows of their own,
-  head tilts, squash or talking mouth. Still under reduced motion. 2026-11-13, Jose:
+  head tilts, squash or talking mouth. Still under reduced motion. Her small copies on
+  other screens (`.hm`: Scan result, empty Scan, quiz end, empty Saved)
+  are a 72 px round still of her head on blush with one line beside it,
+  the second part in rose; they never move, and there is one per screen. 2026-11-13, Jose:
   the bunny there looked basic; he asked for her as a cut-out, animated.
   The bunny stays in the brand bar. The photo fades into the page at the
   bottom and Search overlaps it by 26 px.

@@ -2,7 +2,7 @@
    One line, picked from what this phone already knows; the bubble links to the matching place.
    It reads what the other scripts saved and saves nothing itself. She never words a verdict and
    never says what a certifier's list showed: only CFB.verdict and "What changed" do.
-   The lines speak for the founder's brand: Jose signs off every change to LINES. */
+   The lines speak for the founder's brand: Jose signs off every change to LINES and PLACES. */
 (function () {
   "use strict";
   const CFB = window.CFB;
@@ -23,6 +23,35 @@
     afternoon: () => ({ soft: "In the aisle?", bold: "Scan the barcode.", href: "#scan" }),
     evening: () => ({ soft: "Curious about what you own?", bold: "Scan it tonight.", href: "#scan" })
   };
+
+  /* Her small copies on other screens (Jose signed these off, 2026-11-13): a still of her, 72 px, and one
+     line that links somewhere useful. One per screen, never beside another copy of her. `face` is a frame
+     of her strip (host-engine.js lists them); `go` is the id of something on the same screen to move to. */
+  const PLACES = {
+    scanned: (b) => ({ soft: "Want to see why?", bold: "Read the proof.", href: "#brand/" + encodeURIComponent(b.id) }),
+    unchecked: () => ({ soft: "New to us.", bold: "Look it up on the certifiers' lists.", href: "#scan", go: "scan-lists" }),
+    quizDone: () => ({ soft: "That's your match.", bold: "Now scan what's in your bag.", href: "#scan", face: "smile" }),
+    noSaved: () => ({ soft: "Nothing saved yet.", bold: "Find a brand to heart.", href: "#brands" }),
+    noScans: () => ({ soft: "No scans yet.", bold: "Try one from your bag.", href: "#scan", go: "scan-start" })
+  };
+  const FACE_OF = { pass: "smile", fail: "sad", none: "surprised", unlisted: "surprised" };   // her look beside a scan result, never words
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  function mini(place, arg, kind) {
+    const l = PLACES[place](arg);
+    const frames = CFB.hostFace ? CFB.hostFace.FRAMES : [];
+    const i = frames.indexOf(kind ? FACE_OF[kind] : l.face);
+    const look = i > 0 ? `<i style="background-position-x:${i / (frames.length - 1) * 100}%"></i>` : "";
+    return `<a class="hm" href="${esc(l.href)}"${l.go ? ` data-go="${l.go}"` : ""}><span class="hm-face" aria-hidden="true">${look}</span><span class="hm-say">${esc(l.soft)} <b>${esc(l.bold)}</b></span></a>`;
+  }
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest ? e.target.closest(".hm[data-go]") : null;
+    const to = a && document.getElementById(a.dataset.go);
+    if (!to || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    to.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
+    (to.matches("a, button") ? to : to.querySelector("a, button") || to).focus({ preventScroll: true });
+  });
 
   let brands = [];
   function lastScan() {
@@ -76,5 +105,5 @@
   CFB.brands.then((list) => { brands = list || []; draw(); });
   document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "home") draw(); });
   ["cfb:saved", "cfb:changes", "cfb:garden"].forEach((n) => document.addEventListener(n, draw));
-  CFB.host = { pick, LINES };
+  CFB.host = { pick, LINES, PLACES, mini };
 })();
