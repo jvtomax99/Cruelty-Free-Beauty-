@@ -12,7 +12,7 @@ const MEDIA = "cfb-media-v3";
 /* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
    download. Each file is saved the first time the Sanctuary asks for it, and the world then opens
    offline. Bump WORLD in every change to sanctuary3d.js, sanctuary3d-life.js, assets/sanctuary/ or assets/vendor/three/. */
-const WORLD = "cfb-world-v4";
+const WORLD = "cfb-world-v5";
 const WORLD_PATHS = ["sanctuary3d.js", "sanctuary3d-life.js", "assets/sanctuary/", "assets/vendor/three/"];
 const FILM = "assets/video/launch.mp4";
 const PRECACHE = [

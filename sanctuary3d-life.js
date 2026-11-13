@@ -30,7 +30,7 @@ const V = (x, y, z) => new THREE.Vector3(x, y, z);
    everything behind z and below y (a tail the animal shouldn't have). */
 export const SPECIES = {
   "rabbit-clover": { size: 3.2, r: 0.85, gait: "hop", hop: 1.5, neck: [V(0, 0.5, 0.08), V(0, 0.9, 0.45), 0.1], ear: [V(0, 0.74, 0.03), V(0, 1, -0.1), 0.08, 0.09, 0, 0.36, 0], eye: [0.58, 0.71, 0.045], dip: 0.55 },
-  "rabbit-tan": { size: 2.2, r: 0.95, gait: "hop", hop: 1.6, neck: [V(0, 0.4, 0.24), V(0, 0.35, 0.94), 0.12], ear: [V(0, 0.62, 0.3), V(0, 1, -0.1), 0.08, 0.07, 0, 0.46, 0], eye: [0.44, 0.56, 0.045, 0.42], dip: 0.4 },
+  "rabbit-tan": { size: 2.2, r: 0.95, gait: "hop", hop: 1.6, neck: [V(0, 0.4, 0.24), V(0, 0.35, 0.94), 0.12], ear: [V(0, 0.62, 0.3), V(0, 1, -0.1), 0.08, 0.07, 0, 0.46, 0], eye: [0.44, 0.56, 0.045, 0.42], eyeAt: [0.1, 0.5, 0.39], dip: 0.4 },
   "rabbit-grey": { size: 1.9, r: 1.6, gait: "hop", hop: 1.4, lazy: 2.2, neck: [V(-0.045, 0.4, 0.5), V(0, 0.2, 0.98), 0.15], ear: [V(-0.045, 0.67, 0.56), V(0, 1, 0), 0.04, 0.2, 0, 0.5, 0], eye: [0.42, 0.56, 0.06, 0.3], eyeAt: [0.19, 0.49, 0.83], dip: 0.25, turn: 0.3, earK: 0.15 },
   duck: { size: 2.0, r: 1.15, yaw: -Math.PI / 2, gait: "swim", speed: 0.8, neck: [V(0, 0.6, 0.2), V(0, 1, 0.15), 0.08], tail: [V(0, 0.5, -0.4), V(0, 0.3, -1), 0.12], eye: [0.78, 0.92, 0.04, 0.3], draft: 0.25, dip: 0.9 },
   duckling: { size: 0.95, r: 0.55, yaw: -Math.PI / 2, gait: "swim", speed: 0.95, neck: [V(0, 0.6, 0.28), V(0, 1, 0.2), 0.08], eye: [0.76, 0.9, 0.04, 0.3], draft: 0.2, dip: 0.8 },

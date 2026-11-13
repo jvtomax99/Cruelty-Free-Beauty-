@@ -335,7 +335,7 @@ const tinted = (g, hex) => { g = g.index ? g.toNonIndexed() : g; g.deleteAttribu
 const turned = (g, x, y, z, rx, ry, rz) => { if (rx) g.rotateX(rx); if (rz) g.rotateZ(rz); if (ry) g.rotateY(ry); g.translate(x, y, z); return g; };
 const box = (w, h, d, x, y, z, hex, rx = 0, ry = 0, rz = 0) => tinted(turned(new THREE.BoxGeometry(w, h, d), x, y, z, rx, ry, rz), hex);
 const cyl = (r1, r2, h, x, y, z, hex, rx = 0, ry = 0, rz = 0) => tinted(turned(new THREE.CylinderGeometry(r1, r2, h, 9), x, y, z, rx, ry, rz), hex);
-const ball = (r, x, y, z, hex, sx = 1, sy = 1, sz = 1) => { const g = new THREE.IcosahedronGeometry(r, 2); g.scale(sx, sy, sz); g.translate(x, y, z); return tinted(g, hex); };
+const ball = (r, x, y, z, hex, sx = 1, sy = 1, sz = 1) => { const g = new THREE.IcosahedronGeometry(r, r < 0.25 ? 1 : 2); g.scale(sx, sy, sz); g.translate(x, y, z); return tinted(g, hex); };   // small ones (flowers, leaves) need fewer faces
 const WOOD = 0xc8935e, WOOD2 = 0xa9774c, CREAM = 0xf3e7d3, ROSE = 0xd89aa4, STRAW = 0xe3cc82, LEAF = 0x7fb256, BARK = 0x8a6248;
 /* Each shelter faces +Z, stands on y = 0, and comes in two parts: what is there from the
    start, and what is added once half the habitat's topic is learned. No doors, no fences. */

@@ -18,13 +18,12 @@ its findings were fixed, except the two under "Left" below.
    her: sixteen names and one-line personalities, three habitat names,
    five shelter lines (`HOME` in `garden.js`, `ROSTER` in
    `sanctuary3d.js`; listed in SPEC "Open questions").
-2. **Speed on a real phone** (Jose): not measured. A full sanctuary draws
-   about 380,000 triangles, more than half of it the animals (about
-   13,000 each). Shrinking each model to about 5,000 would halve the
-   scene: in a scratch folder, `npm i @gltf-transform/cli@4`, then
-   `npx gltf-transform simplify in.glb out.glb --ratio 0.4`, check it on
-   `tools/rig-sheet.html`, bump `WORLD`. The install was not allowed in
-   the cloud session without Jose's OK.
+2. **Speed on a real phone** (Jose): not measured. The animal models
+   were shrunk on 2026-11-13 (glTF Transform `weld`, `simplify`,
+   `meshopt`): the Tripo five and the tan rabbit to about 6,000 triangles
+   each; Clover and the grey rabbit only to about 12,000, because their
+   fur textures are cut into many small pieces that the tool will not
+   merge.
 3. **Models to remake or keep** (Tripo, 20 credits each): the ducklings
    read as rubber ducks; the deer has small antlers; the guinea pig came
    with a tail (hidden in code); the beagle and deer are more cartoon
