@@ -56,10 +56,14 @@ const W = () => window.CFB.garden.world;
   check(empty.rabbits === 1 && empty.all.join() === 'clover,willow,pip,biscuit,poppy,fern', `a new sanctuary has the first resident of each habitat (${empty.all.join(', ')})`);
   check(!empty.shelter, 'a new habitat has its plain shelter');
   check(await page.evaluate(() => window.CFB.garden.world.debug.life.animals.every((a) => a.root.visible === a.visible && a.shadow.visible === (a.visible && !a.hab.pool))), 'animals that have not moved in are not drawn');
-  /* the first view: garden, blossom tree, roots, waterfall, hollow and the island's tip together, none of it under the card */
+  /* the first view: where the cottage, pond, blossom tree (foot and crown), a root on the cliff, the basin, the hollow, the island's tip and the end of the long fall are drawn, all on the screen and none under the card.
+     It checks where those places land, not that nothing stands in front of them. */
+  const firstView = (pg) => pg.evaluate(() => { const d = window.CFB.garden.world.debug, cv = document.getElementById('sx-canvas').getBoundingClientRect(), card = document.getElementById('sx-card').getBoundingClientRect(), side = card.top < innerHeight * 0.6 && innerWidth > innerHeight, out = []; for (const [k, p] of Object.entries(d.marks())) { const q = d.project(p[0], p[1], p[2]), X = cv.left + q.x, Y = cv.top + q.y, under = side ? X > card.left && Y > card.top : Y > card.top - 4; if (!(X > 4 && X < innerWidth - 4 && Y > 50 && Y < cv.bottom) || under) out.push(`${k} at ${Math.round(X)}, ${Math.round(Y)} (card starts at ${Math.round(card.top)})`); } return out; });
   await snap();
-  const first = await page.evaluate(() => { const d = window.CFB.garden.world.debug, cv = document.getElementById('sx-canvas').getBoundingClientRect(), card = document.getElementById('sx-card').getBoundingClientRect(), out = []; for (const [k, p] of Object.entries(d.marks())) { const q = d.project(p[0], p[1], p[2]), X = cv.left + q.x, Y = cv.top + q.y; if (!(X > 4 && X < innerWidth - 4 && Y > 60 && Y < card.top - 4)) out.push(`${k} at ${Math.round(X)}, ${Math.round(Y)} (card starts at ${Math.round(card.top)})`); } return out; });
-  check(first.length === 0, `the first view shows the cottage, pond, blossom tree, roots, waterfall, hollow and the island's tip, all clear of the card${first.length ? ': ' + first.join('; ') : ''}`);
+  const first = await firstView(page);
+  check(first.length === 0, `the first view has the cottage, pond, blossom tree, roots, waterfall, hollow and the island's tip on screen, clear of the card${first.length ? ': ' + first.join('; ') : ''}`);
+  const flow = await page.evaluate(() => window.CFB.garden.world.debug.flow());
+  check(flow.every((v) => v > 0), `the falls' streaks run downhill (${flow.map((v) => v.toFixed(2)).join(', ')})`);
   check((await page.textContent('#sx-card')).includes('Bunny Meadow') && (await page.textContent('#sx-card')).includes(`0 of ${MEADOW.length} learned`), 'the card names the habitat and its progress');
   const names = await page.evaluate(() => { const g = window.CFB.garden, out = {}; for (const a of g.world.animals()) (out[a.habitat] = out[a.habitat] || []).push(a.name); return { world: out, cards: Object.fromEntries(Object.entries(g.home).map(([k, v]) => [k, v.who.join(' and ').split(' and ')])) }; });
   check(HABITATS.every((h) => names.world[h].join() === names.cards[h].join()), 'the names on the cards are the names in the world');
@@ -173,7 +177,8 @@ const W = () => window.CFB.garden.world;
   for (const [w, h, what] of [[320, 568, 'narrow portrait'], [844, 390, 'landscape']]) {
     const c = await browser.newContext({ viewport: { width: w, height: h }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
     const p = await c.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(e.message));
-    await p.goto(BASE + '?intro=0#garden'); await ready(p);
+    await p.goto(BASE + '?intro=0#garden'); await ready(p); await snap(p);
+    { const out = await firstView(p); check(out.length === 0, `${what}: the first view has the whole island on screen, clear of the card${out.length ? ': ' + out.join('; ') : ''}`); }
     check(await tappable('#sx-visit', p) && (await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth)), `${what}: Visit is tappable and nothing spills sideways`);
     await p.tap('#sx-visit'); await snap(p);
     const t = await whereIs('clover', p);

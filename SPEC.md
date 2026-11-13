@@ -188,7 +188,8 @@ me**.
   animal; no certifier's mark in the scene. The 3D loads only when the
   Garden is opened, and plain habitat cards show instead where 3D can't
   run (no WebGL, data saver).
-  The world: one floating island, seen whole from garden to tip (changed
+  The world: one floating island, seen whole from garden to tip in the
+  first view (turning it or zooming in shows parts closer; changed
   2026-11-13 on Jose's brief; his reference picture is
   `docs/reference/floating-island.jpg`, a direction only: nothing from it
   ships). Under the garden is a deep, uneven mass of earth and stone, a
@@ -254,7 +255,8 @@ me**.
     one visit; with 3D blocked, the cards show instead.
   - Done when (the floating island): on a phone held upright the first
     view shows the garden, the roots, the waterfall and the underside
-    together, with the card covering none of the island; the quiz, saved
+    together, with the card covering none of the island (also at 320 x
+    568, sideways and on a computer); the quiz, saved
     progress and everything learning changes work as before.
 
 ## Not in v1
@@ -381,7 +383,14 @@ only if it can be shown to work across skin tones.
   the mouse wheel over the world zooms and cannot scroll the page (the
   scrollbar and keys can); each animal makes a little garbage every frame
   (about 50 small objects a frame with all sixteen); the grey rabbit's
-  ears are stiff because they lie on its back.
+  ears are stiff because they lie on its back; Clover and the grey rabbit
+  are still about 12,000 triangles each (the others about 6,000), because
+  their fur pictures are cut into many small pieces the shrinking tool
+  will not merge.
+- Animals are small in the first view (about 60% of the size they had
+  when the garden alone filled the screen): the cost of showing the whole
+  depth. Zooming in comes up to the garden. Jose to say if the first view
+  should sit closer and let the tip run under the card.
 - Does the neutral wording stay ("No longer in Leaping Bunny's guide",
   never "dropped")? Jose decides.
 

@@ -215,7 +215,7 @@ tiles.
   ledges read at phone size (smooth, it turned to a blur). Flowers and
   animals must stay lighter or pinker than the grass they stand on.
 - **Glow** is rare: the mushrooms in the hollow and the seed pods under
-  the blossom tree, each a pale unlit shape with one soft halo. Nothing
+  the blossom tree, pale unlit shapes with a few soft halos among them. Nothing
   else sparkles.
 - **Habitat cards and rounds** reuse the quiz's parts: `.quiz-opt`
   buttons (green with a check when right, red with a cross for a wrong

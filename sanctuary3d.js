@@ -1,7 +1,9 @@
 /* C.F.B. Your Sanctuary: the 3D world behind the Garden's quiz. Loaded only when the Garden
    screen opens (garden.js imports it), never by Home, Brands or Scan.
-   One island: sculpted terrain with an earth-and-stone edge, a pond fed by a two-step
-   waterfall, stone paths, a cottage, trees, and five habitats (HABS), one per quiz topic:
+   One floating island: sculpted terrain on a deep mass of earth and stone (ledges, a hollow,
+   an off-centre tip), one great blossom tree whose roots go down the cliff, a stream into the
+   pond and a waterfall from the pond down the outside, stone paths, a cottage on a raised
+   lawn, trees, and five habitats (HABS), one per quiz topic:
    the rabbits' clover meadow, the ducks' willow pond, the guinea pigs' orchard, the beagles'
    leafy garden and the deer's wooded meadow. Everything except the models in
    assets/sanctuary/ (the animals and the cottage) is made here in code (terrain, water,
@@ -33,8 +35,8 @@ const R0 = 31;                                   // the island's mean radius
 const turn = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b));   // the angle from b round to a, the short way
 /* The outline seen from above. edge0 is the land's own wandering edge; edgeR adds the three
    things that make its front: a cove cut back to the pond's bank (COVE, where the water leaves),
-   a prow under the blossom tree and a blunter one front left. th is atan2(z, x); the default
-   camera looks from th = 1.4. */
+   a prow under the blossom tree and a blunter one front left. th is atan2(z, x); the first
+   view looks from the +z side (th about 1.4), so the front of the island is th 0.5 to 2.3. */
 const COVE = { th: 1.0, r: 20.8 }, HERO = { x: 18.6, z: 15.4 };
 const edge0 = (th) => R0 + 3.2 * (fbm(Math.cos(th) * 1.3 + 5, Math.sin(th) * 1.3 + 9, 3) - 0.5) * 2 + 1.2 * Math.sin(th * 3 + 0.6);
 const coveAt = (th) => Math.exp(-Math.pow(turn(th, COVE.th) / 0.2, 4));
@@ -48,7 +50,7 @@ const POOLS = [
 const POND = POOLS[2];
 /* Where the pond overflows: a channel through its bank to the lip of the cove. */
 const OUT = (() => { const ex = Math.cos(COVE.th) * COVE.r, ez = Math.sin(COVE.th) * COVE.r, len = Math.hypot(ex - POND.x, ez - POND.z); return { dx: (ex - POND.x) / len, dz: (ez - POND.z) / len, len, ex, ez }; })();
-const outlet = (x, z) => { const px = x - POND.x, pz = z - POND.z; return [px * OUT.dx + pz * OUT.dz, Math.abs(px * OUT.dz - pz * OUT.dx)]; };
+const outS = (x, z) => (x - POND.x) * OUT.dx + (z - POND.z) * OUT.dz, outOff = (x, z) => Math.abs((x - POND.x) * OUT.dz - (z - POND.z) * OUT.dx);   // how far along the way out, and how far to the side of it
 const RUNS = [[0, 1], [1, 2]].map(([a, b]) => {
   const A = POOLS[a], B = POOLS[b], len = Math.hypot(B.x - A.x, B.z - A.z), dx = (B.x - A.x) / len, dz = (B.z - A.z) / len;
   const s0 = A.r + 0.2, s1 = Math.min(s0 + 1.5, len - B.r + 0.4);
@@ -69,7 +71,7 @@ export const HABS = [
 const HAB = Object.fromEntries(HABS.map((h) => [h.id, h])), MEADOW = HAB.meadow, LAND = HABS.filter((h) => !h.pool);
 /* Who lives where. The first of each habitat is there from the start; the next two move in
    as the topic is learned (the pond's first is Willow with one duckling). Names and lines
-   speak for the founder: she has not signed them off yet (SPEC "Open questions"). */
+   speak for the founder: Jose's to approve (SPEC "Open questions"). */
 export const ROSTER = [
   { id: "clover", hab: "meadow", model: "rabbit-clover", name: "Clover", line: "Curious, playful, and very fond of clover.", at: [-3.6, 9.6, 0.5], n: 1 },
   { id: "hazel", hab: "meadow", model: "rabbit-tan", name: "Hazel", line: "Quick on her feet, and first to every new flower.", at: [-6.9, 11.8, 1.9], n: 2 },
@@ -105,7 +107,8 @@ function natural(x, z) {
   h += 3.8 * gauss(x + 21, z + 2, 6.5);            // a rise on the left
   h += 2.2 * gauss(x - 23, z - 9, 5);
   h += 1.6 * gauss(x + 12, z - 19, 5);
-  { const d = Math.hypot(x + 10, z + 11) + (fbm(x * 0.22 + 7, z * 0.22, 2) - 0.5) * 2.4, t = 1 - smooth(6.6, 9.4, d); h = mix(h, TERRACE + (1 - smooth(0, 6.6, d)) * 0.3, t); }   // the cottage's terrace: a raised lawn with a firm bank
+  { const d = Math.hypot(x + 10, z + 11) + (fbm(x * 0.22 + 7, z * 0.22, 2) - 0.5) * 1.6, ax = x + 8.6, az = z + 6.6, k = clamp((ax * 3.2 + az * 5.2) / 37.28, 0, 1), ramp = 1 - smooth(1.3, 3.2, Math.hypot(ax - 3.2 * k, az - 5.2 * k));   // ramp: near the path's way down, the bank eases out into a slope for steps
+    h = mix(h, TERRACE, 1 - smooth(mix(7.5, 4.4, ramp), mix(10, 11, ramp), d)); }   // the cottage's terrace: a raised lawn with a firm bank
   for (const b of LAND) { const m = 1 - smooth(b.r * 0.78, b.r + 4.2, Math.hypot(x - b.x, z - b.z)); if (m > 0) h = mix(h, b.base + (fbm(x * 0.2, z * 0.2, 2) - 0.5) * 0.3, m * 0.9); }   // each habitat's terrace
   return h;
 }
@@ -126,10 +129,9 @@ function height(x, z) {
     const off = Math.abs(px * r.dz - pz * r.dx);
     if (off < 2.2) h = mix(Math.min(h, r.w(s) - 0.3), h, smooth(0.7, 2.2, off));
   }
-  { const d = distToPaths(x, z); if (d < 2.4) h -= (1 - smooth(1.1, 2.4, d)) * 0.16; }   // the paths lie a little into the ground
-  { const [s, off] = outlet(x, z); if (s > POND.r - 1.2 && off < 2.6) h = mix(Math.min(h, POND.L - 0.32), h, smooth(1.0, 2.6, off)); }   // the way out of the pond
+  let ch = 0; { const s = outS(x, z); if (s > POND.r - 1.2) { const off = outOff(x, z); if (off < 2.6) { ch = 1 - smooth(1.0, 2.6, off); h = mix(h, Math.min(h, POND.L - 0.32), ch); } } }   // the way out of the pond
   const rn = Math.hypot(x, z) / edgeR(Math.atan2(z, x));
-  return h - smooth(0.92, 1, rn) * 1.1;
+  return h - smooth(0.92, 1, rn) * 1.1 * (1 - ch);   // the turf rounds off at the edge, except where the water runs over it
 }
 function distToPaths(x, z) {
   let best = 1e9;
@@ -143,7 +145,7 @@ function distToPaths(x, z) {
 function wet(x, z, margin = 0) {   // in a pool or the stream
   for (const p of POOLS) if (Math.hypot(x - p.x, z - p.z) < p.r + margin) return true;
   for (const r of RUNS) { const px = x - r.A.x, pz = z - r.A.z, s = px * r.dx + pz * r.dz; if (s > 0 && s < r.len && Math.abs(px * r.dz - pz * r.dx) < 1.3 + margin) return true; }
-  const [s, off] = outlet(x, z); if (s > 0 && s < OUT.len + 2 && off < 1.4 + margin) return true;
+  const s = outS(x, z); if (s > 0 && s < OUT.len + 2 && outOff(x, z) < 1.4 + margin) return true;
   return false;
 }
 const slopeAt = (x, z) => Math.hypot(height(x + 0.4, z) - height(x - 0.4, z), height(x, z + 0.4) - height(x, z - 0.4)) / 0.8;
@@ -360,17 +362,18 @@ function fallGeo(pts) {
   pts.forEach(([p, w, a], i) => {
     const q = pts[Math.min(i + 1, pts.length - 1)][0], o = pts[Math.max(i - 1, 0)][0]; d.subVectors(q, o); if (i) len += p.distanceTo(o);
     const hl = Math.hypot(d.x, d.z) || 1, sx = -d.z / hl, sz = d.x / hl, fx = d.x / hl, fz = d.z / hl;   // across the flow, and the way it is heading
-    for (let k = 0; k <= ACROSS; k++) { const t = k / ACROSS * 2 - 1, bow = (1 - t * t) * w * 0.28; pos.push(p.x + sx * w * t + fx * bow, p.y, p.z + sz * w * t + fz * bow); uv.push(k / ACROSS, len * 0.11); col.push(1, 1, 1, a * (1 - 0.35 * t * t)); }
+    for (let k = 0; k <= ACROSS; k++) { const t = k / ACROSS * 2 - 1, bow = (1 - t * t) * w * 0.28; pos.push(p.x + sx * w * t + fx * bow, p.y, p.z + sz * w * t + fz * bow); uv.push(k / ACROSS, -len * 0.11); col.push(1, 1, 1, a * (1 - 0.35 * t * t)); }
     if (i < pts.length - 1) for (let k = 0; k < ACROSS; k++) { const a0 = i * (ACROSS + 1) + k; idx.push(a0, a0 + 1, a0 + ACROSS + 1, a0 + 1, a0 + ACROSS + 2, a0 + ACROSS + 1); }
   });
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); g.setAttribute("color", new THREE.Float32BufferAttribute(col, 4)); g.setIndex(idx); return g;
 }
 function mistTex() { return canvasTex(64, (g, n) => { const gr = g.createRadialGradient(n / 2, n / 2, 1, n / 2, n / 2, n / 2); gr.addColorStop(0, "rgba(255,255,255,.9)"); gr.addColorStop(0.45, "rgba(255,255,255,.35)"); gr.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = gr; g.fillRect(0, 0, n, n); }); }
 /* The blossom tree's crown: clusters of soft lumps in blush, a few sage ones at the fringe. World units, about the tree's foot. */
+const HERO_CROWN = [[-4.6, 10.9, 1.0, 1], [0.2, 12.6, -1.2, 1.1], [3.3, 10.7, 1.5, 0.95], [-1.6, 11.4, 2.0, 1]];   // its clusters: x, y, z from the tree's foot, and size
 function heroCrown() {
   const r = rng(77), parts = [], tint = [];
   const lump = (x, y, z, s, green) => { const g = mergeVertices(new THREE.IcosahedronGeometry(s, 2)); g.scale(1, 0.8, 1); g.translate(x, y, z); parts.push(g); tint.push([g.attributes.position.count, green]); };
-  for (const [cx, cy, cz, k] of [[-4.6, 10.9, 1.0, 1], [0.2, 12.6, -1.2, 1.1], [3.3, 10.7, 1.5, 0.95], [-1.6, 11.4, 2.0, 1]]) {
+  for (const [cx, cy, cz, k] of HERO_CROWN) {
     lump(cx, cy + 0.5, cz, 2.5 * k); for (let i = 0; i < 5; i++) { const a = (i / 5) * 6.28 + r(), d = (1.5 + r() * 1.2) * k; lump(cx + Math.cos(a) * d, cy + (r() - 0.55) * 1.6, cz + Math.sin(a) * d * 0.9, (1.5 + r() * 0.8) * k); }
     for (let i = 0; i < 3; i++) { const a = r() * 6.28, d = 2.9 * k; lump(cx + Math.cos(a) * d, cy - 1.1 - r() * 0.5, cz + Math.sin(a) * d, 0.75 + r() * 0.35, true); }
   }
@@ -534,7 +537,7 @@ function sway(mat, wind, k, tree) {
   #else
   vec3 wo = modelMatrix[3].xyz;
   #endif
-  float wh = max(0.0, transformed.y - ${(tree === true ? 0.5 : +tree || 0).toFixed(2)}), wp = wo.x * 0.17 + wo.z * 0.12;
+  float wh = ${tree === "hang" ? "max(0.0, -transformed.y)" : "max(0.0, transformed.y - " + (tree === true ? 0.5 : +tree || 0).toFixed(2) + ")"}, wp = wo.x * 0.17 + wo.z * 0.12;
   float wg = sin(uWind * 1.1 - wp) * 0.62 + sin(uWind * 2.6 - wp * 2.3 + transformed.y * 3.0) * 0.38;
   transformed.x += wg * wh * wh * ${k.toFixed(4)}; transformed.z += wg * wh * wh * ${(k * 0.6).toFixed(4)};
 }`);
@@ -573,7 +576,7 @@ export async function mount(canvas, opts = {}) {
 
   /* rocks: round the pools and falls, either side of the pond's way out, the big mossy one by the meadow, and strays */
   const rocks = [[], [], []], rock = (x, z, s, sink = 0.3, sy = 1) => { if (nearShelter(x, z, s)) return; rocks[Math.floor(r() * 3)].push({ x, y: Y(x, z) - s * sink + 0.05, z, ry: r() * 6.28, s, sy }); if (s > 0.4) obstacles.push({ x, z, r: s * 0.85, what: "a rock" }); };
-  for (const p of POOLS) { const n = Math.round(p.r * 3.4); for (let i = 0; i < n; i++) { const a = (i / n) * 6.28 + r() * 0.4, d = p.r + 0.5 + r() * 0.8; if (p === POND && (r() < 0.45 || outlet(p.x + Math.cos(a) * d, p.z + Math.sin(a) * d)[1] < 2.3 && outlet(p.x + Math.cos(a) * d, p.z + Math.sin(a) * d)[0] > 0)) continue; rock(p.x + Math.cos(a) * d, p.z + Math.sin(a) * d, 0.45 + r() * 0.75); } }
+  for (const p of POOLS) { const n = Math.round(p.r * 3.4); for (let i = 0; i < n; i++) { const a = (i / n) * 6.28 + r() * 0.4, d = p.r + 0.5 + r() * 0.8; if (p === POND && (r() < 0.45 || outOff(p.x + Math.cos(a) * d, p.z + Math.sin(a) * d) < 2.3 && outS(p.x + Math.cos(a) * d, p.z + Math.sin(a) * d) > 0)) continue; rock(p.x + Math.cos(a) * d, p.z + Math.sin(a) * d, 0.45 + r() * 0.75); } }
   for (const run of RUNS) for (let s = run.A.r - 0.2; s < run.len - run.B.r + 0.6; s += 0.8) for (const sd of [-1, 1]) { const o = sd * (1.45 + r() * 0.5); rock(run.A.x + run.dx * s + run.dz * o, run.A.z + run.dz * s - run.dx * o, 0.55 + r() * 0.7, 0.25, 1.1); }
   for (let i = 0; i < 16; i++) { const a = -0.9 + r() * 1.5, d = 3 + r() * 6; rock(19.5 + Math.cos(a) * d * 0.9, -14.5 + Math.sin(a) * d, 0.9 + r() * 1.5, 0.35, 1.15); }   // the height behind the falls
   for (const sd of [-1, 1]) rock(OUT.ex - OUT.dx * 1.5 + OUT.dz * sd * 2.5, OUT.ez - OUT.dz * 1.5 - OUT.dx * sd * 2.5, sd > 0 ? 1.5 : 1.25, 0.4, 1.1);   // the gateposts of the waterfall
@@ -590,7 +593,7 @@ export async function mount(canvas, opts = {}) {
   world.add(instanced(stoneGeo, pathMat, stones, false));
   /* shallow steps where a path drops down a bank: a slab per step, sunk into the slope */
   { const steps = [], first = PATHS[0], curve = new THREE.CatmullRomCurve3(first.map(([x, z]) => new THREE.Vector3(x, 0, z))), n = Math.round(curve.getLength() / 0.8);
-    for (let i = 0; i <= n; i++) { const q = curve.getPointAt(i / n); if (slopeAt(q.x, q.z) < 0.3) continue; const t = curve.getTangentAt(i / n); steps.push({ x: q.x, y: Y(q.x, q.z) - 0.1, z: q.z, ry: Math.atan2(t.x, t.z), s: 1 }); }
+    for (let i = 0; i <= n; i++) { const q = curve.getPointAt(i / n); const t = curve.getTangentAt(i / n); if (i / n > 0.5 || Math.abs(Y(q.x + t.x * 0.5, q.z + t.z * 0.5) - Y(q.x - t.x * 0.5, q.z - t.z * 0.5)) < 0.22) continue; steps.push({ x: q.x, y: Y(q.x, q.z) - 0.1, z: q.z, ry: Math.atan2(t.x, t.z), s: 1 }); }
     const sg = new THREE.BoxGeometry(2.3, 0.3, 0.78); sg.translate(0, 0, 0.1); const sc = new Float32Array(sg.attributes.position.count * 3).fill(1); sg.setAttribute("color", new THREE.BufferAttribute(sc, 3));
     if (steps.length) world.add(instanced(sg, pathMat, steps, false)); }
 
@@ -611,11 +614,11 @@ export async function mount(canvas, opts = {}) {
 
   /* the way out: through the pond's bank, over the lip of the cove, down to the basin on the
      cove's floor, across it at a slant, and off its front edge past the tapering base */
-  const basin = body.ledge(COVE.th, BASIN_U, 0.4), spill = body.ledge(1.2, BASIN_U, 1.02), mist = [];
+  const basin = body.ledge(COVE.th, BASIN_U, 0.4), spill = body.ledge(1.2, BASIN_U, 1.02), mist = [], fallEnd = [], falls = [];
   { const strip = (pts, w, lift) => { const pos = [], uv = [], idx = []; pts.forEach((q, i) => { const o = pts[Math.max(0, i - 1)], n = pts[Math.min(pts.length - 1, i + 1)], dx = n.x - o.x, dz = n.z - o.z, l = Math.hypot(dx, dz) || 1; pos.push(q.x + dz / l * w, q.y + lift, q.z - dx / l * w, q.x - dz / l * w, q.y + lift, q.z + dx / l * w); uv.push(0, -i * 0.3, 1, -i * 0.3); if (i < pts.length - 1) idx.push(i * 2, i * 2 + 1, i * 2 + 2, i * 2 + 1, i * 2 + 3, i * 2 + 2); }); const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return g; };
     const fallBody = new THREE.MeshBasicMaterial({ color: 0x8adbd4, vertexColors: true, transparent: true, opacity: 0.92, depthWrite: false, side: THREE.DoubleSide });
     const fallTop = new THREE.MeshBasicMaterial({ map: streak, vertexColors: true, transparent: true, depthWrite: false, side: THREE.DoubleSide });
-    const pour = (pts) => { const g = fallGeo(pts), a = new THREE.Mesh(g, fallBody), b = new THREE.Mesh(g, fallTop); a.renderOrder = 1; b.renderOrder = 2; world.add(a, b); };
+    const pour = (pts) => { const g = fallGeo(pts), a = new THREE.Mesh(g, fallBody), b = new THREE.Mesh(g, fallTop); a.renderOrder = 1; b.renderOrder = 2; world.add(a, b); falls.push(g); };
     const ch = []; for (let i = 0; i <= 6; i++) { const sN = mix(POND.r - 0.9, OUT.len + 0.1, i / 6); ch.push(new THREE.Vector3(POND.x + OUT.dx * sN, POND.L, POND.z + OUT.dz * sN)); }
     world.add(new THREE.Mesh(strip(ch, 1.25, 0.02), waterMat));
     const lip = new THREE.Vector3(OUT.ex, POND.L, OUT.ez), land = new THREE.Vector3(basin.x, basin.y + 0.25, basin.z), up = [[new THREE.Vector3(lip.x - OUT.dx * 1.2, lip.y + 0.04, lip.z - OUT.dz * 1.2), 1.1, 0.5]];
@@ -627,7 +630,7 @@ export async function mount(canvas, opts = {}) {
     world.add(new THREE.Mesh(strip(across, 1.0, 0), waterMat));
     const hd = Math.hypot(spill.x - land.x, spill.z - land.z), fx = (spill.x - land.x) / hd, fz = (spill.z - land.z) / hd, drop = spill.y + DEEP + 6, down = [[new THREE.Vector3(spill.x - fx * 1.2, spill.y + 0.24, spill.z - fz * 1.2), 0.95, 0.5]];
     for (let i = 0; i <= 14; i++) { const t = i / 14, o = 3.4 * Math.pow(t, 0.55); down.push([new THREE.Vector3(spill.x + fx * o, spill.y + 0.2 - drop * Math.pow(t, 1.6), spill.z + fz * o), mix(0.95, 2.0, t), 0.95 * (1 - smooth(0.62, 1, t))]); }
-    pour(down);
+    pour(down); fallEnd.push(down[down.length - 1][0].x, down[down.length - 1][0].y + 3, down[down.length - 1][0].z);
     /* a few rocks round the basin, standing in the ledge it lies on */
     const ring = []; for (const [a, s] of [[0.35, 1.0], [1.3, 0.8], [2.5, 1.1], [-0.6, 0.9], [-1.7, 0.7]]) { const an = COVE.th + a, x = land.x + Math.cos(an) * 3.5, z = land.z + Math.sin(an) * 3.0; ring.push({ x, y: land.y - 0.35 - s * 0.2, z, ry: a * 7, s, sy: 0.9 }); }
     world.add(instanced(rockGeo(31), rockMat, ring, true));
@@ -657,9 +660,9 @@ export async function mount(canvas, opts = {}) {
   const okGround = (x, z, pathGap = 0.9) => inside(x, z) && !wet(x, z, 0.5) && distToPaths(x, z) > pathGap && slopeAt(x, z) < 0.75 && !inHabitat(x, z, 0.2) && !nearShelter(x, z) && Math.hypot(x + 10, z + 11) > 5.2;
   const drifts = [   // [x, z, radius, how many, kind]
     [-0.6, 14.2, 2.2, 26, "daisy"], [1.6, 17.4, 2.4, 24, "spike"], [-14.5, 9.5, 2.4, 24, "pinkspike"], [3.6, 4.6, 1.6, 16, "cosmos"], [5.8, 16.6, 1.8, 16, "daisy"], [-13.5, -5.4, 2.2, 22, "pinkspike"], [-4, -3.2, 2.0, 20, "cosmos"],
-    [-15.6, -14.6, 2.4, 22, "cosmos"], [-3.6, -12.4, 2.0, 18, "cosmos"], [-8, 20, 2.6, 26, "pinkspike"], [-1.5, 22.5, 2.4, 24, "daisy"], [6.5, 23, 2.4, 22, "cosmos"], [13.5, 21, 2.2, 20, "spike"], [-17, 14.5, 2.2, 20, "cosmos"], [19, 18.5, 2.0, 18, "daisy"], [-23, 12, 1.8, 14, "daisy"],
-    [-5.0, -14.2, 1.4, 14, "pinkspike"], [-14.2, -6.8, 1.4, 14, "daisy"], [-2.6, -5.6, 1.6, 16, "cosmos"], [-5.6, 0.4, 1.3, 12, "daisy"], [15.4, 18.2, 1.5, 14, "cosmos"], [22.6, 16.4, 1.4, 12, "daisy"],   // the terrace's edge and foot, the path down, the blossom tree's foot
-    [18.8, 3.6, 2.0, 20, "pinkspike"], [20.8, 12.4, 2.4, 24, "cosmos"], [14.6, 17.6, 2.4, 24, "daisy"], [22.4, -3.4, 2.2, 18, "spike"], [10.6, -1.8, 1.4, 12, "cosmos"], [-12, -1.6, 1.6, 14, "spike"], [-9, -0.6, 1.6, 14, "daisy"], [12, -17, 2.2, 18, "daisy"], [-12, -21, 2.2, 18, "spike"],
+    [-15.6, -14.6, 2.4, 22, "cosmos"], [-3.6, -12.4, 2.0, 18, "cosmos"], [-8, 20, 2.6, 26, "pinkspike"], [-1.5, 22.5, 2.4, 24, "daisy"], [6.5, 23, 2.4, 22, "cosmos"], [8.6, 20.4, 2.0, 18, "spike"], [-17, 14.5, 2.2, 20, "cosmos"], [19, 18.5, 2.0, 18, "daisy"], [-23, 12, 1.8, 14, "daisy"],
+    [-5.0, -14.2, 1.4, 14, "pinkspike"], [-14.2, -6.8, 1.4, 14, "daisy"], [-2.6, -5.6, 1.6, 16, "cosmos"], [-8.8, -2.6, 1.4, 14, "daisy"], [22.2, 18.4, 1.5, 14, "cosmos"], [22.6, 16.4, 1.4, 12, "daisy"],   // the terrace's edge and foot, the path down, the blossom tree's foot
+    [18.8, 3.6, 2.0, 20, "pinkspike"], [20.8, 12.4, 2.4, 24, "cosmos"], [-9.6, 16.4, 2.2, 22, "daisy"], [22.4, -3.4, 2.2, 18, "spike"], [10.6, -1.8, 1.4, 12, "cosmos"], [-12, -1.6, 1.6, 14, "spike"], [-9, -0.6, 1.6, 14, "daisy"], [12, -17, 2.2, 18, "daisy"], [-12, -21, 2.2, 18, "spike"],
   ];
   const KINDS = ["cosmos", "daisy", "spike", "pinkspike"];
   LAND.forEach((h, hi) => { for (let i = 0; i < 6; i++) { const a = Math.atan2(Math.sin(h.az), Math.cos(h.az)) + 1.15 + (i / 5) * (6.283 - 2.3), d = h.r + 1.3 + (i % 2) * 0.5; drifts.push([h.x + Math.sin(a) * d, h.z + Math.cos(a) * d, 1.7, 22, KINDS[(i + hi) % 4]]); } });
@@ -702,7 +705,7 @@ export async function mount(canvas, opts = {}) {
     const y = Y(x, z) - 0.1; bushes[Math.floor(r() * 2)].push({ x, y, z, ry: r() * 6.28, s }); obstacles.push({ x, z, r: s * 1.05, what: "a shrub" });
     if (bloom) for (let i = 0; i < 26; i++) { const a = r() * 6.28, e = r() * 1.2, rad = 1.05 * s; dots.push({ x: x + Math.cos(a) * Math.sin(e) * rad, y: y + (0.75 + Math.cos(e) * 0.72) * s, z: z + Math.sin(a) * Math.sin(e) * rad, s: (0.09 + r() * 0.07) * s, ry: 0, color: C(bloom === 1 ? 0xf7a8c0 : 0xfffaf2).lerp(C(0xfbd9e4), r() * 0.5) }); }
   };
-  for (const [x, z, s, bloom] of [[-13.6, -8.2, 1.5, 1], [-6.2, -13.6, 1.3, 2], [-12.8, -15.2, 1.6, 0], [-7.2, -6.2, 0.9, 1], [-13.5, 15.5, 1.3, 2], [8.5, 17.2, 1.2, 1], [24.6, 4.6, 1.2, 1], [-3.4, -10.2, 1.0, 1], [-15.8, -5.4, 1.1, 2], [-18.5, -10.5, 1.7, 0], [12.5, -15.5, 1.5, 1], [-1.5, 18.6, 1.1, 0], [-11.5, 21.5, 1.4, 1], [2.5, 24.5, 1.2, 0], [10.5, 23.5, 1.3, 2], [-20.5, 10.5, 1.3, 0], [16.5, 21.5, 1.1, 0]]) bush(x, z, s, bloom);
+  for (const [x, z, s, bloom] of [[-13.6, -8.2, 1.5, 1], [-6.2, -13.6, 1.3, 2], [-12.8, -15.2, 1.6, 0], [-7.2, -6.2, 0.9, 1], [-13.5, 15.5, 1.3, 2], [5.4, 18.8, 1.2, 1], [24.6, 4.6, 1.2, 1], [-3.4, -10.2, 1.0, 1], [-15.8, -5.4, 1.1, 2], [-18.5, -10.5, 1.7, 0], [12.5, -15.5, 1.5, 1], [-1.5, 18.6, 1.1, 0], [-11.5, 21.5, 1.4, 1], [2.5, 24.5, 1.2, 0], [10.5, 23.5, 1.3, 2], [-20.5, 10.5, 1.3, 0], [16.5, 21.5, 1.1, 0]]) bush(x, z, s, bloom);
   LAND.forEach((h) => { const n = h.id === "burrow" ? 9 : 4; for (let i = 0; i < n; i++) { const a = h.az + Math.PI + (i / (n - 1) - 0.5) * (h.id === "burrow" ? 3.6 : 2.2) + (r() - 0.5) * 0.2, d = h.r + 1.1 + r() * 1.2; bush(h.x + Math.sin(a) * d, h.z + Math.cos(a) * d, (h.id === "burrow" ? 1.15 : 0.9) + r() * 0.5, h.id === "burrow" ? (i % 3) : (i % 2 ? 0 : 1 + (i % 4) / 2)); } });
   const bushMat = sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, envMapIntensity: 0.2 }), wind, 0.012);
   bushes.forEach((list, i) => world.add(instanced(bushGeo(60 + i * 9), bushMat, list, true)));
@@ -724,7 +727,7 @@ export async function mount(canvas, opts = {}) {
     [8.6, -19.4, 12.5, "oak", 3], [-6.6, -24.6, 9.5, "oak", 44], [5.4, -25.4, 8, "oak", 9], [-8.4, -20.6, 8.5, "oak", 51],                 // the wooded meadow
     [-24.4, -3.4, 6.2, "apple", 21], [-25, 2.4, 5.6, "apple", 27], [-22.6, 6.8, 6, "apple", 33], [-20.4, -6, 5.8, "apple", 38],            // the orchard
     [10.4, -13.6, 6.8, "blossom", 27], [-1.6, -11.6, 6, "blossom", 21], [11.2, -8.6, 5.2, "blossom", 38],                                  // the leafy garden
-    [21.6, 0.4, 9.5, "willow", 60],                                                                               // the willow pond
+    [19, 6.6, 9.5, "willow", 60],                                                                               // the willow pond
     [-21.5, -13.5, 10.5, "oak", 19], [-21.5, 15.2, 5.6, "blossom", 33], [-16.5, 20, 7.4, "oak", 52], [-3.5, 25.5, 5.2, "blossom", 57], [24.5, -6.5, 6.4, "blossom", 39], [-12.6, 3.4, 5.4, "blossom", 61],
   ]) {
     let x = x0, z = z0; const lim = edgeR(Math.atan2(z, x)) - 3, d0 = Math.hypot(x, z); if (d0 > lim) { x *= lim / d0; z *= lim / d0; }
@@ -796,7 +799,7 @@ export async function mount(canvas, opts = {}) {
     const trail = []; for (let i = 0; i < 7; i++) { const g = new THREE.IcosahedronGeometry(0.16 - i * 0.012, 0); g.scale(1, 0.7, 1); g.translate(Math.sin(i * 1.9) * 0.22, -i * 0.42, Math.cos(i * 1.7) * 0.1); trail.push(g); }
     const tm = mergeGeometries(trail), tp = tm.attributes.position, tc = []; for (let i = 0; i < tp.count; i++) { const t = clamp(-tp.getY(i) / 2.6, 0, 1); cc.copy(C(0x6f9f52)).lerp(C(0xa5cf7a), 1 - t); tc.push(cc.r, cc.g, cc.b); }
     tm.setAttribute("color", new THREE.Float32BufferAttribute(tc, 3));
-    world.add(instanced(tm, sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, envMapIntensity: 0.2 }), wind, -0.05, -2.6), hangs)); }
+    world.add(instanced(tm, sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, envMapIntensity: 0.2 }), wind, 0.05, "hang"), hangs)); }
 
   /* the light in the dark places: a cluster of mushrooms on the hollow's floor, and seed pods
      hanging under the blossom tree. Both are unlit bright material plus one soft sprite: no glow pass. */
@@ -813,7 +816,7 @@ export async function mount(canvas, opts = {}) {
     world.add(instanced(new THREE.CylinderGeometry(0.1, 0.14, 1, 5), new THREE.MeshStandardMaterial({ color: 0xf3e2c2, emissive: 0xc99a46, emissiveIntensity: 0.5, roughness: 0.9 }), stems.map((q) => ({ ...q, y: q.y + q.s * 0.5 }))));
     glows.push({ sp: lamp(hp.x, hp.y + 1.6, hp.z, 8, 0.32), o: 0.32, ph: 0 }, { sp: lamp(hp.x, hp.y + 0.8, hp.z, 4, 0.4), o: 0.4, ph: 2.1 }); }
   { const PR = rng(707), pods = [], stalk = [];
-    for (let i = 0; i < 14; i++) { const a = PR() * 6.2832, d = 2.4 + PR() * 4.4, k = ((i % 4) - 1.5), x = hx + Math.cos(a) * d + k * 0.3, y = hy + 8.1 + PR() * 1.4, z = hz + Math.sin(a) * d * 0.9; const l = 0.5 + PR() * 0.7; stalk.push({ x, y: y + l * 0.5, z, ry: 0, s: l }); pods.push({ x, y, z, ry: PR() * 6.28, s: 0.3 + PR() * 0.16 }); }
+    for (let i = 0; i < 11; i++) { const [cx, cy, cz] = HERO_CROWN[i % HERO_CROWN.length], a = PR() * 6.2832, d = 0.4 + PR() * 1.5, x = hx + cx + Math.cos(a) * d, z = hz + cz + Math.sin(a) * d, top = hy + cy - 0.9, y = top - 1.5 - PR() * 0.9; stalk.push({ x, y: (y + top) / 2, z, ry: 0, s: top - y }); pods.push({ x, y, z, ry: PR() * 6.28, s: 0.3 + PR() * 0.16 }); }   // each on a stalk that goes up into the lumps of its cluster
     const podG = new THREE.SphereGeometry(1, 7, 5); podG.scale(0.8, 1.25, 0.8);
     world.add(instanced(podG, new THREE.MeshBasicMaterial({ color: 0xfff0c4 }), pods));
     world.add(instanced(new THREE.CylinderGeometry(0.02, 0.025, 1, 4), new THREE.MeshStandardMaterial({ color: 0xa98a63, roughness: 1 }), stalk));
@@ -902,12 +905,12 @@ export async function mount(canvas, opts = {}) {
     if (chosen) { const d = clamp(chosen.size * 1.9 / (tan * Math.min(a, 0.9)), 9, 46); return { tx: chosen.x, ty: groundOf(chosen.hab) + chosen.size * 0.45 - d * tan * (tall ? 0.16 : 0.06), tz: chosen.z, az: goal.az, pol: 1.2, dist: d }; }
     if (mode !== "world") { const h = HAB[mode], d = clamp(h.r * 1.08 / (tan * Math.min(a, 1.3)), 16, 72); return { tx: h.x, ty: groundOf(h) + 0.6 - d * tan * (tall ? 0.1 : 0.06), tz: h.z, az: h.az, pol: 1.02, dist: d }; }
     // the whole island, top to tip: garden, roots, waterfall and the deep underside. In portrait it sits above the card.
-    return a > 1.05 ? { tx: 1, ty: -11, tz: 3, az: 0.2, pol: 1.06, dist: Math.max(38 / (tan * a), 40 / tan) } : fitWorld(tan);
+    return fitWorld(tan);
   }
   /* Portrait: pull back and aim so the whole island, from the tree tops to its tip, sits between the title and the card. */
-  const FIT = [[-32, 2, 3], [35.5, 2, 7], [6, 17, -21], [hx, hy + 15.5, hz], [body.tip[0], body.tip[1] - 1, body.tip[2]], [-10, Y(-10, -11.2) + 10, -11.2]], probe = new THREE.PerspectiveCamera(), fv = new THREE.Vector3();
+  const FIT = [[-32, 2, 3], [35.5, 2, 7], [6, 17, -21], [hx, hy + 15.5, hz], [body.tip[0], body.tip[1] - 1, body.tip[2]], [-10, Y(-10, -11.2) + 10, -11.2], fallEnd], probe = new THREE.PerspectiveCamera(), fv = new THREE.Vector3();
   function fitWorld(tan) {
-    const H = canvas.clientHeight || 1, cover = (opts.clear && opts.clear()) || 176, top = 1 - (2 * 84) / H, bot = -1 + (2 * (cover + 12)) / H, f = { tx: 3, ty: -11, tz: 3, az: 0.16, pol: 1.1, dist: 200 }, sp = Math.sin(f.pol);
+    const H = canvas.clientHeight || 1, side = cam.aspect > 1.5 && H < 500, cover = side ? 34 : (opts.clear && opts.clear()) || 176, top = 1 - (2 * (side ? 56 : 84)) / H, bot = -1 + (2 * (cover + 12)) / H, f = { tx: 3, ty: -11, tz: 3, az: 0.16, pol: 1.1, dist: 200 }, sp = Math.sin(f.pol);
     probe.fov = cam.fov; probe.aspect = cam.aspect; probe.near = 0.5; probe.far = 3000; probe.updateProjectionMatrix();
     for (let k = 0; k < 5; k++) {
       probe.position.set(f.tx + Math.sin(f.az) * sp * f.dist, f.ty + Math.cos(f.pol) * f.dist, f.tz + Math.cos(f.az) * sp * f.dist); probe.lookAt(f.tx, f.ty, f.tz); probe.updateMatrixWorld();
@@ -919,6 +922,8 @@ export async function mount(canvas, opts = {}) {
     return f;
   }
   const worldDist = () => { const m = mode, c = chosen; mode = "world"; chosen = null; const d = frameFor().dist; mode = m; chosen = c; return d; };
+  /* Zooming in on the whole island brings the view up from the middle of the mass to the garden, where the animals are. */
+  function aim() { if (mode !== "world") return; const f = frameFor(), k = smooth(f.dist * 0.4, f.dist * 0.95, goal.dist), [ox, oz] = aside(goal.az, goal.dist); goal.tx = mix(1 + ox, f.tx, k); goal.ty = mix(0.5, f.ty, k); goal.tz = mix(2 + oz, f.tz, k); }
   function limits() { return { dMin: mode === "world" ? worldDist() * 0.3 : 7, dMax: worldDist() * 1.25, pMin: 0.45, pMax: mode === "world" ? 1.5 : 1.45 }; }
   function retarget() { const az = view.az, f = frameFor(); Object.assign(goal, f); goal.az += Math.round((az - goal.az) / (Math.PI * 2)) * Math.PI * 2; screen(); wake(); }
   function applyCam() {
@@ -983,10 +988,10 @@ export async function mount(canvas, opts = {}) {
   const onMove = (e) => {
     const p = ptr.get(e.pointerId); if (!p) return; const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY; const L = limits();
     if (ptr.size === 1 && !multi) { const was = moved; moved = Math.max(moved, Math.hypot(e.clientX - sx0, e.clientY - sy0)); if (moved > slack(e)) { const k = was > slack(e) ? 1 : 0; goal.az -= dx * 0.0055 * k; goal.pol = clamp(goal.pol - dy * 0.004 * k, L.pMin, L.pMax); screen(); wake(); } }   // the wobble that turned a tap into a drag isn't spent on turning
-    else if (ptr.size === 2) { const [a, b] = [...ptr.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch && d > 1) goal.dist = clamp(goal.dist * (pinch / d), L.dMin, L.dMax); pinch = d; wake(); }
+    else if (ptr.size === 2) { const [a, b] = [...ptr.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch && d > 1) { goal.dist = clamp(goal.dist * (pinch / d), L.dMin, L.dMax); aim(); } pinch = d; wake(); }
   };
   const onUp = (e) => { if (!ptr.has(e.pointerId)) return; ptr.delete(e.pointerId); pinch = 0; if (e.type === "pointerup" && !ptr.size && !multi && moved <= slack(e) && opts.onPick) opts.onPick(pick(e.clientX, e.clientY, e.pointerType !== "mouse")); };
-  const onWheel = (e) => { e.preventDefault(); const L = limits(); goal.dist = clamp(goal.dist * Math.exp(e.deltaY * 0.0012), L.dMin, L.dMax); wake(); };
+  const onWheel = (e) => { e.preventDefault(); const L = limits(); goal.dist = clamp(goal.dist * Math.exp(e.deltaY * 0.0012), L.dMin, L.dMax); aim(); wake(); };
   canvas.addEventListener("pointerdown", onDown); canvas.addEventListener("pointermove", onMove); canvas.addEventListener("pointerup", onUp); canvas.addEventListener("pointercancel", onUp); canvas.addEventListener("lostpointercapture", onUp); canvas.addEventListener("wheel", onWheel, { passive: false });
 
   /* ---------- The loop. With reduced motion nothing idles: it draws only when something changes. ---------- */
@@ -995,7 +1000,7 @@ export async function mount(canvas, opts = {}) {
   const wake = () => { dirty = true; if (running && onscreen && !raf) raf = requestAnimationFrame(tick); };
   function detail() {   // less of the small stuff from far away; the animals a little larger there, so they still read
     const far = view.dist > 62; tuftMesh.count = Math.round(tufts.length * (thin ? 0.4 : far ? 0.55 : 1)); cloverMesh.visible = view.dist < 85 && !thin;
-    life.big = 1 + 0.3 * smooth(40, 95, view.dist) + 0.3 * smooth(120, 210, view.dist);
+    life.big = 1 + 0.3 * smooth(40, 95, view.dist) + 0.45 * smooth(120, 210, view.dist);
   }
   function tick(now) {
     raf = 0; if (!running || !onscreen) return;   // nothing is drawn while the world is scrolled out of sight
@@ -1051,8 +1056,10 @@ export async function mount(canvas, opts = {}) {
     },
     /* for the tests and the screenshots */
     debug: {
+      /* per fall: how fast a streak moves down it, in metres a second (positive is downhill). The picture drifts toward smaller v at 0.9 a second. */
+      flow: () => falls.map((g) => { const uv = g.attributes.uv, p = g.attributes.position, n = uv.count - 1, dv = uv.getY(n) - uv.getY(0), dy = p.getY(n) - p.getY(0); return (-0.9 / dv) * -dy; }),
       /* the things the first view has to show: [x, y, z] each */
-      marks: () => { const h = body.ledge(HOLLOW.th, SHELVES[1].u, 0.3), rt = surf(0.53, 0.45); return { tip: body.tip, basin: [basin.x, basin.y, basin.z], spill: [spill.x, spill.y, spill.z], hollow: [h.x, h.y + 1, h.z], roots: [rt.x, rt.y, rt.z], tree: [hx, hy + 4, hz], cottage: [-10, Y(-10, -11.2) + 4, -11.2], pond: [POND.x, POND.L, POND.z] }; },
+      marks: () => { const h = body.ledge(HOLLOW.th, SHELVES[1].u, 0.3), rt = surf(0.53, 0.45); return { tip: body.tip, basin: [basin.x, basin.y, basin.z], spill: [spill.x, spill.y, spill.z], hollow: [h.x, h.y + 1, h.z], roots: [rt.x, rt.y, rt.z], tree: [hx, hy + 4, hz], crown: [hx, hy + 14, hz], fallEnd, cottage: [-10, Y(-10, -11.2) + 4, -11.2], pond: [POND.x, POND.L, POND.z] }; },
       view, goal, cam, life, byId, trees, flyers, obstacles, pick, failed: failed.length,
       blooms: (hab) => blooms.reduce((n, m) => n + (hab ? m.userData.items.filter((it) => it.on && HABS[it.hab].id === hab).length : m.userData.shown), 0),
       shelter: (id) => shelters[id].extra.visible,
