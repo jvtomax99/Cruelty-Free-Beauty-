@@ -43,13 +43,18 @@ everything (`body::before`).
 
 ## Type
 
-- **Headings:** Fraunces, a soft serif (variable, WOFF2 in
-  `assets/fonts/`). Display italic in rose for the slogan's last words.
-- **Everything else:** Inter (variable).
+- **Headings:** Instrument Serif, a tall, narrow editorial serif (chosen
+  by Jose 2026-11-13 over a softer Fraunces and Bodoni Moda; replaces
+  Fraunces). One weight only: its faces claim 100 to 900 so a heading that
+  asks for 600 uses the drawn weight, never a fake bold, and
+  `size-adjust: 122%` sets it on the old scale. Italic in rose for the
+  slogan's last words, the first letter of each screen title, the brand
+  tile's initial and the price on a brand row.
+- **Everything else:** Manrope (variable; replaces Inter).
 - Scale (`--fs-*`): 11, 12, 13, 15, 16, 17, 20, 22, 28, 34, 40 for the
   hello line, and 56 (`--fs-show`) for the launch show's name card. Body text is 16. Inputs are never under 16 (iPhone zooms).
-- Weights: 450 (italic slogan), 500 (hello), 550 (labels, screen titles),
-  600 (tile and card titles, wordmark).
+- Weights (Manrope): 450 to 600 for labels, 700 for verdict chips. The
+  display face ignores weights (see above).
 - Letter spacing tightens as size grows (`--tr-sm`, `--tr-body`,
   `--tr-head`, `--tr-title`). Small capitals labels (the greeting) use
   0.12em.
@@ -87,7 +92,7 @@ tiles.
 
 ## Components
 
-- **Brand bar:** logo 44 px, "C.F.B." wordmark in Fraunces rose, "Cruelty-Free Beauty" under it.
+- **Brand bar:** logo 44 px, "C.F.B." wordmark in the display serif rose, "Cruelty-Free Beauty" under it.
 - **Hello banner (Home, 2026-11-12, sample awaiting the founder):** the
   Interpreter Hub's banner in our colours. A dressing-table photo
   (`assets/images/home-banner.webp`) full width on phones (452 px tall), a
@@ -99,7 +104,7 @@ tiles.
 - **Quick tiles:** four across, paper-to-blush, radius 20, bright rim
   (`--qt-edge`), a 52 px pin over a 13 px semibold label (64 px pin on
   computers). These replace the four big blush tiles on Home.
-- **Rail:** a Fraunces 20 heading, a count, "View all" in rose, then
+- **Rail:** a display-serif 20 heading, a count, "View all" in rose, then
   cards that scroll sideways (156 px wide, paper-to-blush). A 48 px tile
   with the brand's initial pokes over each card's top edge where the Hub
   has a pin; never a brand's logo.
@@ -112,13 +117,24 @@ tiles.
 - **Tab bar (phones):** floating glass capsule, 56 px tabs, each a 28 px
   pin over its label (32 px in the side rail); the active one in blush-2
   with its pin a touch larger. **Side rail (computers)** replaces it.
-- **Empty state:** the logo, a Fraunces line, one honest sentence.
+- **Empty state:** the logo, a display-serif line, one honest sentence.
 - **Strict / Certified switch:** blush pill track, the chosen side paper
   with the finish (44 px tall).
 - **Filter chip:** paper pill with a hairline, 44 px; on: blush-2 with
   rose-ink text.
-- **Brand row:** paper card, radius 20, name in Fraunces 17, chips on the
-  right, the reason it fails on its own line in ink-soft.
+- **Brand row:** radius 20, paper-to-blush with the bright rim
+  (`--qt-edge`) and the finish, like the rail cards. On the Brands list: a
+  44 px tile with the brand's initial on the left (never a logo) in one of
+  three finishes fixed per brand (porcelain: paper to blush-2, rose
+  letter; blush: blush to pink, rose-ink letter; rose: rose to rose-ink,
+  paper letter), then the name in the display face at 22 in rose-ink, and one row
+  of chips ending in the price band in the display italic at 17, ink-soft
+  ("$$ Mid", the filter chips' words; only the signs when the row already holds three chips). Every passing card is the same height at 390 px and wider; on narrower phones a long name or three chips wrap. The
+  reason a brand fails goes on a last line in ink-soft. Pressed: shrinks to
+  .985 and a 6 px rose edge grows in from the left (the Hub's card edge;
+  only on press, because a standing rose edge means "What changed"). Rows
+  fade up 6 px one after another when the screen opens, never while typing
+  or filtering.
 - **What changed:** a paper card on Home under the search bar, only when
   there is news; each change is a brand row with what the list showed, then
   the date and source link in footnote size; one hairline "Got it" button.
@@ -135,17 +151,17 @@ tiles.
   (PETA says it tests; under Strict, a parent that tests or mainland China
   sales), and
   plain ink when unknown or not about animal testing (vegan, price).
-- **Quiz:** one question per screen, Fraunces 22 question, 56 px paper
+- **Quiz:** one question per screen, display serif 22 question, 56 px paper
   answer cards (chosen: blush-2), a rose progress bar on blush, Back as a
   rose text button.
 - **Profile hero:** a paper-to-blush panel with a blush glow top right,
   a small-caps rose-ink label, the mirror pin (84 px, slow bob), the
   summary as paper chips, undertone chips to change it by hand. Before
   the quiz it shows the five step pins in a row instead.
-- **Routine step:** its 44 px pin beside the step name (Fraunces 17) and
+- **Routine step:** its 44 px pin beside the step name (display serif 17) and
   a blush count ("3 brands"); when every step gives the same brands, the
   five pins sit in a row under the one heading.
-  Inside: a paper card like the fact card; brand name in Fraunces 17
+  Inside: a paper card like the fact card; brand name in the display serif 17
   (links to its page), the reason in ink-soft, "Find your shade" link.
 - **Save button:** paper pill with a hairline, heart icon and "Save";
   on: blush-2 with the heart filled pink, "Saved". Beside the brand name.
@@ -165,11 +181,11 @@ tiles.
   `--sx-peek` (58 px), so the list under it shows there is more. Behind the
   canvas: blush-2 to blush to cream, top to bottom. Nothing floats over
   the world except: a 44 px glass back button, the title in rose-ink
-  (Fraunces 22, 28 on a computer) with one line under it, the learned
+  (display serif 22, 28 on a computer) with one line under it, the learned
   count as a paper pill, and one paper card at the bottom (radius 20,
   `--float`). No labels on the world itself.
 - **The card** has three states, all the same paper card. The whole
-  island: the habitat's name in Fraunces 20 rose-ink and one soft line,
+  island: the habitat's name in the display serif 20 rose-ink and one soft line,
   then a row with a 44 px round arrow each side of a rose Visit pill. A
   visit: the name, who is at home, the progress and what comes next, and
   a rose Practise pill. An animal: its round portrait (72, on sage), "Meet
@@ -189,7 +205,7 @@ tiles.
   grass they stand on.
 - **Habitat cards and rounds** reuse the quiz's parts: `.quiz-opt`
   buttons (green with a check when right, red with a cross for a wrong
-  pick), a paper result card with the verdict in Fraunces, the progress
+  pick), a paper result card with the verdict in the display serif, the progress
   bar in rose (green when a habitat is in bloom).
 
 ## Motion
@@ -229,7 +245,7 @@ on night, 15.4:1), `--glow` #F28DA0 (glow, the flash's edge), `--star` #FFF6F4 (
 name card's brightest text), `--halo` (pink at 60%, text and button glow),
 `--veil` (night at 75%, the vignette's edge), `--spot-line` (outlines on
 night) and `--night-glass` (buttons over the stage). Labels in
-`--pink` (7.9:1 on night-2). The name card's "C.F.B." is Fraunces 600 at
+`--pink` (7.9:1 on night-2). The name card's "C.F.B." is the display serif at
 `--fs-show` (56) with a pink glow; small-caps labels at 0.32em. Buttons:
 52 px pills, the main one blush with rose-ink text and a pink glow, the
 other an outline. The focus ring on night is `--pink`. Letterbox bars
@@ -241,7 +257,7 @@ and doesn't scream glamorous"): the film's own frame at 0.6 s, the
 lipstick held up before the bulb mirror (`assets/images/gate.webp`), so
 the tap flows straight into the film. It drifts slowly (scale 1 to 1.06
 over 14 s) and the glint on the lipstick breathes. Top: "C.F.B. presents"
-in `--gold-pale` small capitals, then "Cruelty-Free *Beauty*" in Fraunces
+in `--gold-pale` small capitals, then "Cruelty-Free *Beauty*" in the display serif
 500 at 34, `--star` with the italic in `--gold-pale`, and a short gold
 rule. Bottom: two 56 px pills with a `--gold-pale` hairline, the main one
 `--rose` with `--star` text, the other night glass. On a wide screen the
@@ -256,12 +272,12 @@ letterbox bars); on a wide screen it is a centred 9:16 column whose side
 edges fade into the night stage. Every word is real text in `.in-over`,
 which sits exactly on the film and sizes itself in the film's own units
 (cqw), so phone and column lay out the same. Lines over the film are
-Fraunces 500 with the second line italic: `--gold-pale` #F4DC9A on a
+the display serif with the second line italic: `--gold-pale` #F4DC9A on a
 `--night-veil` shade over the dressing room, `--gold-deep` #8A5E12 with
 `--berry` italic on a `--day-veil` over the garden. The phone is drawn in
 CSS; its cards are `--paper` with a thin `--gold` edge, an "Example" tag,
 the app's own chips ("Passes" green, "Doesn't pass" red), a label and a
-Fraunces status line for brand and for parent company (green ✓ or red ✕), and "See why" in
+display serif status line for brand and for parent company (green ✓ or red ✕), and "See why" in
 `--rose`. The chosen card gets a `--pink` outline and a filled heart. The
 button is `--rose` with a `--gold-pale` hairline, at least 56 px tall.
 Skip stays top right throughout. Never show PETA's logo or bunny-ears

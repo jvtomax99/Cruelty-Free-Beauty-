@@ -7,7 +7,7 @@
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v26";
+const CACHE_VERSION = "cfb-v28";
 const MEDIA = "cfb-media-v3";
 /* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
    download. Each file is saved the first time the Sanctuary asks for it, and the world then opens
@@ -46,9 +46,9 @@ const PRECACHE = [
   "assets/pins/blush.webp",
   "assets/pins/bronzer.webp",
   "assets/pins/lip.webp",
-  "assets/fonts/fraunces.woff2",
-  "assets/fonts/fraunces-italic.woff2",
-  "assets/fonts/inter.woff2",
+  "assets/fonts/instrument-serif.woff2",
+  "assets/fonts/instrument-serif-italic.woff2",
+  "assets/fonts/manrope.woff2",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
   "assets/icons/apple-touch-icon.png",

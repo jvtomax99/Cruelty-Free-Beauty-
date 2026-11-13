@@ -1,8 +1,8 @@
-/* C.F.B. styles. Every value comes from the tokens below; DESIGN.md explains them. */
-
-@font-face { font-family: "Fraunces"; src: url("assets/fonts/fraunces.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
-@font-face { font-family: "Fraunces"; src: url("assets/fonts/fraunces-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
-@font-face { font-family: "Inter"; src: url("assets/fonts/inter.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+/* Instrument Serif comes in one weight. Its faces claim 100-900 so a heading asking for 600 uses
+   it as drawn instead of a smeared fake bold; size-adjust lifts it to sit with the old scale. */
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; size-adjust: 122%; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; size-adjust: 122%; }
+@font-face { font-family: "Manrope"; src: url("assets/fonts/manrope.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
 
 /* ---------- Tokens ---------- */
 :root {
@@ -51,8 +51,8 @@
   --sx-peek: 58px;        /* how much of the page shows under the Sanctuary's 3D stage */
 
   /* type */
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --fs-cap2: 11px; --fs-cap: 12px; --fs-foot: 13px; --fs-sub: 15px; --fs-call: 16px;
   --fs-head: 17px; --fs-t3: 20px; --fs-t2: 22px; --fs-t1: 28px; --fs-large: 34px; --fs-hero: 40px; --fs-show: 56px;
   --tr-sm: 0.01em; --tr-body: -0.005em; --tr-head: -0.012em; --tr-title: -0.02em;
@@ -238,16 +238,49 @@ main {
 .count { margin: var(--sp-4) var(--sp-1) var(--sp-2); color: var(--ink-soft); font-size: var(--fs-foot); }
 .brand-list { list-style: none; display: grid; gap: var(--sp-2); padding: 0; margin: 0; }
 .brand-row {
+  position: relative; overflow: hidden;
   display: grid; grid-template-columns: 1fr auto; gap: var(--sp-1) var(--sp-3); align-items: center;
-  padding: var(--sp-3) var(--sp-4); min-height: 60px; background: var(--paper); border: 1px solid var(--line);
+  padding: var(--sp-3) var(--sp-4); min-height: 60px; border: 1px solid var(--qt-edge);
+  background: linear-gradient(170deg, var(--paper) 30%, var(--blush));
   border-radius: var(--r-lg); box-shadow: var(--finish); color: var(--ink); text-decoration: none;
-  transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
+  transition: transform var(--t-press) var(--ease), box-shadow var(--t-press) var(--ease);
 }
-.brand-row:active, .brand-row.is-pressed { transform: scale(.985); background: var(--blush); }
+.brand-row::before {   /* the rose edge that grows in on a press (Interp's card edge; only on press here) */
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 6px; background: var(--rose);
+  transform: scaleX(0); transform-origin: left; transition: transform var(--t-press) var(--ease);
+}
+.brand-row:active, .brand-row.is-pressed { transform: scale(.985); box-shadow: var(--pressed); }
+.brand-row:active::before, .brand-row.is-pressed::before { transform: scaleX(1); }
+/* The Brands list's row: the initial tile, then name, what it sells, and the chips on their own row */
+.br-rich { grid-template-columns: auto 1fr; gap: var(--sp-3); }
+.br-mono {   /* the brand's initial, as on Home's rail; never a brand logo */
+  width: 44px; height: 44px; border-radius: var(--r-md); display: grid; place-items: center;
+  background: linear-gradient(150deg, var(--blush), var(--pink)); border: 2px solid var(--paper); box-shadow: var(--finish);
+  font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; color: var(--rose-ink);
+}
+.br-f0 { background: linear-gradient(150deg, var(--paper), var(--blush-2)); color: var(--rose); }   /* porcelain */
+.br-f2 { background: linear-gradient(150deg, var(--rose), var(--rose-ink)); color: var(--paper); }   /* rose */
+.br-body { display: grid; gap: var(--sp-1); min-width: 0; }
+.br-rich .brand-name { font-size: var(--fs-t2); line-height: 1.1; letter-spacing: var(--tr-sm); color: var(--rose-ink); }
+.br-mono { font-style: italic; }
+.br-rich .brand-meta { justify-content: flex-start; }
+.br-price {   /* the price band, in the filter chips' words, in the display italic at the end of the chip row */
+  margin-left: auto; font-family: var(--font-display); font-style: italic; font-size: var(--fs-head); line-height: 24px; color: var(--ink-soft); white-space: nowrap;
+}
+.screen-head h1::first-letter { font-style: italic; }   /* the screen title's first letter in the display italic */
+.brand-list.is-arriving > li { animation: rowIn var(--t-screen) var(--ease) backwards; }
+.brand-list.is-arriving > li:nth-child(2) { animation-delay: .03s; }
+.brand-list.is-arriving > li:nth-child(3) { animation-delay: .06s; }
+.brand-list.is-arriving > li:nth-child(4) { animation-delay: .09s; }
+.brand-list.is-arriving > li:nth-child(5) { animation-delay: .12s; }
+.brand-list.is-arriving > li:nth-child(6) { animation-delay: .15s; }
+.brand-list.is-arriving > li:nth-child(7) { animation-delay: .18s; }
+.brand-list.is-arriving > li:nth-child(n+8) { animation-delay: .21s; }
+@keyframes rowIn { from { opacity: 0; transform: translateY(6px); } }
 .brand-name { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; letter-spacing: var(--tr-head); }
 .brand-meta { display: flex; gap: var(--sp-1); align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 .brand-why { grid-column: 1 / -1; color: var(--ink-soft); font-size: var(--fs-foot); line-height: 1.35; }
-.verdict, .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 var(--sp-2); border-radius: var(--r-pill); font-size: var(--fs-cap2); font-weight: 600; letter-spacing: var(--tr-sm); white-space: nowrap; }
+.verdict, .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 var(--sp-2); border-radius: var(--r-pill); font-size: var(--fs-cap2); font-weight: 700; letter-spacing: var(--tr-sm); white-space: nowrap; }
 .tag { background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line); }
 .v-pass { background: var(--ok-bg); color: var(--ok); }
 .v-fail { background: var(--no-bg); color: var(--no); }
@@ -387,7 +420,8 @@ main {
 .scan-other .scan-form { margin-top: 0; }
 .scan-recent { margin-top: var(--sp-3); }
 .scan-recent .brand-row { grid-template-columns: 1fr; }
-.scan-row-off { box-shadow: none; background: transparent; border-style: dashed; }
+.scan-row-off { box-shadow: none; background: transparent; border: 1px dashed var(--line); }
+.scan-row-off::before { display: none; }
 .scan-unlisted { margin-top: var(--sp-3); color: var(--ink-soft); font-size: var(--fs-foot); }
 
 /* ---------- Profile: saved brands ---------- */
@@ -398,7 +432,8 @@ main {
 .sv-empty { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-sub); }
 
 @media (prefers-reduced-motion: reduce) {
-  .pf-start, .save-btn, .scan-link, .brand-row, .chip, .mode-btn, .quiz-opt { transition: none; }
+  .pf-start, .save-btn, .scan-link, .brand-row, .brand-row::before, .chip, .mode-btn, .quiz-opt { transition: none; }
+  .brand-list.is-arriving > li { animation: none; }
 }
 /* ---------- Opening show settings (Profile) ---------- */
 .intro-set { text-align: left; }
@@ -810,3 +845,7 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
   .sx.is-meet .sx-face { width: 48px; height: 48px; }
 }
 @media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back, .sx-step, .sx-who { transition: none; } }
+
+/* Manrope runs wider than Inter: on the narrowest phones the quick tiles' labels
+   drop to 12 so "My profile" stays on one line like the others. */
+@media (max-width: 374px) { .qt-tile { font-size: var(--fs-cap); letter-spacing: 0; } }

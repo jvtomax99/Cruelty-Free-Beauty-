@@ -14,8 +14,8 @@ its findings were fixed, except the two under "Left" below.
 
 ## Left, in order
 
-1. **The founder.** She signs off the look, and the words that speak for
-   her: sixteen names and one-line personalities, three habitat names,
+1. **Jose's OK** (he decides alone since 2026-11-13) on the words that
+   speak for the founder: sixteen names and one-line personalities, three habitat names,
    five shelter lines (`HOME` in `garden.js`, `ROSTER` in
    `sanctuary3d.js`; listed in SPEC "Open questions").
 2. **Speed on a real phone** (Jose): not measured. The animal models
