@@ -336,8 +336,9 @@ function limb(out, pts, rad, sides, light, dark, seed = 0, ridge = null, face = 
       out.pos.push(P.x + dx * rr, P.y + dy * rr, P.z + dz * rr); out.nor.push((N.x * ca * kB + B.x * sa * kN) / nl, ny, (N.z * ca * kB + B.z * sa * kN) / nl);
       c.copy(dark).lerp(light, clamp((face ? 0.5 + ca * 0.36 + ny * 0.22 : 0.52 + ny * 0.55) + (h2(i * 0.37 + seed, s * 1.7) - 0.5) * 0.3 + groove * 0.28, 0, 1)); out.col.push(c.r, c.g, c.b);
     }
-    if (i < n) for (let s = 0; s < sides; s++) { const a = base + i * sides + s, b = base + i * sides + ((s + 1) % sides); out.idx.push(a, b, a + sides, b, b + sides, a + sides); }
-    if (i === 0 || i === n) { const mid = out.pos.length / 3, ring = base + i * sides, sg = i ? 1 : -1; out.pos.push(P.x + T.x * sg * r * 0.4, P.y + T.y * sg * r * 0.4, P.z + T.z * sg * r * 0.4); out.nor.push(T.x * sg, T.y * sg, T.z * sg); out.col.push(dark.r, dark.g, dark.b); for (let s = 0; s < sides; s++) { const a = ring + s, b = ring + ((s + 1) % sides); if (i) out.idx.push(mid, a, b); else out.idx.push(mid, b, a); } }   // both ends are closed with a blunt point: no limb shows as a cut pipe
+    /* the start's cap point sits between ring 0 and ring 1, so every ring after the first is one further on */
+    if (i < n) { const r0 = base + i * sides + (i ? 1 : 0), r1 = base + (i + 1) * sides + 1; for (let s = 0; s < sides; s++) { const a = r0 + s, b = r0 + ((s + 1) % sides), c2 = r1 + s, d = r1 + ((s + 1) % sides); out.idx.push(a, b, c2, b, d, c2); } }
+    if (i === 0 || i === n) { const mid = out.pos.length / 3, ring = base + i * sides + (i ? 1 : 0), sg = i ? 1 : -1; out.pos.push(P.x + T.x * sg * r * 0.4, P.y + T.y * sg * r * 0.4, P.z + T.z * sg * r * 0.4); out.nor.push(T.x * sg, T.y * sg, T.z * sg); out.col.push(dark.r, dark.g, dark.b); for (let s = 0; s < sides; s++) { const a = ring + s, b = ring + ((s + 1) % sides); if (i) out.idx.push(mid, a, b); else out.idx.push(mid, b, a); } }   // both ends are closed with a blunt point: no limb shows as a cut pipe
   }
 }
 const limbs = () => ({ pos: [], nor: [], col: [], idx: [] });
@@ -359,12 +360,12 @@ function root(out, surf, o, R, lead = []) {
     path.push({ p: new V(p.x + p.nx * off, p.y + p.ny * off, p.z + p.nz * off), f: new V(p.nx, p.ny, p.nz), r }); at.push([th, u, r]);
   }
   if (o.hang) { const e = path[path.length - 1], d = path[path.length - 2].p, sx = R() - 0.5, sz = R() - 0.5; for (const [k, rr] of [[0.3, 0.75], [0.65, 0.45], [1, 0.12]]) path.push({ p: new V(e.p.x + (e.p.x - d.x) * 0.3 * k + sx * k * k * 0.9, e.p.y - o.hang * k, e.p.z + (e.p.z - d.z) * 0.3 * k + sz * k * k * 0.9), f: e.f, r: Math.max(0.02, o.r1 * rr) }); }   // a free end curls a little as it hangs
-  const L = path.length, strands = Math.min(o.low ? 2 : 3, o.r0 > 0.85 ? 3 : o.r0 > 0.5 ? 2 : 1);
+  const L = path.length, full = o.r0 > 0.85 ? 3 : o.r0 > 0.5 ? 2 : 1, strands = Math.min(o.low ? 2 : 3, full);   // a phone with little memory gets two strands where others get three, and otherwise the same roots
   if (strands === 1) limb(out, path.map((q) => q.p), path.map((q) => q.r), o.r0 > 0.45 ? 6 : 4, ROOT_LIGHT, ROOT_DARK, o.seed, null, path.map((q) => q.f));
   else {
-    const T = new V(), N = new V(), B = new V(), wind = (1.1 + R() * 0.9) * 6.2832 * (R() < 0.5 ? -1 : 1);
+    const T = new V(), N = new V(), B = new V(), wind = (1.1 + R() * 0.9) * 6.2832 * (R() < 0.5 ? -1 : 1), stops = [L - 1]; for (let k = 1; k < full; k++) stops.push(Math.round((L - 1) * (0.5 + R() * 0.35)));
     for (let k = 0; k < strands; k++) {
-      const stop = k === 0 ? L - 1 : Math.round((L - 1) * (0.5 + R() * 0.35)), pts = [], rad = [], fc = [], ph = (k / strands) * 6.2832 + o.seed;
+      const stop = stops[k], pts = [], rad = [], fc = [], ph = (k / strands) * 6.2832 + o.seed;
       for (let j = 0; j <= stop; j++) {
         const q = path[j], s = j / (L - 1), a = ph + s * wind; T.subVectors(path[Math.min(L - 1, j + 1)].p, path[Math.max(0, j - 1)].p).normalize(); N.copy(q.f).addScaledVector(T, -q.f.dot(T)).normalize(); B.crossVectors(T, N);
         const end = k ? smooth(stop - 4, stop, j) : 0, spread = q.r * 0.52 * Math.min(1, 0.3 + s * 5) * (1 - end * 0.5);
@@ -808,8 +809,8 @@ export async function mount(canvas, opts = {}) {
     /* over the turf to the edge, then down */
     const UP = new THREE.Vector3(0, 1, 0);
     const over = (thE, r0, wob) => {   // a buttress out of the trunk, then low over the grass, in and out of it, to the edge
-      const e = edgeR(thE) - 0.4, ex = Math.cos(thE) * e, ez = Math.sin(thE) * e, d = Math.hypot(ex - hx, ez - hz), ux = (ex - hx) / d, uz = (ez - hz) / d, n = Math.max(3, Math.round(d / 0.85)), lead = [{ p: V3(0.9 + ux * 0.3, 2.0, 0.2 + uz * 0.3), f: UP, r: r0 * 1.7 }];
-      for (let i = 1; i <= n; i++) { const t = i / n, sd = Math.sin(t * 3.1) * wob + Math.sin(t * 8.3 + thE * 9) * wob * 0.28, x = mix(hx, ex, t) - uz * sd, z = mix(hz, ez, t) + ux * sd, rr = r0 * mix(1.55, 1, smooth(0, 0.4, t)); lead.push({ p: new THREE.Vector3(x, Y(x, z) + rr * (i === 1 ? 0.6 : 0.14 + 0.12 * Math.sin(t * 11 + thE * 5)), z), f: UP, r: rr }); }
+      const e = edgeR(thE) - 0.4, ex = Math.cos(thE) * e, ez = Math.sin(thE) * e, d = Math.hypot(ex - hx, ez - hz), ux = (ex - hx) / d, uz = (ez - hz) / d, n = Math.max(3, Math.round(d / 0.85)), lead = [{ p: V3(0.9 + ux * 0.3, 2.1, 0.2 + uz * 0.3), f: UP, r: r0 * 1.4 }];
+      for (let i = 1; i <= n; i++) { const t = i / n, sd = Math.sin(t * 3.1) * wob + Math.sin(t * 8.3 + thE * 9) * wob * 0.28, x = mix(hx, ex, t) - uz * sd, z = mix(hz, ez, t) + ux * sd, rr = r0 * mix(1.35, 1, smooth(0, 0.45, t)); lead.push({ p: new THREE.Vector3(x, Y(x, z) + rr * (i === 1 ? 0.6 : 0.14 + 0.12 * Math.sin(t * 11 + thE * 5)), z), f: UP, r: rr }); }
       return lead;
     };
     for (const [th, wob, o] of [
@@ -868,8 +869,8 @@ export async function mount(canvas, opts = {}) {
 
   /* fine roots hanging wherever the mass overhangs: under the turf's lip, under the ledges, down by the tip */
   { const FR = rng(616), fine = [], o = limbs(), V = (x, y, z) => new THREE.Vector3(x, y, z);
-    limb(o, [V(0, 0.05, 0), V(0.07, -0.33, 0.03), V(-0.05, -0.68, 0.07), V(0.04, -1, 0.02)], [0.04, 0.03, 0.02, 0.008], 3, TRUNK_LIGHT, TRUNK_DARK, 1);
-    for (let i = 0; i < (low ? 300 : 600); i++) { const th = FR() * 6.2832, u = 0.04 + FR() * 0.9, p = surf(th, u), sz = 0.5 + FR() * FR() * 3.4; if (p.ny < -0.3 && hollowAt(th, u) > 1.6 && FR() < 0.62) fine.push({ x: p.x + p.nx * 0.05, y: p.y, z: p.z + p.nz * 0.05, ry: FR() * 6.28, s: 1, sy: sz }); }
+    limb(o, [V(0, 0.05, 0), V(0.07, -0.5, 0.05), V(-0.03, -1, 0.02)], [0.04, 0.026, 0.008], 3, TRUNK_LIGHT, TRUNK_DARK, 1);
+    for (let i = 0; i < (low ? 230 : 440); i++) { const th = FR() * 6.2832, u = 0.04 + FR() * 0.9, p = surf(th, u), sz = 0.5 + FR() * FR() * 3.4; if (p.ny < -0.3 && hollowAt(th, u) > 1.6 && FR() < 0.62) fine.push({ x: p.x + p.nx * 0.05, y: p.y, z: p.z + p.nz * 0.05, ry: FR() * 6.28, s: 1, sy: sz }); }
     const m = instanced(limbMesh(o, null).geometry, sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, envMapIntensity: 0.15 }), wind, 0.07, "hang"), fine.map((q) => ({ ...q, s: 1.3 }))); m.receiveShadow = false; world.add(m); }
 
   /* the light in the dark places: a cluster of mushrooms on the hollow's floor (the lanterns come

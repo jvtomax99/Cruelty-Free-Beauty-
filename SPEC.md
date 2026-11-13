@@ -198,8 +198,8 @@ me**.
   mushrooms glow. One great blossom tree stands on a prow beside the pond,
   with lanterns hanging under its crown; its roots come out of the
   trunk as buttresses, cross the turf and go down the cliff pressed into
-  it. A thick root is two or three strands wound loosely round each
-  other, which part and go back into the earth; roots fork, some come out
+  it. A thick root is three strands wound loosely round each other
+  (two on a phone with little memory), which part and go back into the earth; roots fork, some come out
   of the earth lower down (on the back of the island too), and fine roots
   hang wherever the mass overhangs. The stream runs pool to pool into the pond; the pond
   overflows through a gap in its bank, falls to a rocky basin, turns, and
@@ -375,8 +375,10 @@ only if it can be shown to work across skin tones.
 - [x] Golden hour and the lantern trees: warm low sun with lavender
       shade, trees remade after Jose's picture, lanterns, lit cottage
       windows, pools of light, glints on the falls, colour variation
-      (2026-11-13; both browser tests pass in the cloud browser; about
-      490,000 triangles with everything unlocked)
+      and the roots reworked into wound strands with fine roots hanging
+      under the overhangs (2026-11-13; both browser tests pass in the
+      cloud browser; about 506,000 triangles with everything unlocked,
+      475,000 before)
 - [ ] A real-phone check of speed and battery (Jose). The island is
       heavier than before, so this matters more now
 
