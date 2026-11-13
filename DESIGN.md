@@ -29,6 +29,7 @@ here.
 | `--rail-bg` | cream at 60% | Side rail on computers |
 | `--scrim` | ink at 35% | Dims the camera view around the barcode frame |
 | `--bunny-line` | #DB6B7E | The logo's outline |
+| `--sage` / `--sage-2` | #DDE9CC / #CFDFBA | The Sanctuary's second button (Practise) and Clover's portrait ring; `--ok` text on it 6.1:1 |
 | `--ok` / `--ok-bg` | #2E5A3C / #E3EFE4 | Cruelty-free: green words with a ✓ (6.7:1 on its fill) |
 | `--no` / `--no-bg` | #9A3A2E / #F8E2DD | Not cruelty-free: red words with a ✕ (5.6:1 on its fill) |
 | `--night`, `--night-2`, `--spot`, `--glow`, `--star`, `--halo`, `--veil`, `--spot-line`, `--night-glass` | see "Launch show" | The launch show only |
@@ -156,6 +157,40 @@ tiles.
 - **Fact card (brand page):** small-caps rose-ink label, the status at 17
   semibold, then the source link and "Checked" date. Two columns from
   900 px.
+
+### Your Sanctuary (the Garden)
+
+- **The 3D stage** (`.sx`): as wide as the screen on a phone and as the
+  space beside the rail on a computer, the screen's height less
+  `--sx-peek` (58 px), so the list under it shows there is more. Behind the
+  canvas: blush-2 to blush to cream, top to bottom. Nothing floats over
+  the world except: a 44 px glass back button, the title in rose-ink
+  (Fraunces 22, 28 on a computer) with one line under it, the learned
+  count as a paper pill, and one paper card at the bottom (radius 20,
+  `--float`). No labels on the world itself.
+- **The card** has three states, all the same paper card. The whole
+  island: the habitat's name in Fraunces 20 rose-ink and one soft line,
+  then a row with a 44 px round arrow each side of a rose Visit pill. A
+  visit: the name, who is at home, the progress and what comes next, and
+  a rose Practise pill. An animal: its round portrait (72, on sage), "Meet
+  <name>", its line, and two pills: rose Say hello, sage Practise with
+  green words. Pills are 44 tall.
+- **On the world itself** the only marks are a small berry pin over the
+  habitat the card names (whole-island view only) and the hearts of a
+  hello. No labels.
+- **Motion in the world** is slow and never in step: one breeze, each
+  animal on its own clock, long pauses. The camera eases (about a second)
+  to a habitat or an animal and never spins on its own.
+- **The world's colours** live in `PAL` in `sanctuary3d.js`: warm sunlit
+  greens, cream stone, a dusty rose roof, pink and white flowers, teal
+  water, earth for the island's side. Sun from the upper left, warm; a
+  faint blush light from the right. Forms are rounded and smooth-shaded,
+  never faceted. Flowers and animals must stay lighter or pinker than the
+  grass they stand on.
+- **Habitat cards and rounds** reuse the quiz's parts: `.quiz-opt`
+  buttons (green with a check when right, red with a cross for a wrong
+  pick), a paper result card with the verdict in Fraunces, the progress
+  bar in rose (green when a habitat is in bloom).
 
 ## Motion
 

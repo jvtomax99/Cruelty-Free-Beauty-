@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>Faces</title><style>body{margin:0;background:#fff}canvas{display:block}</style>
+<!-- Draws the small round portrait an animal's card shows (assets/sanctuary/<id>.webp), from its
+     own model, on the Sanctuary's sage. Serve the repo and open tools/faces.html?who=hazel ;
+     window.__face is then the picture as a data URL. Clover's portrait is older and was not made here. -->
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.min.js","three/addons/":"../assets/vendor/three/addons/"}}</script>
+<canvas id="c" width="144" height="144"></canvas>
+<script type="module">
+import * as THREE from "three"; import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"; import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+import { prepare, rigMaterial } from "../sanctuary3d-life.js"; import { ROSTER } from "../sanctuary3d.js";
+const who = ROSTER.find((a) => a.id === new URLSearchParams(location.search).get("who"));
+const HALF = { "rabbit-clover": 0.3, "rabbit-tan": 0.34, "rabbit-grey": 0.42, duck: 0.3, duckling: 0.33, "guinea-pig": 0.46, beagle: 0.34, deer: 0.34 }, UP = { "guinea-pig": 0.14, "rabbit-tan": 0.12, "rabbit-grey": 0.06, deer: 0.06, "rabbit-clover": 0.1 };
+const canvas = document.getElementById("c"), r = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true }); r.setPixelRatio(1); r.setClearColor(0xdde9cc); r.toneMapping = THREE.ACESFilmicToneMapping;
+const l = new GLTFLoader(); l.setMeshoptDecoder(MeshoptDecoder);
+const model = await prepare(l, "../assets/sanctuary/", who.model), sp = model.sp;
+const scene = new THREE.Scene(); scene.add(new THREE.HemisphereLight(0xfff1e6, 0xb7c79a, 1.5)); const sun = new THREE.DirectionalLight(0xffe3bf, 2.4); sun.position.set(-2, 3, 3); scene.add(sun);
+const mesh = new THREE.Mesh(model.geo, rigMaterial(model.mat, sp, model.lid)); if (who.tint) mesh.material.color.set(who.tint); mesh.frustumCulled = false; scene.add(mesh);
+mesh.material.userData.rig.uHead.value.set(-0.05, 0.25, 0.06);   // looking a little toward us
+const t = sp.neck[0].clone().addScaledVector(sp.neck[1].clone().normalize(), 0.15); t.y += UP[who.model] || 0;
+const h = HALF[who.model], c = new THREE.OrthographicCamera(-h, h, h, -h, 0.1, 20); c.position.set(t.x + 1.6, t.y + 0.5, t.z + 3); c.lookAt(t);
+r.render(scene, c); window.__face = canvas.toDataURL("image/webp", 0.86);
+</script>

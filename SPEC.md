@@ -157,6 +157,86 @@ me**.
     app has updated, with its date and source link, hearted brands first; "Got it"
     hides it and it stays in "Recent changes" and on the brand page.
 
+- **The Garden, shown as "Your Sanctuary"** (added 2026-11-12; the quiz
+  and all five habitats are built; put live 2026-11-13 on Jose's word,
+  before the founder had seen it). A study
+  game: an open sanctuary garden in 3D that grows with what the person
+  learns. Five habitats, one per topic: Bunny Meadow (cruelty-free or
+  vegan), Leafy Garden (PETA or Leaping Bunny), Wooded Meadow (parent
+  companies), Willow Pond (China today), Orchard (read a brand). Rounds
+  of 5 questions; a missed question comes
+  back sooner than a right one (5 minutes, then 1, 3, 7, 16, 35 days); "I
+  guessed" counts as a miss. A question is "learned" once it is answered
+  right twice, at least 5 minutes apart; a right answer before it is due
+  again doesn't count twice. The written questions (33) come from the
+  Learn answers, each with its source and checked date, written by one
+  helper and checked against the source by another. The Orchard's
+  questions are built from `data/brands.json` each time, never stored, and
+  skip a brand whose check is over 90 days old. Progress stays on the
+  phone (`cfb-garden`).
+  Residents (Jose, 2026-11-12, second brief): Bunny Meadow, rabbits
+  Clover, Hazel and Ash; Willow Pond, the duck Willow with ducklings Pip,
+  Dot and Puddle; Orchard, guinea pigs Biscuit, Nutmeg and Pear; Leafy
+  Garden, beagles Poppy, Scout and Juniper; Wooded Meadow, deer Fern,
+  Bramble and Rowan. (This replaces the earlier plan of cats, hamsters,
+  mice and birds.) They are the garden's residents, nothing more: the app
+  says an animal is used in cosmetics testing only with a source beside it.
+  Rules: no fences, cages or enclosures; nothing ever dies, leaves or looks
+  sad; the garden grows only from learning, never from scanning, saving or
+  buying; the words are "moved in" and "at home here", never "rescued",
+  "saved" or "donated", and nothing may suggest a real donation or a real
+  animal; no certifier's mark in the scene. The 3D loads only when the
+  Garden is opened, and plain habitat cards show instead where 3D can't
+  run (no WebGL, data saver).
+  The world: one island that fills the screen, with sculpted land (hills,
+  terraces, an earth-and-stone edge), a pond fed by a two-step waterfall,
+  a footbridge, a cream cottage with a dusty rose roof, rounded trees,
+  flowers in drifts, and stone paths from the middle to every habitat.
+  Each habitat has its own ground, planting and shelter: a burrow under a
+  grassy mound; a nest on the pond's bank under a willow, with reeds; a
+  timber hide among apple trees; a cushion on a deck among leafy shrubs; a
+  lean-to of branches among oaks and bracken.
+  What learning changes, per habitat: a third of its flowers are there
+  from the start and the rest bloom with the share learned; one resident
+  is there from the start (the duck has her first duckling), a second
+  moves in at a third learned and a third at two thirds; at half learned
+  the shelter gains something (a doorway and flowers, a little house, a
+  log and more hay, a pergola, a roof of leaves). Residents and the better
+  shelter stay even if the count later drops. The round's summary says
+  what the round changed.
+  The animals live on their own: each on its own clock, resting, looking
+  about, sniffing, grazing, grooming, and going somewhere for a reason
+  (food, the shelter, a friend), with pauses; they breathe, blink and move
+  ears, head and tail; feet don't slide; none leaves its habitat or passes
+  through a rock, plant, the water, a shelter or another animal. Around
+  them: one breeze through flowers, grass and leaves, running water,
+  rings spreading on the pond, a butterfly or two going between flowers.
+  The interface is a small title ("Your Sanctuary", "A little kindness. A
+  world of life."), the learned count, and one compact card: on the whole
+  island it names a habitat, with arrows to step through the five, and
+  Visit; on a visit it says who is at home and what the next lesson
+  brings, with Practise; on an animal it shows the name, a line about it,
+  Say hello (it turns to you, comes closer and sniffs; hearts rise) and
+  Practise. Drag turns the island, pinch or wheel zooms, a tap on a
+  habitat goes to it and a tap on an animal opens its card; the view then
+  stays with that animal. With reduced motion the world is still shown,
+  but nothing idles, the camera jumps instead of gliding, and Say hello
+  answers in words.
+  Not in this version: cats, hamsters, mice and birds, feeding or petting,
+  naming animals, streaks, reminders, an exam mode, sharing, Spanish,
+  sound, a day and night switch, a photo button.
+  - Done when (the quiz): a round of 5 can be played from Home, each
+    answer shows right or wrong with its source and date, a missed question
+    comes back sooner than a right one, and progress survives a reload and
+    works offline.
+  - Done when (the 3D garden and its animals): learning a topic visibly
+    changes its habitat (flowers, a resident, the shelter) and the change
+    is still there after a reload; a habitat can be visited and its round
+    started from there; an animal can be met and greeted by touch and by
+    mouse; in ten simulated minutes no animal is anywhere it shouldn't be;
+    Home, Brands and Scan load no 3D code; the Garden opens offline after
+    one visit; with 3D blocked, the cards show instead.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
@@ -236,7 +316,37 @@ only if it can be shown to work across skin tones.
 - [x] `lookup-certifiers --diff` prints what looks changed, for a person
       to confirm
 
+### The Garden (added 2026-11-12)
+- [ ] Look sample and one test animal approved by Jose and the founder
+- [x] Phase A: question bank, rounds, progress, habitat cards (2026-11-12:
+      33 written questions, not the 40 planned, because the Learn answers
+      hold no more checked facts; plus one question per brand, 30 today.
+      Live 2026-11-13; the founder hadn't seen it yet)
+- [x] The 3D world and its first habitat, Bunny Meadow, loaded on demand
+      (2026-11-12; checked in the cloud browser only: speed on a real
+      phone is not verified)
+- [x] The other four habitats in 3D with their animals, the animals'
+      own behaviour, the breeze, ripples and butterflies, the camera and
+      the per-habitat progress (2026-11-13; `node tools/test-sanctuary.cjs`
+      passes in the cloud browser; live 2026-11-13 on Jose's word, the
+      founder's sign-off still owed)
+- [ ] A real-phone check of speed and battery (Jose)
+
 ## Open questions (TO FILL)
+
+- Are "Your Sanctuary", "A little kindness. A world of life." and
+  Clover's line the founder's words to keep? Jose to ask.
+- The sixteen animals' names and one-line personalities, the habitat
+  names (Leafy Garden, Wooded Meadow, Willow Pond) and the words for each
+  shelter's gain were written by Claude on 2026-11-13 and speak for the
+  founder. They are in `HOME` (`garden.js`) and `ROSTER`
+  (`sanctuary3d.js`). Jose to check them with her.
+- Models that should be better (2026-11-13): the ducklings read as rubber
+  ducks, the deer has small antlers nobody asked for, the guinea pig came
+  with a tail (hidden in code), and the beagle and deer are more cartoon
+  than the rabbits. Remake them, or keep?
+- Has the founder seen and accepted the Garden (a study game in her app)?
+  Jose to show her the look sample.
 
 - Does the founder accept the neutral wording ("No longer in Leaping
   Bunny's guide", never "dropped")? Jose to ask.
@@ -246,6 +356,12 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-12 (Jose, buttons): a study simulator like his CPA and CCHI
+  apps. He asked for a zoo; after Claude's objection (enclosures, and the
+  film's "no cage" rule) he chose an open sanctuary garden, grown by a new
+  quiz bank and not by using the app, in full 3D loaded on demand. Meshy
+  and other credits are his and OK'd for this, over the $0 budget. Plan
+  approved the same day; the founder has not seen it.
 - 2026-11-12 (Jose): a new direction for the opening, replacing the
   rescue film the same day. The app helps people buy makeup that is
   cruelty-free, and the opening should show that: love of makeup, a moment
