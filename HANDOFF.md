@@ -123,9 +123,11 @@ credits for this (642 were left). Ask before going over 250.
 ## Progress (2026-11-13, second session)
 
 - `SPEC.md` has the plan ("Home's host" under Features and Phases).
-- Step 1 (lines) is built: `host.js`, `tools/test-host.cjs`, pull request
-  open. It must not merge until Jose signs off the words in `LINES`.
-- Steps 2 and 3 not started. No Runway credits spent this session.
+- Step 1 (lines) is done: `host.js`, `tools/test-host.cjs`, pull request
+  #26. Jose signed off the seven lines and chose the quiz line on every
+  other day only.
+- Jose confirmed step 2 is the Dr Smiley-style rebuild, not two clips.
+- No Runway credits spent this session.
 
 ## Left to do
 

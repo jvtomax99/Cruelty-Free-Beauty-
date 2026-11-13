@@ -24,6 +24,7 @@ const LB = 'https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx';
 const PROFILE = { skin: 'dry', depth: 'fair', veins: 'cool', jewelry: 'cool', sun: 'cool', finish: 'matte', budget: 'any', vegan: 'no', undertone: 'cool' };
 const VERDICT = /cruelty|passes|doesn't pass|certified|tests on animals|approved|safe|not on/i;
 
+const dayNo = (d) => Math.floor((d.getTime() - d.getTimezoneOffset() * 6e4) / 864e5);
 let failures = 0;
 const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if (!ok) failures++; };
 const shots = process.argv.includes('--shots') ? process.argv[process.argv.indexOf('--shots') + 1] : null;
@@ -35,12 +36,13 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
   let changes = [];
 
   // A fresh phone each time: `keys` is what it has stored, `hour` the time of day.
-  async function phone(keys, { hour = 10, width = 390, height = 844, reduced = false } = {}) {
+  async function phone(keys, { hour = 10, width = 390, height = 844, reduced = false, off = false } = {}) {
     const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: shots ? 2 : 1, serviceWorkers: 'block', reducedMotion: reduced ? 'reduce' : 'no-preference' });
     await ctx.route('**/data/brands.json', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ...real, changes }) }));
     const page = await ctx.newPage();
     page.on('pageerror', (e) => errors.push(e.message));
     const at = new Date(); at.setHours(hour, 0, 0, 0);
+    if (dayNo(at) % 2 !== (off ? 1 : 0)) at.setDate(at.getDate() + 1);   // the quiz line has every other day
     await page.clock.setFixedTime(at);
     await page.addInitScript((k) => { if (!sessionStorage.getItem('t')) { sessionStorage.setItem('t', '1'); for (const [a, b] of Object.entries(k)) localStorage.setItem('cfb-' + a, JSON.stringify(b)); } }, keys);
     await page.goto(APP, { waitUntil: 'networkidle' });
@@ -61,6 +63,13 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
     check(await page.waitForSelector('[data-screen="profile"]', { state: 'visible', timeout: 3000 }).then(() => true, () => false), 'the bubble opens Profile');
     check(await stored(page) === before, `she stores nothing (${before})`);
     if (shots) { await page.goBack(); await page.screenshot({ path: path.join(shots, 'host-quiz-390.png') }); }
+    await ctx.close();
+  }
+
+  {
+    const { ctx, page } = await phone({ scans: [{ code: '1', brand: 'milani', name: 'Milani', t: Date.now() }] }, { off: true });
+    const t = await line(page);
+    check(t === 'You scanned Milani. See its page again.', `no profile, the day between: the quiz line steps aside ("${t}")`);
     await ctx.close();
   }
 

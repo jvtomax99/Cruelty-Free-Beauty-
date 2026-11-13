@@ -35,9 +35,13 @@
     return brands.find((b) => b.id === s.brand) || null;
   }
 
+  /* Someone who skipped the quiz on purpose shouldn't hear about it at every visit: the quiz line
+     has every other day (counted in the phone's own time), and the other lines get the days between. */
+  const quizDay = () => { const d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 6e4) / 864e5) % 2 === 0; };
+
   /* The first that applies wins. */
   function pick() {
-    if (CFB.hasProfile && !CFB.hasProfile()) return LINES.quiz();
+    if (CFB.hasProfile && !CFB.hasProfile() && quizDay()) return LINES.quiz();
     const changed = CFB.unseenSaved ? CFB.unseenSaved() : [];
     if (changed.length) return LINES.changed(changed);
     const due = CFB.garden && CFB.garden.tally ? CFB.garden.tally().due : 0;

@@ -280,7 +280,9 @@ me**.
   pull request each.
   *Lines.* Her bubble on Home shows one line, picked from what the phone
   already knows, and the bubble links to the matching place. First that
-  applies wins: no beauty profile yet (the quiz); a change this phone
+  applies wins: no beauty profile yet (the quiz; only every other day,
+  so a person who skipped it is not asked at every visit; Jose,
+  2026-11-13); a change this phone
   hasn't seen to a hearted brand (the "What changed" card); Sanctuary
   questions due for review (a round); the newest scan, when it is under 7 days
   old and of a brand we list (that brand's page); otherwise a line by time of day (Scan). It reads
@@ -290,12 +292,18 @@ me**.
   `CFB.verdict` and "What changed" do. The lines speak for the founder's
   brand, so Jose signs off the list before it ships; the list lives in
   `host.js` (`LINES`).
-  *Moves.* Two more clips of her: a wave when Home opens (once per visit)
-  and a happy reaction when she is tapped. Each begins and ends on the
-  idle loop's first pose. Runway, about 52 credits each; Jose approved
-  about 104 in total (ask before more). The new strips load after the
-  page and are not in the worker's install list. Still under reduced
-  motion.
+  *Moves, like Dr Smiley* (Jose, 2026-11-13; this replaces the two video
+  clips first planned, which are not to be made). Same girl, more depth:
+  the face Jose approved, re-lit (glossy hair, soft shadows, a warm rim
+  of light), proportions unchanged; Jose sees the new still before
+  anything is built on it. Then the Interpreter Hub's structure: one base
+  picture, a strip of about 16 face frames (rest, blink, wink, smile,
+  laugh, love, surprised, sad, worried, looking left, right, up, down)
+  and a small engine of our own: random blinks, eyes that follow a
+  finger, reactions to a tap, a scan result and a quiz answer. She may
+  look sad at a fail but never says anything about the brand. Runway:
+  Jose approved 150 to 250 credits (ask before going over 250). Art in
+  `assets/host/`. A big feature: its own plan and Jose's OK before code.
   *Places.* A small still of her (about 72 px) with one line on the Scan
   result, the end of the profile quiz and the empty states (no saved
   brands, no scans yet).
@@ -308,10 +316,10 @@ me**.
     what changes during a visit (quiz finished, "Got it", a heart); no
     line contains a verdict word; nothing new is stored; Home looks right
     at 390 px and 1440 px with the longest line.
-  - Done when (moves): she waves once when Home first opens and not again
-    that visit, reacts to a tap, returns to the idle loop with no jump,
-    stays still under reduced motion, and Home's first paint downloads no
-    new strip.
+  - Done when (moves): TO FILL in the plan Jose approves; at least: she
+    blinks at random, her eyes follow a finger, she reacts to a tap, a
+    scan result and a quiz answer, her hair and outline never jump
+    between frames, and she rests still under reduced motion.
   - Done when (places): she appears once, small and still, on each of the
     named screens with a line that links somewhere useful, and never
     beside a second copy of herself.
@@ -427,9 +435,9 @@ only if it can be shown to work across skin tones.
       heavier than before, so this matters more now
 
 ### Home's host (added 2026-11-13)
-- [ ] Lines: her bubble picks a line from what the phone knows (built;
-      waits for Jose's sign-off of the words)
-- [ ] Moves: a wave when Home opens, a reaction when tapped
+- [x] Lines: her bubble picks a line from what the phone knows
+      (2026-11-13; Jose signed off the seven lines; `tools/test-host.cjs`)
+- [ ] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
 - [ ] Places: Scan result, end of the quiz, empty states
 
 ## Open questions (TO FILL)
