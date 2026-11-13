@@ -7,7 +7,7 @@
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v33";
+const CACHE_VERSION = "cfb-v34";
 const MEDIA = "cfb-media-v3";
 /* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
    download. Each file is saved the first time the Sanctuary asks for it, and the world then opens
@@ -28,6 +28,7 @@ const PRECACHE = [
   "scan.js",
   "garden.js",
   "host.js",
+  "host-engine.js",
   "assets/vendor/barcode-detector/barcode-detector.js",
   "assets/vendor/barcode-detector/zxing_reader.wasm",
   "intro.js",
@@ -37,7 +38,8 @@ const PRECACHE = [
   "assets/logo.svg",
   "assets/images/home-banner.webp",
   "assets/images/gate.webp",
-  "assets/images/host.webp",
+  "assets/host/base.webp",
+  "assets/host/face.webp",
   "assets/pins/brands.webp",
   "assets/pins/scan.webp",
   "assets/pins/profile.webp",
