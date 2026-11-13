@@ -276,13 +276,22 @@
     if (h) { h.focus({ preventScroll: true }); h.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
   }
 
+  /* Her "no scans yet" line: only with nothing scanned and no result (which has her too) on view.
+     Redrawn whenever the result area changes, so it comes back when a result is cleared. */
+  function renderEmpty() {
+    const want = !readList("scans").length && !out.querySelector(".hm") && !!window.CFB.host;
+    const none = $("scan-empty");
+    if (want !== !!none.firstChild) none.innerHTML = want ? window.CFB.host.mini("noScans") : "";
+  }
+  new MutationObserver(renderEmpty).observe(out, { childList: true });
+  document.addEventListener("cfb:host", renderEmpty);
+
   /* ---------- Recent scans ---------- */
   function renderRecent() {
     const list = readList("scans"), un = readList("unlisted");
     const box = $("scan-recent-box");
     box.hidden = !list.length;
-    const none = $("scan-empty");   // her "no scans yet" line: only with nothing scanned and no result (which has her too) on view
-    none.innerHTML = !list.length && !out.querySelector(".hm") && window.CFB.host ? window.CFB.host.mini("noScans") : "";
+    renderEmpty();
     $("scan-recent").innerHTML = list.map((s) => {
       const label = s.product ? `${esc(s.product)}` : s.code ? `Barcode ${esc(s.code)}` : "Typed brand";
       return s.brand

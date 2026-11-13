@@ -70,7 +70,7 @@
   const focusQuestion = () => { const l = app.querySelector(".quiz-q"); if (l) l.focus({ preventScroll: true }); window.scrollTo(0, 0); };
 
   let justDone = false;   // the quiz ended on this visit
-  function start() { answers = {}; step = 0; inQuiz = true; renderQuestion(); focusQuestion(); }
+  function start() { answers = {}; step = 0; inQuiz = true; justDone = false; renderQuestion(); focusQuestion(); renderSaved(); }
 
   function finish() {
     const p = { ...answers, undertone: undertoneFrom(answers), undertoneSet: false, saved: new Date().toISOString().slice(0, 10) };
@@ -163,7 +163,7 @@
       save(next); renderProfile(next, true);
     }));
     document.getElementById("pf-retake").addEventListener("click", start);
-    document.getElementById("pf-clear").addEventListener("click", () => { clear(); renderIntro(); const s = document.getElementById("pf-start"); if (s) s.focus(); });
+    document.getElementById("pf-clear").addEventListener("click", () => { clear(); justDone = false; renderIntro(); renderSaved(); const s = document.getElementById("pf-start"); if (s) s.focus(); });
     if (focus) document.getElementById("pf-h").focus({ preventScroll: true });
   }
 
@@ -215,6 +215,7 @@
     }
   }
   document.addEventListener("cfb:saved", renderSaved);
+  document.addEventListener("cfb:host", renderSaved);   // host.js loads after this file
 
   document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "profile") { show(); renderSaved(); } });
   show();

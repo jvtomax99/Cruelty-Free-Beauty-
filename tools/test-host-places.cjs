@@ -90,6 +90,12 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
     check(await page.evaluate(() => !!document.activeElement.closest('#scan-lists')), `${tag}, its link moves to the certifiers' links on the card`);
     await page.click('#scan-clear');
     check((await here()).count === 1, `${tag}, recent scans cleared with a result on view: still one of her`);
+    await page.fill('#scan-code', '12345678');   // a new lookup clears the result; this one ends in "Which brand is on the box?"
+    await ctx.route('https://world.openbeautyfacts.org/api/**/12345678.json*', (route) => route.fulfill({ status: 404, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"status":0}' }));
+    await page.click('#scan-code-form button');
+    await page.waitForSelector('#scan-brand-form');
+    const back = await here();
+    check(back.count === 1 && back.text === 'No scans yet. Try one from your bag.', `${tag}, the result gone and nothing scanned: the "no scans yet" line is back`);
 
     // Profile: no saved brands (and no quiz yet), then the end of the quiz, then back to the saved line.
     await page.goto(APP + '#profile');
@@ -116,6 +122,31 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
     await page.evaluate(() => { location.hash = '#profile'; });
     await page.waitForSelector('#saved-app .sv-list');
     check((await here()).count === 0, `${tag}, with a brand saved: no empty line`);
+    await ctx.close();
+  }
+  // Scan or Profile opened first, with host.js arriving late (after the brand list): she still shows.
+  for (const [hash, sel] of [['#scan', '#scan-empty .hm'], ['#profile', '#saved-app .hm']]) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+    await ctx.route('**/host.js', async (route) => { await new Promise((r) => setTimeout(r, 1200)); route.continue(); });
+    const page = await ctx.newPage();
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto(APP + hash);
+    const ok = await page.waitForSelector(sel, { timeout: 5000 }).then(() => true, () => false);
+    check(ok, `${hash} opened first with host.js 1.2 s late: she is there`);
+    await ctx.close();
+  }
+  {   // the quiz ended, then the profile is cleared on the same visit: the saved line comes back
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+    const page = await ctx.newPage();
+    await page.goto(APP + '#profile'); await page.click('#pf-start');
+    for (let i = 0; i < 8; i++) { await page.waitForSelector('.quiz-opt'); const q = await page.textContent('.quiz-q'); await page.locator('.quiz-opt').first().click(); await page.waitForFunction((q) => !document.querySelector('.quiz-q') || document.querySelector('.quiz-q').textContent !== q, q); }
+    await page.waitForSelector('.pf-hero .hm');
+    await page.click('#pf-clear');
+    const ok = await page.waitForSelector('#saved-app .hm', { timeout: 3000 }).then(() => true, () => false);
+    check(ok && await page.locator('.hm:visible').count() === 1, 'profile cleared right after the quiz: one of her, under Saved');
+    await page.click('#pf-start');
+    await page.waitForSelector('.quiz-opt');
+    check(await page.locator('.hm:visible').count() === 1, 'during a quiz: one of her, under Saved');
     await ctx.close();
   }
   const bad = [...new Set(said)].filter((t) => VERDICT.test(t));

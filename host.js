@@ -106,4 +106,8 @@
   document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "home") draw(); });
   ["cfb:saved", "cfb:changes", "cfb:garden"].forEach((n) => document.addEventListener(n, draw));
   CFB.host = { pick, LINES, PLACES, mini };
+  /* scan.js and profile.js load before this file and may have drawn without her: once every script has
+     run (host-engine.js, with her faces, comes after this one) they draw again. */
+  const ready = () => document.dispatchEvent(new CustomEvent("cfb:host"));
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else setTimeout(ready, 0);
 })();
