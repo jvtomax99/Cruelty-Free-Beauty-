@@ -98,8 +98,10 @@ tiles.
   (`assets/images/home-banner.webp`) full width on phones (452 px tall), a
   radius-20 card on computers (380). The time-of-day label and the slogan
   at 40 sit top left in ink over a cream shade (`--veil-cream`), never
-  white text. The bunny (84 px, a slow bob) sits bottom left with a paper
-  speech bubble that links to Scan. The photo fades into the page at the
+  white text. The girl from the opening film (`assets/images/host.webp`, a
+  round 84 px portrait with a paper rim and a slow bob; 2026-11-13, Jose:
+  the bunny there looked basic) sits bottom left with a paper speech
+  bubble that links to Scan. The bunny stays in the brand bar. The photo fades into the page at the
   bottom and Search overlaps it by 26 px.
 - **Quick tiles:** four across, paper-to-blush, radius 20, bright rim
   (`--qt-edge`), a 52 px pin over a 13 px semibold label (64 px pin on

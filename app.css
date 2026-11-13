@@ -612,10 +612,13 @@ html.intro-on .intro {
 }
 .hb .hello { margin: 0; }
 .hb-pal {
-  display: flex; align-items: flex-end; gap: var(--sp-1); margin-top: auto; align-self: flex-start;
+  display: flex; align-items: flex-end; gap: var(--sp-2); margin-top: auto; align-self: flex-start;
   color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease);
 }
-.hb-pal img { width: 84px; height: 84px; flex: none; animation: palBob 4.6s ease-in-out infinite; }
+.hb-pal img {   /* the girl from the opening film, as a round portrait */
+  width: 84px; height: 84px; flex: none; border-radius: 50%; object-fit: cover;
+  border: 3px solid var(--paper); box-shadow: var(--float); animation: palBob 4.6s ease-in-out infinite;
+}
 .hb-say {
   position: relative; margin-bottom: var(--sp-5); padding: var(--sp-2) var(--sp-3); max-width: 190px;
   background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--sp-1);
