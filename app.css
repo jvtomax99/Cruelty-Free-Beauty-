@@ -617,7 +617,7 @@ html.intro-on .intro {
   color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease);
 }
 .hb-pal img {   /* the girl from the opening film, cut out; her bust fades out at the bottom */
-  width: 104px; height: auto; flex: none; margin-left: calc(-1 * var(--sp-1));
+  width: 130px; height: auto; flex: none; margin-left: calc(-1 * var(--sp-1));
   filter: drop-shadow(var(--cut-shadow)); animation: palBob 4.6s ease-in-out infinite;
 }
 .hb-say {

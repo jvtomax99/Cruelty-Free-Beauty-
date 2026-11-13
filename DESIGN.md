@@ -99,7 +99,7 @@ tiles.
   radius-20 card on computers (380). The time-of-day label and the slogan
   at 40 sit top left in ink over a cream shade (`--veil-cream`), never
   white text. The girl from the opening film (`assets/images/host.webp`,
-  her head and shoulders cut out, 104 px wide, fading out at the bottom,
+  her head and shoulders cut out, 130 px wide, fading out at the bottom,
   a soft drop shadow and a slow bob; 2026-11-13, Jose: the bunny there
   looked basic, and he chose the cut-out over a round portrait) sits
   bottom left with a paper speech bubble that links to Scan. The bunny stays in the brand bar. The photo fades into the page at the
