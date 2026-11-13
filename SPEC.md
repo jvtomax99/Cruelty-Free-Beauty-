@@ -196,9 +196,12 @@ me**.
   loose diamond: broad under the turf and tapering to an off-centre point,
   with ledges, recesses, overhangs and one shaded hollow where a few
   mushrooms glow. One great blossom tree stands on a prow beside the pond,
-  with seed pods that glow faintly under its crown; its thick roots cross
-  the turf and go down the cliff, forking, some coming out of the earth
-  lower down. The stream runs pool to pool into the pond; the pond
+  with lanterns hanging under its crown; its roots come out of the
+  trunk as buttresses, cross the turf and go down the cliff pressed into
+  it. A thick root is three strands wound loosely round each other
+  (two on a phone with little memory), which part and go back into the earth; roots fork, some come out
+  of the earth lower down (on the back of the island too), and fine roots
+  hang wherever the mass overhangs. The stream runs pool to pool into the pond; the pond
   overflows through a gap in its bank, falls to a rocky basin, turns, and
   falls again past the island's base into a little mist. On top: sculpted
   land (hills, a raised lawn for the cream cottage with a dusty rose roof,
@@ -217,6 +220,18 @@ me**.
   log and more hay, a pergola, a roof of leaves). Residents and the better
   shelter stay even if the count later drops. The round's summary says
   what the round changed.
+  The look (changed 2026-11-13, Jose's pick of "golden hour" after four
+  pictures he sent as a direction; three look like other artists' work, so
+  they are not in the repo and nothing from them ships): a low warm sun
+  and lavender shade, never grey. Trees after his lantern-tree picture: a
+  trunk that bends and twists, bark drawn in code on every trunk and
+  root (not the fine hanging ones), flat pads of leaves in layers, and blossom on the kinds that
+  flower: dotted over the pads, which are blushed pink across the top. The great tree has boulders in its
+  roots and five lanterns on chains; four other trees carry one lantern
+  each (three and two on a phone with little memory). The cottage's windows are lit, lanterns and windows throw a soft
+  pool of light on the ground, glints ride down the waterfall, and no two
+  rocks, shrubs or blocks of cliff are quite the same colour. It stays
+  daytime: no night mode.
   The animals live on their own: each on its own clock, resting, looking
   about, sniffing, grazing, grooming, and going somewhere for a reason
   (food, the shelter, a friend, a flower in bloom at the edge of their
@@ -358,6 +373,14 @@ only if it can be shown to work across skin tones.
       `node tools/test-sanctuary.cjs` and `node tools/test-garden.cjs`
       pass in the cloud browser; about 470,000 triangles with everything
       unlocked, up from 394,000)
+- [x] Golden hour and the lantern trees: warm low sun with lavender
+      shade, trees remade after Jose's picture, lanterns, lit cottage
+      windows, pools of light, glints on the falls, colour variation
+      and the roots reworked into wound strands with fine roots hanging
+      under the overhangs (2026-11-13; both browser tests pass in the
+      cloud browser; then bark on trunks and roots, more blossom and a
+      stronger glow; about 512,000 triangles with everything unlocked,
+      475,000 before)
 - [ ] A real-phone check of speed and battery (Jose). The island is
       heavier than before, so this matters more now
 
@@ -374,6 +397,9 @@ only if it can be shown to work across skin tones.
   ducks, the deer has small antlers nobody asked for, the guinea pig came
   with a tail (hidden in code), and the beagle and deer are more cartoon
   than the rabbits. Remake them, or keep?
+- Blossom trees are green underneath with pads blushed pink on top and
+  blossom dotted over them (Jose asked for more pink on 2026-11-13; they
+  were pink all over before the restyle). Jose to say if that is enough.
 - The cliff under the island is lit face by face (faceted), the one
   break from DESIGN's "rounded, never faceted": smooth, it read as a
   blur on a phone. Jose to say if it stays (one word in `mass()` in
