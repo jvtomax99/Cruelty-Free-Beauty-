@@ -115,13 +115,9 @@
 
   // The brand's first letter for its tile (a whole character, never half an emoji); never a brand logo.
   const initial = (name) => (Array.from(String(name || "").trim())[0] || "•").toUpperCase();
-  // A row's second line: the price band in the filter chips' words, then what the brand sells.
-  // Only what the data holds; a brand with neither gets no line.
-  function subLine(b) {
-    const t = b.productTypes || [];
-    const what = [["lips", "eyes", "cheeks", "face"].some((x) => t.includes(x)) && "Makeup", t.includes("brushes") && "brushes", t.includes("skincare") && "skincare"].filter(Boolean).join(", ");
-    return [b.price && `${b.price} ${PRICE[b.price]}`, what && what[0].toUpperCase() + what.slice(1)].filter(Boolean).join(" · ");
-  }
+  // The tile's finish (porcelain, blush or rose), fixed per brand by its name so it never
+  // changes with the filters.
+  const finish = (name) => Array.from(String(name)).reduce((n, c) => n + c.codePointAt(0), 0) % 3;
 
   // `arriving`: the rows fade up one after another. Only when the list first draws or the screen
   // opens, never while typing or filtering.
@@ -146,21 +142,21 @@
     const filtered = state.q || state.vegan || state.price.size;
     $("brand-count").textContent = `${passing} brands pass ${modeName}` + (filtered ? `. Showing ${shown.length}.` : ".");
 
-    $("brand-list").innerHTML = shown.length ? shown.map(({ b, v }) => {
-      const sub = subLine(b);
-      return `
+    // A row with three chips has no room for the price band's word on a phone: it keeps the
+    // signs and says the word to screen readers only.
+    $("brand-list").innerHTML = shown.length ? shown.map(({ b, v }) => `
       <li><a class="brand-row br-rich" href="#brand/${encodeURIComponent(b.id)}">
-        <span class="br-mono" aria-hidden="true">${esc(initial(b.name))}</span>
+        <span class="br-mono br-f${finish(b.name)}" aria-hidden="true">${esc(initial(b.name))}</span>
         <span class="br-body">
           <span class="brand-name">${esc(b.name)}</span>
-          ${sub ? `<span class="br-sub">${esc(sub)}</span>` : ""}
           <span class="brand-meta">
             ${v.pass ? certChips(v) : `<span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>`}
             ${b.vegan === "all" ? '<span class="tag">Vegan</span>' : ""}
+            ${b.price ? `<span class="br-price"><span aria-hidden="true">${esc(b.price)}</span> <span class="${v.pass && v.certs.length + (b.vegan === "all") > 2 ? "sr-only" : ""}">${PRICE[b.price]}</span></span>` : ""}
           </span>
           ${v.pass ? "" : `<span class="brand-why">${esc(v.reason)}</span>`}
         </span>
-      </a></li>`; }).join("")
+      </a></li>`).join("")
       : `<li class="none">${state.q ? `No brand called “${esc(state.q)}” on our list yet.` : "No brands match these filters."}</li>`;
     $("brand-hint").hidden = !!state.q;
   }

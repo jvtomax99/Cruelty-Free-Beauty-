@@ -119,14 +119,17 @@ tiles.
   rose-ink text.
 - **Brand row:** radius 20, paper-to-blush with the bright rim
   (`--qt-edge`) and the finish, like the rail cards. On the Brands list: a
-  44 px tile with the brand's initial on the left (never a logo), then the
-  name in Fraunces 17, one ink-soft line in footnote size (price band in
-  the filter chips' words, then what it sells; left out when the data has
-  neither), the chips on their own row, and the reason it fails on a last
-  line. Pressed: shrinks to .985 and a 6 px rose edge grows in from the
-  left (the Hub's card edge; only on press, because a standing rose edge
-  means "What changed"). Rows fade up 6 px one after another when the
-  screen opens, never while typing or filtering.
+  44 px tile with the brand's initial on the left (never a logo) in one of
+  three finishes fixed per brand (porcelain: paper to blush-2, rose
+  letter; blush: blush to pink, rose-ink letter; rose: rose to rose-ink,
+  paper letter), then the name in Fraunces 20, and one row of chips ending in
+  the price band in rose-ink 12 semibold ("$$ Mid", the filter chips'
+  words; only the signs when the row already holds three chips). Every passing card is the same height (82) at 390 px and wider; on narrower phones a long name or three chips wrap. The
+  reason a brand fails goes on a last line in ink-soft. Pressed: shrinks to
+  .985 and a 6 px rose edge grows in from the left (the Hub's card edge;
+  only on press, because a standing rose edge means "What changed"). Rows
+  fade up 6 px one after another when the screen opens, never while typing
+  or filtering.
 - **What changed:** a paper card on Home under the search bar, only when
   there is news; each change is a brand row with what the list showed, then
   the date and source link in footnote size; one hairline "Got it" button.

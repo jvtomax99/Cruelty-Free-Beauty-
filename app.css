@@ -258,9 +258,14 @@ main {
   background: linear-gradient(150deg, var(--blush), var(--pink)); border: 2px solid var(--paper); box-shadow: var(--finish);
   font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; color: var(--rose-ink);
 }
+.br-f0 { background: linear-gradient(150deg, var(--paper), var(--blush-2)); color: var(--rose); }   /* porcelain */
+.br-f2 { background: linear-gradient(150deg, var(--rose), var(--rose-ink)); color: var(--paper); }   /* rose */
 .br-body { display: grid; gap: var(--sp-1); min-width: 0; }
-.br-sub { color: var(--ink-soft); font-size: var(--fs-foot); line-height: 1.35; }
+.br-rich .brand-name { font-size: var(--fs-t3); letter-spacing: var(--tr-title); line-height: 1.2; }
 .br-rich .brand-meta { justify-content: flex-start; }
+.br-price {   /* the price band, in the filter chips' words, at the end of the chip row */
+  margin-left: auto; font-size: var(--fs-cap); font-weight: 600; letter-spacing: var(--tr-sm); color: var(--rose-ink); white-space: nowrap;
+}
 .brand-list.is-arriving > li { animation: rowIn var(--t-screen) var(--ease) backwards; }
 .brand-list.is-arriving > li:nth-child(2) { animation-delay: .03s; }
 .brand-list.is-arriving > li:nth-child(3) { animation-delay: .06s; }
