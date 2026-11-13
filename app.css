@@ -1,8 +1,8 @@
-/* C.F.B. styles. Every value comes from the tokens below; DESIGN.md explains them. */
-
-@font-face { font-family: "Fraunces"; src: url("assets/fonts/fraunces.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
-@font-face { font-family: "Fraunces"; src: url("assets/fonts/fraunces-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
-@font-face { font-family: "Inter"; src: url("assets/fonts/inter.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+/* Instrument Serif comes in one weight. Its faces claim 100-900 so a heading asking for 600 uses
+   it as drawn instead of a smeared fake bold; size-adjust lifts it to sit with the old scale. */
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; size-adjust: 122%; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; size-adjust: 122%; }
+@font-face { font-family: "Manrope"; src: url("assets/fonts/manrope.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
 
 /* ---------- Tokens ---------- */
 :root {
@@ -51,8 +51,8 @@
   --sx-peek: 58px;        /* how much of the page shows under the Sanctuary's 3D stage */
 
   /* type */
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --fs-cap2: 11px; --fs-cap: 12px; --fs-foot: 13px; --fs-sub: 15px; --fs-call: 16px;
   --fs-head: 17px; --fs-t3: 20px; --fs-t2: 22px; --fs-t1: 28px; --fs-large: 34px; --fs-hero: 40px; --fs-show: 56px;
   --tr-sm: 0.01em; --tr-body: -0.005em; --tr-head: -0.012em; --tr-title: -0.02em;
@@ -261,11 +261,13 @@ main {
 .br-f0 { background: linear-gradient(150deg, var(--paper), var(--blush-2)); color: var(--rose); }   /* porcelain */
 .br-f2 { background: linear-gradient(150deg, var(--rose), var(--rose-ink)); color: var(--paper); }   /* rose */
 .br-body { display: grid; gap: var(--sp-1); min-width: 0; }
-.br-rich .brand-name { font-size: var(--fs-t3); letter-spacing: var(--tr-title); line-height: 1.2; }
+.br-rich .brand-name { font-size: var(--fs-t2); line-height: 1.1; letter-spacing: var(--tr-sm); color: var(--rose-ink); }
+.br-mono { font-style: italic; }
 .br-rich .brand-meta { justify-content: flex-start; }
-.br-price {   /* the price band, in the filter chips' words, at the end of the chip row */
-  margin-left: auto; font-size: var(--fs-cap); font-weight: 600; letter-spacing: var(--tr-sm); color: var(--rose-ink); white-space: nowrap;
+.br-price {   /* the price band, in the filter chips' words, in the display italic at the end of the chip row */
+  margin-left: auto; font-family: var(--font-display); font-style: italic; font-size: var(--fs-head); color: var(--ink-soft); white-space: nowrap;
 }
+.screen-head h1::first-letter { font-style: italic; }   /* the screen title's first letter in the display italic */
 .brand-list.is-arriving > li { animation: rowIn var(--t-screen) var(--ease) backwards; }
 .brand-list.is-arriving > li:nth-child(2) { animation-delay: .03s; }
 .brand-list.is-arriving > li:nth-child(3) { animation-delay: .06s; }
@@ -278,7 +280,7 @@ main {
 .brand-name { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; letter-spacing: var(--tr-head); }
 .brand-meta { display: flex; gap: var(--sp-1); align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 .brand-why { grid-column: 1 / -1; color: var(--ink-soft); font-size: var(--fs-foot); line-height: 1.35; }
-.verdict, .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 var(--sp-2); border-radius: var(--r-pill); font-size: var(--fs-cap2); font-weight: 600; letter-spacing: var(--tr-sm); white-space: nowrap; }
+.verdict, .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 var(--sp-2); border-radius: var(--r-pill); font-size: var(--fs-cap2); font-weight: 700; letter-spacing: var(--tr-sm); white-space: nowrap; }
 .tag { background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line); }
 .v-pass { background: var(--ok-bg); color: var(--ok); }
 .v-fail { background: var(--no-bg); color: var(--no); }

@@ -43,13 +43,18 @@ everything (`body::before`).
 
 ## Type
 
-- **Headings:** Fraunces, a soft serif (variable, WOFF2 in
-  `assets/fonts/`). Display italic in rose for the slogan's last words.
-- **Everything else:** Inter (variable).
+- **Headings:** Instrument Serif, a tall, narrow editorial serif (chosen
+  by Jose 2026-11-13 over a softer Fraunces and Bodoni Moda; replaces
+  Fraunces). One weight only: its faces claim 100 to 900 so a heading that
+  asks for 600 uses the drawn weight, never a fake bold, and
+  `size-adjust: 122%` sets it on the old scale. Italic in rose for the
+  slogan's last words, the first letter of each screen title, the brand
+  tile's initial and the price on a brand row.
+- **Everything else:** Manrope (variable; replaces Inter).
 - Scale (`--fs-*`): 11, 12, 13, 15, 16, 17, 20, 22, 28, 34, 40 for the
   hello line, and 56 (`--fs-show`) for the launch show's name card. Body text is 16. Inputs are never under 16 (iPhone zooms).
-- Weights: 450 (italic slogan), 500 (hello), 550 (labels, screen titles),
-  600 (tile and card titles, wordmark).
+- Weights (Manrope): 450 to 600 for labels, 700 for verdict chips. The
+  display face ignores weights (see above).
 - Letter spacing tightens as size grows (`--tr-sm`, `--tr-body`,
   `--tr-head`, `--tr-title`). Small capitals labels (the greeting) use
   0.12em.
@@ -122,9 +127,9 @@ tiles.
   44 px tile with the brand's initial on the left (never a logo) in one of
   three finishes fixed per brand (porcelain: paper to blush-2, rose
   letter; blush: blush to pink, rose-ink letter; rose: rose to rose-ink,
-  paper letter), then the name in Fraunces 20, and one row of chips ending in
-  the price band in rose-ink 12 semibold ("$$ Mid", the filter chips'
-  words; only the signs when the row already holds three chips). Every passing card is the same height (82) at 390 px and wider; on narrower phones a long name or three chips wrap. The
+  paper letter), then the name in the display face at 22 in rose-ink, and one row
+  of chips ending in the price band in the display italic at 17, ink-soft
+  ("$$ Mid", the filter chips' words; only the signs when the row already holds three chips). Every passing card is the same height at 390 px and wider; on narrower phones a long name or three chips wrap. The
   reason a brand fails goes on a last line in ink-soft. Pressed: shrinks to
   .985 and a 6 px rose edge grows in from the left (the Hub's card edge;
   only on press, because a standing rose edge means "What changed"). Rows
