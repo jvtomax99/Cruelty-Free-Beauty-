@@ -120,6 +120,13 @@ credits for this (642 were left). Ask before going over 250.
 - This is a big feature by `.claude/rules/general.md` (a new engine and a
   new set of art): write its "Done when" into `SPEC.md` first.
 
+## Progress (2026-11-13, second session)
+
+- `SPEC.md` has the plan ("Home's host" under Features and Phases).
+- Step 1 (lines) is built: `host.js`, `tools/test-host.cjs`, pull request
+  open. It must not merge until Jose signs off the words in `LINES`.
+- Steps 2 and 3 not started. No Runway credits spent this session.
+
 ## Left to do
 
 - Add the plan to `SPEC.md` (it is outside the current spec) before coding.

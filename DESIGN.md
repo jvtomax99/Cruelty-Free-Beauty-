@@ -101,7 +101,10 @@ tiles.
   white text. The girl from the opening film (`assets/images/host.webp`,
   160 px wide, a soft drop shadow) sits bottom left, her shoulders running
   down behind the Search field, with a paper speech bubble beside her
-  face that links to Scan. She was re-shot on a plain backdrop so her
+  face. The bubble holds one line in two parts (a quiet first part, a
+  rose second part) chosen by `host.js` from what the phone knows, and
+  links to where that line points; it wraps to three rows at most at
+  190 px. She was re-shot on a plain backdrop so her
   hair has a clean outline (cut out of the film itself it kept the
   stage's brown and a soft, lumpy edge). She moves: 3.9 s of a blink, a
   wider smile and a glance aside (39 frames, 10 a second), then rests

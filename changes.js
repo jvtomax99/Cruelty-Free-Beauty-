@@ -93,10 +93,17 @@
     return `<p class="change-note"><strong>Checked ${day(c.date)}.</strong> ${esc(words(c))}.${c.note ? " " + esc(c.note) : ""}${link}</p>`;
   }).join("");
 
+  // host.js asks: the hearted brands with a change this phone hasn't seen.
+  CFB.unseenSaved = () => {
+    const mine = new Set(CFB.saved.list()), old = new Set(seen());
+    return [...new Set(changes.filter((c) => mine.has(c.id) && !old.has(key(c))).map((c) => c.id))].map((id) => ({ id, name: name(id) }));
+  };
+
   $("changes-ok").addEventListener("click", () => {
     seenNow = changes.map(key);
     store.set("changes-seen", JSON.stringify(seenNow));   // also drops keys of entries that aged out
     render();
+    document.dispatchEvent(new CustomEvent("cfb:changes"));
     $("hello-line").focus();
   });
   document.addEventListener("cfb:saved", render);
@@ -105,6 +112,7 @@
     brands = d.brands || [];
     changes = load(d.changes);
     render();
+    document.dispatchEvent(new CustomEvent("cfb:changes"));
     if (changes.length && location.hash.startsWith("#brand/")) CFB.show();   // a brand link opened directly: add its line
   });
 })();

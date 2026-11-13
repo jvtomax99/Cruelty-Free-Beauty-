@@ -36,6 +36,7 @@
   }
   function load() { try { const p = JSON.parse(store.get("profile", "null")); return valid(p) ? p : null; } catch (_) { return null; } }
   function save(p) { store.set("profile", JSON.stringify(p)); }
+  window.CFB.hasProfile = () => !!load();   // host.js asks
   function clear() { try { localStorage.removeItem("cfb-profile"); } catch (_) {} }
 
   let answers = {};
