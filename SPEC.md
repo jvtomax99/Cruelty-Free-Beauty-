@@ -340,6 +340,16 @@ me**.
   head held still and frames picked from it. Budget: about 60 credits
   for edits at 4 each with retries, 52 more if the clip is needed; the
   two re-lit options cost 8.
+  Built 2026-11-13: 14 frames (rest, half-blink, blink, wink, smile,
+  laugh, love, surprised, sad, worried, looking left, right, up, down),
+  all image edits, no clip needed; 52 credits for the edits. Two things
+  the plan did not say, decided while building (Jose can change them):
+  she is only on Home, so a scan result or a Sanctuary answer is kept in
+  memory (up to 10 minutes, the newest only) and she plays its face when
+  Home next opens; and a tap on her picture plays the smile or wink
+  instead of following the bubble's link (the bubble itself still links;
+  under reduced motion the tap follows the link as before). A scan of a
+  brand we have not checked plays surprised, like "not on a list".
   - Done when (moves): she blinks at random and never on a beat; her
     eyes follow a finger; a tap, a scan result and a Sanctuary answer
     each play their reaction and she returns to rest; her hair, outline
@@ -464,7 +474,8 @@ only if it can be shown to work across skin tones.
 ### Home's host (added 2026-11-13)
 - [x] Lines: her bubble picks a line from what the phone knows
       (2026-11-13; Jose signed off the seven lines; `tools/test-host.cjs`)
-- [ ] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
+- [x] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
+      (2026-11-13; `tools/test-host-engine.cjs`; 120 KB of pictures in place of 412 KB)
 - [ ] Places: Scan result, end of the quiz, empty states
 
 ## Open questions (TO FILL)

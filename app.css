@@ -626,7 +626,7 @@ html.intro-on .intro {
    moves the strip; the window's place and size are the "window" numbers make-host.py prints, over the base's. */
 .hb-face {
   --host-n: 14; display: none; position: absolute;
-  left: calc(123 / 480 * 100%); top: calc(135 / 541 * 100%); width: calc(231 / 480 * 100%); height: calc(186 / 541 * 100%);
+  left: calc(114 / 480 * 100%); top: calc(117 / 541 * 100%); width: calc(252 / 480 * 100%); height: calc(237 / 541 * 100%);
   background: url("assets/host/face.webp") 0 0 / calc(var(--host-n) * 100%) 100% no-repeat;
 }
 .hb-host.is-live .hb-face { display: block; }

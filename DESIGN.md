@@ -98,7 +98,7 @@ tiles.
   (`assets/images/home-banner.webp`) full width on phones (452 px tall), a
   radius-20 card on computers (380). The time-of-day label and the slogan
   at 40 sit top left in ink over a cream shade (`--veil-cream`), never
-  white text. The girl from the opening film (`assets/images/host.webp`,
+  white text. The girl from the opening film (`assets/host/base.webp`,
   160 px wide, a soft drop shadow) sits bottom left, her shoulders running
   down behind the Search field, with a paper speech bubble beside her
   face. The bubble holds one line in two parts (a quiet first part, a
@@ -106,9 +106,14 @@ tiles.
   links to where that line points; it wraps to three rows at most at
   190 px. She was re-shot on a plain backdrop so her
   hair has a clean outline (cut out of the film itself it kept the
-  stage's brown and a soft, lumpy edge). She moves: 3.9 s of a blink, a
-  wider smile and a glance aside (39 frames, 10 a second), then rests
-  3 s on the first frame; still under reduced motion. 2026-11-13, Jose:
+  stage's brown and a soft, lumpy edge), then re-lit for depth (glossy
+  hair, soft shadows, a warm rim of light; Jose's pick A, same
+  proportions). She moves like Dr Smiley in the Interpreter Hub
+  (`host-engine.js`): only her face changes, one whole frame at a time,
+  never faded or slid. Blinks at random, eyes that follow a finger, a
+  smile or a wink when tapped, and a face for a scan result or a
+  Sanctuary answer when Home next opens. No moving brows of their own,
+  head tilts, squash or talking mouth. Still under reduced motion. 2026-11-13, Jose:
   the bunny there looked basic; he asked for her as a cut-out, animated.
   The bunny stays in the brand bar. The photo fades into the page at the
   bottom and Search overlaps it by 26 px.

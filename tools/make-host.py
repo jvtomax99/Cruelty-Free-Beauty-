@@ -22,7 +22,7 @@ import numpy as np
 FRAMES = ["rest", "half", "shut", "wink", "smile", "laugh", "love", "surprised", "sad", "worried",
           "lookL", "lookR", "lookU", "lookD"]
 OUT_W = 480                       # her width in the saved base: three times the 160 px she is shown at
-WIN = (318, 336, 708, 654)        # the face window in rest.png's own pixels (left, top, right, bottom)
+WIN = (300, 310, 726, 708)        # the face window in rest.png's own pixels (left, top, right, bottom)
 EDGE = 14                         # the soft border inside the window where a frame fades back to rest.png
 DRIFT = 0.012                     # most of the area outside the window that an edit may have changed
 
