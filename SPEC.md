@@ -357,6 +357,13 @@ me**.
     comparing every frame with the base outside the face window); she
     rests still under reduced motion; no line of hers words a verdict;
     Home's first paint downloads less than before.
+  Built 2026-11-13. Jose signed off the five lines (`PLACES` in
+  `host.js`) and chose her face on a scan result to match it, as a still:
+  a smile on a pass, sad on a fail, surprised for a brand on no list or
+  one we have not checked. One of her per screen: on Scan the "no scans
+  yet" line shows only with nothing scanned and no result on view; on
+  Profile the quiz-end line shows only on the visit the quiz ended, and
+  the "nothing saved" line steps aside for it.
   - Done when (places): she appears once, small and still, on each of the
     named screens with a line that links somewhere useful, and never
     beside a second copy of herself.
@@ -476,7 +483,8 @@ only if it can be shown to work across skin tones.
       (2026-11-13; Jose signed off the seven lines; `tools/test-host.cjs`)
 - [x] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
       (2026-11-13; `tools/test-host-engine.cjs`; 120 KB of pictures in place of 412 KB)
-- [ ] Places: Scan result, end of the quiz, empty states
+- [x] Places: Scan result, end of the quiz, empty states (2026-11-13; Jose
+      signed off the five lines; `tools/test-host-places.cjs`)
 
 ## Open questions (TO FILL)
 

@@ -216,6 +216,7 @@
         </div>
         ${code ? obfLine(code) : ""}
         <p class="src">The verdict is for the brand, not this one product.</p>
+        ${window.CFB.host ? window.CFB.host.mini("scanned", b, v.kind) : ""}
       </div>`;
     focusResult();
     remember({ code: code || "", product: product || "", brand: b.id, name: b.name, t: Date.now() });
@@ -228,12 +229,13 @@
         ${product ? `<p class="scan-product">${esc(product)}</p>` : ""}
         <h2 class="scan-brand" tabindex="-1" id="scan-h">We haven't checked ${esc(name)} yet</h2>
         <p class="scan-text">It isn't one of the${total ? ` ${total}` : ""} brands we've verified, so we can't say whether it's cruelty-free. Look it up on the certifiers' own lists:</p>
-        <ul class="buy">
+        <ul class="buy" id="scan-lists">
           <li><a href="${PETA_SEARCH}${encodeURIComponent(name)}" target="_blank" rel="noopener">Search PETA for ${esc(name)}</a></li>
           <li><a href="${LB_GUIDE}" target="_blank" rel="noopener">Leaping Bunny's shopping guide</a> <span>search ${esc(name)} there</span></li>
         </ul>
         <p class="src">Noted on this phone, so it's easy to ask us to add it.</p>
         ${code ? obfLine(code) : ""}
+        ${window.CFB.host ? window.CFB.host.mini("unchecked", null, "unlisted") : ""}
       </div>`;
     focusResult();
     remember({ code: code || "", product: product || "", brand: null, name, t: Date.now() });
@@ -274,11 +276,22 @@
     if (h) { h.focus({ preventScroll: true }); h.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
   }
 
+  /* Her "no scans yet" line: only with nothing scanned and no result (which has her too) on view.
+     Redrawn whenever the result area changes, so it comes back when a result is cleared. */
+  function renderEmpty() {
+    const want = !readList("scans").length && !out.querySelector(".hm") && !!window.CFB.host;
+    const none = $("scan-empty");
+    if (want !== !!none.firstChild) none.innerHTML = want ? window.CFB.host.mini("noScans") : "";
+  }
+  new MutationObserver(renderEmpty).observe(out, { childList: true });
+  document.addEventListener("cfb:host", renderEmpty);
+
   /* ---------- Recent scans ---------- */
   function renderRecent() {
     const list = readList("scans"), un = readList("unlisted");
     const box = $("scan-recent-box");
     box.hidden = !list.length;
+    renderEmpty();
     $("scan-recent").innerHTML = list.map((s) => {
       const label = s.product ? `${esc(s.product)}` : s.code ? `Barcode ${esc(s.code)}` : "Typed brand";
       return s.brand
@@ -303,12 +316,13 @@
     renderRecent();
   });
   // Never leave the camera on behind another screen or app.
-  document.addEventListener("cfb:screen", (e) => { if (e.detail.name !== "scan") stopCamera(); });
+  document.addEventListener("cfb:screen", (e) => { if (e.detail.name !== "scan") stopCamera(); else renderRecent(); });
   document.addEventListener("visibilitychange", () => { if (document.hidden) stopCamera(); });
 
   window.CFB.brands.then((list) => {
     window.CFB.brandCount = list.length;
     $("scan-brand-names").innerHTML = list.map((b) => `<option value="${esc(b.name)}"></option>`).join("");
+    renderRecent();   // host.js has loaded by now: her "no scans yet" line
   });
   renderRecent();
 })();

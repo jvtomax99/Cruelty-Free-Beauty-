@@ -69,13 +69,14 @@
   }
   const focusQuestion = () => { const l = app.querySelector(".quiz-q"); if (l) l.focus({ preventScroll: true }); window.scrollTo(0, 0); };
 
-  function start() { answers = {}; step = 0; inQuiz = true; renderQuestion(); focusQuestion(); }
+  let justDone = false;   // the quiz ended on this visit
+  function start() { answers = {}; step = 0; inQuiz = true; justDone = false; renderQuestion(); focusQuestion(); renderSaved(); }
 
   function finish() {
     const p = { ...answers, undertone: undertoneFrom(answers), undertoneSet: false, saved: new Date().toISOString().slice(0, 10) };
     save(p);
-    inQuiz = false;
-    renderProfile(p, true);
+    inQuiz = false; justDone = true;
+    renderProfile(p, true).then(renderSaved);   // she is in the profile card now, so the saved list's copy of her goes
     window.scrollTo(0, 0);
   }
 
@@ -146,6 +147,7 @@
         <div class="pf-tones" role="group" aria-label="Change undertone">
           ${Object.entries(UNDERTONE).map(([v, l]) => `<button type="button" class="chip" data-tone="${v}" aria-pressed="${p.undertone === v}">${l}</button>`).join("")}
         </div>
+        ${justDone && window.CFB.host ? window.CFB.host.mini("quizDone") : ""}
       </div>
       <h2 class="rt-head">Your routine</h2>
       <p class="rt-intro">Brands that pass ${modeName} (change it on the Brands screen), fit your budget${p.vegan === "yes" ? ", are fully vegan" : ""} and sell each step. We suggest brands, not products: shades and formulas are on each brand's own site. Your skin type and finish don't change the picks yet: we don't have sourced data on which products suit them.${unchecked ? ` ${unchecked} brand${unchecked === 1 ? "'s" : "s'"} ranges aren't checked yet, so they're left out.` : ""}</p>
@@ -161,7 +163,7 @@
       save(next); renderProfile(next, true);
     }));
     document.getElementById("pf-retake").addEventListener("click", start);
-    document.getElementById("pf-clear").addEventListener("click", () => { clear(); renderIntro(); const s = document.getElementById("pf-start"); if (s) s.focus(); });
+    document.getElementById("pf-clear").addEventListener("click", () => { clear(); justDone = false; renderIntro(); renderSaved(); const s = document.getElementById("pf-start"); if (s) s.focus(); });
     if (focus) document.getElementById("pf-h").focus({ preventScroll: true });
   }
 
@@ -180,6 +182,7 @@
   // Redraw on each visit, so a strictness change on the Brands screen shows up here.
   function show() {
     if (inQuiz) { if (!app.querySelector(".quiz")) renderQuestion(); return; }
+    justDone = false;   // her "That's your match" line is for the moment the quiz ends
     const p = load(); if (p) renderProfile(p); else renderIntro();
   }
   /* ---------- Saved brands (hearts on brand pages and scan results) ---------- */
@@ -201,7 +204,7 @@
       <h2 class="rt-head" id="sv-h" tabindex="-1">Saved brands</h2>
       ${list.length
         ? `<p class="rt-intro">Verdicts under ${mode === "strict" ? "Strict" : "Certified"}, as of today's data.</p><ul class="brand-list sv-list">${rows}</ul>`
-        : `<p class="sv-empty">Tap Save on a brand's page or after a scan, and it shows here.</p>`}`;
+        : `<p class="sv-empty">Tap Save on a brand's page or after a scan, and it shows here.</p>${!justDone && window.CFB.host ? window.CFB.host.mini("noSaved") : ""}`}`;
     savedApp.querySelectorAll("[data-unsave]").forEach((x) => x.addEventListener("click", () => {
       refocus = true;
       window.CFB.saved.toggle(x.dataset.unsave);   // fires cfb:saved, which redraws
@@ -212,6 +215,7 @@
     }
   }
   document.addEventListener("cfb:saved", renderSaved);
+  document.addEventListener("cfb:host", renderSaved);   // host.js loads after this file
 
   document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "profile") { show(); renderSaved(); } });
   show();
