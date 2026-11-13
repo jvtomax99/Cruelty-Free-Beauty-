@@ -5,8 +5,10 @@ Written 2026-11-13. Delete this file when its work is done.
 ## Goal
 
 Jose approved the animated girl on Home's banner ("She is perfect") and
-asked to give her more: **more lines, more moves, more places**. The plan
-below is a proposal. It is NOT approved yet: get Jose's OK before any code.
+asked to give her more: **more lines, more moves, more places**. Jose
+approved the plan below on 2026-11-13 ("Build all three"), including about
+104 Runway credits for the two new moves. Her lines still need his sign-off
+before they ship.
 
 ## Done (live, pull request #25, merge commit fe29c2b)
 
@@ -34,7 +36,7 @@ below is a proposal. It is NOT approved yet: get Jose's OK before any code.
 Cutting her out of the opening film itself does not work: her hair is
 blurred into a brown stage backdrop there. Jose rejected that three times.
 
-## Proposed plan (needs Jose's OK)
+## The plan (approved by Jose, 2026-11-13)
 
 **What it does.** She becomes the app's host instead of one picture.
 
@@ -76,8 +78,9 @@ places. Each is its own pull request with screenshots.
 
 ## Left to do
 
-- Get Jose's OK on the plan (or his changes), then add it to `SPEC.md`
-  (it is outside the current spec) before coding.
+- Add the plan to `SPEC.md` (it is outside the current spec) before coding.
+- Build in the order above, one pull request each, with 390 px and 1440 px
+  screenshots; merge when the site check is green, then notify Jose.
 - Draft the lines for Jose to sign off.
 - `tools/make-host.py`: take an output path.
 
