@@ -177,8 +177,8 @@ const W = () => window.CFB.garden.world;
     check((await p.textContent('.sx-name')) === 'Meet Clover', `${what}: a finger tap on Clover opens her card`);
     check(await tappable('#sx-hello', p) && await tappable('.sx-btn-2', p), `${what}: Say hello and Practise are tappable`);
     await snap(p);
-    const on = await p.evaluate(() => { const d = window.CFB.garden.world.debug, a = d.byId.clover, q = d.project(a.x, a.root.position.y + a.size * 0.5, a.z), cv = document.getElementById('sx-canvas').getBoundingClientRect(), card = document.getElementById('sx-card').getBoundingClientRect(); return { x: q.x / cv.width, clear: cv.top + q.y < card.top && q.y > 0 }; });
-    check(on.x > 0.2 && on.x < 0.8 && on.clear, `${what}: Clover is in view, clear of the card`);
+    const on = await p.evaluate(() => { const d = window.CFB.garden.world.debug, a = d.byId.clover, q = d.project(a.x, a.root.position.y + a.size * 0.5, a.z), cv = document.getElementById('sx-canvas').getBoundingClientRect(), card = document.getElementById('sx-card').getBoundingClientRect(); const X = cv.left + q.x, Y = cv.top + q.y; return { x: q.x / cv.width, clear: q.y > 0 && Y < innerHeight && !(X > card.left && X < card.right && Y > card.top && Y < card.bottom) }; });   // the card is under her on a tall phone and beside her on a sideways one
+    check(on.x > 0.12 && on.x < 0.8 && on.clear, `${what}: Clover is in view, clear of the card`);
     await p.tap('#sx-hello');
     check((await p.textContent('#sx-desc')) === 'Clover says hello.' && errs.length === 0, `${what}: Say hello answers, no script errors`);
     await c.close();
