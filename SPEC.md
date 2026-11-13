@@ -408,7 +408,8 @@ only if it can be shown to work across skin tones.
   every launch. A tap first, then the show with sound. Founder to see the
   logo and the show.
 - 2026-11-10 (Jose): built for the founder; v1 is the directory plus the
-  quiz; $0 asset budget; soft luxury look; Fraunces headings.
+  quiz; $0 asset budget; soft luxury look; Fraunces headings (replaced by
+  Instrument Serif and Manrope, 2026-11-13).
 - 2026-11-11 (Jose): default strictness is Strict. Brand rechecks run as a
   monthly scheduled Claude task that opens a pull request for Jose to
   approve. Affiliate links undecided; the data leaves room for them.

@@ -152,7 +152,7 @@
           <span class="brand-meta">
             ${v.pass ? certChips(v) : `<span class="verdict v-${v.kind}">${CHIP[v.kind]}</span>`}
             ${b.vegan === "all" ? '<span class="tag">Vegan</span>' : ""}
-            ${b.price ? `<span class="br-price"><span aria-hidden="true">${esc(b.price)}</span> <span class="${v.pass && v.certs.length + (b.vegan === "all") > 2 ? "sr-only" : ""}">${PRICE[b.price]}</span></span>` : ""}
+            ${b.price ? `<span class="br-price"><span class="sr-only">Price: </span><span aria-hidden="true">${esc(b.price)}</span> <span class="${v.pass && v.certs.length + (b.vegan === "all") > 2 ? "sr-only" : ""}">${PRICE[b.price]}</span></span>` : ""}
           </span>
           ${v.pass ? "" : `<span class="brand-why">${esc(v.reason)}</span>`}
         </span>

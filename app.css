@@ -265,7 +265,7 @@ main {
 .br-mono { font-style: italic; }
 .br-rich .brand-meta { justify-content: flex-start; }
 .br-price {   /* the price band, in the filter chips' words, in the display italic at the end of the chip row */
-  margin-left: auto; font-family: var(--font-display); font-style: italic; font-size: var(--fs-head); color: var(--ink-soft); white-space: nowrap;
+  margin-left: auto; font-family: var(--font-display); font-style: italic; font-size: var(--fs-head); line-height: 24px; color: var(--ink-soft); white-space: nowrap;
 }
 .screen-head h1::first-letter { font-style: italic; }   /* the screen title's first letter in the display italic */
 .brand-list.is-arriving > li { animation: rowIn var(--t-screen) var(--ease) backwards; }
@@ -845,3 +845,7 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
   .sx.is-meet .sx-face { width: 48px; height: 48px; }
 }
 @media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back, .sx-step, .sx-who { transition: none; } }
+
+/* Manrope runs wider than Inter: on the narrowest phones the quick tiles' labels
+   drop to 12 so "My profile" stays on one line like the others. */
+@media (max-width: 374px) { .qt-tile { font-size: var(--fs-cap); letter-spacing: 0; } }
