@@ -56,10 +56,13 @@
   function row(c, isSaved) {
     const link = /^https:\/\//.test(c.url || "") ? ` · <a href="${esc(c.url)}" target="_blank" rel="noopener">${SOURCE[c.claim]}</a>` : "";
     return `<li class="change">
-      <a class="brand-row" href="#brand/${encodeURIComponent(c.id)}">
-        <span class="brand-name">${esc(name(c.id))}</span>
-        ${isSaved ? '<span class="brand-meta"><span class="tag">You saved this</span></span>' : ""}
-        <span class="brand-why">${esc(words(c))}.${c.note ? " " + esc(c.note) : ""}</span>
+      <a class="brand-row br-rich" href="#brand/${encodeURIComponent(c.id)}">
+        <span class="br-mono br-f${CFB.finish(name(c.id))}" aria-hidden="true">${esc(CFB.initial(name(c.id)))}</span>
+        <span class="br-body">
+          <span class="brand-name">${esc(name(c.id))}</span>
+          ${isSaved ? '<span class="brand-meta"><span class="tag">You saved this</span></span>' : ""}
+          <span class="brand-why">${esc(words(c))}.${c.note ? " " + esc(c.note) : ""}</span>
+        </span>
       </a>
       <p class="src">Checked ${day(c.date)}${link}</p>
     </li>`;

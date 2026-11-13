@@ -244,6 +244,8 @@
   window.CFB.CHIP = CHIP;
   window.CFB.certChips = certChips;
   window.CFB.initial = initial;
+  window.CFB.finish = finish;
+  window.CFB.PRICE = PRICE;
   // The whole file, for changes.js ("changes"); an empty one if it couldn't load.
   const file = fetch("data/brands.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
   window.CFB.data = file.catch(() => ({ brands: [], changes: [] }));

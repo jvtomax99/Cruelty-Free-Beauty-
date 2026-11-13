@@ -105,9 +105,15 @@ tiles.
   (`--qt-edge`), a 52 px pin over a 13 px semibold label (64 px pin on
   computers). These replace the four big blush tiles on Home.
 - **Rail:** a display-serif 20 heading, a count, "View all" in rose, then
-  cards that scroll sideways (156 px wide, paper-to-blush). A 48 px tile
-  with the brand's initial pokes over each card's top edge where the Hub
-  has a pin; never a brand's logo.
+  cards that scroll sideways (156 px wide, paper-to-blush, all as tall as
+  the tallest). A 48 px tile with the brand's initial in the display
+  italic pokes over each card's top edge where the Hub has a pin, in the
+  same three finishes as the Brands list; never a brand's logo. Then the
+  name in the display serif at 20 in rose-ink, the price band in the
+  display italic at 16 ink-soft, and the certifier chips at the bottom.
+  Pressed: a 6 px rose edge grows in on the left as an inner shadow (the
+  tile pokes out, so the card can't clip a bar). The cards fade up one
+  after another when Home opens.
 - **Pins:** glossy pictures in one family of materials only: white
   porcelain, blush enamel, rose gold, a touch of cocoa. 256 px WebP with a
   clear background, in `assets/pins/`. No rainbow of colours: that is the
@@ -136,7 +142,8 @@ tiles.
   fade up 6 px one after another when the screen opens, never while typing
   or filtering.
 - **What changed:** a paper card on Home under the search bar, only when
-  there is news; each change is a brand row with what the list showed, then
+  there is news; each change is a brand row (letter tile, rose name) with
+  what the list showed, then
   the date and source link in footnote size; one hairline "Got it" button.
   On a brand page: a paper note with a 3 px rose left edge. No red, no
   warning icon: it reports, it doesn't accuse.
