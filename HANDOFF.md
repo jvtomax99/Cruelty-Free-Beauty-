@@ -122,19 +122,23 @@ credits for this (642 were left). Ask before going over 250.
 
 ## Progress (2026-11-13, second session)
 
-- `SPEC.md` has the plan ("Home's host" under Features and Phases).
-- Step 1 (lines) is done: `host.js`, `tools/test-host.cjs`, pull request
-  #26. Jose signed off the seven lines and chose the quiz line on every
-  other day only.
+- Step 1 (lines) is live: pull request #26, merge commit 341983f.
+  `host.js` holds `LINES`; Jose signed off the seven lines and chose the
+  quiz line on every other day. Test: `node tools/test-host.cjs`.
 - Jose confirmed step 2 is the Dr Smiley-style rebuild, not two clips.
-- No Runway credits spent this session.
+  Its plan and "Done when" are in `SPEC.md` ("Plan for the moves").
+- Two re-lit stills made from the clean still (Runway, 8 credits, 634
+  left): task `f8da62eb-1d26-4c74-b5a5-e9b3cdd9f0e4` (option A, a warm
+  rim, clean edge) and `1fa1d2c1-6bd3-4f93-807e-d75ee742b808` (option B,
+  a paler halo round the hair that may be harder to key). Waiting for
+  Jose to pick one and OK the plan. Nothing is built on them yet.
+- `jvtomax99/interp` clones read-only in a cloud session (public).
 
 ## Left to do
 
-- Add the plan to `SPEC.md` (it is outside the current spec) before coding.
 - Build in the order above, one pull request each, with 390 px and 1440 px
   screenshots; merge when the site check is green, then notify Jose.
-- Draft the lines for Jose to sign off.
+- Step 3 (places): draft its lines for Jose to sign off.
 - `tools/make-host.py`: take an output path.
 
 ## Files to read first
