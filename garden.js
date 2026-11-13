@@ -5,8 +5,10 @@
    The 3D world (sanctuary3d.js) is loaded only when this screen opens and only where it can
    run; without it the habitat cards below are the whole screen.
    Rules (SPEC "The Garden"): the sanctuary grows only from learning, never from scanning,
-   saving or buying. The learned count is honest and can drop after a miss, but a rabbit that
-   has moved in never leaves (state.best is a high-water mark). */
+   saving or buying. The learned count is honest and can drop after a miss, but an animal that
+   has moved in never leaves and a shelter that was improved stays improved (state.best and
+   state.shelter are high-water marks). The words are "moved in" and "at home here": never
+   "rescued", "saved" or "donated", because none of this is a real animal or a real gift. */
 (function () {
   "use strict";
   const store = window.CFB.store;
@@ -20,19 +22,29 @@
 
   const TOPICS = [
     { id: "meadow", name: "Bunny Meadow", sub: "Cruelty-free or vegan" },
-    { id: "burrow", name: "Burrow hill", sub: "PETA or Leaping Bunny" },
-    { id: "oak", name: "Old oak", sub: "Parent companies" },
-    { id: "pond", name: "Pond", sub: "China today" },
+    { id: "burrow", name: "Leafy Garden", sub: "PETA or Leaping Bunny" },
+    { id: "oak", name: "Wooded Meadow", sub: "Parent companies" },
+    { id: "pond", name: "Willow Pond", sub: "China today" },
     { id: "orchard", name: "Orchard", sub: "Read a brand" },
   ];
+  /* Who is at home in each habitat, in the order they move in (the same names as ROSTER in
+     sanctuary3d.js; tools/test-sanctuary.cjs checks they agree), and what its shelter gains
+     at half learned. The founder has not signed these words off yet. */
+  const HOME = {
+    meadow: { who: ["Clover", "Hazel", "Ash"], better: "a doorway and flowers for the burrow" },
+    burrow: { who: ["Poppy", "Scout", "Juniper"], better: "a pergola over the cushion" },
+    oak: { who: ["Fern", "Bramble", "Rowan"], better: "a roof of leaves on the lean-to" },
+    pond: { who: ["Willow and Pip", "Dot", "Puddle"], better: "a little house on the nest" },
+    orchard: { who: ["Biscuit", "Nutmeg", "Pear"], better: "a log to run through, and more hay" },
+  };
   const TOPIC = Object.fromEntries(TOPICS.map((t) => [t.id, t]));
   const ROUND = 5;
   /* A right answer comes back after these waits; a miss comes back in the next round. */
   const WAITS = [5 * 60e3, DAY, 3 * DAY, 7 * DAY, 16 * DAY, 35 * DAY];
   const LEARNED = 2;   // right on two separate occasions
 
-  /* ---------- Progress: { v, items: { id: { s: stage, due: ms, k: answer it was learned with } }, best: { habitat: residents } } ---------- */
-  let state = { v: 1, items: {}, best: {} };
+  /* ---------- Progress: { v, items: { id: { s: stage, due: ms, k: answer it was learned with } }, best: { habitat: residents }, shelter: { habitat: true } } ---------- */
+  let state = { v: 1, items: {}, best: {}, shelter: {} };
   try {
     const raw = JSON.parse(store.get("garden", "null"));
     if (raw && raw.v === 1 && raw.items && typeof raw.items === "object" && !Array.isArray(raw.items)) {
@@ -40,6 +52,7 @@
         if (it && Number.isInteger(it.s) && it.s >= 0 && it.s <= WAITS.length && Number.isFinite(it.due)) state.items[id] = { s: it.s, due: it.due, k: typeof it.k === "string" ? it.k : "w" };
       }
       if (raw.best && typeof raw.best === "object" && !Array.isArray(raw.best)) for (const t of TOPICS) if ([1, 2, 3].includes(raw.best[t.id])) state.best[t.id] = raw.best[t.id];
+      if (raw.shelter && typeof raw.shelter === "object" && !Array.isArray(raw.shelter)) for (const t of TOPICS) if (raw.shelter[t.id] === true) state.shelter[t.id] = true;
     }
   } catch (_) {}
   const save = () => store.set("garden", JSON.stringify(state));
@@ -112,6 +125,24 @@
     if (now > (state.best[topicId] || 1)) { state.best[topicId] = now; save(); }
     return state.best[topicId] || 1;
   }
+  /* The habitat's shelter is improved once half its topic is learned, and stays improved. */
+  function shelter(topicId) {
+    const n = tally(topicId);
+    if (n.total && n.learned * 2 >= n.total && !state.shelter[topicId]) { state.shelter[topicId] = true; save(); }
+    return !!state.shelter[topicId];
+  }
+  /* What a habitat looks like now, and what learning more brings next. */
+  const snapshot = () => Object.fromEntries(TOPICS.map((t) => [t.id, { p: tally(t.id).p, residents: residents(t.id), shelter: shelter(t.id) }]));
+  function nextUp(id) {
+    const n = tally(id), res = residents(id), ups = [], need = (num, den) => Math.max(1, Math.ceil((n.total * num) / den) - n.learned);
+    if (!n.total) return "";
+    if (res < 3) ups.push([need(res, 3), `${HOME[id].who[res]} moves in`]);
+    if (!shelter(id)) ups.push([need(1, 2), HOME[id].better]);
+    ups.sort((a, b) => a[0] - b[0]);
+    if (ups.length) return `${ups[0][0]} more learned: ${ups[0][1]}.`;
+    return n.p >= 1 ? "Everyone is at home and it is in full bloom." : "More flowers open with each answer you learn.";
+  }
+  const list = (a) => (a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]);
 
   /* ---------- Picking a round: missed and due first, then new, then the ones due soonest ---------- */
   function pick(topicId) {
@@ -170,9 +201,12 @@
     line.textContent = all.learned || all.due ? `${all.learned} of ${all.total} learned${all.due ? ` · ${all.due} to review` : ""}` : `${all.total} questions, 5 at a time`;
   }
 
-  /* ---------- The 3D world ---------- */
+  /* ---------- The 3D world ----------
+     The card under it has three states. "world": a habitat is named, arrows step through the
+     five, Visit goes to it. "visit": close to the habitat, with who is at home and what the
+     next lesson brings. "animal": one animal, its line, Say hello. Practise is always there. */
   const sx = $("sx"), reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let world = null, worldAsked = false, view = "world", said = false;
+  let world = null, worldAsked = false, view = "world", sel = "meadow", who = null, said = false;
   function canWorld() {
     const q = new URLSearchParams(location.search).get("3d");
     if (q === "0" || !sx) return false;
@@ -188,7 +222,7 @@
       .then((m) => m.mount($("sx-canvas"), { reduced, low: (navigator.deviceMemory || 8) <= 3, onPick }))
       .then((w) => {
         world = w; sx.classList.remove("is-loading"); sx.classList.add("is-ready");
-        syncWorld(); world.start();
+        syncWorld(); world.focus(sel); world.start();
         if (location.hash.slice(1) !== "garden") world.stop();
         window.CFB.garden.world = world;
       })
@@ -196,45 +230,69 @@
   }
   function syncWorld() {
     if (!sx || !loaded) return;
-    const n = tally("meadow");
-    if (world) world.setState({ p: n.p, residents: residents("meadow") });
+    if (world) world.setState(snapshot());
     drawCard();
   }
+  const animal = (id) => (world ? world.animals().find((a) => a.id === id && a.visible) : null);
+  const CHEV = `<svg aria-hidden="true"><use href="#i-chev"/></svg>`;
   function drawCard() {
     const card = $("sx-card"); if (!card || !loaded) return;
-    const n = tally("meadow"), here = residents("meadow"), line = `${esc(TOPIC.meadow.sub)} · ${n.learned} of ${n.total} learned`;
-    sx.classList.toggle("is-meet", view === "meet");
-    $("sx-back").setAttribute("aria-label", view === "meet" ? "Back to the whole sanctuary" : "Back");
+    const t = TOPIC[sel], n = tally(sel), here = residents(sel), line = `${esc(t.sub)} · ${n.learned} of ${n.total} learned`, a = view === "animal" ? animal(who) : null;
+    if (view === "animal" && !a) view = "visit";
+    sx.classList.toggle("is-meet", view !== "world");
+    $("sx-back").setAttribute("aria-label", view === "animal" ? `Back to ${t.name}` : view === "visit" ? "Back to the whole sanctuary" : "Back");
     card.hidden = false;
-    card.innerHTML = view === "meet" ? `
-      <img class="sx-face" src="assets/sanctuary/clover.webp" alt="" width="72" height="72">
+    card.innerHTML = view === "animal" ? `
+      <img class="sx-face" src="assets/sanctuary/${esc(a.id)}.webp" alt="" width="72" height="72">
       <div class="sx-text">
-        <h2 class="sx-name">Meet Clover</h2>
-        <p class="sx-desc" id="sx-desc">${said ? "Clover says hello." : "Curious, playful, and very fond of clover."}</p>
-        <p class="sx-line">${line}${here < 3 ? `. ${here === 1 ? "Two friends move" : "One more friend moves"} in as you learn.` : ""}</p>
+        <h2 class="sx-name">Meet ${esc(a.name)}</h2>
+        <p class="sx-desc" id="sx-desc" aria-live="polite">${said ? `${esc(a.name)} says hello.` : esc(a.line)}</p>
+        <p class="sx-line">At home in ${esc(t.name)}</p>
       </div>
       <div class="sx-actions">
         <button class="sx-btn" type="button" id="sx-hello">Say hello</button>
-        <a class="sx-btn sx-btn-2" href="#practice/meadow">Practise</a>
-      </div>` : `
-      <img class="sx-face" src="assets/sanctuary/clover.webp" alt="" width="56" height="56">
+        <a class="sx-btn sx-btn-2" href="#practice/${t.id}">Practise</a>
+      </div>` : view === "visit" ? `
       <div class="sx-text">
-        <h2 class="sx-name">${esc(TOPIC.meadow.name)}</h2>
+        <h2 class="sx-name">${esc(t.name)}</h2>
+        <p class="sx-desc">At home here: ${esc(list(HOME[sel].who.slice(0, here)))}. Tap one to meet.</p>
+        <p class="sx-line">${line}. ${esc(nextUp(sel))}</p>
+      </div>
+      <div class="sx-actions">
+        <a class="sx-btn" href="#practice/${t.id}" id="sx-practise">Practise</a>
+      </div>` : `
+      <div class="sx-text">
+        <h2 class="sx-name">${esc(t.name)}</h2>
         <p class="sx-line">${line}</p>
       </div>
-      <button class="sx-btn" type="button" id="sx-visit">Visit</button>`;
+      <div class="sx-actions">
+        <button class="sx-step" type="button" id="sx-prev" aria-label="Previous habitat">${CHEV}</button>
+        <button class="sx-btn" type="button" id="sx-visit">Visit</button>
+        <button class="sx-step sx-step-next" type="button" id="sx-next" aria-label="Next habitat">${CHEV}</button>
+      </div>`;
   }
-  function go(v) { view = v; said = false; if (world) world.go(v); drawCard(); }
-  function onPick(what) {   // a tap in the 3D world
+  function show(v, id) {   // "world", "visit" (id: habitat) or "animal" (id: animal)
+    said = false;
+    if (v === "animal") { const a = animal(id); if (!a) return; who = id; sel = a.habitat; view = "animal"; world.select(id); }
+    else if (v === "visit") { sel = TOPIC[id] ? id : sel; who = null; view = "visit"; if (world) world.visit(sel); }
+    else { who = null; view = "world"; if (world) { world.visit(null); world.focus(sel); } }
+    drawCard();
+  }
+  function step(by) { const i = TOPICS.findIndex((t) => t.id === sel); sel = TOPICS[(i + by + TOPICS.length) % TOPICS.length].id; if (world) world.focus(sel); drawCard(); }
+  function onPick(what) {   // a tap in the 3D world: { animal, habitat }, { habitat } or null
     if (!what) return;
-    if (view === "world") go("meet");
-    else if (what === "clover") hello();
+    if (what.animal) { if (view === "animal" && who === what.animal) hello(); else show("animal", what.animal); }
+    else if (view === "world" || what.habitat !== sel) show("visit", what.habitat);
+    else if (view === "animal") show("visit", sel);
   }
-  function hello() { said = true; if (world) world.hello(); const d = $("sx-desc"); if (d) d.textContent = "Clover says hello."; }
+  function hello() { const a = animal(who); if (!a) return; said = true; world.hello(who); const d = $("sx-desc"); if (d) d.textContent = `${a.name} says hello.`; }
   if (sx) sx.addEventListener("click", (e) => {
-    if (e.target.closest("#sx-visit")) { go("meet"); const b = $("sx-hello"); if (b) b.focus({ preventScroll: true }); }
+    const keep = (id) => { const b = $(id); if (b) b.focus({ preventScroll: true }); };
+    if (e.target.closest("#sx-visit")) { show("visit", sel); keep("sx-practise"); }
+    else if (e.target.closest("#sx-prev")) { step(-1); keep("sx-prev"); }
+    else if (e.target.closest("#sx-next")) { step(1); keep("sx-next"); }
     else if (e.target.closest("#sx-hello")) hello();
-    else if (e.target.closest("#sx-back")) { if (view === "meet") go("world"); else if (cameFrom) history.back(); else location.hash = "#home"; }
+    else if (e.target.closest("#sx-back")) { if (view === "animal") show("visit", sel); else if (view === "visit") show("world"); else if (cameFrom) history.back(); else location.hash = "#home"; }
   });
 
   /* ---------- A round ---------- */
@@ -247,7 +305,7 @@
     if (failed) { box.innerHTML = LOAD_FAIL; return; }
     const qs = pick(topic);
     if (!qs.length) { box.innerHTML = `<p class="gd-note">Nothing to practise here yet.</p>`; return; }
-    round = { topic, qs, i: 0, right: 0, before: tally(topic === "all" ? null : topic) };
+    round = { topic, qs, i: 0, right: 0, before: tally(topic === "all" ? null : topic), world: snapshot() };
     ask();
   }
   function ask() {
@@ -304,11 +362,20 @@
     const t = round.topic === "all" ? null : round.topic, now = tally(t), was = round.before;
     const gained = now.learned - was.learned;
     const name = t ? TOPIC[t].name : "The sanctuary";
+    /* what this round changed in the sanctuary, habitat by habitat */
+    const then = round.world, here = snapshot(), news = [];
+    for (const tp of TOPICS) {
+      const a = then[tp.id], b = here[tp.id];
+      if (b.residents > a.residents) { const m = HOME[tp.id].who.slice(a.residents, b.residents); news.push(`${list(m)} moved in to ${tp.name}.`); }
+      if (b.shelter && !a.shelter) news.push(`${tp.name} now has ${HOME[tp.id].better}.`);
+      if (b.p > a.p + 1e-9 && !(b.residents > a.residents) && !(b.shelter && !a.shelter)) news.push(`More flowers are out in ${tp.name}.`);
+    }
     $("practice-box").innerHTML = `
       <div class="card gd-done">
         <h2 id="practice-done" tabindex="-1">${round.right} of ${round.qs.length} right</h2>
         <p>${esc(name)}: ${now.learned} of ${now.total} learned${gained > 0 ? ` (${gained} more than before)` : ""}. ${t ? WORD(now) + "." : ""}</p>
         <span class="gd-bar" aria-hidden="true"><span style="width:${Math.round(now.p * 100)}%"></span></span>
+        ${news.length ? `<ul class="gd-news">${news.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
         <p class="gd-note">A question counts as learned once you get it right twice, at least 5 minutes apart. Missed ones come back first.</p>
       </div>
       <button class="pf-start" type="button" id="practice-again">Another round</button>
@@ -351,5 +418,5 @@
     if (h === "garden") onScreen("garden"); else if (h.startsWith("practice/")) onScreen("practice", h.slice(9)); else { shown = h.split("/")[0] || "home"; ready.then(drawHome); }
   }
 
-  window.CFB.garden = { tally, residents, topics: TOPICS, world: null };
+  window.CFB.garden = { tally, residents, shelter, topics: TOPICS, home: HOME, world: null };
 })();

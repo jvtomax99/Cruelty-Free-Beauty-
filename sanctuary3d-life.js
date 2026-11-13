@@ -31,12 +31,12 @@ const V = (x, y, z) => new THREE.Vector3(x, y, z);
 export const SPECIES = {
   "rabbit-clover": { size: 3.2, r: 0.85, gait: "hop", hop: 1.5, neck: [V(0, 0.5, 0.08), V(0, 0.9, 0.45), 0.1], ear: [V(0, 0.74, 0.03), V(0, 1, -0.1), 0.08, 0.09, 0, 0.36, 0], eye: [0.58, 0.71, 0.045], dip: 0.55 },
   "rabbit-tan": { size: 2.2, r: 0.95, gait: "hop", hop: 1.6, neck: [V(0, 0.4, 0.24), V(0, 0.35, 0.94), 0.12], ear: [V(0, 0.62, 0.3), V(0, 1, -0.1), 0.08, 0.07, 0, 0.46, 0], eye: [0.44, 0.56, 0.045, 0.42], dip: 0.4 },
-  "rabbit-grey": { size: 1.9, r: 1.45, gait: "hop", hop: 1.4, lazy: 2.2, neck: [V(-0.045, 0.4, 0.5), V(0, 0.2, 0.98), 0.15], ear: [V(-0.045, 0.67, 0.56), V(0, 1, 0), 0.04, 0.2, 0, 0.5, 0], eye: [0.42, 0.56, 0.06, 0.3], eyeAt: [0.19, 0.49, 0.83], dip: 0.25, turn: 0.3, earK: 0.15 },
+  "rabbit-grey": { size: 1.9, r: 1.6, gait: "hop", hop: 1.4, lazy: 2.2, neck: [V(-0.045, 0.4, 0.5), V(0, 0.2, 0.98), 0.15], ear: [V(-0.045, 0.67, 0.56), V(0, 1, 0), 0.04, 0.2, 0, 0.5, 0], eye: [0.42, 0.56, 0.06, 0.3], eyeAt: [0.19, 0.49, 0.83], dip: 0.25, turn: 0.3, earK: 0.15 },
   duck: { size: 2.0, r: 1.15, yaw: -Math.PI / 2, gait: "swim", speed: 0.8, neck: [V(0, 0.6, 0.2), V(0, 1, 0.15), 0.08], tail: [V(0, 0.5, -0.4), V(0, 0.3, -1), 0.12], eye: [0.78, 0.92, 0.04, 0.3], draft: 0.25, dip: 0.9 },
   duckling: { size: 0.95, r: 0.55, yaw: -Math.PI / 2, gait: "swim", speed: 0.95, neck: [V(0, 0.6, 0.28), V(0, 1, 0.2), 0.08], eye: [0.76, 0.9, 0.04, 0.3], draft: 0.2, dip: 0.8 },
-  "guinea-pig": { size: 1.7, r: 0.95, yaw: -Math.PI / 2, gait: "scurry", speed: 2.4, neck: [V(0, 0.5, 0.38), V(0, 0.15, 1), 0.2], eye: [0.72, 0.88, 0.05], cut: [-0.5, 0.22, V(0, 0.14, -0.44)], dip: 0.22 },
-  beagle: { size: 3.5, r: 1.2, yaw: -Math.PI / 2, gait: "walk", speed: 1.9, stride: 1.5, neck: [V(0, 0.56, 0.2), V(0, 0.8, 0.6), 0.1], ear: [V(0, 0.9, 0.2), V(0, -1, 0), 0.16, 0.2, 0.24, 0.37, 0], legs: [0.3, 0.12, 0.18, -0.4, -0.08, 0.24, 0.01, -0.1], tail: [V(0, 0.5, -0.38), V(0, 0.4, -0.9), 0.08], eye: [0.78, 0.89, 0.04], wag: 1, dip: 1.0 },
-  deer: { size: 5.0, r: 1.2, yaw: -Math.PI / 2, gait: "walk", speed: 1.5, stride: 1.9, neck: [V(0.04, 0.47, 0.15), V(0, 0.7, 0.7), 0.1], ear: [V(0.04, 0.86, 0.15), V(1, 0, 0), 0.05, 0.12, 0, 0.2, 1], legs: [0.38, 0.12, 0.12, -0.26, -0.07, 0.14, 0, 0.13], tail: [V(0, 0.5, -0.33), V(0, 0.3, -1), 0.05], eye: [0.68, 0.8, 0.035], shy: 1, dip: 1.35 },
+  "guinea-pig": { size: 1.6, r: 1.05, yaw: -Math.PI / 2, gait: "scurry", speed: 2.4, neck: [V(0, 0.5, 0.38), V(0, 0.15, 1), 0.2], eye: [0.72, 0.88, 0.05], cut: [-0.5, 0.22, V(0, 0.14, -0.44)], dip: 0.22 },
+  beagle: { size: 2.6, r: 1.4, yaw: -Math.PI / 2, gait: "walk", speed: 1.7, stride: 1.25, neck: [V(0, 0.56, 0.2), V(0, 0.8, 0.6), 0.1], ear: [V(0, 0.9, 0.2), V(0, -1, 0), 0.16, 0.2, 0.24, 0.37, 0], legs: [0.3, 0.12, 0.18, -0.4, -0.08, 0.24, 0.01, -0.1], tail: [V(0, 0.5, -0.38), V(0, 0.4, -0.9), 0.08], eye: [0.78, 0.89, 0.04], wag: 1, dip: 1.0 },
+  deer: { size: 3.8, r: 1.45, yaw: -Math.PI / 2, gait: "walk", speed: 1.3, stride: 1.5, neck: [V(0.04, 0.47, 0.15), V(0, 0.7, 0.7), 0.1], ear: [V(0.04, 0.86, 0.15), V(1, 0, 0), 0.05, 0.12, 0, 0.2, 1], legs: [0.38, 0.12, 0.12, -0.26, -0.07, 0.14, 0, 0.13], tail: [V(0, 0.5, -0.33), V(0, 0.3, -1), 0.05], eye: [0.68, 0.8, 0.035], shy: 1, dip: 1.35 },
 };
 
 /* ---------- The soft skeleton ---------- */
@@ -173,11 +173,11 @@ class Animal {
     if (this.queue.length) return this.queue.shift()();
     const R = this.rand, hab = this.hab, lazy = this.sp.lazy || 1, others = this.life.animals.filter((a) => a !== this && a.hab === hab && a.visible);
     if (this.follow && this.follow.visible) return this.trail();
-    const roll = R();
-    if (roll < 0.24 * lazy) return this.set("rest", (4 + R() * 9) * lazy, { sleepy: R() < 0.35 * lazy });
-    if (roll < 0.36 * lazy + 0.06) return this.set("look", 1.6 + R() * 2.6, { lookAt: this.interest(others) });
-    if (roll < 0.46 * lazy + 0.08) return this.set("sniff", 1.4 + R() * 2);
-    if (roll < 0.56 * lazy + 0.1) return this.set("groom", 2.4 + R() * 3, { side: R() < 0.5 ? -1 : 1 });
+    const roll = R(), nap = Math.min(0.45, 0.24 * lazy);   // a lazy animal rests more often and longer, and still gets up
+    if (roll < nap) return this.set("rest", (4 + R() * 9) * lazy, { sleepy: R() < 0.35 * lazy });
+    if (roll < nap + 0.13) return this.set("look", 1.6 + R() * 2.6, { lookAt: this.interest(others) });
+    if (roll < nap + 0.23) return this.set("sniff", 1.4 + R() * 2);
+    if (roll < nap + 0.33) return this.set("groom", 2.4 + R() * 3, { side: R() < 0.5 ? -1 : 1 });
     /* going somewhere, for a reason */
     const why = R(), food = hab.food && hab.food.length ? hab.food[Math.floor(R() * hab.food.length)] : null;
     if (why < 0.46 && food) { const near = Math.hypot(food[0] - this.x, food[1] - this.z) < this.r + 0.9; const to = near ? null : this.spot(food, this.r + 0.5); if (near || to) { if (to) this.go(to); this.queue.push(() => this.face(food), () => this.set("graze", 3.5 + R() * 6)); return near ? this.next() : undefined; } }

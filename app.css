@@ -773,8 +773,18 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
 .sx-btn:active, .sx-btn.is-pressed { transform: scale(.97); background: var(--rose-ink); }
 .sx-btn-2 { background: var(--sage); color: var(--ok); }
 .sx-btn-2:active, .sx-btn-2.is-pressed { background: var(--sage-2); }
-/* meeting Clover: the card grows a second row for its two buttons */
-.sx.is-meet .sx-card:not([hidden]) { flex-wrap: wrap; }
+/* the arrows that step through the habitats */
+.sx-step {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); border-radius: var(--r-pill);
+  background: var(--paper); color: var(--rose-ink); cursor: pointer; transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
+}
+.sx-step svg { width: 20px; height: 20px; transform: rotate(90deg); }
+.sx-step-next svg { transform: rotate(-90deg); }
+.sx-step:active, .sx-step.is-pressed { transform: scale(.94); background: var(--blush); }
+.sx.is-ready .sx-card:not([hidden]) { flex-wrap: wrap; }
+.gd-news { margin: var(--sp-2) 0 0; padding: 0; list-style: none; color: var(--ok); font-weight: 600; }
+.gd-news li + li { margin-top: var(--sp-1); }
+/* visiting a habitat or meeting an animal: the card grows a second row for its buttons */
 .sx.is-meet .sx-face { width: 72px; height: 72px; }
 .sx-actions { display: flex; gap: var(--sp-2); flex-basis: 100%; }
 .sx-actions .sx-btn { flex: 1; }
@@ -786,4 +796,4 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
   .sx.is-on .sx-back, .sx.is-on .sx-head, .sx.is-on .sx-pill { top: var(--sp-4); }
   .sx.is-on .sx-back { left: var(--sp-4); } .sx.is-on .sx-head { left: calc(var(--sp-4) + 44px + var(--sp-3)); } .sx.is-on .sx-pill { right: var(--sp-4); top: calc(var(--sp-4) + 6px); }
 }
-@media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back, .sx-step { transition: none; } }
