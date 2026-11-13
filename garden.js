@@ -333,6 +333,7 @@
     record(q, right);
     if (right) round.right++;
     round.lastRight = right;
+    document.dispatchEvent(new CustomEvent("cfb:answer", { detail: { right } }));   // host-engine.js: her face on Home
     document.querySelectorAll("#practice-box .quiz-opt").forEach((b, i) => {
       b.disabled = true;
       if (round.shown[i].ok) b.classList.add("is-right");
@@ -358,6 +359,7 @@
     if (!round || !round.answered || !round.lastRight) return;
     record(round.qs[round.i], false);
     round.right--; round.lastRight = false;
+    document.dispatchEvent(new CustomEvent("cfb:answer", { detail: { right: false } }));
     $("practice-guess").outerHTML = `<p class="gd-note" id="practice-guessed">Counted as a miss. It will come back in your next round.</p>`;
     $("practice-next").focus({ preventScroll: true });
   }

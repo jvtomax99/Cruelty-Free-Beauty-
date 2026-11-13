@@ -616,19 +616,20 @@ html.intro-on .intro {
   display: flex; align-items: flex-end; gap: var(--sp-1); margin: auto 0 calc(-1 * var(--sp-6)); align-self: flex-start;
   color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease);
 }
-.hb-host {   /* the girl from the opening film, re-shot on a plain backdrop and cut out: a strip of 39 frames
-                (tools/make-host.py) stepped through. Her shoulders run down behind the Search field */
-  --host-n: 39; width: 160px; aspect-ratio: 300 / 335; flex: none;
-  background: url("assets/images/host.webp") 0 0 / calc(var(--host-n) * 100%) 100% no-repeat;
+.hb-host {   /* the girl from the opening film, re-lit on a plain backdrop and cut out (tools/make-host.py).
+                Her shoulders run down behind the Search field */
+  position: relative; width: 160px; aspect-ratio: 480 / 540; flex: none;
+  background: url("assets/host/base.webp") 0 0 / 100% 100% no-repeat;
   filter: drop-shadow(var(--cut-shadow));
-  animation: hostPlay 7s infinite;
 }
-/* 3.9 s of her (a blink, a wider smile, a glance aside, back to where she began), then she rests on the first frame */
-@keyframes hostPlay {
-  0% { background-position-x: 0%; animation-timing-function: steps(39, jump-none); }
-  55.7% { background-position-x: 100%; animation-timing-function: step-end; }
-  55.71%, 100% { background-position-x: 0%; }
+/* Her face: a strip of frames (eyes, brows and mouth) seen through a window over the base. host-engine.js
+   moves the strip; the window's place and size are the "window" numbers make-host.py prints, over the base's. */
+.hb-face {
+  --host-n: 14; display: none; position: absolute;
+  left: calc(114 / 480 * 100%); top: calc(117 / 540 * 100%); width: calc(252 / 480 * 100%); height: calc(237 / 540 * 100%);
+  background: url("assets/host/face.webp") 0 0 / calc(var(--host-n) * 100%) 100% no-repeat;
 }
+.hb-host.is-live .hb-face { display: block; }
 .hb-say {
   position: relative; margin-bottom: calc(var(--sp-6) + var(--sp-6)); padding: var(--sp-2) var(--sp-3); max-width: 190px;
   background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--sp-1);
@@ -734,7 +735,8 @@ ul.pf-sum li { display: inline-flex; align-items: center; min-height: 28px; padd
   .hr-card { width: 176px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hb-host, .pf-pin { animation: none; }
+  .pf-pin { animation: none; }
+  .hb-host.is-live .hb-face { display: none; }
   .tab-pin { transition: none; }
   .hb-pal, .qt-tile, .hr-card, .hr-card::after { transition: none; }
   .hr-track.is-arriving > li { animation: none; }

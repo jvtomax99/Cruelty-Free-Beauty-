@@ -219,6 +219,7 @@
       </div>`;
     focusResult();
     remember({ code: code || "", product: product || "", brand: b.id, name: b.name, t: Date.now() });
+    document.dispatchEvent(new CustomEvent("cfb:scan", { detail: { kind: v.kind } }));   // host-engine.js: her face, never words
   }
   function showUnlisted(name, { code, product }) {
     const total = window.CFB.brandCount || 0;
@@ -236,6 +237,7 @@
       </div>`;
     focusResult();
     remember({ code: code || "", product: product || "", brand: null, name, t: Date.now() });
+    document.dispatchEvent(new CustomEvent("cfb:scan", { detail: { kind: "unlisted" } }));
   }
   function showAskBrand(code, why, product) {
     const lead = why === "offline" ? "You seem to be offline, so we can't look the barcode up."

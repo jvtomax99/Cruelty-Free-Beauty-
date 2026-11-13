@@ -11,32 +11,6 @@ to look 3D and expressive like Dr Smiley in the Interp hub."** The section
 "Like Dr Smiley" below replaces the old step 2 (two canned video clips):
 do not make those clips.
 
-## Done (live, pull request #25, merge commit fe29c2b)
-
-- The girl replaces the bunny in Home's hello banner: 160 px wide, her
-  shoulders behind the Search field, a speech bubble that links to Scan.
-- `assets/images/host.webp` is a strip of 39 frames (300 x 335 each,
-  412 KB) that `app.css` steps through (`.hb-host`, `@keyframes hostPlay`:
-  3.9 s of motion, 3 s of rest; none under reduced motion). No JavaScript.
-- `tools/make-host.py <clip.mp4>` builds the strip from a clip of her on a
-  flat backdrop (it keys the backdrop out).
-- Runway spent on her so far: 76 credits. 642 were left afterwards.
-
-## How she was made (repeat this for every new move)
-
-1. The clean still: Runway task `079bae6c-b528-42cb-9c52-11a9a316c8f9`
-   (her on a flat pale blue-grey backdrop, #C9D6E2, 1024 x 1024). Use it as
-   the start AND end frame of every new clip so each move begins and ends
-   on the same pose and can be chained with the idle loop.
-2. A 4 s clip, 480p, 1:1, no audio, on Runway's cheaper Seedance 2.5 tier:
-   52 credits. Prompt pattern: locked-off camera, she stays centred, the
-   move, "returns to exactly her starting pose", flat uniform backdrop.
-3. `python3 tools/make-host.py clip.mp4` (today it always writes
-   `assets/images/host.webp`: give it an output argument first).
-
-Cutting her out of the opening film itself does not work: her hair is
-blurred into a brown stage backdrop there. Jose rejected that three times.
-
 ## The plan (approved by Jose, 2026-11-13)
 
 **What it does.** She becomes the app's host instead of one picture.
@@ -120,26 +94,32 @@ credits for this (642 were left). Ask before going over 250.
 - This is a big feature by `.claude/rules/general.md` (a new engine and a
   new set of art): write its "Done when" into `SPEC.md` first.
 
-## Progress (2026-11-13, second session)
+## Progress (2026-11-13, third session)
 
-- `SPEC.md` has the plan ("Home's host" under Features and Phases).
-- Step 1 (lines) is done: `host.js`, `tools/test-host.cjs`, pull request
-  #26. Jose signed off the seven lines and chose the quiz line on every
-  other day only.
-- Jose confirmed step 2 is the Dr Smiley-style rebuild, not two clips.
-- No Runway credits spent this session.
+- Step 1 (lines) is live: pull request #26, merge commit 341983f.
+- Step 2 (moves) is built: `host-engine.js`, `assets/host/`, the new
+  `tools/make-host.py <folder>` (takes the still and one edit per frame;
+  the old clip-to-strip tool and `assets/images/host.webp` are gone),
+  `tools/test-host-engine.cjs`. 14 frames, all image edits of option A
+  (Runway task `f8da62eb-...`), 52 credits; 582 left. No clip was needed.
+  The source PNGs lived in the session's scratch folder and are gone:
+  the Runway account still has every edit, and CREDITS.md names the still.
+- Decided while building, for Jose to confirm or change: reactions to a
+  scan or a Sanctuary answer play when Home next opens (she is only on
+  Home); a tap on her picture plays a face instead of following the link.
 
 ## Left to do
 
-- Add the plan to `SPEC.md` (it is outside the current spec) before coding.
-- Build in the order above, one pull request each, with 390 px and 1440 px
-  screenshots; merge when the site check is green, then notify Jose.
-- Draft the lines for Jose to sign off.
-- `tools/make-host.py`: take an output path.
+- Step 3 (places): a 72 px still of her with one line on the Scan
+  result, the end of the profile quiz and the empty states. Draft the
+  lines, get Jose's sign-off, then build (its own pull request). With
+  her on the Scan result, think again about whether her face there
+  should show the reaction at once (the plan says the small copies do
+  not move).
+- Delete this file when step 3 is merged.
 
 ## Files to read first
 
-`CLAUDE.md`, `SPEC.md`, `docs/ARCHITECTURE.md`, `DESIGN.md` (Hello banner),
-`app.css` (`.hb`, `.hb-pal`, `.hb-host`, `hostPlay`), `index.html` (Home),
-`tools/make-host.py`, `changes.js` and `home.js` (how Home reads `cfb-`
-keys).
+`CLAUDE.md`, `SPEC.md` ("Home's host"), `docs/ARCHITECTURE.md`,
+`DESIGN.md` (Hello banner), `host.js`, `host-engine.js`, `app.css`
+(`.hb-pal`, `.hb-host`, `.hb-face`), `tools/make-host.py`.

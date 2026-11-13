@@ -316,10 +316,47 @@ me**.
     what changes during a visit (quiz finished, "Got it", a heart); no
     line contains a verdict word; nothing new is stored; Home looks right
     at 390 px and 1440 px with the longest line.
-  - Done when (moves): TO FILL in the plan Jose approves; at least: she
-    blinks at random, her eyes follow a finger, she reacts to a tap, a
-    scan result and a quiz answer, her hair and outline never jump
-    between frames, and she rests still under reduced motion.
+  Plan for the moves (2026-11-13; Jose OK'd it and picked re-lit option
+  A). One base picture of her (cut out, about 60 KB) and
+  one strip of about 16 face frames showing only eyes and mouth through
+  a small window over the base, swapped outright, never faded (together
+  lighter than today's 412 KB loop, which they replace). Frames are
+  image edits of the chosen still that change only eyes and mouth, each
+  fitted onto the base and checked against it; a frame that moves her
+  hair or outline is redone. `host-engine.js`, a few hundred lines, one
+  controller: blinks at random (2 to 6 s), eyes follow a finger or the
+  mouse, a tap plays a smile or a wink, a scan result plays happy,
+  sad or surprised from `CFB.verdict`'s kind, a Sanctuary answer plays
+  a smile or a worried look. Frame changes keep the sequence's own
+  clock (Dr Smiley's lesson). Priorities: a reaction beats a gaze beats
+  a blink. Not in this version: brows that move on their own, squash
+  and stretch, head tilts, a talking mouth, movement in her small
+  "places" copies. Compared with: Dr Smiley (read 2026-11-13: 30 frames,
+  separate brows, a 1,100-line engine tied to the Hub), Duolingo's owl
+  and Finch's pet (from memory, not rechecked). Ours can be lighter and
+  tied to proof: she reacts to what the data says and links to it.
+  Biggest risk: edited frames drifting from the base (eyes a pixel off
+  reads as a twitch at 160 px); the fallback is one Runway clip with her
+  head held still and frames picked from it. Budget: about 60 credits
+  for edits at 4 each with retries, 52 more if the clip is needed; the
+  two re-lit options cost 8.
+  Built 2026-11-13: 14 frames (rest, half-blink, blink, wink, smile,
+  laugh, love, surprised, sad, worried, looking left, right, up, down),
+  all image edits, no clip needed; 52 credits for the edits. Two things
+  the plan did not say, decided while building (Jose can change them):
+  she is only on Home, so a scan result or a Sanctuary answer is kept in
+  memory (up to 10 minutes, the newest only) and she plays its face when
+  Home next opens; and a tap on her picture plays the smile or wink
+  instead of following the bubble's link (the bubble itself still links;
+  under reduced motion the tap follows the link as before). A scan of a
+  brand we have not checked plays surprised, like "not on a list".
+  - Done when (moves): she blinks at random and never on a beat; her
+    eyes follow a finger; a tap, a scan result and a Sanctuary answer
+    each play their reaction and she returns to rest; her hair, outline
+    and shoulders do not shift between any two frames (checked by
+    comparing every frame with the base outside the face window); she
+    rests still under reduced motion; no line of hers words a verdict;
+    Home's first paint downloads less than before.
   - Done when (places): she appears once, small and still, on each of the
     named screens with a line that links somewhere useful, and never
     beside a second copy of herself.
@@ -437,7 +474,8 @@ only if it can be shown to work across skin tones.
 ### Home's host (added 2026-11-13)
 - [x] Lines: her bubble picks a line from what the phone knows
       (2026-11-13; Jose signed off the seven lines; `tools/test-host.cjs`)
-- [ ] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
+- [x] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
+      (2026-11-13; `tools/test-host-engine.cjs`; 120 KB of pictures in place of 412 KB)
 - [ ] Places: Scan result, end of the quiz, empty states
 
 ## Open questions (TO FILL)

@@ -59,7 +59,7 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
     const t = await line(page); said.push(t);
     check(t === 'New here? Find your match in 8 questions.' && await href(page) === '#profile', `no profile: "${t}" -> ${await href(page)}`);
     const before = await stored(page);
-    await page.click('#host');
+    await page.click('#host-say');
     check(await page.waitForSelector('[data-screen="profile"]', { state: 'visible', timeout: 3000 }).then(() => true, () => false), 'the bubble opens Profile');
     check(await stored(page) === before, `she stores nothing (${before})`);
     if (shots) { await page.goBack(); await page.screenshot({ path: path.join(shots, 'host-quiz-390.png') }); }
@@ -81,7 +81,7 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
     let t = await line(page); said.push(t);
     check(t === 'Kosas has news. See what changed.', `one hearted brand changed: "${t}"`);
     if (shots) await page.screenshot({ path: path.join(shots, 'host-changed-390.png') });
-    await page.click('#host');
+    await page.click('#host-say');
     await page.waitForFunction(() => document.activeElement && document.activeElement.id === 'changes-h');
     check(await page.isVisible('[data-screen="home"]') && await page.isVisible('#changes-card'), 'the bubble stays on Home and goes to the "What changed" card');
     await page.evaluate(() => window.CFB.saved.toggle('milani'));
@@ -90,7 +90,7 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
     await page.click('#changes-ok');
     t = await line(page); said.push(t);
     check(t === 'Your Sanctuary is waiting. 1 question to review.' && await href(page) === '#practice/all', `after "Got it", the next case: "${t}" -> ${await href(page)}`);
-    await page.click('#host');
+    await page.click('#host-say');
     await page.waitForSelector('#practice-box .quiz-opt');
     check(true, 'the bubble opens a round of questions');
     await ctx.close();
@@ -125,7 +125,7 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
     const box = await page.$eval('#host-say', (el) => { const r = el.getBoundingClientRect(); return r.right <= innerWidth && r.left >= 0; });
     check(box, 'the longest line stays inside the screen at 390 px');
     if (shots) await page.screenshot({ path: path.join(shots, 'host-scanned-390.png') });
-    await page.click('#host');
+    await page.click('#host-say');
     await page.waitForSelector('#brand-page .facts');
     check((await page.textContent('#brand-page h1')).includes(long.name), "the bubble opens that brand's page");
     await ctx.close();
