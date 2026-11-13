@@ -58,7 +58,7 @@ const shots = process.argv.includes('--shots') ? process.argv[process.argv.index
     check(t === 'New here? Find your match in 8 questions.' && await href(page) === '#profile', `no profile: "${t}" -> ${await href(page)}`);
     const before = await stored(page);
     await page.click('#host');
-    check(await page.isVisible('[data-screen="profile"]'), 'the bubble opens Profile');
+    check(await page.waitForSelector('[data-screen="profile"]', { state: 'visible', timeout: 3000 }).then(() => true, () => false), 'the bubble opens Profile');
     check(await stored(page) === before, `she stores nothing (${before})`);
     if (shots) { await page.goBack(); await page.screenshot({ path: path.join(shots, 'host-quiz-390.png') }); }
     await ctx.close();
