@@ -320,44 +320,66 @@ function mass(low) {
 /* A limb: a tube along `pts` whose radius follows `rad` (one per point), added to `out`. Few
    sides, not quite round, pale on top and dark underneath in its own vertices, so trunk and
    roots read as round and solid at any size. */
-function limb(out, pts, rad, sides, light, dark, seed = 0, ridge = null) {   // ridge: [how many, how deep, how far they wind round]; give each ridge three sides or more, or it cannot wind
-  const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal"), n = Math.max(2, (pts.length - 1) * 2), base = out.pos.length / 3;
-  const T = new THREE.Vector3(), N = new THREE.Vector3(), B = new THREE.Vector3(), P = new THREE.Vector3(), prev = new THREE.Vector3(), q = new THREE.Quaternion(), c = new THREE.Color();
+function limb(out, pts, rad, sides, light, dark, seed = 0, ridge = null, face = null) {   // ridge: [how many, how deep, how far they wind round]; give each ridge three sides or more, or it cannot wind
+  /* face: for a limb that lies on something, the way out of that surface at each point. The limb is then flattened onto it (wider than it is high), lit on the side that faces out and dark where it meets the surface. */
+  const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal"), n = Math.max(2, (pts.length - 1) * (pts.length > 12 ? 1 : 2)), base = out.pos.length / 3;
+  const T = new THREE.Vector3(), N = new THREE.Vector3(), B = new THREE.Vector3(), P = new THREE.Vector3(), prev = new THREE.Vector3(), q = new THREE.Quaternion(), c = new THREE.Color(), kN = face ? 0.8 : 1, kB = face ? 1.15 : 1;
   for (let i = 0; i <= n; i++) {
     const t = i / n; curve.getPoint(t, P); curve.getTangent(t, T);
-    if (i === 0) { N.set(0, 1, 0); if (Math.abs(T.y) > 0.9) N.set(1, 0, 0); N.cross(T).normalize(); } else { q.setFromUnitVectors(prev, T); N.applyQuaternion(q).normalize(); }
-    prev.copy(T); B.crossVectors(T, N).normalize();
     const f = t * (pts.length - 1), k = Math.min(pts.length - 2, Math.floor(f)), r = mix(rad[k], rad[k + 1], f - k);
+    if (face) { N.copy(face[k]).lerp(face[k + 1], f - k); N.addScaledVector(T, -N.dot(T)); if (N.lengthSq() < 1e-5) { N.set(0, 1, 0); if (Math.abs(T.y) > 0.9) N.set(1, 0, 0); N.addScaledVector(T, -N.dot(T)); } N.normalize(); }
+    else if (i === 0) { N.set(0, 1, 0); if (Math.abs(T.y) > 0.9) N.set(1, 0, 0); N.cross(T).normalize(); } else { q.setFromUnitVectors(prev, T); N.applyQuaternion(q).normalize(); }
+    prev.copy(T); B.crossVectors(T, N).normalize();
     for (let s = 0; s < sides; s++) {
-      const a = (s / sides) * 6.2832, ca = Math.cos(a), sa = Math.sin(a), nx = N.x * ca + B.x * sa, ny = N.y * ca + B.y * sa, nz = N.z * ca + B.z * sa, groove = ridge ? Math.sin(a * ridge[0] + t * ridge[2] + seed) : 0, rr = r * (1 + 0.14 * Math.sin(a * 2 + t * 7 + seed) + (ridge ? ridge[1] * groove : 0));
-      out.pos.push(P.x + nx * rr, P.y + ny * rr, P.z + nz * rr); out.nor.push(nx, ny, nz);
-      c.copy(dark).lerp(light, clamp(0.52 + ny * 0.55 + (h2(i * 0.37 + seed, s * 1.7) - 0.5) * 0.3 + groove * 0.28, 0, 1)); out.col.push(c.r, c.g, c.b);
+      const a = (s / sides) * 6.2832, ca = Math.cos(a), sa = Math.sin(a), groove = ridge ? Math.sin(a * ridge[0] + t * ridge[2] + seed) : 0, rr = r * (1 + 0.14 * Math.sin(a * 2 + t * 7 + seed) + (ridge ? ridge[1] * groove : 0));
+      const dx = N.x * ca * kN + B.x * sa * kB, dy = N.y * ca * kN + B.y * sa * kB, dz = N.z * ca * kN + B.z * sa * kB, nl = Math.hypot(N.x * ca * kB + B.x * sa * kN, N.y * ca * kB + B.y * sa * kN, N.z * ca * kB + B.z * sa * kN) || 1, ny = (N.y * ca * kB + B.y * sa * kN) / nl;
+      out.pos.push(P.x + dx * rr, P.y + dy * rr, P.z + dz * rr); out.nor.push((N.x * ca * kB + B.x * sa * kN) / nl, ny, (N.z * ca * kB + B.z * sa * kN) / nl);
+      c.copy(dark).lerp(light, clamp((face ? 0.5 + ca * 0.36 + ny * 0.22 : 0.52 + ny * 0.55) + (h2(i * 0.37 + seed, s * 1.7) - 0.5) * 0.3 + groove * 0.28, 0, 1)); out.col.push(c.r, c.g, c.b);
     }
     if (i < n) for (let s = 0; s < sides; s++) { const a = base + i * sides + s, b = base + i * sides + ((s + 1) % sides); out.idx.push(a, b, a + sides, b, b + sides, a + sides); }
+    if (i === 0 || i === n) { const mid = out.pos.length / 3, ring = base + i * sides, sg = i ? 1 : -1; out.pos.push(P.x + T.x * sg * r * 0.4, P.y + T.y * sg * r * 0.4, P.z + T.z * sg * r * 0.4); out.nor.push(T.x * sg, T.y * sg, T.z * sg); out.col.push(dark.r, dark.g, dark.b); for (let s = 0; s < sides; s++) { const a = ring + s, b = ring + ((s + 1) % sides); if (i) out.idx.push(mid, a, b); else out.idx.push(mid, b, a); } }   // both ends are closed with a blunt point: no limb shows as a cut pipe
   }
 }
 const limbs = () => ({ pos: [], nor: [], col: [], idx: [] });
 const limbMesh = (o, mat) => { const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(o.pos, 3)); g.setAttribute("normal", new THREE.Float32BufferAttribute(o.nor, 3)); g.setAttribute("color", new THREE.Float32BufferAttribute(o.col, 3)); g.setIndex(o.idx); return new THREE.Mesh(g, mat); };   // (with no material, just for its geometry)
 /* A root on the mass, from depth u0 to u1 starting at angle th. It wanders (drift is where it
-   ends up, wig the wobble on the way), tapers from r0 to r1, lies half sunk in the skin, can
-   start buried (it came through the earth), dive under and come out again, end hanging free,
-   and throws off thinner roots of its own (kids). `lead` are points before it reaches the cliff. */
-function root(out, surf, o, R, lead = [], leadRad = []) {
-  const pts = [...lead], rad = [...leadRad], n = Math.max(4, Math.round((o.u1 - o.u0) * DEEP / 1.6)), at = [];
+   ends up, wig the wobble on the way), tapers from r0 to r1 and lies pressed into the skin.
+   A thick root is not one pipe but two or three strands that wind loosely round each other;
+   the lesser strands leave part of the way down and go back into the earth. It can start
+   buried (it swells out of the earth), dive under and come out again, end hanging free or
+   end by going back in, and throws off thinner roots of its own (kids), which leave it along
+   its own line before they turn away. `lead` is its way to the cliff: [{ p, f (the way out of
+   the ground there), r }]. */
+function root(out, surf, o, R, lead = []) {
+  const V = THREE.Vector3, path = [...lead], n = Math.max(5, Math.round((o.u1 - o.u0) * DEEP / 1.05)), at = [];
   for (let i = 0; i <= n; i++) {
-    const s = i / n, u = mix(o.u0, o.u1, s), th = o.th + o.drift * s + o.wig * (vnoise(s * 3.3 + o.seed * 7.13, o.seed * 1.7) - 0.5) * 2 * Math.sin(Math.min(1, s * 3) * 1.571), r = mix(o.r0, o.r1, Math.pow(s, 0.8)), p = surf(th, u);
-    const sink = (o.bury ? (1 - smooth(0, o.bury, s)) * r * 2.6 : 0) + (o.dive && s > o.dive[0] && s < o.dive[1] ? Math.sin(((s - o.dive[0]) / (o.dive[1] - o.dive[0])) * Math.PI) * r * 3 : 0), off = r * 0.45 - sink;
-    pts.push(new THREE.Vector3(p.x + p.nx * off, p.y + p.ny * off, p.z + p.nz * off)); rad.push(r); at.push([th, u, r]);
+    const s = i / n, u = mix(o.u0, o.u1, s), th = o.th + o.drift * (o.ease ? Math.pow(s, o.ease) : s) + o.wig * (vnoise(s * 3.3 + o.seed * 7.13, o.seed * 1.7) - 0.5) * 2 * Math.sin(Math.min(1, s * 3) * 1.571) + o.wig * 0.3 * (vnoise(s * 9.1 + o.seed, 3.3) - 0.5) * 2 * Math.min(1, s * 4);
+    const grow = o.bury ? smooth(0, o.bury, s) : 1, r = mix(o.r0, o.r1, Math.pow(s, 0.8)) * mix(0.3, 1, grow), p = surf(th, u);
+    const sink = (1 - grow) * o.r0 * 2.2 + (o.dive && s > o.dive[0] && s < o.dive[1] ? Math.sin(((s - o.dive[0]) / (o.dive[1] - o.dive[0])) * Math.PI) * r * 3 : 0) + (o.hang ? 0 : smooth(0.86, 1, s) * (r + 0.3) * 1.8), off = r * 0.3 - sink;
+    path.push({ p: new V(p.x + p.nx * off, p.y + p.ny * off, p.z + p.nz * off), f: new V(p.nx, p.ny, p.nz), r }); at.push([th, u, r]);
   }
-  if (o.hang) { const e = pts[pts.length - 1], d = pts[pts.length - 2]; pts.push(new THREE.Vector3(e.x + (e.x - d.x) * 0.3, e.y - o.hang * 0.5, e.z + (e.z - d.z) * 0.3), new THREE.Vector3(e.x + (e.x - d.x) * 0.35 + (R() - 0.5), e.y - o.hang, e.z + (e.z - d.z) * 0.35 + (R() - 0.5))); rad.push(o.r1 * 0.8, 0.03); }
-  limb(out, pts, rad, o.r0 > 0.75 ? 9 : o.r0 > 0.4 ? 6 : 5, ROOT_LIGHT, ROOT_DARK, o.seed, o.r0 > 0.75 ? [3, 0.15, 5] : null);
+  if (o.hang) { const e = path[path.length - 1], d = path[path.length - 2].p, sx = R() - 0.5, sz = R() - 0.5; for (const [k, rr] of [[0.3, 0.75], [0.65, 0.45], [1, 0.12]]) path.push({ p: new V(e.p.x + (e.p.x - d.x) * 0.3 * k + sx * k * k * 0.9, e.p.y - o.hang * k, e.p.z + (e.p.z - d.z) * 0.3 * k + sz * k * k * 0.9), f: e.f, r: Math.max(0.02, o.r1 * rr) }); }   // a free end curls a little as it hangs
+  const L = path.length, strands = Math.min(o.low ? 2 : 3, o.r0 > 0.85 ? 3 : o.r0 > 0.5 ? 2 : 1);
+  if (strands === 1) limb(out, path.map((q) => q.p), path.map((q) => q.r), o.r0 > 0.45 ? 6 : 4, ROOT_LIGHT, ROOT_DARK, o.seed, null, path.map((q) => q.f));
+  else {
+    const T = new V(), N = new V(), B = new V(), wind = (1.1 + R() * 0.9) * 6.2832 * (R() < 0.5 ? -1 : 1);
+    for (let k = 0; k < strands; k++) {
+      const stop = k === 0 ? L - 1 : Math.round((L - 1) * (0.5 + R() * 0.35)), pts = [], rad = [], fc = [], ph = (k / strands) * 6.2832 + o.seed;
+      for (let j = 0; j <= stop; j++) {
+        const q = path[j], s = j / (L - 1), a = ph + s * wind; T.subVectors(path[Math.min(L - 1, j + 1)].p, path[Math.max(0, j - 1)].p).normalize(); N.copy(q.f).addScaledVector(T, -q.f.dot(T)).normalize(); B.crossVectors(T, N);
+        const end = k ? smooth(stop - 4, stop, j) : 0, spread = q.r * 0.52 * Math.min(1, 0.3 + s * 5) * (1 - end * 0.5);
+        pts.push(new V().copy(q.p).addScaledVector(B, Math.cos(a) * spread).addScaledVector(N, Math.sin(a) * spread * 0.5 - end * (q.r + 0.2) * 1.4)); rad.push(Math.max(0.02, q.r * (strands === 3 ? 0.62 : 0.72) * (1 - end * 0.8))); fc.push(q.f);
+      }
+      limb(out, pts, rad, strands === 3 ? 5 : 6, ROOT_LIGHT, ROOT_DARK, o.seed + k * 2.3, null, fc);
+    }
+  }
   for (let k = 0; k < (o.kids || 0); k++) {
     const i = Math.round(n * (0.18 + 0.6 * ((k + R()) / o.kids))), [th, u, r] = at[clamp(i, 1, n - 1)], side = (k % 2 ? 1 : -1) * (R() < 0.8 ? 1 : -1), len = (0.12 + R() * 0.2) * (o.r0 > 0.7 ? 1.3 : 1);
     if (r < 0.16 || u > 0.93) continue;
-    root(out, surf, { th, u0: u, u1: Math.min(0.99, u + len), r0: r * 0.62, r1: 0.05, drift: side * (0.1 + R() * 0.28) / Math.max(0.35, 1 - u), wig: 0.06 + R() * 0.08, seed: o.seed * 3.1 + k * 17.7 + 1, kids: o.r0 > 0.7 ? 1 : 0, hang: R() < 0.4 ? 1 + R() * 2 : 0 }, R);
+    root(out, surf, { th, u0: u, u1: Math.min(0.99, u + len), r0: r * 0.55, r1: 0.04, drift: side * (0.1 + R() * 0.28) / Math.max(0.35, 1 - u), ease: 1.7, wig: 0.06 + R() * 0.08, seed: o.seed * 3.1 + k * 17.7 + 1, kids: o.r0 > 0.7 ? 1 : 0, hang: R() < 0.35 ? 1 + R() * 2 : 0, low: o.low }, R);
   }
 }
-const ROOT_LIGHT = C(0xd4aa7c), ROOT_DARK = C(0x6a4631), TRUNK_LIGHT = C(0xcc9c6c), TRUNK_DARK = C(0x5c3c2a);
+const ROOT_LIGHT = C(0xe2bd90), ROOT_DARK = C(0x62402c), TRUNK_LIGHT = C(0xcc9c6c), TRUNK_DARK = C(0x5c3c2a);
 /* A ribbon of falling water along `pts` (each [Vector3, half-width, how solid 0 to 1]), bowed a little so it has body from the side. */
 function fallGeo(pts) {
   const pos = [], uv = [], col = [], idx = [], ACROSS = 4, d = new THREE.Vector3(); let len = 0;
@@ -784,10 +806,11 @@ export async function mount(canvas, opts = {}) {
       for (const b of stones.slice(0, 2)) { const dx = b.x - hx - 0.9, dz = b.z - hz - 0.2, d = Math.hypot(dx, dz), ux = dx / d, uz = dz / d, far = (m) => [b.x + ux * m, b.z + uz * m], [x1, z1] = far(b.s * 1.25), [x2, z2] = far(b.s * 1.25 + 1.8);
         limb(wood, [V3(0.9 + ux * 0.4, 1.5, 0.2 + uz * 0.4), new THREE.Vector3(b.x - ux * b.s * 0.5, b.y + b.s * 0.62, b.z - uz * b.s * 0.5), new THREE.Vector3(b.x + ux * b.s * 0.45, b.y + b.s * 0.6, b.z + uz * b.s * 0.45), new THREE.Vector3(x1, Y(x1, z1) + 0.15, z1), new THREE.Vector3(x2, Y(x2, z2) - 0.5, z2)], [0.75, 0.55, 0.48, 0.34, 0.1], 9, ROOT_LIGHT, ROOT_DARK, b.s * 7, [3, 0.1, 4]); } }
     /* over the turf to the edge, then down */
-    const over = (thE, r0, wob) => {
-      const e = edgeR(thE) - 0.5, ex = Math.cos(thE) * e, ez = Math.sin(thE) * e, d = Math.hypot(ex - hx, ez - hz), n = Math.max(2, Math.round(d / 1.6)), pts = [V3(0.9 + (ex - hx) / d * 0.3, 1.7, 0.2 + (ez - hz) / d * 0.3)], rad = [r0 * 1.2];
-      for (let i = 1; i <= n; i++) { const t = i / n, sd = Math.sin(t * 3.1) * wob, x = mix(hx, ex, t) - (ez - hz) / d * sd, z = mix(hz, ez, t) + (ex - hx) / d * sd, rr = mix(r0 * 1.15, r0, t); pts.push(new THREE.Vector3(x, Y(x, z) + rr * (i === 1 ? 0.8 : 0.35), z)); rad.push(rr); }
-      return [pts, rad];
+    const UP = new THREE.Vector3(0, 1, 0);
+    const over = (thE, r0, wob) => {   // a buttress out of the trunk, then low over the grass, in and out of it, to the edge
+      const e = edgeR(thE) - 0.4, ex = Math.cos(thE) * e, ez = Math.sin(thE) * e, d = Math.hypot(ex - hx, ez - hz), ux = (ex - hx) / d, uz = (ez - hz) / d, n = Math.max(3, Math.round(d / 0.85)), lead = [{ p: V3(0.9 + ux * 0.3, 2.0, 0.2 + uz * 0.3), f: UP, r: r0 * 1.7 }];
+      for (let i = 1; i <= n; i++) { const t = i / n, sd = Math.sin(t * 3.1) * wob + Math.sin(t * 8.3 + thE * 9) * wob * 0.28, x = mix(hx, ex, t) - uz * sd, z = mix(hz, ez, t) + ux * sd, rr = r0 * mix(1.55, 1, smooth(0, 0.4, t)); lead.push({ p: new THREE.Vector3(x, Y(x, z) + rr * (i === 1 ? 0.6 : 0.14 + 0.12 * Math.sin(t * 11 + thE * 5)), z), f: UP, r: rr }); }
+      return lead;
     };
     for (const [th, wob, o] of [
       [0.77, 0.8, { u1: 0.86, r0: 1.1, r1: 0.12, drift: 0.44, wig: 0.07, seed: 1, kids: 3, hang: 2 }],        // round the cove's flank and under the basin
@@ -795,12 +818,12 @@ export async function mount(canvas, opts = {}) {
       [0.3, 0.6, { u1: 0.72, r0: 1.0, r1: 0.1, drift: -0.32, wig: 0.08, seed: 3, kids: 2, hang: 1.5 }],
       [0.64, -0.4, { u1: 0.52, r0: 0.75, r1: 0.08, drift: 0.12, wig: 0.09, seed: 4, kids: 1, dive: [0.3, 0.6] }],
       [0.42, 0.4, { u1: 0.6, r0: 0.7, r1: 0.06, drift: 0.1, wig: 0.1, seed: 5, kids: 1 }],
-    ]) { const [lp, lr] = over(th, o.r0, wob); root(wood, surf, { th, u0: 0.014, ...o }, R, lp, lr); }
+    ]) root(wood, surf, { th, u0: 0.014, low, ...o }, R, over(th, o.r0, wob));
     /* into the garden: a few that cross the grass and go under (one drinks from the pond) */
     for (const [dx, dz, len, r0] of [[-0.97, -0.25, 6.2, 0.9], [-0.55, -0.84, 5, 0.8], [0.35, -0.94, 4.4, 0.7], [-0.88, 0.48, 4.4, 0.75]]) {
-      const pts = [V3(0.9 + dx * 0.3, 1.6, 0.2 + dz * 0.3)], rad = [r0 * 1.2];
-      for (let i = 1; i <= 5; i++) { const t = i / 5, sd = Math.sin(t * 2.6 + dx * 9) * 0.7, x = hx + dx * len * t - dz * sd, z = hz + dz * len * t + dx * sd, rr = mix(r0, 0.12, t); pts.push(new THREE.Vector3(x, Y(x, z) + rr * (i === 1 ? 0.8 : 0.35) - smooth(0.6, 1, t) * 0.7, z)); rad.push(rr); }
-      limb(wood, pts, rad, 6, ROOT_LIGHT, ROOT_DARK, len);
+      const pts = [V3(0.9 + dx * 0.3, 1.8, 0.2 + dz * 0.3)], rad = [r0 * 1.6], n = Math.round(len / 0.8);
+      for (let i = 1; i <= n; i++) { const t = i / n, sd = Math.sin(t * 2.6 + dx * 9) * 0.7 + Math.sin(t * 7.7 + dz * 5) * 0.2, x = hx + dx * len * t - dz * sd, z = hz + dz * len * t + dx * sd, rr = mix(r0 * 1.3, 0.1, Math.pow(t, 0.8)); pts.push(new THREE.Vector3(x, Y(x, z) + rr * (i === 1 ? 0.6 : 0.15) - smooth(0.65, 1, t) * 0.9, z)); rad.push(rr); }
+      limb(wood, pts, rad, 9, ROOT_LIGHT, ROOT_DARK, len, [3, 0.14, 5], pts.map(() => UP));
     }
     /* out of the earth lower down: left of the waterfall, round the hollow, under the basin; and thinner ones on the sides a turn away */
     for (const o of [
@@ -813,7 +836,11 @@ export async function mount(canvas, opts = {}) {
       { th: -1.35, u0: 0.12, u1: 0.7, r0: 0.55, r1: 0.06, drift: -0.25, wig: 0.1, seed: 17, kids: 1, bury: 0.15 },
       { th: -2.1, u0: 0.2, u1: 0.9, r0: 0.6, r1: 0.06, drift: 0.3, wig: 0.1, seed: 18, kids: 1, bury: 0.15, hang: 2 },
       { th: 3.05, u0: 0.1, u1: 0.75, r0: 0.55, r1: 0.06, drift: 0.25, wig: 0.1, seed: 19, kids: 1, bury: 0.15, hang: 1.5 },
-    ].slice(0, low ? 6 : 9)) root(wood, surf, o, R);
+      { th: -0.8, u0: 0.06, u1: 0.82, r0: 0.9, r1: 0.08, drift: 0.28, wig: 0.1, seed: 20, kids: 2, bury: 0.12, hang: 2 },      // the back, under the oaks
+      { th: -1.9, u0: 0.08, u1: 0.86, r0: 0.95, r1: 0.1, drift: -0.3, wig: 0.09, seed: 21, kids: 2, bury: 0.12, hang: 2.5 },
+      { th: 2.75, u0: 0.06, u1: 0.7, r0: 0.8, r1: 0.07, drift: 0.22, wig: 0.1, seed: 22, kids: 2, bury: 0.13 },
+      { th: -2.7, u0: 0.1, u1: 0.76, r0: 0.7, r1: 0.06, drift: -0.2, wig: 0.1, seed: 23, kids: 1, bury: 0.14, hang: 1.5 },
+    ].slice(0, low ? 6 : 13)) root(wood, surf, { low, ...o }, R);
     const m = limbMesh(wood, woodMat); m.castShadow = m.receiveShadow = true; world.add(m);
     const crown = new THREE.Mesh(heroCrown(), sway(new THREE.MeshStandardMaterial({ vertexColors: true, map: leafMat.map, roughness: 0.9, envMapIntensity: 0.25 }), wind, 0.0012, 7)); crown.position.set(hx, hy, hz); crown.castShadow = crown.receiveShadow = true; world.add(crown);
     obstacles.push({ x: hx, z: hz, r: 2.4, what: "the blossom tree" });
@@ -838,6 +865,12 @@ export async function mount(canvas, opts = {}) {
     const tm = mergeGeometries(trail), tp = tm.attributes.position, tc = []; for (let i = 0; i < tp.count; i++) { const t = clamp(-tp.getY(i) / 2.6, 0, 1); cc.copy(C(0x6f9f52)).lerp(C(0xa5cf7a), 1 - t); tc.push(cc.r, cc.g, cc.b); }
     tm.setAttribute("color", new THREE.Float32BufferAttribute(tc, 3));
     world.add(instanced(tm, sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, envMapIntensity: 0.2 }), wind, 0.05, "hang"), hangs)); }
+
+  /* fine roots hanging wherever the mass overhangs: under the turf's lip, under the ledges, down by the tip */
+  { const FR = rng(616), fine = [], o = limbs(), V = (x, y, z) => new THREE.Vector3(x, y, z);
+    limb(o, [V(0, 0.05, 0), V(0.07, -0.33, 0.03), V(-0.05, -0.68, 0.07), V(0.04, -1, 0.02)], [0.04, 0.03, 0.02, 0.008], 3, TRUNK_LIGHT, TRUNK_DARK, 1);
+    for (let i = 0; i < (low ? 300 : 600); i++) { const th = FR() * 6.2832, u = 0.04 + FR() * 0.9, p = surf(th, u), sz = 0.5 + FR() * FR() * 3.4; if (p.ny < -0.3 && hollowAt(th, u) > 1.6 && FR() < 0.62) fine.push({ x: p.x + p.nx * 0.05, y: p.y, z: p.z + p.nz * 0.05, ry: FR() * 6.28, s: 1, sy: sz }); }
+    const m = instanced(limbMesh(o, null).geometry, sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, envMapIntensity: 0.15 }), wind, 0.07, "hang"), fine.map((q) => ({ ...q, s: 1.3 }))); m.receiveShadow = false; world.add(m); }
 
   /* the light in the dark places: a cluster of mushrooms on the hollow's floor (the lanterns come
      further down). Unlit bright material plus a soft sprite: no glow pass. */

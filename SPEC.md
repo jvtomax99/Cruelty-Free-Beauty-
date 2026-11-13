@@ -196,9 +196,12 @@ me**.
   loose diamond: broad under the turf and tapering to an off-centre point,
   with ledges, recesses, overhangs and one shaded hollow where a few
   mushrooms glow. One great blossom tree stands on a prow beside the pond,
-  with lanterns hanging under its crown; its thick roots cross
-  the turf and go down the cliff, forking, some coming out of the earth
-  lower down. The stream runs pool to pool into the pond; the pond
+  with lanterns hanging under its crown; its roots come out of the
+  trunk as buttresses, cross the turf and go down the cliff pressed into
+  it. A thick root is two or three strands wound loosely round each
+  other, which part and go back into the earth; roots fork, some come out
+  of the earth lower down (on the back of the island too), and fine roots
+  hang wherever the mass overhangs. The stream runs pool to pool into the pond; the pond
   overflows through a gap in its bank, falls to a rocky basin, turns, and
   falls again past the island's base into a little mist. On top: sculpted
   land (hills, a raised lawn for the cream cottage with a dusty rose roof,
