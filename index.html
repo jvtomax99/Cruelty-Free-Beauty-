@@ -101,9 +101,9 @@
           <div class="hello-time" id="hello-time">Hello</div>
           <h1 class="hello-line" id="hello-line" tabindex="-1">Cruelty-free looks <em>beautiful on you.</em></h1>
         </div>
-        <a class="hb-pal" href="#scan">
+        <a class="hb-pal" id="host" href="#scan">
           <span class="hb-host" aria-hidden="true"></span>
-          <span class="hb-say">Shopping today? <b>Scan it first.</b></span>
+          <span class="hb-say" id="host-say">Shopping today? <b>Scan it first.</b></span>
         </a>
       </div>
 
@@ -120,7 +120,7 @@
       </div>
 
       <section class="card changes" id="changes-card" aria-labelledby="changes-h" hidden>
-        <h2 id="changes-h">What changed</h2>
+        <h2 id="changes-h" tabindex="-1">What changed</h2>
         <p>What our latest checks of the certifiers' lists found.</p>
         <ul class="change-list" id="changes-new"></ul>
         <p id="changes-rest" hidden></p>
@@ -305,6 +305,7 @@
 <script src="profile.js"></script>
 <script src="scan.js"></script>
 <script src="garden.js"></script>
+<script src="host.js"></script>
 <script src="intro.js"></script>
 </body>
 </html>

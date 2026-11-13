@@ -274,6 +274,56 @@ me**.
     568, sideways and on a computer); the quiz, saved
     progress and everything learning changes work as before.
 
+- **Home's host** (added 2026-11-13; Jose approved "Build all three"). The
+  girl on Home's hello banner becomes the app's host: a friendly face that
+  points to the next useful thing. Three parts, built in this order, one
+  pull request each.
+  *Lines.* Her bubble on Home shows one line, picked from what the phone
+  already knows, and the bubble links to the matching place. First that
+  applies wins: no beauty profile yet (the quiz; only every other day,
+  so a person who skipped it is not asked at every visit; Jose,
+  2026-11-13); a change this phone
+  hasn't seen to a hearted brand (the "What changed" card); Sanctuary
+  questions due for review (a round); the newest scan, when it is under 7 days
+  old and of a brand we list (that brand's page); otherwise a line by time of day (Scan). It reads
+  only what is already stored (`cfb-profile`, `cfb-saved`,
+  `cfb-changes-seen`, `cfb-garden`, `cfb-scans`); nothing new is saved.
+  She never words a verdict or says what a certifier's list showed: only
+  `CFB.verdict` and "What changed" do. The lines speak for the founder's
+  brand, so Jose signs off the list before it ships; the list lives in
+  `host.js` (`LINES`).
+  *Moves, like Dr Smiley* (Jose, 2026-11-13; this replaces the two video
+  clips first planned, which are not to be made). Same girl, more depth:
+  the face Jose approved, re-lit (glossy hair, soft shadows, a warm rim
+  of light), proportions unchanged; Jose sees the new still before
+  anything is built on it. Then the Interpreter Hub's structure: one base
+  picture, a strip of about 16 face frames (rest, blink, wink, smile,
+  laugh, love, surprised, sad, worried, looking left, right, up, down)
+  and a small engine of our own: random blinks, eyes that follow a
+  finger, reactions to a tap, a scan result and a quiz answer. She may
+  look sad at a fail but never says anything about the brand. Runway:
+  Jose approved 150 to 250 credits (ask before going over 250). Art in
+  `assets/host/`. A big feature: its own plan and Jose's OK before code.
+  *Places.* A small still of her (about 72 px) with one line on the Scan
+  result, the end of the profile quiz and the empty states (no saved
+  brands, no scans yet).
+  Not in this version: a name, a voice or audio, chat, her inside the
+  Sanctuary's 3D world, comments on single brands, more than one
+  appearance per screen. She is never cut out of the opening film (her
+  hair blurs into the stage there; rejected three times).
+  - Done when (lines): with made-up phone data each of the five cases
+    shows its line and its link opens the right place; the line follows
+    what changes during a visit (quiz finished, "Got it", a heart); no
+    line contains a verdict word; nothing new is stored; Home looks right
+    at 390 px and 1440 px with the longest line.
+  - Done when (moves): TO FILL in the plan Jose approves; at least: she
+    blinks at random, her eyes follow a finger, she reacts to a tap, a
+    scan result and a quiz answer, her hair and outline never jump
+    between frames, and she rests still under reduced motion.
+  - Done when (places): she appears once, small and still, on each of the
+    named screens with a line that links somewhere useful, and never
+    beside a second copy of herself.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
@@ -383,6 +433,12 @@ only if it can be shown to work across skin tones.
       475,000 before)
 - [ ] A real-phone check of speed and battery (Jose). The island is
       heavier than before, so this matters more now
+
+### Home's host (added 2026-11-13)
+- [x] Lines: her bubble picks a line from what the phone knows
+      (2026-11-13; Jose signed off the seven lines; `tools/test-host.cjs`)
+- [ ] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
+- [ ] Places: Scan result, end of the quiz, empty states
 
 ## Open questions (TO FILL)
 

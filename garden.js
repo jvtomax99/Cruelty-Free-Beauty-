@@ -98,6 +98,7 @@
       // An answer learned under an older verdict no longer counts (a recheck changed the brand).
       for (const q of bank) { const it = state.items[q.id]; if (it && it.k !== q.key) delete state.items[q.id]; }
       loaded = true;
+      document.dispatchEvent(new CustomEvent("cfb:garden"));   // host.js: the review count can be read now
     }).catch(() => { failed = true; });
     return ready;
   }
