@@ -258,8 +258,8 @@ main {
   background: linear-gradient(150deg, var(--blush), var(--pink)); border: 2px solid var(--paper); box-shadow: var(--finish);
   font-family: var(--font-display); font-size: var(--fs-t3); font-weight: 600; color: var(--rose-ink);
 }
-.br-f0 { background: linear-gradient(150deg, var(--paper), var(--blush-2)); color: var(--rose); }   /* porcelain */
-.br-f2 { background: linear-gradient(150deg, var(--rose), var(--rose-ink)); color: var(--paper); }   /* rose */
+.br-f0, .hr-mono.br-f0 { background: linear-gradient(150deg, var(--paper), var(--blush-2)); color: var(--rose); }   /* porcelain */
+.br-f2, .hr-mono.br-f2 { background: linear-gradient(150deg, var(--rose), var(--rose-ink)); color: var(--paper); }   /* rose */
 .br-body { display: grid; gap: var(--sp-1); min-width: 0; }
 .br-rich .brand-name { font-size: var(--fs-t2); line-height: 1.1; letter-spacing: var(--tr-sm); color: var(--rose-ink); }
 .br-mono { font-style: italic; }
@@ -656,16 +656,29 @@ html.intro-on .intro {
   color: var(--ink); text-decoration: none;
   transition: transform var(--t-press) var(--ease), box-shadow var(--t-press) var(--ease);
 }
+.hr-card::after {   /* the rose edge that grows in on a press, as on the Brands list; an inner shadow,
+                       because the tile pokes over the top edge and the card can't clip */
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: inset 0 0 0 var(--rose); transition: box-shadow var(--t-press) var(--ease);
+}
 .hr-card:active, .hr-card.is-pressed { transform: scale(.97); box-shadow: var(--pressed); }
+.hr-card:active::after, .hr-card.is-pressed::after { box-shadow: inset 6px 0 0 var(--rose); }
 .hr-mono {   /* the brand's initial, poking over the card's top edge like Interp's pins; never a brand logo */
   position: absolute; top: calc(-1 * var(--sp-4)); left: var(--sp-3); width: 48px; height: 48px; border-radius: var(--r-md);
   display: grid; place-items: center; background: linear-gradient(150deg, var(--blush), var(--pink));
   border: 2px solid var(--paper); box-shadow: var(--finish);
-  font-family: var(--font-display); font-size: var(--fs-t2); font-weight: 600; color: var(--rose-ink);
+  font-family: var(--font-display); font-style: italic; font-size: var(--fs-t2); font-weight: 600; color: var(--rose-ink);
 }
-.hr-name { font-family: var(--font-display); font-size: var(--fs-head); font-weight: 600; letter-spacing: var(--tr-head); line-height: 1.2; }
+.hr-name { font-family: var(--font-display); font-size: var(--fs-t3); line-height: 1.1; letter-spacing: var(--tr-sm); color: var(--rose-ink); }
+.hr-price { margin-top: calc(-1 * var(--sp-1)); font-family: var(--font-display); font-style: italic; font-size: var(--fs-call); color: var(--ink-soft); }
+.hr-track li { display: flex; }   /* every card in the rail as tall as the tallest */
+.hr-track.is-arriving > li { animation: rowIn var(--t-screen) var(--ease) backwards; }
+.hr-track.is-arriving > li:nth-child(2) { animation-delay: .04s; }
+.hr-track.is-arriving > li:nth-child(3) { animation-delay: .08s; }
+.hr-track.is-arriving > li:nth-child(n+4) { animation-delay: .12s; }
 .hr-chips { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-top: auto; }
-.hr-more { justify-content: center; align-items: center; padding-top: var(--sp-3); color: var(--rose); }
+.hr-more { justify-content: center; align-items: center; padding-top: var(--sp-3); }
+.hr-more .hr-name { font-style: italic; color: var(--rose); }
 .hr:not([hidden]) + .card { margin-top: var(--sp-3); }
 
 /* ---------- Pins in the tab bar and side rail ---------- */
@@ -710,7 +723,8 @@ ul.pf-sum li { display: inline-flex; align-items: center; min-height: 28px; padd
 @media (prefers-reduced-motion: reduce) {
   .hb-pal img, .pf-pin { animation: none; }
   .tab-pin { transition: none; }
-  .hb-pal, .qt-tile, .hr-card { transition: none; }
+  .hb-pal, .qt-tile, .hr-card, .hr-card::after { transition: none; }
+  .hr-track.is-arriving > li { animation: none; }
 }
 
 /* ---------- The Garden: habitats and rounds (garden.js) ---------- */

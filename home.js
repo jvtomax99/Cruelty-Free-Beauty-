@@ -8,7 +8,8 @@
   const box = document.getElementById("home-rail");
   let brands = [];
 
-  function draw() {
+  // `arriving`: the cards fade up one after another when Home opens, not when a heart redraws them.
+  function draw(arriving) {
     if (!brands.length) { box.hidden = true; return; }
     const mode = window.CFB.mode();
     const saved = window.CFB.saved;
@@ -17,17 +18,20 @@
       .sort((x, y) => (hearted(y.b) - hearted(x.b)) || x.b.name.localeCompare(y.b.name));
     if (!pass.length) { box.hidden = true; return; }
     document.getElementById("home-rail-count").textContent = `${pass.length} · ${mode === "strict" ? "Strict" : "Certified"}`;
-    document.getElementById("home-rail-list").innerHTML = pass.slice(0, MAX).map(({ b, v }) => `
+    const list = document.getElementById("home-rail-list");
+    list.classList.toggle("is-arriving", arriving === true);
+    list.innerHTML = pass.slice(0, MAX).map(({ b, v }) => `
       <li><a class="hr-card" href="#brand/${encodeURIComponent(b.id)}">
-        <span class="hr-mono" aria-hidden="true">${esc(initial(b.name))}</span>
+        <span class="hr-mono br-f${window.CFB.finish(b.name)}" aria-hidden="true">${esc(initial(b.name))}</span>
         <span class="hr-name">${esc(b.name)}</span>
+        ${b.price ? `<span class="hr-price"><span class="sr-only">Price: </span><span aria-hidden="true">${esc(b.price)}</span> ${window.CFB.PRICE[b.price]}</span>` : ""}
         <span class="hr-chips">${window.CFB.certChips(v)}</span>
       </a></li>`).join("") +
       (pass.length > MAX ? `<li><a class="hr-card hr-more" href="#brands"><span class="hr-name">See all ${pass.length}</span></a></li>` : "");
     box.hidden = false;
   }
 
-  window.CFB.brands.then((list) => { brands = list || []; draw(); });
-  document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "home") draw(); });   // the strictness may have changed
-  document.addEventListener("cfb:saved", draw);
+  window.CFB.brands.then((list) => { brands = list || []; draw(true); });
+  document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "home") draw(true); });   // the strictness may have changed
+  document.addEventListener("cfb:saved", () => draw());
 })();
