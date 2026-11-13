@@ -219,7 +219,7 @@
     if (!canWorld()) return;
     sx.classList.add("is-on", "is-loading");
     import("./sanctuary3d.js")
-      .then((m) => m.mount($("sx-canvas"), { reduced, low: (navigator.deviceMemory || 8) <= 3, onPick }))
+      .then((m) => m.mount($("sx-canvas"), { reduced, low: (navigator.deviceMemory || 8) <= 3, onPick, clear: () => { const c = $("sx-card").getBoundingClientRect(); return c.height ? Math.max(0, $("sx-canvas").getBoundingClientRect().bottom - c.top) : 0; } }))
       .then((w) => {
         world = w; sx.classList.remove("is-loading"); sx.classList.add("is-ready");
         syncWorld(); world.focus(sel); world.start();

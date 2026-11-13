@@ -56,6 +56,10 @@ const W = () => window.CFB.garden.world;
   check(empty.rabbits === 1 && empty.all.join() === 'clover,willow,pip,biscuit,poppy,fern', `a new sanctuary has the first resident of each habitat (${empty.all.join(', ')})`);
   check(!empty.shelter, 'a new habitat has its plain shelter');
   check(await page.evaluate(() => window.CFB.garden.world.debug.life.animals.every((a) => a.root.visible === a.visible && a.shadow.visible === (a.visible && !a.hab.pool))), 'animals that have not moved in are not drawn');
+  /* the first view: garden, blossom tree, roots, waterfall, hollow and the island's tip together, none of it under the card */
+  await snap();
+  const first = await page.evaluate(() => { const d = window.CFB.garden.world.debug, cv = document.getElementById('sx-canvas').getBoundingClientRect(), card = document.getElementById('sx-card').getBoundingClientRect(), out = []; for (const [k, p] of Object.entries(d.marks())) { const q = d.project(p[0], p[1], p[2]), X = cv.left + q.x, Y = cv.top + q.y; if (!(X > 4 && X < innerWidth - 4 && Y > 60 && Y < card.top - 4)) out.push(`${k} at ${Math.round(X)}, ${Math.round(Y)} (card starts at ${Math.round(card.top)})`); } return out; });
+  check(first.length === 0, `the first view shows the cottage, pond, blossom tree, roots, waterfall, hollow and the island's tip, all clear of the card${first.length ? ': ' + first.join('; ') : ''}`);
   check((await page.textContent('#sx-card')).includes('Bunny Meadow') && (await page.textContent('#sx-card')).includes(`0 of ${MEADOW.length} learned`), 'the card names the habitat and its progress');
   const names = await page.evaluate(() => { const g = window.CFB.garden, out = {}; for (const a of g.world.animals()) (out[a.habitat] = out[a.habitat] || []).push(a.name); return { world: out, cards: Object.fromEntries(Object.entries(g.home).map(([k, v]) => [k, v.who.join(' and ').split(' and ')])) }; });
   check(HABITATS.every((h) => names.world[h].join() === names.cards[h].join()), 'the names on the cards are the names in the world');

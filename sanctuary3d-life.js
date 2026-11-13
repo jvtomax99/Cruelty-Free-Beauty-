@@ -5,7 +5,7 @@
       found from the texture (dark patches on the head) and a blink fills them with fur colour.
    2. Behaviour (Animal): each animal has its own clock and random numbers, and alternates
       between resting, looking about, sniffing, grazing, grooming and going somewhere for a
-      reason (food, shelter, a friend, something that moved). Rabbits travel only in hops and
+      reason (food, shelter, a friend, a flower in bloom, something that moved). Rabbits travel only in hops and
       move only while in the air, so their feet never slide; walkers' legs step at the pace
       they cover ground; ducks glide on their own pond.
    An animal only ever sets off along a straight line that has been checked: inside its
@@ -183,12 +183,14 @@ class Animal {
     if (why < 0.46 && food) { const near = Math.hypot(food[0] - this.x, food[1] - this.z) < this.r + 0.9; const to = near ? null : this.spot(food, this.r + 0.5); if (near || to) { if (to) this.go(to); this.queue.push(() => this.face(food), () => this.set("graze", 3.5 + R() * 6)); return near ? this.next() : undefined; } }
     if (why < 0.64 && hab.rest) { const to = this.spot(hab.rest, 1.5); if (to) { this.go(to); this.queue.push(() => this.set("rest", (5 + R() * 9) * lazy, { sleepy: R() < 0.5 })); return; } }
     if (why < 0.84 && others.length) { const f = others[Math.floor(R() * others.length)], to = this.spot([f.x, f.z], this.r + f.r + 0.5); if (to && f.state !== "move") { this.go(to); this.queue.push(() => this.face([f.x, f.z]), () => { if (f.state !== "move" && f.state !== "hello") f.set("look", 2.5 + R() * 1.5, { lookAt: [this.x, this.z] }); this.set("sniff", 2 + R() * 1.6, { friend: f }); }); return; } }
+    if (why >= 0.84 && why < 0.94) { const f = this.life.bloom(this); if (f) { const d = Math.hypot(f.x - hab.x, f.z - hab.z) || 1, k = Math.min(1, (hab.r - this.r - 0.5) / d), to = this.spot([hab.x + (f.x - hab.x) * k, hab.z + (f.z - hab.z) * k], 0.9); if (to) { this.go(to); this.queue.push(() => this.face([f.x, f.z]), () => this.set("sniff", 2.2 + R() * 2.2)); return; } } }   // a flower at the edge of its ground: go as near as it may, and smell it
     const to = this.spot(null); if (to) { this.go(to); this.queue.push(() => this.set(R() < 0.5 ? "sniff" : "look", 1.5 + R() * 2.5, { lookAt: this.interest(others) })); return; }
     this.set("rest", 3 + R() * 5, { sleepy: false });
   }
   interest(others) {   // something worth looking at: a friend on the move, a butterfly, the person watching
     const moving = others.find((a) => a.state === "move" || a.state === "hello"); if (moving && this.rand() < 0.7) return [moving.x, moving.z];
     const b = this.life.near(this.x, this.z); if (b && this.rand() < 0.5) return b;
+    const f = this.life.bloom(this); if (f && Math.hypot(f.x - this.x, f.z - this.z) < 7 && this.rand() < 0.4) return [f.x, f.z];
     return this.rand() < 0.4 ? "cam" : [this.x + (this.rand() - 0.5) * 8, this.z + (this.rand() - 0.5) * 8];
   }
   go(to) { this.set("move", 30, { to, sub: "turn", st: 0 }); }
@@ -279,7 +281,7 @@ class Animal {
 
 /* ---------- All of them ---------- */
 export class Life {
-  constructor(o) { Object.assign(this, o); this.animals = []; this.time = 0; this.big = 1; this.flyers = []; }
+  constructor(o) { Object.assign(this, o); this.animals = []; this.time = 0; this.big = 1; this.flyers = []; this.flowers = []; }
   add(id, model, hab, o) { const a = new Animal(this, id, model, hab, o); this.animals.push(a); return a; }
   /* May `a` stand at (x, z)? Inside its habitat, on the right kind of ground, clear of things and of the others. */
   free(a, x, z) {
@@ -289,6 +291,8 @@ export class Life {
     for (const b of this.animals) { if (b === a || b.hab !== h || !b.visible) continue; const sep = a.r + b.r; if (Math.hypot(x - b.x, z - b.z) < sep) return false; if (b.state === "move" && b.land && b.sub !== "wait" && b.sub !== "turn" && Math.hypot(x - b.land[0], z - b.land[1]) < sep) return false; if (b.state === "move" && b.to && Math.hypot(x - b.to[0], z - b.to[1]) < sep * 0.9 && a.id > b.id) return false; }
     return true;
   }
+  /* an open flower close enough to an animal's own ground to walk up to (land animals only) */
+  bloom(a) { const h = a.hab, list = this.flowers; if (h.pool || !list || !list.length) return null; for (let i = 0; i < 8; i++) { const f = list[Math.floor(a.rand() * list.length)]; if (f.on && Math.hypot(f.x - h.x, f.z - h.z) < h.r + 2.4) return f; } return null; }
   near(x, z) { let best = null, bd = 7; for (const f of this.flyers) { const d = Math.hypot(f.x - x, f.z - z); if (d < bd) { bd = d; best = [f.x, f.z]; } } return best; }
   update(dt) { this.time += dt; for (const a of this.animals) if (a.visible) a.update(dt); }
   /* Who is somewhere it shouldn't be, right now. Empty means all is well. */

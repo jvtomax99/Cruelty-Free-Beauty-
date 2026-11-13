@@ -61,7 +61,7 @@ const RUNS = [[0, 1], [1, 2]].map(([a, b]) => {
    sh: the shelter [x, z, radius]. rest: where they settle beside it. food: what they go to. */
 export const HABS = [
   { id: "meadow", x: -5, z: 9.5, r: 6.6, base: 1.2, az: 0.3, sh: [-9.8, 5.3, 2.3], rest: [-7.0, 7.7], food: [[-3.2, 12], [-6.6, 13], [-1.6, 7.6]] },
-  { id: "pond", x: 10.5, z: 8.5, r: 6.8, az: 0.35, pool: POOLS[2], sh: [3.5, 3.7, 1.6], rest: [6.3, 5.6], food: [[8, 11], [12.6, 11.4], [13.6, 6.6]] },
+  { id: "pond", x: 10.5, z: 8.5, r: 6.8, az: -0.25, pool: POOLS[2], sh: [3.5, 3.7, 1.6], rest: [6.3, 5.6], food: [[8, 11], [12.6, 11.4], [13.6, 6.6]] },
   { id: "orchard", x: -18.5, z: 0.5, r: 5.6, base: 3.0, az: 0.95, sh: [-23.6, -1.1, 1.8], rest: [-21, -0.3], food: [[-17, 3], [-19.4, -2.4], [-15.8, -0.8]] },
   { id: "burrow", x: 4.5, z: -8.5, r: 5.6, base: 2.4, az: 0.2, sh: [5.8, -13.5, 2.9], rest: [4.9, -10.2], food: [[2.2, -7.0], [6.9, -6.2]] },
   { id: "oak", x: 0, z: -20, r: 5.4, base: 4.9, az: 0.02, sh: [-1.7, -24.5, 2.2], rest: [-0.8, -22], food: [[2.8, -18.6], [-3, -18], [2, -22.6]] },
@@ -311,7 +311,7 @@ function mass(low) {
   };
   /* a point on the flat top of whatever juts out at depth u: f = 0 at the wall behind it, 1 at its front edge */
   const ledge = (th, u, f) => { const i = Math.ceil(Math.pow(u, 1 / 1.12) * ROWS - 1e-6); return surf(th, mix(uOf(i - 1), uOf(i), f)); };
-  return { mesh, surf, ledge };
+  return { mesh, surf, ledge, tip: [pos[N * 3], pos[N * 3 + 1], pos[N * 3 + 2]] };
 }
 /* A limb: a tube along `pts` whose radius follows `rad` (one per point), added to `out`. Few
    sides, not quite round, pale on top and dark underneath in its own vertices, so trunk and
@@ -658,6 +658,7 @@ export async function mount(canvas, opts = {}) {
   const drifts = [   // [x, z, radius, how many, kind]
     [-0.6, 14.2, 2.2, 26, "daisy"], [1.6, 17.4, 2.4, 24, "spike"], [-14.5, 9.5, 2.4, 24, "pinkspike"], [3.6, 4.6, 1.6, 16, "cosmos"], [5.8, 16.6, 1.8, 16, "daisy"], [-13.5, -5.4, 2.2, 22, "pinkspike"], [-4, -3.2, 2.0, 20, "cosmos"],
     [-15.6, -14.6, 2.4, 22, "cosmos"], [-3.6, -12.4, 2.0, 18, "cosmos"], [-8, 20, 2.6, 26, "pinkspike"], [-1.5, 22.5, 2.4, 24, "daisy"], [6.5, 23, 2.4, 22, "cosmos"], [13.5, 21, 2.2, 20, "spike"], [-17, 14.5, 2.2, 20, "cosmos"], [19, 18.5, 2.0, 18, "daisy"], [-23, 12, 1.8, 14, "daisy"],
+    [-5.0, -14.2, 1.4, 14, "pinkspike"], [-14.2, -6.8, 1.4, 14, "daisy"], [-2.6, -5.6, 1.6, 16, "cosmos"], [-5.6, 0.4, 1.3, 12, "daisy"], [15.4, 18.2, 1.5, 14, "cosmos"], [22.6, 16.4, 1.4, 12, "daisy"],   // the terrace's edge and foot, the path down, the blossom tree's foot
     [18.8, 3.6, 2.0, 20, "pinkspike"], [20.8, 12.4, 2.4, 24, "cosmos"], [14.6, 17.6, 2.4, 24, "daisy"], [22.4, -3.4, 2.2, 18, "spike"], [10.6, -1.8, 1.4, 12, "cosmos"], [-12, -1.6, 1.6, 14, "spike"], [-9, -0.6, 1.6, 14, "daisy"], [12, -17, 2.2, 18, "daisy"], [-12, -21, 2.2, 18, "spike"],
   ];
   const KINDS = ["cosmos", "daisy", "spike", "pinkspike"];
@@ -701,7 +702,7 @@ export async function mount(canvas, opts = {}) {
     const y = Y(x, z) - 0.1; bushes[Math.floor(r() * 2)].push({ x, y, z, ry: r() * 6.28, s }); obstacles.push({ x, z, r: s * 1.05, what: "a shrub" });
     if (bloom) for (let i = 0; i < 26; i++) { const a = r() * 6.28, e = r() * 1.2, rad = 1.05 * s; dots.push({ x: x + Math.cos(a) * Math.sin(e) * rad, y: y + (0.75 + Math.cos(e) * 0.72) * s, z: z + Math.sin(a) * Math.sin(e) * rad, s: (0.09 + r() * 0.07) * s, ry: 0, color: C(bloom === 1 ? 0xf7a8c0 : 0xfffaf2).lerp(C(0xfbd9e4), r() * 0.5) }); }
   };
-  for (const [x, z, s, bloom] of [[-13.6, -8.2, 1.5, 1], [-6.2, -13.6, 1.3, 2], [-12.8, -15.2, 1.6, 0], [-7.2, -6.2, 0.9, 1], [-13.5, 15.5, 1.3, 2], [8.5, 17.2, 1.2, 1], [24.6, 4.6, 1.2, 1], [-18.5, -10.5, 1.7, 0], [12.5, -15.5, 1.5, 1], [-1.5, 18.6, 1.1, 0], [-11.5, 21.5, 1.4, 1], [2.5, 24.5, 1.2, 0], [10.5, 23.5, 1.3, 2], [-20.5, 10.5, 1.3, 0], [16.5, 21.5, 1.1, 0]]) bush(x, z, s, bloom);
+  for (const [x, z, s, bloom] of [[-13.6, -8.2, 1.5, 1], [-6.2, -13.6, 1.3, 2], [-12.8, -15.2, 1.6, 0], [-7.2, -6.2, 0.9, 1], [-13.5, 15.5, 1.3, 2], [8.5, 17.2, 1.2, 1], [24.6, 4.6, 1.2, 1], [-3.4, -10.2, 1.0, 1], [-15.8, -5.4, 1.1, 2], [-18.5, -10.5, 1.7, 0], [12.5, -15.5, 1.5, 1], [-1.5, 18.6, 1.1, 0], [-11.5, 21.5, 1.4, 1], [2.5, 24.5, 1.2, 0], [10.5, 23.5, 1.3, 2], [-20.5, 10.5, 1.3, 0], [16.5, 21.5, 1.1, 0]]) bush(x, z, s, bloom);
   LAND.forEach((h) => { const n = h.id === "burrow" ? 9 : 4; for (let i = 0; i < n; i++) { const a = h.az + Math.PI + (i / (n - 1) - 0.5) * (h.id === "burrow" ? 3.6 : 2.2) + (r() - 0.5) * 0.2, d = h.r + 1.1 + r() * 1.2; bush(h.x + Math.sin(a) * d, h.z + Math.cos(a) * d, (h.id === "burrow" ? 1.15 : 0.9) + r() * 0.5, h.id === "burrow" ? (i % 3) : (i % 2 ? 0 : 1 + (i % 4) / 2)); } });
   const bushMat = sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, envMapIntensity: 0.2 }), wind, 0.012);
   bushes.forEach((list, i) => world.add(instanced(bushGeo(60 + i * 9), bushMat, list, true)));
@@ -792,7 +793,7 @@ export async function mount(canvas, opts = {}) {
     }
     world.add(instanced(mergeGeometries(fernG), sway(new THREE.MeshStandardMaterial({ roughness: 0.9, side: THREE.DoubleSide, envMapIntensity: 0.2 }), wind, 0.3), mossy));
     /* a trail of small leaves down the face */
-    const trail = []; for (let i = 0; i < 7; i++) { const g = new THREE.IcosahedronGeometry(0.16 - i * 0.012, 1); g.scale(1, 0.7, 1); g.translate(Math.sin(i * 1.9) * 0.22, -i * 0.42, Math.cos(i * 1.7) * 0.1); trail.push(g); }
+    const trail = []; for (let i = 0; i < 7; i++) { const g = new THREE.IcosahedronGeometry(0.16 - i * 0.012, 0); g.scale(1, 0.7, 1); g.translate(Math.sin(i * 1.9) * 0.22, -i * 0.42, Math.cos(i * 1.7) * 0.1); trail.push(g); }
     const tm = mergeGeometries(trail), tp = tm.attributes.position, tc = []; for (let i = 0; i < tp.count; i++) { const t = clamp(-tp.getY(i) / 2.6, 0, 1); cc.copy(C(0x6f9f52)).lerp(C(0xa5cf7a), 1 - t); tc.push(cc.r, cc.g, cc.b); }
     tm.setAttribute("color", new THREE.Float32BufferAttribute(tc, 3));
     world.add(instanced(tm, sway(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, envMapIntensity: 0.2 }), wind, -0.05, -2.6), hangs)); }
@@ -805,7 +806,7 @@ export async function mount(canvas, opts = {}) {
   { const MR = rng(606), caps = [], stems = [], hp = body.ledge(HOLLOW.th, SHELVES[1].u, 0.3);
     for (let i = 0; i < 9; i++) {
       const q = body.ledge(HOLLOW.th + (MR() - 0.5) * HOLLOW.w * 1.1, SHELVES[1].u, 0.16 + MR() * 0.3), h = 0.5 + MR() * 0.9;
-      stems.push({ x: q.x, y: q.y - 0.05, z: q.z, ry: 0, s: h }); caps.push({ x: q.x, y: q.y - 0.05 + h * 0.95, z: q.z, ry: MR() * 6.28, s: 0.38 + MR() * 0.4 });
+      stems.push({ x: q.x, y: q.y - 0.05, z: q.z, ry: 0, s: h }); caps.push({ x: q.x, y: q.y - 0.05 + h * 0.95, z: q.z, ry: MR() * 6.28, s: 0.32 + MR() * 0.34 });
     }
     const capG = new THREE.SphereGeometry(1, 7, 4, 0, 6.2832, 0, 1.25); capG.scale(1, 0.72, 1);
     world.add(instanced(capG, new THREE.MeshBasicMaterial({ color: 0xffe9a8 }), caps));
@@ -867,7 +868,7 @@ export async function mount(canvas, opts = {}) {
     const R = rng(seed), p = perches[Math.floor(R() * perches.length)] || { x: 0, y: 2, z: 0, s: 1 };
     flyers.push({ g, a, b, R, x: p.x, z: p.z, y: p.y + 0.63 * p.s, from: null, to: p, t: 0, dur: 0, rest: 1 + R() * 4, ph: R() * 6 });
   });
-  life.flyers = flyers;
+  life.flyers = flyers; life.flowers = perches;
   function flutter(f, dt, time) {
     if (f.from) {   // on the wing: a curved, bobbing line to the next flower
       f.t += dt; const u = Math.min(1, f.t / f.dur), e = smooth(0, 1, u), fx = f.from.x, fz = f.from.z, tx = f.to.x, tz = f.to.z, len = Math.hypot(tx - fx, tz - fz) || 1, side = Math.sin(u * Math.PI) * Math.sin(u * 9 + f.ph) * 0.7;
@@ -901,7 +902,21 @@ export async function mount(canvas, opts = {}) {
     if (chosen) { const d = clamp(chosen.size * 1.9 / (tan * Math.min(a, 0.9)), 9, 46); return { tx: chosen.x, ty: groundOf(chosen.hab) + chosen.size * 0.45 - d * tan * (tall ? 0.16 : 0.06), tz: chosen.z, az: goal.az, pol: 1.2, dist: d }; }
     if (mode !== "world") { const h = HAB[mode], d = clamp(h.r * 1.08 / (tan * Math.min(a, 1.3)), 16, 72); return { tx: h.x, ty: groundOf(h) + 0.6 - d * tan * (tall ? 0.1 : 0.06), tz: h.z, az: h.az, pol: 1.02, dist: d }; }
     // the whole island, top to tip: garden, roots, waterfall and the deep underside. In portrait it sits above the card.
-    return a > 1.05 ? { tx: 1, ty: -11, tz: 3, az: 0.2, pol: 1.06, dist: Math.max(38 / (tan * a), 40 / tan) } : { tx: 3, ty: -11.5, tz: 3, az: 0.16, pol: 1.1, dist: 29 / (tan * a) };
+    return a > 1.05 ? { tx: 1, ty: -11, tz: 3, az: 0.2, pol: 1.06, dist: Math.max(38 / (tan * a), 40 / tan) } : fitWorld(tan);
+  }
+  /* Portrait: pull back and aim so the whole island, from the tree tops to its tip, sits between the title and the card. */
+  const FIT = [[-32, 2, 3], [35.5, 2, 7], [6, 17, -21], [hx, hy + 15.5, hz], [body.tip[0], body.tip[1] - 1, body.tip[2]], [-10, Y(-10, -11.2) + 10, -11.2]], probe = new THREE.PerspectiveCamera(), fv = new THREE.Vector3();
+  function fitWorld(tan) {
+    const H = canvas.clientHeight || 1, cover = (opts.clear && opts.clear()) || 176, top = 1 - (2 * 84) / H, bot = -1 + (2 * (cover + 12)) / H, f = { tx: 3, ty: -11, tz: 3, az: 0.16, pol: 1.1, dist: 200 }, sp = Math.sin(f.pol);
+    probe.fov = cam.fov; probe.aspect = cam.aspect; probe.near = 0.5; probe.far = 3000; probe.updateProjectionMatrix();
+    for (let k = 0; k < 5; k++) {
+      probe.position.set(f.tx + Math.sin(f.az) * sp * f.dist, f.ty + Math.cos(f.pol) * f.dist, f.tz + Math.cos(f.az) * sp * f.dist); probe.lookAt(f.tx, f.ty, f.tz); probe.updateMatrixWorld();
+      let x0 = 9, x1 = -9, y0 = 9, y1 = -9; for (const p of FIT) { fv.set(p[0], p[1], p[2]).project(probe); x0 = Math.min(x0, fv.x); x1 = Math.max(x1, fv.x); y0 = Math.min(y0, fv.y); y1 = Math.max(y1, fv.y); }
+      const sc = Math.max((x1 - x0) / 2, (y1 - y0) / Math.max(0.2, top - bot)); f.dist *= sc;
+      const dy = (top + bot) / 2 - (y0 + y1) / 2 / sc, dx = -(x0 + x1) / 2 / sc;
+      f.ty -= (dy * f.dist * tan) / sp; f.tx -= Math.cos(f.az) * dx * f.dist * tan * cam.aspect; f.tz += Math.sin(f.az) * dx * f.dist * tan * cam.aspect;
+    }
+    return f;
   }
   const worldDist = () => { const m = mode, c = chosen; mode = "world"; chosen = null; const d = frameFor().dist; mode = m; chosen = c; return d; };
   function limits() { return { dMin: mode === "world" ? worldDist() * 0.3 : 7, dMax: worldDist() * 1.25, pMin: 0.45, pMax: mode === "world" ? 1.5 : 1.45 }; }
@@ -980,7 +995,7 @@ export async function mount(canvas, opts = {}) {
   const wake = () => { dirty = true; if (running && onscreen && !raf) raf = requestAnimationFrame(tick); };
   function detail() {   // less of the small stuff from far away; the animals a little larger there, so they still read
     const far = view.dist > 62; tuftMesh.count = Math.round(tufts.length * (thin ? 0.4 : far ? 0.55 : 1)); cloverMesh.visible = view.dist < 85 && !thin;
-    life.big = 1 + 0.3 * smooth(40, 95, view.dist) + 0.2 * smooth(120, 200, view.dist);
+    life.big = 1 + 0.3 * smooth(40, 95, view.dist) + 0.3 * smooth(120, 210, view.dist);
   }
   function tick(now) {
     raf = 0; if (!running || !onscreen) return;   // nothing is drawn while the world is scrolled out of sight
@@ -1036,6 +1051,8 @@ export async function mount(canvas, opts = {}) {
     },
     /* for the tests and the screenshots */
     debug: {
+      /* the things the first view has to show: [x, y, z] each */
+      marks: () => { const h = body.ledge(HOLLOW.th, SHELVES[1].u, 0.3), rt = surf(0.53, 0.45); return { tip: body.tip, basin: [basin.x, basin.y, basin.z], spill: [spill.x, spill.y, spill.z], hollow: [h.x, h.y + 1, h.z], roots: [rt.x, rt.y, rt.z], tree: [hx, hy + 4, hz], cottage: [-10, Y(-10, -11.2) + 4, -11.2], pond: [POND.x, POND.L, POND.z] }; },
       view, goal, cam, life, byId, trees, flyers, obstacles, pick, failed: failed.length,
       blooms: (hab) => blooms.reduce((n, m) => n + (hab ? m.userData.items.filter((it) => it.on && HABS[it.hab].id === hab).length : m.userData.shown), 0),
       shelter: (id) => shelters[id].extra.visible,
