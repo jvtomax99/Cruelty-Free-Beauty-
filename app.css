@@ -784,7 +784,7 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
 .sx.is-ready .sx-card:not([hidden]) { flex-wrap: wrap; }
 .sx-home { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); flex-basis: 100%; }
 .sx-who {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-4); border: 1px solid var(--line); border-radius: var(--r-pill);
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-3); border: 1px solid var(--line); border-radius: var(--r-pill);
   background: var(--sage); color: var(--ok); font: 600 var(--fs-sub)/1 var(--font-body); cursor: pointer; transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
 }
 .sx-who:active, .sx-who.is-pressed { transform: scale(.96); background: var(--sage-2); }
@@ -801,5 +801,12 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
   .sx.is-ready .sx-card:not([hidden]) { bottom: var(--sp-5); }
   .sx.is-on .sx-back, .sx.is-on .sx-head, .sx.is-on .sx-pill { top: var(--sp-4); }
   .sx.is-on .sx-back { left: var(--sp-4); } .sx.is-on .sx-head { left: calc(var(--sp-4) + 44px + var(--sp-3)); } .sx.is-on .sx-pill { right: var(--sp-4); top: calc(var(--sp-4) + 6px); }
+}
+/* a phone on its side: the stage is only as tall as the screen, and the card sits to one side so the world keeps the middle */
+@media (max-height: 500px) and (max-width: 899px) {
+  .sx.is-on { min-height: 0; }
+  .sx.is-on::before { height: 90px; }
+  .sx.is-ready .sx-card:not([hidden]) { left: auto; right: var(--sp-3); width: min(46%, 340px); margin: 0; padding: var(--sp-2) var(--sp-3); gap: var(--sp-2); }
+  .sx.is-meet .sx-face { width: 48px; height: 48px; }
 }
 @media (prefers-reduced-motion: reduce) { .sx.is-on .sx-canvas, .sx-btn, .sx-back, .sx-step, .sx-who { transition: none; } }

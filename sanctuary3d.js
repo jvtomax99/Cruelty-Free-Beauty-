@@ -627,7 +627,11 @@ export async function mount(canvas, opts = {}) {
   const view = { tx: 1, ty: 1, tz: 2, az: 0.18, pol: 0.93, dist: 90 }, goal = { ...view };
   let mode = "world", chosen = null, focus = null, shape = 0;
   const groundOf = (h) => (h.pool ? h.pool.L : h.base);
-  function frameFor() {
+  /* On a phone held sideways the card takes the right of the screen, so the view looks a little to the right of its subject, which puts the subject left of the middle. */
+  const aside = (az, d) => { if (!(cam.aspect > 1.5 && canvas.clientHeight < 500)) return [0, 0]; const k = d * Math.tan((cam.fov * Math.PI) / 360) * cam.aspect * 0.3; return [Math.cos(az) * k, -Math.sin(az) * k]; };
+  const shifted = (f) => { const [ox, oz] = aside(f.az, f.dist); f.tx += ox; f.tz += oz; return f; };
+  function frameFor() { return shifted(frame0()); }
+  function frame0() {
     const a = cam.aspect, tan = Math.tan((cam.fov * Math.PI) / 360), tall = a < 1;
     if (chosen) { const d = clamp(chosen.size * 1.9 / (tan * Math.min(a, 0.9)), 9, 46); return { tx: chosen.x, ty: groundOf(chosen.hab) + chosen.size * 0.45 - d * tan * (tall ? 0.16 : 0.06), tz: chosen.z, az: goal.az, pol: 1.2, dist: d }; }
     if (mode !== "world") { const h = HAB[mode], d = clamp(h.r * 1.08 / (tan * Math.min(a, 1.3)), 16, 72); return { tx: h.x, ty: groundOf(h) + 0.6 - d * tan * (tall ? 0.1 : 0.06), tz: h.z, az: h.az, pol: 1.02, dist: d }; }
@@ -652,7 +656,7 @@ export async function mount(canvas, opts = {}) {
     const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return;
     renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
     const f = frameFor(), turned = Math.abs(cam.aspect - shape) > 0.08; shape = cam.aspect;
-    if (!started) Object.assign(goal, f); else if (turned) { goal.dist = f.dist; goal.ty = f.ty; }   // a phone turned on its side is framed again; a browser bar sliding away keeps the person's own zoom
+    if (!started) Object.assign(goal, f); else if (turned) { goal.dist = f.dist; goal.ty = f.ty; goal.tx = f.tx; goal.tz = f.tz; }   // a phone turned on its side is framed again; a browser bar sliding away keeps the person's own zoom
     if (!started) Object.assign(view, goal); dirty = true;
   }
 
@@ -718,7 +722,7 @@ export async function mount(canvas, opts = {}) {
     const raw = (now - last) / 1000 || 0.016, dt = Math.min(0.05, raw); last = now; time += dt;
     /* quality follows the phone: if frames are slow for a while, draw fewer pixels, then less grass */
     if (!hold && !reduced && raw < 0.5) { spent += raw; frames++; if (spent > 2) { const ms = (spent / frames) * 1000; if (ms > 27) { if (ratio > 1) { ratio = Math.max(1, ratio - 0.25); renderer.setPixelRatio(ratio); renderer.setSize(canvas.clientWidth, canvas.clientHeight, false); } else thin = true; } spent = frames = 0; } }
-    if (chosen) { goal.tx = chosen.x; goal.tz = chosen.z; }
+    if (chosen) { const [ox, oz] = aside(goal.az, goal.dist); goal.tx = chosen.x + ox; goal.tz = chosen.z + oz; }
     const k = reduced ? 1 : 1 - Math.pow(0.0025, dt); let moving = false;
     for (const key in view) { const d = goal[key] - view[key]; if (Math.abs(d) > 1e-4) { view[key] += d * k; moving = true; } }
     applyCam(); detail();
