@@ -196,7 +196,7 @@ me**.
   loose diamond: broad under the turf and tapering to an off-centre point,
   with ledges, recesses, overhangs and one shaded hollow where a few
   mushrooms glow. One great blossom tree stands on a prow beside the pond,
-  with seed pods that glow faintly under its crown; its thick roots cross
+  with lanterns hanging under its crown; its thick roots cross
   the turf and go down the cliff, forking, some coming out of the earth
   lower down. The stream runs pool to pool into the pond; the pond
   overflows through a gap in its bank, falls to a rocky basin, turns, and
@@ -217,6 +217,17 @@ me**.
   log and more hay, a pergola, a roof of leaves). Residents and the better
   shelter stay even if the count later drops. The round's summary says
   what the round changed.
+  The look (changed 2026-11-13, Jose's pick of "golden hour" after four
+  pictures he sent as a direction; three look like other artists' work, so
+  they are not in the repo and nothing from them ships): a low warm sun
+  and lavender shade, never grey. Trees after his lantern-tree picture: a
+  trunk that bends and twists, flat pads of leaves in layers, blossom
+  dotted over the kinds that flower. The great tree has boulders in its
+  roots and five lanterns on chains; four other trees carry one lantern
+  each. The cottage's windows are lit, lanterns and windows throw a soft
+  pool of light on the ground, glints ride down the waterfall, and no two
+  rocks, shrubs or blocks of cliff are quite the same colour. It stays
+  daytime: no night mode.
   The animals live on their own: each on its own clock, resting, looking
   about, sniffing, grazing, grooming, and going somewhere for a reason
   (food, the shelter, a friend, a flower in bloom at the edge of their
@@ -358,6 +369,11 @@ only if it can be shown to work across skin tones.
       `node tools/test-sanctuary.cjs` and `node tools/test-garden.cjs`
       pass in the cloud browser; about 470,000 triangles with everything
       unlocked, up from 394,000)
+- [x] Golden hour and the lantern trees: warm low sun with lavender
+      shade, trees remade after Jose's picture, lanterns, lit cottage
+      windows, pools of light, glints on the falls, colour variation
+      (2026-11-13; both browser tests pass in the cloud browser; about
+      490,000 triangles with everything unlocked)
 - [ ] A real-phone check of speed and battery (Jose). The island is
       heavier than before, so this matters more now
 
@@ -374,6 +390,10 @@ only if it can be shown to work across skin tones.
   ducks, the deer has small antlers nobody asked for, the guinea pig came
   with a tail (hidden in code), and the beagle and deer are more cartoon
   than the rabbits. Remake them, or keep?
+- The small blossom trees are now green with pink blossom on top, like
+  the lantern-tree picture, where they used to be pink all over: the
+  island has less pink in the first view. Jose to say if some should go
+  back to full blossom.
 - The cliff under the island is lit face by face (faceted), the one
   break from DESIGN's "rounded, never faceted": smooth, it read as a
   blur on a phone. Jose to say if it stays (one word in `mass()` in
