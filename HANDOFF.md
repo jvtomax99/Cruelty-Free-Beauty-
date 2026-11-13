@@ -4,11 +4,12 @@ Written 2026-11-13. Delete this file when its work is done.
 
 ## Goal
 
-Jose approved the animated girl on Home's banner ("She is perfect") and
-asked to give her more: **more lines, more moves, more places**. Jose
-approved the plan below on 2026-11-13 ("Build all three"), including about
-104 Runway credits for the two new moves. Her lines still need his sign-off
-before they ship.
+Jose approved the animated girl on Home's banner ("She is perfect"), asked
+to give her more (**lines, moves, places**; he approved "Build all three"),
+and then, later on 2026-11-13, changed how she should move: **"I want her
+to look 3D and expressive like Dr Smiley in the Interp hub."** The section
+"Like Dr Smiley" below replaces the old step 2 (two canned video clips):
+do not make those clips.
 
 ## Done (live, pull request #25, merge commit fe29c2b)
 
@@ -47,10 +48,7 @@ blurred into a brown stage backdrop there. Jose rejected that three times.
   time-of-day line pointing to Scan. All from existing `cfb-` keys; no new
   stored data. She never words a verdict: only `CFB.verdict` does.
   The lines speak for the founder's brand, so Jose signs off the list.
-- *More moves.* Two new clips: a wave when Home opens (once per visit) and
-  a happy reaction when she is tapped. About 52 credits each, 104 in all.
-  Each strip is about 400 KB, so new moves load after the page, not in the
-  worker's install list.
+- *More moves.* Replaced: see "Like Dr Smiley" below.
 - *More places.* A small version of her (about 72 px, still frame, with a
   line) on: the Scan result, the end of the profile quiz, and the empty
   states (no saved brands, no scans yet).
@@ -73,8 +71,54 @@ the proof, so she is useful and never only decoration.
 on every screen can crowd the proof the app exists for. Hence lazy loading
 and one appearance per screen.
 
-**Order.** 1) lines on Home (no credits), 2) the two moves, 3) the other
-places. Each is its own pull request with screenshots.
+**Order.** 1) lines on Home (no credits), 2) the Dr Smiley-style rebuild,
+3) the other places. Each is its own pull request with screenshots.
+
+## Like Dr Smiley (Jose's two choices, 2026-11-13)
+
+**What Dr Smiley is.** Public repo `jvtomax99/interp` (clone it read-only:
+`drsmiley/*.webp`, `features/smiley-engine.js`,
+`features/smiley-performances.js`, `docs/features/dr-smiley.md`). He is not
+a video. He is one calm base picture (`base.webp`, head and shoulders, a
+glossy 3D cartoon) with a strip of 30 face frames (`face.webp`: only the
+eyes and mouth, shown through a small window over the base, swapped
+outright, never faded), brows that are their own pictures and glide, and an
+engine (`DrAnim`) with priorities that blinks at random, follows touch with
+his gaze, leans, squashes and stretches, and plays short performances
+(greet, laugh, love, surprised, sad, worried, doubt) from task states.
+
+**Her look: "Same girl, more depth".** Keep the face Jose called perfect
+(the clean still, Runway task `079bae6c-...`). Re-light her like Dr Smiley:
+glossy hair, soft shadows, rounder shading, a warm rim of light, so she
+comes off the banner. Do NOT change her proportions (he turned down "Dr
+Smiley proportions"). Still on a flat backdrop so `tools/make-host.py`'s
+keying works. Show Jose the new still before building on it.
+
+**Expressive: "Full set like his".** Replace the 4-second loop with his
+structure: a base picture, a face strip of about 16 frames (rest, blink
+in-betweens and shut, wink, smile, laugh, love, surprised, sad, worried,
+looks left, right, up and down), and a small engine of our own in a new
+file: random blinks, eyes that follow a finger, reactions to taps, to a
+scan result and to a quiz answer. Jose approved about 150 to 250 Runway
+credits for this (642 were left). Ask before going over 250.
+
+**Advice from making her so far.**
+- Every face frame must sit on the same base, or her hair and outline
+  jump. Dr Smiley's frames were fitted onto one face. Two ways to get that:
+  image edits of the base that change only the eyes and mouth (check each
+  against the base and re-fit), or one or two clips with her head held
+  perfectly still and frames picked from them (clips keep the base
+  consistent; the first clip here did, apart from a small head tilt).
+- Port the idea, not the file: `smiley-engine.js` is 1,100 lines tied to
+  the Hub. Ours should be a few hundred lines, one controller per picture,
+  frame changes on the sequence's own clock (his notes explain why).
+- Reduced motion: she stays on the rest frame. Data saver: no extra art.
+- She reacts to a scan result, but never words a verdict: `CFB.verdict`
+  does. A sad face on a fail is fine; a sentence about the brand is not.
+- New art goes in its own folder (say `assets/host/`), in `CREDITS.md`,
+  and into `sw.js` with a version bump.
+- This is a big feature by `.claude/rules/general.md` (a new engine and a
+  new set of art): write its "Done when" into `SPEC.md` first.
 
 ## Left to do
 
