@@ -65,6 +65,7 @@
   --finish: 0 1px 0 0 inset rgba(255,255,255,.82), 0 1px 2px rgba(59,42,42,.06), 0 8px 20px -12px rgba(94,52,58,.24);
   --pressed: 0 1px 2px rgba(59,42,42,.08);
   --float: 0 1px 0 0 inset rgba(255,255,255,.9), 0 2px 6px rgba(59,42,42,.06), 0 18px 34px -16px rgba(94,52,58,.32);
+  --cut-shadow: 0 6px 10px rgba(94,52,58,.2);   /* under a cut-out picture (Home's host) */
 
   /* motion */
   --ease: cubic-bezier(.2,.8,.2,1);
@@ -612,12 +613,12 @@ html.intro-on .intro {
 }
 .hb .hello { margin: 0; }
 .hb-pal {
-  display: flex; align-items: flex-end; gap: var(--sp-2); margin-top: auto; align-self: flex-start;
+  display: flex; align-items: flex-end; gap: 0; margin-top: auto; align-self: flex-start;
   color: var(--ink); text-decoration: none; transition: transform var(--t-press) var(--ease);
 }
-.hb-pal img {   /* the girl from the opening film, as a round portrait */
-  width: 84px; height: 84px; flex: none; border-radius: 50%; object-fit: cover;
-  border: 3px solid var(--paper); box-shadow: var(--float); animation: palBob 4.6s ease-in-out infinite;
+.hb-pal img {   /* the girl from the opening film, cut out; her bust fades out at the bottom */
+  width: 104px; height: auto; flex: none; margin-left: calc(-1 * var(--sp-1));
+  filter: drop-shadow(var(--cut-shadow)); animation: palBob 4.6s ease-in-out infinite;
 }
 .hb-say {
   position: relative; margin-bottom: var(--sp-5); padding: var(--sp-2) var(--sp-3); max-width: 190px;
