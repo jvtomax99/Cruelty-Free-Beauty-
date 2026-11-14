@@ -449,6 +449,16 @@ main {
 .ad-state { flex: none; color: var(--ink-soft); font-size: var(--fs-foot); }
 .ad-state.is-in { color: var(--ok); font-weight: 700; text-decoration: none; padding: var(--sp-2) 0; }
 .pk-card, .fd-card { text-align: left; }
+.brandbar { -webkit-user-select: none; user-select: none; }   /* the logo takes 5 taps for Founder tools */
+.fd-toast {
+  position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 60; max-width: min(92vw, 420px);
+  margin: 0; padding: var(--sp-3) var(--sp-4); border-radius: var(--r-md); background: var(--ink); color: var(--paper);
+  font-size: var(--fs-sub); text-align: center; box-shadow: var(--finish);
+  opacity: 0; transform: translate(-50%, 8px); pointer-events: none; transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+.fd-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+@media (min-width: 900px) { .fd-toast { bottom: var(--sp-6); } }
+@media (prefers-reduced-motion: reduce) { .fd-toast { transition: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .pf-start, .save-btn, .scan-link, .brand-row, .brand-row::before, .chip, .mode-btn, .quiz-opt { transition: none; }

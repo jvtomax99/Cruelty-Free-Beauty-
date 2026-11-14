@@ -429,7 +429,9 @@ me**.
 - **Founder tools** (the founder's ask, 2026-11-14). Two things for her:
   - *Add a brand herself.* A private "Add a brand" screen (`#add`),
     reached from a Founder tools row on Profile that shows only on a phone
-    opened once with `?founder=1` (hidden, not secured). She types the
+    where it was turned on: 5 quick taps on the C.F.B. logo (works inside
+    the installed app, whose storage on an iPhone is apart from Safari's),
+    or opening the app once with `?founder=1` (hidden, not secured). She types the
     name, and the brand's site and certifier page if she has them; Send
     opens GitHub's "Add a brand" issue form filled in, and she taps
     Submit. A daily scheduled Claude check reads open `add-brand` issues
