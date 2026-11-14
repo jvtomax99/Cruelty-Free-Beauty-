@@ -366,8 +366,21 @@ me**.
   glance, a look down at Search, a smile; from 10 at night to 5 in the
   morning mostly a long drowsy blink), looks at her bubble and smiles
   when its line changes, and beams when a brand is hearted. Still no
-  talking mouth, brows of their own, squash, sound or name. Nothing is
+  brows of their own, squash, sound or name. Nothing is
   stored and nothing new is downloaded. None of it under reduced motion.
+  Talking mouth (2026-11-14, Jose's pick; 12 Runway credits for three
+  mouth shapes, image edits of the same still). After her hello, and
+  whenever her bubble's line changes, she looks at the bubble and mouths
+  the line: about one shape per 5 letters (3 to 10), never the same
+  shape twice running, her mouth closing as between words, then a
+  smile. It follows the line's length, not its sounds. Not in this
+  version: sound, real lip-sync, text that types itself out, talking in
+  her small copies. This lifts "no talking mouth" from the first version.
+  - Done when (talking): in `tools/test-host-engine.cjs` she mouths her
+    line after the hello and after a real change of line, with the
+    number of shapes the line's length gives, none repeated back to
+    back, ending on a smile and then her resting face, in under 3 s; the
+    three new frames pass the same "nothing but her face changes" check.
   - Done when (alive): each of those is seen in `tools/test-host-engine.cjs`
     (hello, breath, lean both ways and back, at least three kinds of
     small thing in three minutes while she keeps blinking, the bubble
@@ -508,6 +521,7 @@ only if it can be shown to work across skin tones.
       (2026-11-13; `tools/test-host-engine.cjs`; 120 KB of pictures in place of 412 KB)
 - [x] Alive: breath, lean, hello, a small life of her own, the bubble look,
       a heart, drowsy at night (2026-11-14; no new art)
+- [x] Talking mouth: she mouths her bubble's line (2026-11-14; 3 more frames)
 - [x] Places: Scan result, end of the quiz, empty states (2026-11-13; Jose
       signed off the five lines; `tools/test-host-places.cjs`)
 

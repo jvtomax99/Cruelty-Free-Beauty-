@@ -8,7 +8,7 @@
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v37";
+const CACHE_VERSION = "cfb-v38";
 const MEDIA = "cfb-media-v3";
 /* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
    download. Each file is saved the first time the Sanctuary asks for it, and the world then opens

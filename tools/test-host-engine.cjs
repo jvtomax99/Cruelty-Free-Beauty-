@@ -230,9 +230,11 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
   {
     const { ctx, page } = await phone({ clock: true, alive: true, at: new Date('2026-11-14T10:00:00') });
     await page.clock.runFor(600); await live(page);
-    await page.clock.runFor(3000);
-    const hello = await frames(page);
-    check(hello.join(' ').includes('half shut half rest smile'), `Home first shows her: a slow blink, then a smile (${hello.join(' ')})`);
+    await page.clock.runFor(4500);
+    const upTo = (list) => list.slice(0, list.lastIndexOf('smile') + 2);   // what she did, without the blinks after it
+    const hello = upTo(await frames(page));
+    const mouths = (list) => list.filter((n) => /^talk/.test(n));
+    check(hello.join(' ').includes('half shut half rest smile') && mouths(hello).length >= 3 && hello[hello.length - 2] === 'smile', `Home first shows her: a slow blink, a smile, then she mouths her line and smiles (${hello.join(' ')})`);
     check(await page.$eval('.hb-host', (e) => getComputedStyle(e).animationName) === 'hostBreathe', 'she breathes (a slow rise and fall of her whole picture)');
     const box = await page.$eval('.hb-host', (e) => { const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height * 0.36 }; });
     const lean = () => page.$eval('.hb-host', (e) => parseFloat(e.style.rotate) || 0);
@@ -253,9 +255,14 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
     // her bubble says something new: she looks at it, then smiles
     await idle(page); await clear(page);
     await page.evaluate(() => { localStorage.setItem('cfb-scans', JSON.stringify([{ code: '1', brand: 'milani', name: 'Milani', t: Date.now() }])); document.dispatchEvent(new CustomEvent('cfb:changes')); });
-    await page.clock.runFor(1500);
-    const said = await frames(page);
-    check(/You scanned Milani/.test(await page.textContent('#host-say')) && said.join(' ').includes('lookR rest smile'), `her bubble changes to the scan line: she looks at it, then smiles (${said.join(' ')})`);
+    await page.clock.runFor(3500);
+    const said = upTo(await frames(page));
+    const line = (await page.textContent('#host-say')).replace(/\s+/g, ' ').trim();
+    const twice = said.some((n, i) => /^talk/.test(n) && n === said[i - 1]);
+    check(/You scanned Milani/.test(line) && said[0] === 'lookR' && mouths(said).length === Math.max(3, Math.min(10, Math.round(line.length / 5))) && new Set(mouths(said)).size >= 2 && !twice && said[said.length - 2] === 'smile' && said[said.length - 1] === 'rest',
+      `her bubble changes to the scan line (${line.length} letters): she looks at it, mouths it in ${mouths(said).length} shapes, never the same twice running, smiles, rests (${said.join(' ')})`);
+    const took = await page.evaluate((n) => { const p = window.__hostProbe; return Math.round(p[n - 1].at - p[0].at); }, said.length);
+    check(took < 2900, `the whole of it takes ${took} ms`);
     // a brand is hearted on Home
     await idle(page); await clear(page);
     await page.evaluate(() => window.CFB.saved.toggle('milani'));
@@ -269,7 +276,7 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
   }
   {   // late at night: the long drowsy blink
     const { ctx, page } = await phone({ clock: true, alive: true, at: new Date('2026-11-14T23:30:00') });
-    await page.clock.runFor(600); await live(page); await page.clock.runFor(3000);
+    await page.clock.runFor(600); await live(page); await page.clock.runFor(4500);
     await page.evaluate(() => window.CFB.hostFace.seed(5)); await clear(page);
     await page.clock.runFor(120000);
     const long = await page.evaluate(() => { const p = window.__hostProbe; return p.filter((f, i) => f.name === 'shut' && p[i + 1] && p[i + 1].at - f.at > 550).length; });
@@ -278,7 +285,7 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
   }
   {   // by day there are none
     const { ctx, page } = await phone({ clock: true, alive: true, at: new Date('2026-11-14T15:00:00') });
-    await page.clock.runFor(600); await live(page); await page.clock.runFor(3000);
+    await page.clock.runFor(600); await live(page); await page.clock.runFor(4500);
     await page.evaluate(() => window.CFB.hostFace.seed(5)); await clear(page);
     await page.clock.runFor(120000);
     const long = await page.evaluate(() => { const p = window.__hostProbe; return p.filter((f, i) => f.name === 'shut' && p[i + 1] && p[i + 1].at - f.at > 550).length; });

@@ -85,13 +85,14 @@
   function draw() {
     const l = pick();
     const key = l.soft + "|" + l.bold;
-    if (said !== null && said !== key) document.dispatchEvent(new CustomEvent("cfb:host-line"));   // host-engine.js: she looks at it
+    const fresh = said !== null && said !== key;
     said = key;
     const b = document.createElement("b");
     b.textContent = l.bold;
     say.replaceChildren(l.soft + " ", b);
     pal.setAttribute("href", l.href);
     if (l.go) pal.dataset.go = l.go; else delete pal.dataset.go;
+    if (fresh) document.dispatchEvent(new CustomEvent("cfb:host-line"));   // host-engine.js: she looks at it and says it
   }
 
   /* "What changed" is a card further down Home, not a screen of its own: go to it. */
