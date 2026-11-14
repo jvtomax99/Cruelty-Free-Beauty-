@@ -10,7 +10,7 @@
    app updates. If the film itself changes, bump MEDIA.
    The music (assets/sounds/, about 1 MB) lives in MEDIA too: saved the first time the page asks for it,
    then served from there, so it plays offline. If the music changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v40";
+const CACHE_VERSION = "cfb-v41";
 const MEDIA = "cfb-media-v3";
 /* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
    download. Each file is saved the first time the Sanctuary asks for it, and the world then opens

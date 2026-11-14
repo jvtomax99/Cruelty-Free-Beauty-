@@ -1,7 +1,9 @@
 /* C.F.B. launch show: a stage reveal for the bunny after one tap.
    Version 2 is a rendered 13.8 s film (assets/video/launch.mp4) with a voice: she loves a lipstick, wonders if it
    was tested on animals, checks it with the app, picks one that passes, and ends with the rabbit beside her.
-   It plays on the first visit only (cfb-intro-seen) and from Replay in Profile; see "the film" below.
+   It plays at every start of the app (Jose, 2026-11-14) and from Replay in Profile; see "the film" below.
+   Not on a link to one brand, and not when the app reloads itself to take an update (the script in
+   index.html's head decides).
    The drawn show (version 1, about 6 s, described next) plays alone whenever the film can't.
    The head of index.html decides before paint whether it plays (html.intro-on): the first visit only,
    unless ?intro=0 or the link opens one brand (#brand/...); ?intro=1 forces it.
@@ -198,7 +200,7 @@
      tap, on reduced motion, or with data saver on. If the film breaks or freezes part-way, the app opens at once. */
   const vid = el.querySelector(".in-film");
   const FILM = { src: "assets/video/launch.mp4", ask: [1.6, 3.2], phone: [3.1, 8.1], swap: 6.0, tap: 7.3, kind: [9.2, 10.35], line: 10.9, go: 11.8, wait: 3 };
-  let filmOn = false, filmAt = -1, filmMoved = 0, filmEnd = 0, leaving = false, again = false;
+  let filmOn = false, filmAt = -1, filmMoved = 0, filmEnd = 0, leaving = false;
   const saver = () => { const c = navigator.connection; return !!(c && c.saveData); };
   function filmLoad() {                          // called when the gate opens, so the film buffers while it shows
     if (!vid) return;
@@ -453,7 +455,6 @@
       const giveUp = () => {
         if (!filmWait) return;
         filmWait = false; vid.removeEventListener("playing", begin); vid.pause();
-        again = !vid.error;                                  // the film was only slow to load: let the next visit try it again
         if (state === "starting") go();
       };
       vid.addEventListener("playing", begin, { once: true });
@@ -480,8 +481,6 @@
     if (state === "idle") return;
     clearTimers();
     state = "idle"; paused = false; still = false; leaving = false; F.go.tabIndex = -1;
-    if (store && !again) store.set("intro-seen", "1");     // it plays on the first visit only; Replay is in Profile
-    again = false;
     filmWait = false;
     if (filmPlayed) {                                      // now that it has played, ask the offline worker to keep the film
       filmPlayed = false;

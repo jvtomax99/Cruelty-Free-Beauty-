@@ -120,10 +120,10 @@ me**.
     nothing says one purchase saves an animal. Every word, the phone and
     its cards are real text over the film; the cards are marked "Example"
     and name no product or brand. A voice in English with a Latina accent
-    speaks her thoughts; it reads fully with the sound off. It plays on
-    the first visit only and from "Replay the opening" in Profile. (If the
-    film was only slow to load and the drawn show played instead, the
-    next visit tries the film again.) On a screen wider than a phone the
+    speaks her thoughts; it reads fully with the sound off. It plays
+    every time the app starts (Jose, 2026-11-14) and from "Replay the
+    opening" in Profile; not on a link to one brand, and not when the app
+    reloads itself to take an update. On a screen wider than a phone the
     film is a centred column, not a crop. When it
     ends, the last frame holds with the button; the button, or 3 seconds,
     opens Home. The drawn show (version 1) plays instead when the film
@@ -415,8 +415,8 @@ me**.
   first tap and fades in. A music button is always in view (last in the
   tab bar on phones, at the foot of the side rail on computers); the
   choice is kept on the phone. It is silent while the opening plays and
-  while the app is in the background. "Enter quietly" on the first visit
-  turns it off. With data saver on, nothing is downloaded unless she
+  while the app is in the background. "Enter quietly" at the opening
+  keeps it silent for that visit; the button brings it back. With data saver on, nothing is downloaded unless she
   turns the music on herself. It plays offline after the first time.
   Not in this version: a song per screen, a volume slider, sound effects,
   vocals.
@@ -600,6 +600,12 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-14 (Jose): the app always starts with the opening, as he first
+  chose on 2026-11-11 (it had been first visit only since 2026-11-12).
+  Claude's objection: a tap and up to 14 seconds, or two taps with Skip,
+  before every scan in a store. Kept out: links to one brand, and the
+  app's own reload for an update. "Enter quietly" now silences the music
+  for that visit only and saves nothing.
 - 2026-11-14 (Jose, buttons): music in the app, made with ElevenLabs, "a
   Latina, but soft melody vibe". It plays everywhere and is on from the
   first tap (Claude named the risk: on an iPhone it may stop a podcast

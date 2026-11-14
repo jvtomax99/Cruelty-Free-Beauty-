@@ -3,7 +3,7 @@
    - A sound button stays in view (tab bar on phones, side rail on computers). The choice is saved as
      cfb-music ("off"; anything else is on).
    - Silent while the opening plays (it has its own music), and paused while the app is in the background.
-   - "Enter quietly" on the very first visit turns it off: she has just said she wants no sound.
+   - "Enter quietly" at the opening keeps it silent for that visit (nothing saved; the button brings it back).
    - Data saver: the button shows off and the file is not downloaded, until she turns the music on herself.
    The file is cut by tools/make-music-loop.py, which prints LOOP. It carries PAD seconds of the loop's
    end before the loop and PAD seconds of its start after it, and the player repeats a stretch of exactly
@@ -28,7 +28,9 @@
   let direct = false, saved = false;   // the file came straight from the network, not through the offline worker
 
   const inShow = () => root.classList.contains("intro-on");
-  const chosen = () => on && (asked || !saver());           // what the button shows: with data saver, on only if she said so
+  let launch = root.classList.contains("intro-on");         // the opening that plays as the app starts is on view
+  let hush = false;                                         // she chose "Enter quietly" at that opening: no music this visit, until she asks
+  const chosen = () => on && !hush && (asked || !saver());  // what the button shows: with data saver, on only if she said so
   const wanted = () => chosen() && !failed && !document.hidden && !inShow();
 
   function paint() {
@@ -116,23 +118,24 @@
   ["pointerup", "touchend", "click", "keydown"].forEach(ev => document.addEventListener(ev, touched, { capture: true, passive: true }));
 
   buttons.forEach(b => b.addEventListener("click", () => {
-    on = !chosen(); asked = on;
+    on = !chosen(); asked = on; hush = false;
     store.set("music", on ? "on" : "off");
     paint();
     if (on) wake();
     sync();
   }));
 
-  // the opening's gate: "Enter quietly" on the first visit means no sound at all
+  // the gate as the app starts: "Enter quietly" means no sound for this visit. Nothing is saved, and the
+  // music button brings it back. A replay from Profile asks about the film only.
   document.querySelectorAll(".in-gate [data-sound=off]").forEach(b => b.addEventListener("click", () => {
-    if (store.get("intro-seen", "") === "1" || store.get("music", "") !== "") return;
-    on = false; store.set("music", "off"); paint(); sync();
+    if (!launch) return;
+    hush = true; paint(); sync();
   }, true));
 
   document.addEventListener("visibilitychange", sync);
   window.addEventListener("pagehide", () => { if (ctx) stop(); });
   window.addEventListener("pageshow", sync);                // back from the browser's page cache
-  new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ["class"] });   // the opening starting or ending
+  new MutationObserver(() => { if (!inShow()) launch = false; sync(); }).observe(root, { attributes: true, attributeFilter: ["class"] });   // the opening starting or ending
 
   // fetch the file ahead of the first touch, once the page is settled
   if (AC && chosen()) {

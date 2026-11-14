@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="app.css">
 <!-- launch show: decide before paint so Home never flashes first (intro.js; ?intro=0 skips, ?intro=1 forces) -->
 <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
-<script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}try{off=off||localStorage.getItem("cfb-intro-seen")==="1"}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content="#1C0F13";setTimeout(function(){if(!window.CFBIntro){d.classList.remove("intro-on");if(m)m.content="#FBF6F2"}},5000)}})();</script>
+<script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}try{off=off||Math.abs(Date.now()-Number(sessionStorage.getItem("cfb-renewed")||0))<20000}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content="#1C0F13";setTimeout(function(){if(!window.CFBIntro){d.classList.remove("intro-on");if(m)m.content="#FBF6F2"}},5000)}})();</script>
 </head>
 <body>
 
@@ -246,7 +246,7 @@
       <div id="saved-app"></div>
       <div class="card intro-set">
         <h2>Opening show</h2>
-        <p>It plays the first time the app is opened. Watch it again any time.</p>
+        <p>It plays each time the app starts. Watch it again any time.</p>
         <button class="pill-btn" type="button" id="intro-replay">Replay the opening</button>
       </div>
     </section>
