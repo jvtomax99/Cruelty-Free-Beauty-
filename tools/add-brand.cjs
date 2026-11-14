@@ -34,10 +34,14 @@ const { peta, leapingBunny, LB } = require('./lookup-certifiers.cjs');
 const FILE = process.env.BRANDS_FILE || path.join(__dirname, '..', 'data', 'brands.json');
 const today = new Date().toISOString().slice(0, 10);
 const bare = (t) => String(t || '').replace(/\s*\(.*\)\s*$/, '');   // PETA titles carry "(parent)" notes
-const VALUE_FLAGS = ['--site', '--name-file', '--parent'];
+const VALUE_FLAGS = ['--site', '--name-file', '--parent', '--json-out'];
 function arg(flag) { const i = process.argv.indexOf(flag); return i > 0 ? process.argv[i + 1] : null; }
 const httpsLink = (u) => (typeof u === 'string' && /^https:\/\/[^\s]+$/.test(u) ? u : null);
-const done = (code, msg) => { console.log(msg); process.exit(code); };
+// --json-out FILE: the result as data for tools/process-brand-requests.cjs (the GitHub Action):
+// { code, message, name, brand: { id, name } | null, record | null }.
+const jsonOut = arg('--json-out');
+const result = (code, message, extra = {}) => { if (jsonOut) fs.writeFileSync(jsonOut, JSON.stringify({ code, message, brand: null, record: null, ...extra })); };
+const done = (code, msg, extra) => { console.log(msg); result(code, msg, extra); process.exit(code); };
 
 // Exactly the app's matching (CFB.match in brands.js): the whole name, ignoring case, accents,
 // spaces and punctuation, with or without trailing filler words. So the tool's "already in the
@@ -81,7 +85,7 @@ async function main() {
   const inApp = (n) => data.brands.find((b) => [b.name, ...(b.search || [])].some((x) => same(x, n)));
 
   const have = inApp(name);
-  if (have) done(3, `Already in the app: ${have.name} (${have.id}).`);
+  if (have) done(3, `Already in the app: ${have.name} (${have.id}).`, { brand: { id: have.id, name: have.name } });
 
   const [petaHits, lbHits] = await lookups(name);
 
@@ -93,7 +97,7 @@ async function main() {
   const near = [...petaHits.map((h) => `PETA: ${h.title}`), ...lbHits.map((h) => `Leaping Bunny: ${h.tradingName || h.company}`)];
 
   if (!pYes.length && !l.length) {
-    if (pNo.length) done(2, `Not added: PETA says "${name}" tests on animals (${pNo[0].verdict}, ${pNo[0].url}), and Leaping Bunny doesn't certify it.`);
+    if (pNo.length) done(2, `Not added: PETA says "${name}" tests on animals (${pNo[0].verdict}, ${pNo[0].url}), and Leaping Bunny doesn't certify it.`, { tests: true, url: pNo[0].url });
     done(2, `Not listed: neither PETA nor Leaping Bunny lists "${name}" as cruelty-free (searched ${today}).`
       + (near.length ? '\nClose names they do list:\n  ' + near.slice(0, 8).join('\n  ') : ''));
   }
@@ -107,7 +111,7 @@ async function main() {
   const display = (lh && (lh.tradingName || lh.company)) || (ph && bare(ph.title)) || name;
   // The certifier's own name may be one we already have (she typed the company's legal name).
   const dup = inApp(display) || data.brands.find((b) => b.id === slug(display));
-  if (dup) done(3, `Already in the app: ${dup.name} (${dup.id}); the certifiers call it "${display}".`);
+  if (dup) done(3, `Already in the app: ${dup.name} (${dup.id}); the certifiers call it "${display}".`, { brand: { id: dup.id, name: dup.name } });
   if (lh && lh.parentTests && !parentName) {
     done(5, `Leaping Bunny certifies "${display}" but flags a parent company that tests (${lh.url}). Find the parent's name on that page or a primary source, then run again with --parent "Name". Without the name the app can't fail it under Strict.`);
   }
@@ -143,6 +147,7 @@ async function main() {
     fs.writeFileSync(FILE, JSON.stringify(data, null, 1) + (raw.endsWith('\n') ? '\n' : ''));
     console.log(`\nAdded ${display} (${record.id}) to ${path.relative(process.cwd(), FILE)}. Bump CACHE_VERSION in sw.js, then run check-brands --links.`);
   }
+  result(0, `Drafted ${display}`, { brand: { id: record.id, name: display }, record });
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => { console.error(e); result(1, `Lookup failed: ${e.message}`); process.exit(1); });

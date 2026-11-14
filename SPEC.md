@@ -434,12 +434,15 @@ me**.
     or opening the app once with `?founder=1` (hidden, not secured). She types the
     name, and the brand's site and certifier page if she has them; Send
     opens GitHub's "Add a brand" issue form filled in, and she taps
-    Submit. A daily scheduled Claude check reads open `add-brand` issues
-    from trusted logins only, looks each name up on PETA and Leaping Bunny
-    (`tools/add-brand.cjs`), opens both pages, and adds the brand only if
-    PETA says it doesn't test or Leaping Bunny certifies it, with each
-    page and the date. Parent company and
-    China stay "not yet researched". It answers on the issue either way.
+    Submit. A GitHub Action starts at once (trusted logins only), looks
+    the name up on PETA and Leaping Bunny (`tools/add-brand.cjs`), and adds
+    the brand only if PETA says it doesn't test or Leaping Bunny certifies
+    it, with each page and the date; it runs the data and site checks,
+    pushes to `main`, asks for a Pages build and answers on the issue once
+    the brand is live. Parent company and China stay "not yet researched".
+    Not listed or already in: it says so and closes the issue. Unclear (two
+    matches, a parent that tests): it leaves the issue for Jose
+    (`needs-jose`). A failed lookup is retried daily.
     The screen lists what she sent from this phone and which are in the
     app now.
   - *Her storefront.* A "Shop my picks" card on Profile that opens her
@@ -460,8 +463,9 @@ me**.
     `check-brands` for a listed brand and adds nothing for an unlisted
     one or one PETA says tests (`tools/test-add-brand.cjs`); the picks
     card is absent while `picks.url` is null and shows the commission line
-    when set (`tools/test-founder.cjs`); and the daily check has added a
-    real brand she sent.
+    when set (`tools/test-founder.cjs`); the Action handles every kind of
+    request (`tools/test-brand-requests.cjs`); and it has added a real
+    brand she sent.
 
 ## Not in v1
 
@@ -599,9 +603,10 @@ only if it can be shown to work across skin tones.
       card (built 2026-11-14; `tools/test-founder.cjs` and
       `tools/test-add-brand.cjs` pass; live lookups of Kaja and Juice
       Beauty drafted correctly)
-- [ ] The daily scheduled check (her login, `cfbbeauty`, is trusted from
-      2026-11-14; the task runs daily at 20:23 UTC) and a first real brand
-      added through it
+- [ ] The "Add a brand" GitHub Action (2026-11-14, replacing a daily
+      Claude check that couldn't reach the repo from a scheduled run;
+      `tools/test-brand-requests.cjs` passes) and a first real brand added
+      through it. Her login, `cfbbeauty`, is trusted
 
 ## Open questions (TO FILL)
 
