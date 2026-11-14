@@ -1,5 +1,6 @@
 // Checks data/brands.json: missing or invalid fields, claims without a
-// source or date, checks older than 90 days, and (with --links) dead links.
+// source or date, checks older than 90 days, the founder's picks link, and
+// (with --links) dead links.
 //
 //   node tools/check-brands.cjs            fields and dates only (no network)
 //   node tools/check-brands.cjs --links    also opens every source link
@@ -101,6 +102,8 @@ function checkBrand(b, seen) {
     else if (ageDays(f.checked) > MAX_AGE_DAYS) warn(id, `shadeFinder check due (last checked ${f.checked})`);
   }
   if (!REVIEW.includes(b.review)) err(id, `review "${b.review}" is not one of ${REVIEW.join(', ')}`);
+  // added: the day a brand came in through the founder's Add a brand box (tools/add-brand.cjs).
+  if (b.added !== undefined && (!isDate(b.added) || ageDays(b.added) < 0)) err(id, `added "${b.added}" must be a past YYYY-MM-DD date`);
   // Brand rule 3: a certifier's status must link that certifier's own site.
   for (const [k, re] of Object.entries(OWN_SITE)) {
     const c = b[k];
@@ -188,8 +191,17 @@ async function main() {
   const seen = new Set();
   data.brands.forEach((b) => checkBrand(b, seen));
   checkChanges(data.changes, data.brands);
+  // picks: the founder's storefront (Profile's "Shop my picks" card). Off while url is null.
+  const pk = data.picks;
+  if (pk !== undefined) {
+    if (!pk || typeof pk !== 'object') err('picks', 'must be an object');
+    else if (pk.url !== null) {
+      if (!isUrl(pk.url)) err('picks', 'url must be an https link or null');
+      if (!isDate(pk.checked)) err('picks', 'a picks url needs a checked date');
+    }
+  }
   let linkCount = 0;
-  if (process.argv.includes('--links')) linkCount = await checkLinks(data.brands);
+  if (process.argv.includes('--links')) linkCount = await checkLinks(data.picks && isUrl(data.picks.url) ? [...data.brands, { id: 'picks', whereToBuy: [{ url: data.picks.url }] }] : data.brands);
 
   console.log(`${data.brands.length} brands and ${(data.changes || []).length} changes checked${linkCount ? `, ${linkCount} links opened` : ''}.`);
   if (warnings.length) console.log(`\nWarnings (${warnings.length}):\n  ` + warnings.join('\n  '));

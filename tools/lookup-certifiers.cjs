@@ -190,4 +190,6 @@ async function diff(brands, results) {
   if (unsure.length) console.log(`Could not check (${unsure.length}):\n  ` + unsure.join('\n  '));
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+// tools/add-brand.cjs reuses the two lookups; run directly, this prints them.
+module.exports = { peta, leapingBunny, petaPage, fold, LB, PETA };
+if (require.main === module) main().catch((e) => { console.error(e); process.exit(1); });

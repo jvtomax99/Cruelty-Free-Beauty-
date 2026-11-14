@@ -433,6 +433,23 @@ main {
 .sv-remove { min-height: 44px; padding: 0 var(--sp-3); border: 0; background: none; color: var(--rose); font: 600 var(--fs-foot)/1 var(--font-body); cursor: pointer; }
 .sv-empty { margin-top: var(--sp-1); color: var(--ink-soft); font-size: var(--fs-sub); }
 
+/* ---------- Founder tools (founder.js): Add a brand, and her storefront card on Profile ---------- */
+.ad-form { margin-top: 0; }
+.ad-label { margin-top: var(--sp-2); font-size: var(--fs-sub); font-weight: 600; color: var(--ink); }
+.ad-label:first-child { margin-top: 0; }
+.ad-label span { font-weight: 450; color: var(--ink-soft); }
+.ad-form .search-field { cursor: text; }
+.ad-form .search-field:active { transform: none; background: var(--paper); }
+.ad-form .search-field input { font-size: var(--fs-call); }   /* never under 16 px: iPhones zoom */
+.ad-form .search-field:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+.ad-form .pf-start { margin-top: var(--sp-3); }
+.ad-list { display: grid; gap: var(--sp-2); margin: var(--sp-3) 0 0; padding: 0; list-style: none; }
+.ad-row { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-3); min-height: 52px; padding: 0 var(--sp-4); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); box-shadow: var(--finish); }
+.ad-name { font-weight: 600; overflow-wrap: anywhere; }
+.ad-state { flex: none; color: var(--ink-soft); font-size: var(--fs-foot); }
+.ad-state.is-in { color: var(--ok); font-weight: 700; text-decoration: none; padding: var(--sp-2) 0; }
+.pk-card, .fd-card { text-align: left; }
+
 @media (prefers-reduced-motion: reduce) {
   .pf-start, .save-btn, .scan-link, .brand-row, .brand-row::before, .chip, .mode-btn, .quiz-opt { transition: none; }
   .brand-list.is-arriving > li { animation: none; }

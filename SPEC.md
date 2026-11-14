@@ -426,6 +426,39 @@ me**.
     background; it plays offline (`tools/test-music.cjs`); and Jose has
     heard it loop on a real iPhone.
 
+- **Founder tools** (the founder's ask, 2026-11-14). Two things for her:
+  - *Add a brand herself.* A private "Add a brand" screen (`#add`),
+    reached from a Founder tools row on Profile that shows only on a phone
+    opened once with `?founder=1` (hidden, not secured). She types the
+    name, and the brand's site and certifier page if she has them; Send
+    opens GitHub's "Add a brand" issue form filled in, and she taps
+    Submit. A daily scheduled Claude check reads open `add-brand` issues
+    from trusted logins only, looks each name up on PETA and Leaping Bunny
+    (`tools/add-brand.cjs`), opens both pages, and adds the brand only if
+    a certifier lists it, with each page and the date. Parent company and
+    China stay "not yet researched". It answers on the issue either way.
+    The screen lists what she sent from this phone and which are in the
+    app now.
+  - *Her storefront.* A "Shop my picks" card on Profile that opens her
+    creator storefront (ShopMy, My Sephora Storefront or Amazon
+    Storefront) in a new tab, always with the line that she earns a
+    commission. It shows only once `picks.url` in `data/brands.json` is
+    filled in. Rule: her storefront holds only brands that pass Strict;
+    the app can't check that, so it's hers to keep. Money never touches a
+    verdict, the brand order or the brand pages.
+  - Not in this version: picks of single products inside the app,
+    affiliate links on brand pages or scan results, brands that show
+    before they're checked, a public "request a brand" button, bulk
+    import of certifier lists.
+  - Done when: a fresh phone shows no Founder tools row and `?founder=1`
+    shows it; Send opens GitHub's form with the name, site and link whole
+    (names with &, ' and accents); a brand in the app shows "In the app"
+    in her sent list; `tools/add-brand.cjs` drafts a record that passes
+    `check-brands` for a listed brand and adds nothing for an unlisted
+    one; the picks card is absent while `picks.url` is null and shows the
+    commission line when set (`tools/test-founder.cjs`); and the daily
+    check has added a real brand she sent.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
@@ -437,8 +470,8 @@ me**.
   mail service; the in-app "What changed" notice is in v1).
 - An app-store app.
 - Skincare, hair and household products.
-- Paid or affiliate links (undecided; the data has a link-type field so
-  they can be added later, always disclosed).
+- Affiliate links on brands or results. The one paid link is the
+  founder's storefront card, always disclosed (decided 2026-11-14).
 
 ## Later
 
@@ -447,6 +480,11 @@ Product-type filter, once product data tells brands apart (quiz phase).
 Prices for the 10 brands whose sites block automated readers (e.l.f.,
 Too Faced, Urban Decay, Kosas, Juvia's Place, NYX, Maybelline, L'Oréal
 Paris, Estée Lauder, Benefit): checked by hand, or by the founder.
+
+Bulk import of PETA's and Leaping Bunny's lists, hundreds of brands at
+a time, each with its source (ask both whether reuse is allowed first;
+Bunny Search shows it can be done). A public "Ask us to add a brand"
+button. Picks of single products inside the app.
 
 Notifications while the app is closed, Spanish (EN | ES switch
 like Lions-Roar-), near me, skincare, reviews, a camera undertone helper
@@ -552,7 +590,19 @@ only if it can be shown to work across skin tones.
       2026-11-14, `tools/test-music.cjs` passes; not yet heard on a real
       iPhone, which is the last "Done when")
 
+### Founder tools (added 2026-11-14, the founder's ask)
+- [ ] Add a brand screen, issue form, `tools/add-brand.cjs`, the picks
+      card (built 2026-11-14, `tools/test-founder.cjs` passes)
+- [ ] The daily scheduled check, once her GitHub login is known, and a
+      first real brand added through it
+
 ## Open questions (TO FILL)
+
+- Founder tools (2026-11-14): the founder's GitHub login, for the trusted
+  list in CLAUDE.md. The storefront's address once one approves her. The
+  picks card's words ("My cruelty-free favorites. I earn a small
+  commission if you buy, at no extra cost to you.") and the Add a brand
+  screen's words speak for her: Jose to sign off.
 
 - Music on a real iPhone (2026-11-14): does it stop a podcast or song
   already playing, does the ringer switch silence it, and does it come
@@ -707,4 +757,8 @@ only if it can be shown to work across skin tones.
   words of the profile changed. Art: Runway, Jose's credits (44 used),
   which he OK'd over the $0 budget for this. Not in main until the
   founder has seen it.
-- Paid or affiliate links: ever?
+- 2026-11-14 (Jose, after the founder's feedback): no TikTok Shop and no
+  affiliate links on brands. The founder gets one disclosed storefront
+  card on Profile, and adds brands herself through a GitHub issue that a
+  daily check verifies before anything shows. Accounts and user profiles
+  stay in "Not in v1".

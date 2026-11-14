@@ -10,7 +10,7 @@
   window.CFB = { store };
 
   /* ---------- Screens (hash routing, so the Back button retraces) ---------- */
-  const SCREENS = ["home", "brands", "profile", "learn", "scan", "garden"];
+  const SCREENS = ["home", "brands", "profile", "learn", "scan", "garden", "add"];
   const scrollOf = {};   // each screen keeps its own scroll, like a phone's tab bar
   let current = null;     // screen whose scroll we remember
   let lastShown = null;   // screen on view, for moving focus
@@ -19,7 +19,7 @@
     const isBrand = hash.startsWith("brand/");   // #brand/<id>: one brand's page, under the Brands tab
     const isRound = hash.startsWith("practice/");   // #practice/<habitat>: a round of questions, under the Garden
     const name = isBrand ? "brand" : isRound ? "practice" : SCREENS.includes(hash) ? hash : "home";
-    const tab = isBrand ? "brands" : name === "scan" || name === "garden" || isRound ? "home" : name;   // Scan and the Garden open from Home
+    const tab = isBrand ? "brands" : name === "scan" || name === "garden" || isRound ? "home" : name === "add" ? "profile" : name;   // Scan and the Garden open from Home; Add a brand from Profile
     if (current) scrollOf[current] = window.scrollY;
     document.querySelectorAll("[data-screen]").forEach(s => { s.hidden = s.dataset.screen !== name; });
     document.querySelectorAll("[data-tab]").forEach(t => {
@@ -39,7 +39,7 @@
     lastShown = name;
     current = isBrand || isRound ? null : name;   // a brand page or a round keeps no scroll of its own
     if (isBrand || isRound) return;   // brands.js and garden.js set those titles
-    document.title = name === "home" ? "C.F.B. · Cruelty-Free Beauty" : "C.F.B. · " + (name === "garden" ? "Your Sanctuary" : name[0].toUpperCase() + name.slice(1));
+    document.title = name === "home" ? "C.F.B. · Cruelty-Free Beauty" : "C.F.B. · " + (name === "garden" ? "Your Sanctuary" : name === "add" ? "Add a brand" : name[0].toUpperCase() + name.slice(1));
   }
   window.addEventListener("hashchange", show);
   window.CFB.show = show;   // brands.js calls it once the brand data has loaded
@@ -77,13 +77,15 @@
        downloaded and taken over, the page reloads by itself at a moment nobody is watching or working:
        when the app goes into the background, or on arriving at Home. Never under a reader on another
        screen, and never while something is in use: the opening, a quiz (finished or not on view), a
-       Sanctuary round, the Sanctuary itself, the Scan screen, a brand search, a field being typed in. */
+       Sanctuary round, the Sanctuary itself, the Scan screen, a brand search, a field being typed in,
+       a brand half typed into Add a brand. */
     let had = !!sw.controller;            // false on the very first visit: that worker is not an update
     let fresh = false, reg = null, asked = 0;
     const on = (name) => { const s = document.querySelector(`[data-screen="${name}"]`); return !!s && !s.hidden; };
     const busy = () => document.documentElement.classList.contains("intro-on") || on("scan") || on("practice") || on("garden")
       || !!document.querySelector("#profile-app .quiz")          // a quiz under way, even with another screen on view
       || !!(document.getElementById("brand-q") || {}).value      // a search she would have to type again
+      || [...document.querySelectorAll("#add-form input")].some(i => i.value)   // a brand half typed into Add a brand
       || /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "");
     const renew = () => {
       if (!fresh || busy() || !(document.hidden || on("home"))) return;

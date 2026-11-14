@@ -1,0 +1,30 @@
+# The founder's "Add a brand" box (founder.js) opens this form filled in.
+# A daily scheduled check reads open issues with the add-brand label, but only
+# ones opened by the trusted logins in CLAUDE.md; it checks PETA and Leaping
+# Bunny, adds the brand with its proof, and answers on the issue.
+name: Add a brand
+description: Ask for a cruelty-free brand to be checked and added to C.F.B.
+title: "Add brand: "
+labels: ["add-brand"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We check PETA and Leaping Bunny and add the brand with the proof. If neither lists it, it stays out and we say why here.
+  - type: input
+    id: brand
+    attributes:
+      label: Brand name
+      placeholder: Milani
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Brand's website (if you have it)
+      placeholder: https://
+  - type: input
+    id: proof
+    attributes:
+      label: PETA or Leaping Bunny page (if you have it)
+      placeholder: https://
