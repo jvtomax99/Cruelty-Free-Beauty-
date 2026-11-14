@@ -1,5 +1,5 @@
 // Drafts a record for a brand the founder asked for (her Add a brand box opens a GitHub issue;
-// the daily scheduled check runs this for each one). Looks the name up on PETA and Leaping Bunny
+// the Add a brand GitHub Action, tools/process-brand-requests.cjs, runs this for each one). Looks the name up on PETA and Leaping Bunny
 // with the same code as tools/lookup-certifiers.cjs and builds a record whose every claim links
 // its certifier page and today's date. Parent company and China are left "not yet researched".
 //
@@ -60,6 +60,7 @@ const slug = (n) => words(n).join('-') || 'brand';
 async function lookups(name) {
   if (process.env.ADD_BRAND_FAKE) {
     const f = JSON.parse(fs.readFileSync(process.env.ADD_BRAND_FAKE, 'utf8'));
+    if ((f.fail || []).includes(name)) throw new Error('fake lookup failure');
     return [f.peta || [], f.leapingBunny || []];
   }
   const { chromium } = require('playwright');

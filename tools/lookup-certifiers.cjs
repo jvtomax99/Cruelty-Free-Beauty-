@@ -73,7 +73,7 @@ async function peta(name) {
   const q = `${PETA}/wp-json/wp/v2/company?search=${encodeURIComponent(name)}&per_page=10&_fields=link,title,class_list`;
   const hits = JSON.parse(await get(q));
   const out = [];
-  for (const h of hits.slice(0, 6)) {
+  for (const h of hits.slice(0, 10)) {
     const read = petaRead(await get(h.link));
     out.push({
       title: decode(h.title.rendered),

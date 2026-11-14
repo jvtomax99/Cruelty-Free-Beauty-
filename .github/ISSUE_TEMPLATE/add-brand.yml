@@ -1,7 +1,7 @@
 # The founder's "Add a brand" box (founder.js) opens this form filled in.
-# A daily scheduled check reads open issues with the add-brand label, but only
-# ones opened by the trusted logins in CLAUDE.md; it checks PETA and Leaping
-# Bunny, adds the brand with its proof, and answers on the issue.
+# The Add a brand GitHub Action (.github/workflows/add-brand.yml) handles these,
+# only from the trusted logins in CLAUDE.md: it checks PETA and Leaping Bunny,
+# adds the brand with its proof, and answers on the issue.
 name: Add a brand
 description: Ask for a cruelty-free brand to be checked and added to C.F.B.
 title: "Add brand: "
