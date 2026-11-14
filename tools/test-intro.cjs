@@ -68,7 +68,10 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(!await showing(page), 'a link to one brand skips the show');
   await page.goto(BASE); await page.click('[data-sound=off]'); await page.waitForTimeout(500); await page.click('.in-skip'); await gone(page, 1500);
   await page.goto(BASE + '#home'); await page.reload();
-  check(!await showing(page) && await page.evaluate(() => localStorage.getItem('cfb-intro-seen')) === '1', 'after the first visit the opening does not play again at launch');
+  check(await showing(page), 'the opening plays again at the next start');
+  await page.evaluate(() => sessionStorage.setItem('cfb-renewed', String(Date.now()))); await page.reload();
+  check(!await showing(page), 'not when the app has just reloaded itself to take an update');
+  await page.evaluate(() => sessionStorage.removeItem('cfb-renewed'));
   await page.goto(BASE + '?intro=1');
   check(await showing(page), '?intro=1 forces it on a later visit');
   await page.goto(BASE + '?intro=0#profile');
@@ -163,7 +166,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   check(!fr.inert && fr.hit && fr.focus === 'hello-line', 'film: Home takes taps afterwards and focus is on its heading');
   // a later open goes straight to Home; forced with ?intro=1 it plays again, and quiet stays quiet
   await fp.reload();
-  check(!await showing(fp), 'film, next open: straight to Home, the opening is for the first visit');
+  check(await showing(fp), 'film, next open: the opening again');
   await fp.goto(BASE + '?intro=1');
   check(await filmReady(fp), 'film, forced with ?intro=1: ready again');
   await fp.click('[data-sound=off]'); await fp.waitForTimeout(900);
@@ -220,7 +223,6 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await dp.click('[data-sound=off]'); await dp.waitForTimeout(600);
   check(!(await film(dp)).on, 'film not loaded at the tap: the drawn show plays');
   check(await gone(dp, 8000), 'film not loaded at the tap: Home in under 8 s');
-  check(await dp.evaluate(() => localStorage.getItem('cfb-intro-seen')) === null, 'film not loaded at the tap: the next visit may try the film again');
   await dc.close();
 
   // like an iPhone: nothing of the film loads until the tap; it must still start, a moment later

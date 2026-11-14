@@ -20,7 +20,7 @@ differs, this file wins.
   ask him to check them with her.
 - **Offline worker.** Bump `CACHE_VERSION` in `sw.js` in every change to a
   file it precaches, or returning users keep the old app.
-- **Launch film.** `assets/video/launch.mp4` (13.8 s, first visit only; its words are real text in `intro.js`, timed by `FILM`), cut by
+- **Launch film.** `assets/video/launch.mp4` (13.8 s, at every start of the app; its words are real text in `intro.js`, timed by `FILM`), cut by
   `tools/make-launch-video.sh`. It is not in the worker's precache list; if
   the film changes, bump `MEDIA` in `sw.js`. Runway credits are Jose's: ask
   before spending more. Never show PETA's logo or bunny-ears mark.

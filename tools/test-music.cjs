@@ -126,11 +126,14 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     await page.click('.in-skip').catch(() => {});
     await page.waitForFunction(() => !document.documentElement.classList.contains('intro-on'), null, { timeout: 30000 });
     await page.click('.tabbar .tab[data-tab="learn"]'); await wait(600);
-    check(!(await state(page)).playing && await page.evaluate(() => localStorage.getItem('cfb-music')) === 'off' && await page.getAttribute(btn, 'aria-pressed') === 'false', '"Enter quietly" on the first visit: music off, saved, and the button shows off');
+    check(!(await state(page)).playing && await page.evaluate(() => localStorage.getItem('cfb-music')) === null && await page.getAttribute(btn, 'aria-pressed') === 'false', '"Enter quietly" as the app starts: no music this visit, the button shows off, nothing saved');
+    await page.click(btn);
+    check(await playing(page), 'after "Enter quietly": the music button brings it back');
     await ctx.close();
   }
   {
-    const { ctx, page } = await phone({ url: '?intro=1', keys: { 'intro-seen': '1' } });   // a replay: the gate's choice is about the film only
+    const { ctx, page } = await phone({ url: '?intro=0#profile' });   // a replay from Profile: the gate's choice is about the film only
+    await page.click('#intro-replay');
     await page.click('.in-gate [data-sound=off]');
     await page.click('.in-skip').catch(() => {});
     await page.waitForFunction(() => !document.documentElement.classList.contains('intro-on'), null, { timeout: 30000 });
