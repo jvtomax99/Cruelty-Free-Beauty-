@@ -1,0 +1,57 @@
+# The founder's "Add a brand" requests. Her Add a brand box (founder.js) opens a GitHub issue
+# labelled add-brand; this checks PETA and Leaping Bunny and adds the brand to the live app
+# with its proof (tools/process-brand-requests.cjs says exactly what it does). It acts only on
+# issues opened by the trusted logins listed here and in that script (CLAUDE.md). Runs when such
+# an issue is opened, once a day as a retry for lookups that failed, and by hand.
+name: Add a brand
+
+on:
+  issues:
+    types: [opened, reopened]
+  schedule:
+    - cron: "41 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  # A push made with this workflow's token doesn't start a Pages build on its own (GitHub's Pages
+  # docs), so the script asks for one after pushing.
+  pages: write
+
+jobs:
+  add:
+    # Issue events only from trusted logins and with the label; the script checks again.
+    if: >-
+      github.event_name != 'issues' ||
+      (contains(github.event.issue.labels.*.name, 'add-brand') &&
+       contains(fromJSON('["jvtomax99","cfbbeauty"]'), github.event.issue.user.login))
+    # On the job, not the workflow, so runs skipped by the line above never join the queue and
+    # can't push out a waiting run. One run at a time; each run reads every open request.
+    concurrency:
+      group: add-brand
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      # Actions pinned to exact commits (v4.4.0, v4.3.1), since this job pushes to the live site.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 20
+      # The browser is installed before the repository (and its push token) is on this machine.
+      - name: Install the browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/pw" && cd "$RUNNER_TEMP/pw"
+          npm install --no-save --no-package-lock playwright@1.56.1
+          timeout 180 npx playwright install --with-deps chromium || npx playwright install chromium
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: main
+      - name: Check the requests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_PATH: ${{ runner.temp }}/pw/node_modules
+        run: |
+          git config user.name "C.F.B. brand check"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node tools/process-brand-requests.cjs
