@@ -234,24 +234,24 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
     const upTo = (list) => list.slice(0, list.lastIndexOf('smile') + 2);   // what she did, without the blinks after it
     const hello = upTo(await frames(page));
     const mouths = (list) => list.filter((n) => /^talk/.test(n));
-    check(hello.join(' ').includes('half shut half rest smile') && mouths(hello).length >= 3 && hello[hello.length - 2] === 'smile', `Home first shows her: a slow blink, a smile, then she mouths her line and smiles (${hello.join(' ')})`);
+    check(hello.join(' ').includes('half shut half rest smile') && mouths(hello).length === 0, `Home first shows her: a slow blink, then a smile, and she does not talk (${hello.join(' ')})`);
     check(await page.$eval('.hb-host', (e) => getComputedStyle(e).animationName) === 'hostBreathe', 'she breathes (a slow rise and fall of her whole picture)');
     const box = await page.$eval('.hb-host', (e) => { const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height * 0.36 }; });
     const lean = () => page.$eval('.hb-host', (e) => parseFloat(e.style.rotate) || 0);
     await page.mouse.move(box.x - 85, box.y); const l = await lean();
     await page.mouse.move(box.x + 250, box.y); const r = await lean();
     await page.mouse.move(box.x, box.y); const c = await lean();
-    check(l < -0.5 && l >= -1.6 && r > 0.5 && r <= 1.6 && c === 0, `she leans towards the pointer (${l.toFixed(1)} and ${r.toFixed(1)} degrees) and straightens when it is on her`);
+    check(l < -0.3 && l >= -0.9 && r > 0.3 && r <= 0.9 && c === 0, `she leans towards the pointer (${l.toFixed(1)} and ${r.toFixed(1)} degrees) and straightens when it is on her`);
     await page.clock.runFor(2000);
     check(await lean() === 0, 'with the pointer still she straightens');
     // left alone for three minutes
     await page.evaluate(() => window.CFB.hostFace.seed(11)); await clear(page);
-    await page.clock.runFor(180000);
+    await page.clock.runFor(300000);
     const acts = await page.evaluate(() => { const p = window.__hostProbe, out = []; p.forEach((f, i) => { const before = p[i - 1] ? p[i - 1].name : 'rest'; if (/^look|^smile$/.test(f.name) && before === 'rest') out.push(f.name); }); return out; });
-    check(acts.length >= 6 && acts.length <= 22 && new Set(acts).size >= 3, `left alone 3 minutes: ${acts.length} small things of ${new Set(acts).size} kinds (${[...new Set(acts)].join(', ')})`);
+    check(acts.length >= 5 && acts.length <= 17 && new Set(acts).size >= 3, `left alone 5 minutes (one every 18 to 40 s): ${acts.length} small things of ${new Set(acts).size} kinds (${[...new Set(acts)].join(', ')})`);
     const shut = await page.evaluate(() => window.__hostProbe.filter((p) => p.name === 'shut').map((p) => p.at));
     const gaps = shut.slice(1).map((t, i) => t - shut[i]).filter((g) => g > 400);
-    check(gaps.length >= 20 && Math.max(...gaps) <= 8600, `she keeps blinking through it (${gaps.length + 1} blinks, never more than ${Math.round(Math.max(...gaps))} ms apart)`);
+    check(gaps.length >= 40 && Math.max(...gaps) <= 8600, `she keeps blinking through it (${gaps.length + 1} blinks, never more than ${Math.round(Math.max(...gaps))} ms apart)`);
     // her bubble says something new: she looks at it, then smiles
     await idle(page); await clear(page);
     await page.evaluate(() => { localStorage.setItem('cfb-scans', JSON.stringify([{ code: '1', brand: 'milani', name: 'Milani', t: Date.now() }])); document.dispatchEvent(new CustomEvent('cfb:changes')); });
