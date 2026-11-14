@@ -240,11 +240,34 @@
       </div>
       <div id="profile-app"></div>
       <div id="saved-app"></div>
+      <div id="picks-app"></div>
+      <div id="founder-row"></div>
       <div class="card intro-set">
         <h2>Opening show</h2>
         <p>It plays each time the app starts. Watch it again any time.</p>
         <button class="pill-btn" type="button" id="intro-replay">Replay the opening</button>
       </div>
+    </section>
+
+    <!-- ---------- Add a brand: the founder's box (founder.js). Send opens GitHub's issue form ---------- -->
+    <section class="screen" data-screen="add" aria-labelledby="add-h" hidden>
+      <div class="screen-head">
+        <h1 id="add-h" tabindex="-1">Add a brand</h1>
+        <p>Found a cruelty-free brand? Send it here. We check PETA and Leaping Bunny and add it with the proof, usually within a day.</p>
+      </div>
+      <div class="card">
+        <form class="scan-form ad-form" id="add-form" novalidate>
+          <label class="ad-label" for="add-name">Brand name</label>
+          <span class="search search-field"><input id="add-name" type="text" autocomplete="off" spellcheck="false" maxlength="80" placeholder="For example, Milani"></span>
+          <label class="ad-label" for="add-site">Brand's website <span>(if you have it)</span></label>
+          <span class="search search-field"><input id="add-site" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://"></span>
+          <label class="ad-label" for="add-proof">PETA or Leaping Bunny page <span>(if you have it)</span></label>
+          <span class="search search-field"><input id="add-proof" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://"></span>
+          <button type="submit" class="pf-start">Send</button>
+        </form>
+        <p class="src" id="add-msg" role="status">Send opens GitHub with the brand filled in. Tap "Submit new issue" there.</p>
+      </div>
+      <div id="add-sent"></div>
     </section>
 
     <!-- ---------- Your Sanctuary (garden.js; the 3D world is sanctuary3d.js, loaded on demand) ---------- -->
@@ -304,6 +327,7 @@
 <script src="changes.js"></script>
 <script src="home.js"></script>
 <script src="profile.js"></script>
+<script src="founder.js"></script>
 <script src="scan.js"></script>
 <script src="garden.js"></script>
 <script src="host.js"></script>

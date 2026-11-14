@@ -2,6 +2,10 @@
  "schema": 1,
  "updated": "2026-11-11",
  "changes": [],
+ "picks": {
+  "url": null,
+  "checked": null
+ },
  "brands": [
   {
    "id": "elf",
