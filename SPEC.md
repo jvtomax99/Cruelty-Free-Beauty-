@@ -376,8 +376,13 @@ me**.
   smile. It follows the line's length, not its sounds. Not in this
   version: sound, real lip-sync, text that types itself out, talking in
   her small copies. This lifts "no talking mouth" from the first version.
+  Toned down the same day after Jose saw her on his phone ("too much
+  motion"): the breath is half the size and slower (about 1% over
+  5.6 s), the lean is at most 0.9 degrees, a small thing of her own
+  comes every 18 to 40 s, and she mouths her line only when it changes,
+  no longer after every hello.
   - Done when (talking): in `tools/test-host-engine.cjs` she mouths her
-    line after the hello and after a real change of line, with the
+    line after a real change of line (and not at her hello), with the
     number of shapes the line's length gives, none repeated back to
     back, ending on a smile and then her resting face, in under 3 s; the
     three new frames pass the same "nothing but her face changes" check.

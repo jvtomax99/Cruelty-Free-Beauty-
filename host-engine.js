@@ -9,7 +9,7 @@
    breathes (app.css), leans a degree or two towards the pointer, says hello with a slow blink and a smile
    when Home first shows her, does small things of her own when left alone (a glance, a look down at
    Search, a smile; late at night a long drowsy blink), looks at her bubble when its line changes, and
-   beams when a brand is hearted. She mouths her bubble's line (talk) after her hello and when it changes:
+   beams when a brand is hearted. She mouths her bubble's line (talk) when it changes (not at every hello: Jose found that too much):
    three mouth shapes, no sound.
    She only makes faces: she never words a verdict (CFB.verdict does) and nothing is stored.
    Reduced motion: she rests on the base. Data saver: the page never asks for the strip (the offline
@@ -39,7 +39,7 @@
     sad: [["half", 60], ["sad", 1400], ["half", 60]],
     worried: [["worried", 1150]],
     /* her own small life (IDLE) and the things she does unasked */
-    hello: [["half", 70], ["shut", 160], ["half", 80], ["rest", 280], ["smile", 700], ["rest", 160]],   // then talk() says her line
+    hello: [["half", 70], ["shut", 160], ["half", 80], ["rest", 280], ["smile", 950]],
     say: [["lookR", 460], ["rest", 120]],                          // her bubble is to her right (yours); talk() adds the words
     glanceL: [["lookL", 700]], glanceR: [["lookR", 700]], muse: [["lookU", 800]], peek: [["lookD", 850]],
     grin: [["smile", 1200]],
@@ -48,7 +48,7 @@
   const IDLE_DAY = ["glanceL", "glanceR", "muse", "peek", "peek", "grin", "grin"];
   const IDLE_NIGHT = ["drowsy", "drowsy", "drowsy", "peek", "grin"];   // from 10 at night to 5 in the morning
   const MOUTHS = ["talkA", "talkB", "talkO", "talkA", "talkB"];   // open shapes; "rest" is her closed mouth
-  const LEAN = 1.6;                 // degrees she leans towards the pointer
+  const LEAN = 0.9;                 // degrees she leans towards the pointer
   const ON_SCAN = { pass: "happy", fail: "sad", none: "surprised", unlisted: "surprised" };   // from CFB.verdict's kind
   const KEEP_MS = 10 * 60e3;        // a reaction waiting for Home is dropped after this
   const GAZE_HOLD = 1500;           // she looks back at you this long after the pointer last moved
@@ -126,7 +126,7 @@
     }, after || 2000 + rand() * 4000);
   }
 
-  /* Left alone, she does one small thing every 9 to 20 s. Never while she follows a pointer or reacts. */
+  /* Left alone, she does one small thing every 18 to 40 s. Never while she follows a pointer or reacts. */
   function idleSoon() {
     clearTimeout(idleTimer);
     if (quiet || !home || document.hidden || still.matches) return;
@@ -136,7 +136,7 @@
         play(pool[Math.floor(rand() * pool.length)], P.IDLE);
       }
       idleSoon();
-    }, 9000 + rand() * 11000);
+    }, 18000 + rand() * 22000);
   }
   const wake = () => { blinkSoon(); idleSoon(); };   // (blinkSoon takes a wait: never hand it an event)
   const sleep = () => { clearTimeout(blinkTimer); clearTimeout(idleTimer); };
@@ -161,7 +161,7 @@
     if (!play(name, P.REACT)) waiting = { name, t: Date.now() };   // not on view: Home plays it when it opens
   }
   function arrive() {
-    if (!waiting) { if (!greeted && seen() && !quiet) { greeted = true; setTimeout(() => talk("hello"), 350); } return; }
+    if (!waiting) { if (!greeted && seen() && !quiet) { greeted = true; setTimeout(() => play("hello", P.GAZE), 350); } return; }
     greeted = true;                  // a reaction is her hello
     const w = waiting;
     if (Date.now() - w.t > KEEP_MS) { waiting = null; return; }

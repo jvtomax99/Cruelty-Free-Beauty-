@@ -625,8 +625,8 @@ html.intro-on .intro {
 }
 /* Alive (host-engine.js adds .is-live; never under reduced motion): a slow breath, and a lean towards the
    pointer that the engine sets as `rotate`. Separate properties, so neither undoes the other. */
-.hb-host.is-live { animation: hostBreathe 4.6s ease-in-out infinite; transition: rotate .45s cubic-bezier(.3, 1.3, .6, 1); }
-@keyframes hostBreathe { 50% { scale: 1.012 1.018; translate: 0 -.6px; } }
+.hb-host.is-live { animation: hostBreathe 5.6s ease-in-out infinite; transition: rotate .45s cubic-bezier(.3, 1.3, .6, 1); }
+@keyframes hostBreathe { 50% { scale: 1.006 1.009; translate: 0 -.3px; } }
 /* Her face: a strip of frames (eyes, brows and mouth) seen through a window over the base. host-engine.js
    moves the strip; the window's place and size are the "window" numbers make-host.py prints, over the base's. */
 .hb-face {

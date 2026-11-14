@@ -112,9 +112,9 @@ tiles.
   (`host-engine.js`): only her face changes, one whole frame at a time,
   never faded or slid. Blinks at random, eyes that follow a finger, a
   smile or a wink when tapped, and a face for a scan result or a
-  Sanctuary answer when Home next opens. She breathes (her whole picture rises about 2% and
-  back over 4.6 s), leans at most 1.6 degrees towards the pointer and
-  does one small thing of her own every 9 to 20 s: small and occasional,
+  Sanctuary answer when Home next opens. She breathes (her whole picture rises about 1% and
+  back over 5.6 s), leans at most 0.9 degrees towards the pointer and
+  does one small thing of her own every 18 to 40 s: small and occasional,
   so she never competes with the proof. She mouths her bubble's line when it is new (three mouth
   shapes, no sound). No moving brows of their own or squash. Still under reduced motion. Her small copies on
   other screens (`.hm`: Scan result, empty Scan, quiz end, empty Saved)
