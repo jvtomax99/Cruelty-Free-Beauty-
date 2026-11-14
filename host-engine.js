@@ -9,7 +9,8 @@
    breathes (app.css), leans a degree or two towards the pointer, says hello with a slow blink and a smile
    when Home first shows her, does small things of her own when left alone (a glance, a look down at
    Search, a smile; late at night a long drowsy blink), looks at her bubble when its line changes, and
-   beams when a brand is hearted.
+   beams when a brand is hearted. She mouths her bubble's line (talk) after her hello and when it changes:
+   three mouth shapes, no sound.
    She only makes faces: she never words a verdict (CFB.verdict does) and nothing is stored.
    Reduced motion: she rests on the base. Data saver: the page never asks for the strip (the offline
    worker still saves it with the rest of the app, as it saved the old loop). */
@@ -22,7 +23,7 @@
 
   /* The strip's frames, left to right: the same list as FRAMES in tools/make-host.py. */
   const FRAMES = ["rest", "half", "shut", "wink", "smile", "laugh", "love", "surprised", "sad", "worried",
-    "lookL", "lookR", "lookU", "lookD"];
+    "lookL", "lookR", "lookU", "lookD", "talkA", "talkB", "talkO"];
   const STRIP = "assets/host/face.webp";
   const P = { IDLE: 0, GAZE: 1, REACT: 2 };
 
@@ -38,14 +39,15 @@
     sad: [["half", 60], ["sad", 1400], ["half", 60]],
     worried: [["worried", 1150]],
     /* her own small life (IDLE) and the things she does unasked */
-    hello: [["half", 70], ["shut", 160], ["half", 80], ["rest", 280], ["smile", 950]],
-    say: [["lookR", 520], ["rest", 140], ["smile", 620]],          // her bubble is to her right (yours)
+    hello: [["half", 70], ["shut", 160], ["half", 80], ["rest", 280], ["smile", 700], ["rest", 160]],   // then talk() says her line
+    say: [["lookR", 460], ["rest", 120]],                          // her bubble is to her right (yours); talk() adds the words
     glanceL: [["lookL", 700]], glanceR: [["lookR", 700]], muse: [["lookU", 800]], peek: [["lookD", 850]],
     grin: [["smile", 1200]],
     drowsy: [["half", 380], ["shut", 620], ["half", 420]]
   };
   const IDLE_DAY = ["glanceL", "glanceR", "muse", "peek", "peek", "grin", "grin"];
   const IDLE_NIGHT = ["drowsy", "drowsy", "drowsy", "peek", "grin"];   // from 10 at night to 5 in the morning
+  const MOUTHS = ["talkA", "talkB", "talkO", "talkA", "talkB"];   // open shapes; "rest" is her closed mouth
   const LEAN = 1.6;                 // degrees she leans towards the pointer
   const ON_SCAN = { pass: "happy", fail: "sad", none: "surprised", unlisted: "surprised" };   // from CFB.verdict's kind
   const KEEP_MS = 10 * 60e3;        // a reaction waiting for Home is dropped after this
@@ -71,8 +73,8 @@
   /* Each frame is due at a fixed time from the sequence's start, and the next timer aims at the next due
      time, never "so long after this one fired": a late timer doesn't push the rest back, and a stall
      skips the frames whose time has passed (never the last) instead of stretching the performance. */
-  function play(name, pri) {
-    const steps = SEQ[name];
+  function play(name, pri, own) {
+    const steps = own || SEQ[name];
     if (!steps || !seen() || still.matches) return false;
     if (run && run.pri > pri) return false;
     stop();
@@ -92,6 +94,22 @@
     if (shown !== r.at[i].frame || now === 0) show(r.at[i].frame);
     const next = i + 1 < r.at.length ? r.at[i + 1].due : r.end;
     r.timer = setTimeout(step, Math.max(0, r.t0 + next - performance.now()));
+  }
+  /* She mouths her bubble's line: not the sounds of the words, only their length. About one mouth shape
+     per 5 letters (3 to 10 of them), never the same twice running, her mouth closing every few shapes
+     as between words, then a smile. `lead` is what she does first (a look at the bubble, or her hello). */
+  function talk(lead) {
+    const text = (document.getElementById("host-say") || {}).textContent || "";
+    const n = Math.max(3, Math.min(10, Math.round(text.trim().length / 5)));
+    const steps = SEQ[lead].slice();
+    let last = "", word = 0;
+    for (let i = 0; i < n; i++) {
+      let m; do { m = MOUTHS[Math.floor(rand() * MOUTHS.length)]; } while (m === last);
+      steps.push([m, 95 + Math.round(rand() * 55)]); last = m;
+      if (++word >= 2 + Math.floor(rand() * 2) && i < n - 1) { steps.push(["rest", 70]); word = 0; last = ""; }
+    }
+    steps.push(["smile", 620]);
+    return play(lead, P.GAZE, steps);
   }
   function stop() { if (run) { clearTimeout(run.timer); run = null; } }
   function rest() { stop(); clearTimeout(gazeTimer); gaze = "rest"; lean(0); show("rest"); }
@@ -143,7 +161,7 @@
     if (!play(name, P.REACT)) waiting = { name, t: Date.now() };   // not on view: Home plays it when it opens
   }
   function arrive() {
-    if (!waiting) { if (!greeted && seen() && !quiet) { greeted = true; setTimeout(() => play("hello", P.GAZE), 350); } return; }
+    if (!waiting) { if (!greeted && seen() && !quiet) { greeted = true; setTimeout(() => talk("hello"), 350); } return; }
     greeted = true;                  // a reaction is her hello
     const w = waiting;
     if (Date.now() - w.t > KEEP_MS) { waiting = null; return; }
@@ -176,7 +194,7 @@
     if (!live) return;
     if (home) { wake(); arrive(); } else { rest(); sleep(); }
   });
-  document.addEventListener("cfb:host-line", () => play("say", P.GAZE));                 // host.js: her bubble says something new
+  document.addEventListener("cfb:host-line", () => talk("say"));                 // host.js: her bubble says something new
   document.addEventListener("cfb:saved", (e) => { if (e.detail && e.detail.on) react("love"); });
   document.addEventListener("cfb:intro-done", arrive);
   document.addEventListener("visibilitychange", () => { if (!live) return; if (document.hidden) { rest(); sleep(); } else wake(); });
