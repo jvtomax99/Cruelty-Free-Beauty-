@@ -38,7 +38,8 @@ differs, this file wins.
   WebFetch skips the proxy and fails). Verify every quote before saving.
   Exponent and ACTAsia refuse automated readers; cite the certifiers' own
   pages instead.
-- **Budget: $0.** Free assets only, listed in `CREDITS.md`. The repo is
+- **Budget: $0.** Free assets only, listed in `CREDITS.md`, except what
+  Jose paid credits for (the film, Home's pictures, the music). The repo is
   public, so paid raw files can't be committed.
 
 ## Preview, checks and going live

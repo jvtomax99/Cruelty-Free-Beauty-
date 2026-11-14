@@ -68,10 +68,10 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     await page.evaluate(() => { Object.defineProperty(document, 'hidden', { value: false, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
     check(await playing(page), 'back in view: playing again');
 
-    await page.click(btn);
+    await page.click(btn); await page.click(btn); await page.click(btn);   // off, on, off in a hurry
     await wait(600);
     s = await state(page);
-    check(!s.playing && await page.getAttribute(btn, 'aria-pressed') === 'false', 'the button turns it off');
+    check(!s.playing && await page.getAttribute(btn, 'aria-pressed') === 'false', 'the button turns it off (three quick taps end on off)');
     check(await page.evaluate(() => localStorage.getItem('cfb-music')) === 'off', 'off is saved on the phone');
     if (shots) await page.screenshot({ path: path.join(shots, 'music-off-390.png') });
     await page.click('.tabbar .tab[data-tab="learn"]'); await wait(400);
@@ -144,19 +144,21 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const { ctx, page, asked } = await phone({ saver: true });
     await wait(1500);
     await page.click('.tabbar .tab[data-tab="brands"]'); await wait(600);
-    check(asked.length === 0 && !(await state(page)).playing, 'data saver: nothing downloaded, nothing played');
-    await page.click(btn); await wait(300); await page.click(btn);   // off, then on: her own choice
-    check(await playing(page) && asked.length === 1, 'data saver: she turns it on herself and it plays');
+    check(asked.length === 0 && !(await state(page)).playing && await page.getAttribute(btn, 'aria-pressed') === 'false', 'data saver: nothing downloaded, nothing played, and the button shows off');
+    await page.click(btn);
+    check(await playing(page) && asked.length === 1 && await page.getAttribute(btn, 'aria-pressed') === 'true', 'data saver: one tap on the button and it plays');
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.click('.tabbar .tab[data-tab="learn"]');
+    check(await playing(page), 'data saver: her choice is remembered after a reload');
     await ctx.close();
   }
 
-  // 5. Offline after one play (the real worker keeps the file).
+  // 5. Offline after one visit, the very first (the real worker keeps the file, though it was not in charge when the page fetched it).
   {
     const { ctx, page } = await phone({ worker: true });
-    await page.evaluate(() => navigator.serviceWorker.ready);
-    await page.reload({ waitUntil: 'networkidle' });
     await page.click('.tabbar .tab[data-tab="learn"]');
-    check(await playing(page), 'with the offline worker: playing');
+    check(await playing(page), 'first visit, with the offline worker: playing');
+    await page.waitForFunction(async () => { for (const k of await caches.keys()) if (k.includes('media') && (await (await caches.open(k)).keys()).length) return true; return false; }, null, { timeout: 20000 }).catch(() => {});
     const kept = await page.evaluate(async () => { for (const k of await caches.keys()) if (k.includes('media')) return (await (await caches.open(k)).keys()).map((r) => r.url); return []; });
     check(kept.some((u) => u.endsWith('assets/sounds/music.mp3')), 'the worker kept the music file');
     await ctx.setOffline(true);
