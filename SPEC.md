@@ -356,6 +356,23 @@ me**.
   instead of following the bubble's link (the bubble itself still links;
   under reduced motion the tap follows the link as before). A scan of a
   brand we have not checked plays surprised, like "not on a list".
+  Alive (2026-11-14; Jose asked what would make her feel alive and
+  picked the pack that needs no new art). Before it only her face
+  moved, so she read as a picture with moving eyes. Now she breathes (a
+  slow rise and fall of her whole picture), leans up to 1.6 degrees
+  towards the pointer (this lifts "no head tilts" from the first
+  version), says hello with a slow blink and a smile when Home first
+  shows her, does one small thing every 9 to 20 s when left alone (a
+  glance, a look down at Search, a smile; from 10 at night to 5 in the
+  morning mostly a long drowsy blink), looks at her bubble and smiles
+  when its line changes, and beams when a brand is hearted. Still no
+  talking mouth, brows of their own, squash, sound or name. Nothing is
+  stored and nothing new is downloaded. None of it under reduced motion.
+  - Done when (alive): each of those is seen in `tools/test-host-engine.cjs`
+    (hello, breath, lean both ways and back, at least three kinds of
+    small thing in three minutes while she keeps blinking, the bubble
+    look, the heart, drowsy blinks at night and none by day), and under
+    reduced motion she neither breathes nor leans.
   - Done when (moves): she blinks at random and never on a beat; her
     eyes follow a finger; a tap, a scan result and a Sanctuary answer
     each play their reaction and she returns to rest; her hair, outline
@@ -489,6 +506,8 @@ only if it can be shown to work across skin tones.
       (2026-11-13; Jose signed off the seven lines; `tools/test-host.cjs`)
 - [x] Moves, like Dr Smiley: re-lit still shown to Jose, face frames, engine
       (2026-11-13; `tools/test-host-engine.cjs`; 120 KB of pictures in place of 412 KB)
+- [x] Alive: breath, lean, hello, a small life of her own, the bubble look,
+      a heart, drowsy at night (2026-11-14; no new art)
 - [x] Places: Scan result, end of the quiz, empty states (2026-11-13; Jose
       signed off the five lines; `tools/test-host-places.cjs`)
 

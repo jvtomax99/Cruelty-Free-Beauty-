@@ -81,8 +81,12 @@
     return (h < 12 ? LINES.morning : h < 17 ? LINES.afternoon : LINES.evening)();
   }
 
+  let said = null;   // the line on show
   function draw() {
     const l = pick();
+    const key = l.soft + "|" + l.bold;
+    if (said !== null && said !== key) document.dispatchEvent(new CustomEvent("cfb:host-line"));   // host-engine.js: she looks at it
+    said = key;
     const b = document.createElement("b");
     b.textContent = l.bold;
     say.replaceChildren(l.soft + " ", b);

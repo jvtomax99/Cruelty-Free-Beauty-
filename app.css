@@ -621,7 +621,12 @@ html.intro-on .intro {
   position: relative; width: 160px; aspect-ratio: 480 / 540; flex: none;
   background: url("assets/host/base.webp") 0 0 / 100% 100% no-repeat;
   filter: drop-shadow(var(--cut-shadow));
+  transform-origin: 50% 96%;   /* she breathes and leans about her shoulders, which the Search field hides */
 }
+/* Alive (host-engine.js adds .is-live; never under reduced motion): a slow breath, and a lean towards the
+   pointer that the engine sets as `rotate`. Separate properties, so neither undoes the other. */
+.hb-host.is-live { animation: hostBreathe 4.6s ease-in-out infinite; transition: rotate .45s cubic-bezier(.3, 1.3, .6, 1); }
+@keyframes hostBreathe { 50% { scale: 1.012 1.018; translate: 0 -.6px; } }
 /* Her face: a strip of frames (eyes, brows and mouth) seen through a window over the base. host-engine.js
    moves the strip; the window's place and size are the "window" numbers make-host.py prints, over the base's. */
 .hb-face {
@@ -747,6 +752,7 @@ ul.pf-sum li { display: inline-flex; align-items: center; min-height: 28px; padd
 @media (prefers-reduced-motion: reduce) {
   .pf-pin { animation: none; }
   .hb-host.is-live .hb-face { display: none; }
+  .hb-host.is-live { animation: none; transition: none; rotate: none !important; }
   .tab-pin { transition: none; }
   .hb-pal, .qt-tile, .hr-card, .hr-card::after { transition: none; }
   .hr-track.is-arriving > li { animation: none; }

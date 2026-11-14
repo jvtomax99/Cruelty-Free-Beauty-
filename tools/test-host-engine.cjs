@@ -27,17 +27,21 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
   const browser = await chromium.launch();
   const errors = [];
   const asked = [];
-  async function phone({ width = 390, height = 844, reduced = false, saver = false, clock = false, keys = { profile: PROFILE } } = {}) {
+  async function phone({ width = 390, height = 844, reduced = false, saver = false, clock = false, alive = false, at = null, keys = { profile: PROFILE } } = {}) {
     const ctx = await browser.newContext({ viewport: { width, height }, hasTouch: false, serviceWorkers: 'block', reducedMotion: reduced ? 'reduce' : 'no-preference' });
     const page = await ctx.newPage();
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('request', (r) => asked.push(r.url()));
-    if (clock) await page.clock.install();
-    await page.addInitScript(([k, saver]) => {
+    if (clock) await page.clock.install(at ? { time: at } : undefined);
+    await page.addInitScript(([k, saver, alive]) => {
       window.__hostProbe = [];
+      if (!alive) {   // the older checks want her still between the things they ask of her: no idle acts, no hello, no breath
+        window.__hostQuiet = true;
+        document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.hb-host.is-live{animation:none!important}'; document.head.appendChild(s); });
+      }
       if (saver) Object.defineProperty(navigator, 'connection', { value: { saveData: true } });
       if (!sessionStorage.getItem('t')) { sessionStorage.setItem('t', '1'); for (const [a, b] of Object.entries(k)) localStorage.setItem('cfb-' + a, JSON.stringify(b)); }
-    }, [keys, saver]);
+    }, [keys, saver, alive]);
     await page.goto(APP, { waitUntil: 'networkidle' });
     return { ctx, page };
   }
@@ -222,6 +226,66 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
     await ctx.close();
   }
 
+  // 9b. Alive: she breathes, leans, says hello, has a small life of her own, looks at her bubble, beams at a heart.
+  {
+    const { ctx, page } = await phone({ clock: true, alive: true, at: new Date('2026-11-14T10:00:00') });
+    await page.clock.runFor(600); await live(page);
+    await page.clock.runFor(3000);
+    const hello = await frames(page);
+    check(hello.join(' ').includes('half shut half rest smile'), `Home first shows her: a slow blink, then a smile (${hello.join(' ')})`);
+    check(await page.$eval('.hb-host', (e) => getComputedStyle(e).animationName) === 'hostBreathe', 'she breathes (a slow rise and fall of her whole picture)');
+    const box = await page.$eval('.hb-host', (e) => { const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height * 0.36 }; });
+    const lean = () => page.$eval('.hb-host', (e) => parseFloat(e.style.rotate) || 0);
+    await page.mouse.move(box.x - 85, box.y); const l = await lean();
+    await page.mouse.move(box.x + 250, box.y); const r = await lean();
+    await page.mouse.move(box.x, box.y); const c = await lean();
+    check(l < -0.5 && l >= -1.6 && r > 0.5 && r <= 1.6 && c === 0, `she leans towards the pointer (${l.toFixed(1)} and ${r.toFixed(1)} degrees) and straightens when it is on her`);
+    await page.clock.runFor(2000);
+    check(await lean() === 0, 'with the pointer still she straightens');
+    // left alone for three minutes
+    await page.evaluate(() => window.CFB.hostFace.seed(11)); await clear(page);
+    await page.clock.runFor(180000);
+    const acts = await page.evaluate(() => { const p = window.__hostProbe, out = []; p.forEach((f, i) => { const before = p[i - 1] ? p[i - 1].name : 'rest'; if (/^look|^smile$/.test(f.name) && before === 'rest') out.push(f.name); }); return out; });
+    check(acts.length >= 6 && acts.length <= 22 && new Set(acts).size >= 3, `left alone 3 minutes: ${acts.length} small things of ${new Set(acts).size} kinds (${[...new Set(acts)].join(', ')})`);
+    const shut = await page.evaluate(() => window.__hostProbe.filter((p) => p.name === 'shut').map((p) => p.at));
+    const gaps = shut.slice(1).map((t, i) => t - shut[i]).filter((g) => g > 400);
+    check(gaps.length >= 20 && Math.max(...gaps) <= 8600, `she keeps blinking through it (${gaps.length + 1} blinks, never more than ${Math.round(Math.max(...gaps))} ms apart)`);
+    // her bubble says something new: she looks at it, then smiles
+    await idle(page); await clear(page);
+    await page.evaluate(() => { localStorage.setItem('cfb-scans', JSON.stringify([{ code: '1', brand: 'milani', name: 'Milani', t: Date.now() }])); document.dispatchEvent(new CustomEvent('cfb:changes')); });
+    await page.clock.runFor(1500);
+    const said = await frames(page);
+    check(/You scanned Milani/.test(await page.textContent('#host-say')) && said.join(' ').includes('lookR rest smile'), `her bubble changes to the scan line: she looks at it, then smiles (${said.join(' ')})`);
+    // a brand is hearted on Home
+    await idle(page); await clear(page);
+    await page.evaluate(() => window.CFB.saved.toggle('milani'));
+    await page.clock.runFor(1700);
+    check((await frames(page)).includes('love'), 'a brand is hearted: she beams');
+    await clear(page);
+    await page.evaluate(() => window.CFB.saved.toggle('milani'));
+    await page.clock.runFor(1700);
+    check(!(await frames(page)).includes('love'), 'the heart is taken back: no face for that');
+    await ctx.close();
+  }
+  {   // late at night: the long drowsy blink
+    const { ctx, page } = await phone({ clock: true, alive: true, at: new Date('2026-11-14T23:30:00') });
+    await page.clock.runFor(600); await live(page); await page.clock.runFor(3000);
+    await page.evaluate(() => window.CFB.hostFace.seed(5)); await clear(page);
+    await page.clock.runFor(120000);
+    const long = await page.evaluate(() => { const p = window.__hostProbe; return p.filter((f, i) => f.name === 'shut' && p[i + 1] && p[i + 1].at - f.at > 550).length; });
+    check(long >= 2, `at 11:30 at night: ${long} long, drowsy blinks in two minutes`);
+    await ctx.close();
+  }
+  {   // by day there are none
+    const { ctx, page } = await phone({ clock: true, alive: true, at: new Date('2026-11-14T15:00:00') });
+    await page.clock.runFor(600); await live(page); await page.clock.runFor(3000);
+    await page.evaluate(() => window.CFB.hostFace.seed(5)); await clear(page);
+    await page.clock.runFor(120000);
+    const long = await page.evaluate(() => { const p = window.__hostProbe; return p.filter((f, i) => f.name === 'shut' && p[i + 1] && p[i + 1].at - f.at > 550).length; });
+    check(long === 0, 'at 3 in the afternoon: no drowsy blinks');
+    await ctx.close();
+  }
+
   // 10. Reduced motion: she rests on the base; the strip is never asked for; a tap on her follows the link.
   {
     asked.length = 0;
@@ -229,6 +293,7 @@ const list = (src) => src.match(/FRAMES = \[([^\]]+)\]/)[1].match(/"(\w+)"/g).ma
     await page.waitForTimeout(600);
     const s = await state(page);
     check(!s.live && await page.isHidden('.hb-face') && !asked.some((u) => u.includes('face.webp')), 'reduced motion: the base picture alone, no strip downloaded');
+    check(await page.$eval('.hb-host', (e) => getComputedStyle(e).animationName) === 'none' && await page.$eval('.hb-host', (e) => !e.style.rotate), 'reduced motion: no breath, no lean');
     const box = await page.$eval('.hb-host', (e) => { const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height * 0.36 }; });
     await page.mouse.click(box.x, box.y);
     await page.waitForFunction(() => location.hash !== '');
