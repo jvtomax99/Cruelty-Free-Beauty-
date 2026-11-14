@@ -3,7 +3,7 @@
    - A sound button stays in view (tab bar on phones, side rail on computers). The choice is saved as
      cfb-music ("off"; anything else is on).
    - Silent while the opening plays (it has its own music), and paused while the app is in the background.
-   - "Enter quietly" at the opening keeps it silent for that visit (nothing saved; the button brings it back).
+   - "Start without sound" at the opening keeps it silent for that visit (nothing saved; the button brings it back).
    - Data saver: the button shows off and the file is not downloaded, until she turns the music on herself.
    The file is cut by tools/make-music-loop.py, which prints LOOP. It carries PAD seconds of the loop's
    end before the loop and PAD seconds of its start after it, and the player repeats a stretch of exactly
@@ -29,7 +29,7 @@
 
   const inShow = () => root.classList.contains("intro-on");
   let launch = root.classList.contains("intro-on");         // the opening that plays as the app starts is on view
-  let hush = false;                                         // she chose "Enter quietly" at that opening: no music this visit, until she asks
+  let hush = false;                                         // she chose "Start without sound" at that opening: no music this visit, until she asks
   const chosen = () => on && !hush && (asked || !saver());  // what the button shows: with data saver, on only if she said so
   const wanted = () => chosen() && !failed && !document.hidden && !inShow();
 
@@ -111,7 +111,7 @@
      put the sound output back to sleep after the app has been in the background. */
   function touched(e) {
     if (!chosen()) return;
-    // during the opening only "Enter with sound" may wake it: "Enter quietly" and taps on a quiet film make no sound output at all
+    // during the opening only "Tap to start" may wake it: "Start without sound" and taps on a quiet film make no sound output at all
     if (inShow() && !(e.target && e.target.closest && e.target.closest(".in-gate [data-sound=on]"))) return;
     wake(); sync();
   }
@@ -125,7 +125,7 @@
     sync();
   }));
 
-  // the gate as the app starts: "Enter quietly" means no sound for this visit. Nothing is saved, and the
+  // the gate as the app starts: "Start without sound" means no sound for this visit. Nothing is saved, and the
   // music button brings it back. A replay from Profile asks about the film only.
   document.querySelectorAll(".in-gate [data-sound=off]").forEach(b => b.addEventListener("click", () => {
     if (!launch) return;
