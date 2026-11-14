@@ -409,6 +409,23 @@ me**.
     named screens with a line that links somewhere useful, and never
     beside a second copy of herself.
 
+- **Music.** One soft instrumental track (a gentle bachata guitar, picked
+  by ear from three takes) plays on repeat on every screen while the app
+  is open. Phones only allow sound after a touch, so it starts at the
+  first tap and fades in. A music button is always in view (last in the
+  tab bar on phones, at the foot of the side rail on computers); the
+  choice is kept on the phone. It is silent while the opening plays and
+  while the app is in the background. "Enter quietly" on the first visit
+  turns it off. With data saver on, nothing is downloaded unless she
+  turns the music on herself. It plays offline after the first time.
+  Not in this version: a song per screen, a volume slider, sound effects,
+  vocals.
+  - Done when: nothing sounds before a tap; after one the track plays and
+    restarts with no gap or click; the button turns it off and on and the
+    choice survives a reload; it is silent through the opening and in the
+    background; it plays offline (`tools/test-music.cjs`); and Jose has
+    heard it loop on a real iPhone.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
@@ -530,7 +547,19 @@ only if it can be shown to work across skin tones.
 - [x] Places: Scan result, end of the quiz, empty states (2026-11-13; Jose
       signed off the five lines; `tools/test-host-places.cjs`)
 
+### Music (added 2026-11-14)
+- [ ] The looping track, its button and the saved choice (built
+      2026-11-14, `tools/test-music.cjs` passes; not yet heard on a real
+      iPhone, which is the last "Done when")
+
 ## Open questions (TO FILL)
+
+- Music on a real iPhone (2026-11-14): does it stop a podcast or song
+  already playing, does the ringer switch silence it, and does it come
+  back after the app has been in the background? The cloud browser can't
+  answer these. Jose to try.
+- Which ElevenLabs plan is the account on? Their music terms allow
+  commercial use from Starter up; `CREDITS.md` has a TO FILL for it.
 
 - Are "Your Sanctuary", "A little kindness. A world of life." and
   Clover's line the words to keep? Jose decides.
@@ -571,6 +600,14 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-14 (Jose, buttons): music in the app, made with ElevenLabs, "a
+  Latina, but soft melody vibe". It plays everywhere and is on from the
+  first tap (Claude named the risk: on an iPhone it may stop a podcast
+  already playing; the always-visible button is the answer). Three takes
+  for about $0.68 of his ElevenLabs credit: a bolero with music box, a
+  bachata, a soft dembow. He picked the bachata. Claude added, unasked:
+  "Enter quietly" on the first visit turns the music off, and data saver
+  holds the download back.
 - 2026-11-13 (Jose): he has full control of the app. Plans, the look,
   brand rules and the words in the app are his to approve; nothing waits
   for the founder's sign-off any more.

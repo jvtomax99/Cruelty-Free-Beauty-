@@ -69,6 +69,8 @@
   <symbol id="i-chev" viewBox="0 0 24 24"><path class="ic-line" d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path class="ic-line ic-heart" d="M12 19.5s-7-4.3-7-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.1c0 5.1-7 9.4-7 9.4z"/></symbol>
   <symbol id="i-scan" viewBox="0 0 24 24"><path class="ic-line" d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M8 8.5v7M11 8.5v7M13.5 8.5v7M16 8.5v7"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><circle class="ic-fill" cx="13.5" cy="12.5" r="9"/><path class="ic-line" d="M9 17.2V6.6l9-2v10.6"/><circle class="ic-line" cx="6.9" cy="17.2" r="2.1"/><circle class="ic-line" cx="15.9" cy="15.2" r="2.1"/></symbol>
+  <symbol id="i-music-off" viewBox="0 0 24 24"><path class="ic-line" d="M9 17.2V6.6l9-2v10.6"/><circle class="ic-line" cx="6.9" cy="17.2" r="2.1"/><circle class="ic-line" cx="15.9" cy="15.2" r="2.1"/><path class="ic-line ic-cut" d="M4 3.5l16.5 17"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle class="ic-fill" cx="13" cy="13" r="9"/><path class="ic-line" d="m7.5 12.5 3 3 6-6.5"/></symbol>
 </svg>
 
@@ -84,6 +86,7 @@
     <a class="tab" href="#brands" data-tab="brands"><img class="tab-pin" src="assets/pins/brands.webp" alt="" width="28" height="28">Brands</a>
     <a class="tab" href="#profile" data-tab="profile"><img class="tab-pin" src="assets/pins/profile.webp" alt="" width="28" height="28">My profile</a>
     <a class="tab" href="#learn" data-tab="learn"><img class="tab-pin" src="assets/pins/learn.webp" alt="" width="28" height="28">Learn</a>
+    <button class="tab tab-sound" type="button" data-music aria-pressed="true" hidden><svg aria-hidden="true"><use class="snd-on" href="#i-music"/><use class="snd-off" href="#i-music-off"/></svg><span>Music</span><span class="snd-state" data-music-state aria-hidden="true">On</span></button>
   </nav>
 
   <main id="main">
@@ -295,6 +298,7 @@
     <a class="tab" href="#brands" data-tab="brands"><img class="tab-pin" src="assets/pins/brands.webp" alt="" width="28" height="28">Brands</a>
     <a class="tab" href="#profile" data-tab="profile"><img class="tab-pin" src="assets/pins/profile.webp" alt="" width="28" height="28">Profile</a>
     <a class="tab" href="#learn" data-tab="learn"><img class="tab-pin" src="assets/pins/learn.webp" alt="" width="28" height="28">Learn</a>
+    <button class="tab tab-sound" type="button" data-music aria-pressed="true" aria-label="Music" hidden><svg aria-hidden="true"><use class="snd-on" href="#i-music"/><use class="snd-off" href="#i-music-off"/></svg></button>
   </nav>
 </div>
 
@@ -309,5 +313,6 @@
 <script src="host.js"></script>
 <script src="host-engine.js"></script>
 <script src="intro.js"></script>
+<script src="music.js"></script>
 </body>
 </html>
