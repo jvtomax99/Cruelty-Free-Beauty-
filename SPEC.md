@@ -599,13 +599,13 @@ only if it can be shown to work across skin tones.
       card (built 2026-11-14; `tools/test-founder.cjs` and
       `tools/test-add-brand.cjs` pass; live lookups of Kaja and Juice
       Beauty drafted correctly)
-- [ ] The daily scheduled check, once her GitHub login is known, and a
-      first real brand added through it
+- [ ] The daily scheduled check (her login, `cfbbeauty`, is trusted from
+      2026-11-14; the task runs daily at 20:23 UTC) and a first real brand
+      added through it
 
 ## Open questions (TO FILL)
 
-- Founder tools (2026-11-14): the founder's GitHub login, for the trusted
-  list in CLAUDE.md. The storefront's address once one approves her. The
+- Founder tools (2026-11-14): the storefront's address once one approves her. The
   picks card's words ("My cruelty-free favorites. I earn a small
   commission if you buy, at no extra cost to you.") and the Add a brand
   screen's words speak for her: Jose to sign off.
