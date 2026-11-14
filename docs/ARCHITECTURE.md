@@ -77,7 +77,7 @@ confirms it.
 - `tools/rig-sheet.html` and `tools/faces.html`: pages for setting an animal's rig numbers on posed pictures, and for drawing its card portrait (how to open them is at the top of each).
 - `node tools/test-add-brand.cjs`: `add-brand.cjs` with fake certifier answers on a scratch copy of the data (every exit code, `--write` and its formatting, the record passing `check-brands`, a name with `$(...)` staying text, `check-brands` rejecting an unnamed parent that tests). No network.
 - `node tools/test-founder.cjs`: the founder tools in a real browser (the row hidden and shown, the issue link and its encoding without going to GitHub, the sent list across a reload and with broken saved data, the picks card off, on and with a bad link, offline; `--shots DIR` saves 390 and 1440 px pictures).
-- Daily (once set up): a scheduled task reads open `add-brand` issues from trusted logins, runs `tools/add-brand.cjs`, opens the certifier pages, and adds what a certifier lists in one pull request, merged under the usual rule; it answers on each issue.
+- Daily (20:23 UTC, set up 2026-11-14): a scheduled task reads open `add-brand` issues from trusted logins (`jvtomax99`, `cfbbeauty`), runs `tools/add-brand.cjs`, opens the certifier pages, and adds what a certifier lists in one pull request, merged under the usual rule; it answers on each issue.
 - `node tools/test-directory.cjs`: the directory in a real browser (counts, search, filters, brand page, Back, offline).
 - Monthly: a scheduled task (3rd of each month) reruns the lookup and opens
   a recheck pull request. A status that changed also gets an entry in
