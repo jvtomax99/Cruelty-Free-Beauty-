@@ -153,9 +153,12 @@ me**.
   tool covers PETA and Leaping Bunny; parent and China changes are entered
   by hand. An installed app picks an update up by itself
   (2026-11-13, Jose: nobody should have to reinstall): it asks for a new
-  version each time it comes back into view and reloads once that version
-  has downloaded, waiting while the opening, a quiz, a Sanctuary round,
-  the Scan screen or a typed-in field is in use.
+  version each time it comes back into view and, once that version has
+  downloaded, reloads when the app goes into the background or on
+  arriving at Home; never under a reader on another screen, and never
+  while the opening, a quiz, a Sanctuary round, the Sanctuary, the Scan
+  screen, a brand search or a typed-in field is in use. The phone has to
+  load this version once, the old way, before it can do so.
   - Done when: a change added to `data/brands.json` shows on Home once the
     app has updated, with its date and source link, hearted brands first; "Got it"
     hides it and it stays in "Recent changes" and on the brand page.

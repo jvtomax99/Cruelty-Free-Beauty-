@@ -74,26 +74,29 @@
     const sw = navigator.serviceWorker;
     /* Updates on their own (Jose, 2026-11-13: nobody should have to reinstall). An installed app is mostly
        resumed, not loaded, so it asks for a new version each time it comes back into view. When one has
-       downloaded and taken over, the page reloads by itself, but never in the middle of something: the
-       opening, a quiz (finished or not on view), a Sanctuary round, the Scan screen or a field being typed in wait until that is over. */
-    const had = !!sw.controller;          // false on the very first visit: that worker is not an update
+       downloaded and taken over, the page reloads by itself at a moment nobody is watching or working:
+       when the app goes into the background, or on arriving at Home. Never under a reader on another
+       screen, and never while something is in use: the opening, a quiz (finished or not on view), a
+       Sanctuary round, the Sanctuary itself, the Scan screen, a brand search, a field being typed in. */
+    let had = !!sw.controller;            // false on the very first visit: that worker is not an update
     let fresh = false, reg = null, asked = 0;
     const on = (name) => { const s = document.querySelector(`[data-screen="${name}"]`); return !!s && !s.hidden; };
-    const busy = () => document.documentElement.classList.contains("intro-on") || on("scan") || on("practice")
+    const busy = () => document.documentElement.classList.contains("intro-on") || on("scan") || on("practice") || on("garden")
       || !!document.querySelector("#profile-app .quiz")          // a quiz under way, even with another screen on view
+      || !!(document.getElementById("brand-q") || {}).value      // a search she would have to type again
       || /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "");
     const renew = () => {
-      if (!fresh || busy()) return;
+      if (!fresh || busy() || !(document.hidden || on("home"))) return;
       let last = 0; try { last = Number(sessionStorage.getItem("cfb-renewed")) || 0; } catch (_) {}
       if (Date.now() - last < 30e3) return;                       // never a loop of reloads
       try { sessionStorage.setItem("cfb-renewed", String(Date.now())); } catch (_) {}
+      fresh = false;
       location.reload();
     };
     const ask = () => { if (reg && !document.hidden && Date.now() - asked > 60e3) { asked = Date.now(); reg.update().catch(() => {}); } };
-    sw.addEventListener("controllerchange", () => { if (had) { fresh = true; renew(); } });
-    ["cfb:screen", "cfb:intro-done", "visibilitychange"].forEach((n) => document.addEventListener(n, () => setTimeout(renew, 0)));
-    document.addEventListener("focusout", (e) => { if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName || "")) setTimeout(renew, 0); });   // a field was left
-    document.addEventListener("visibilitychange", ask);
+    sw.addEventListener("controllerchange", () => { if (had) { fresh = true; if (document.hidden) renew(); } else had = true; });
+    document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "home") setTimeout(renew, 0); });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) renew(); else ask(); });
     window.addEventListener("pageshow", ask);
     window.addEventListener("load", () => { sw.register("./sw.js").then((r) => { reg = r; asked = Date.now(); }).catch(() => {}); });
     window.CFB.update = { busy, waiting: () => fresh };          // for tests
