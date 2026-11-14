@@ -24,6 +24,11 @@ differs, this file wins.
   `tools/make-launch-video.sh`. It is not in the worker's precache list; if
   the film changes, bump `MEDIA` in `sw.js`. Runway credits are Jose's: ask
   before spending more. Never show PETA's logo or bunny-ears mark.
+- **Music.** `assets/sounds/music.mp3` loops on every screen (`music.js`),
+  cut by `tools/make-music-loop.py`, which prints the `LOOP` number
+  `music.js` needs. It is saved by the worker in `MEDIA`: bump `MEDIA` if
+  the file changes. ElevenLabs credits are Jose's ($0.15 a minute of
+  music): say what a batch will cost before making it.
 - **The Sanctuary's 3D world.** `sanctuary3d.js`, `assets/sanctuary/` and
   `assets/vendor/three/` are saved by the worker on first use, in their own
   cache: bump `WORLD` in `sw.js` in every change to any of them. Meshy
@@ -33,7 +38,8 @@ differs, this file wins.
   WebFetch skips the proxy and fails). Verify every quote before saving.
   Exponent and ACTAsia refuse automated readers; cite the certifiers' own
   pages instead.
-- **Budget: $0.** Free assets only, listed in `CREDITS.md`. The repo is
+- **Budget: $0.** Free assets only, listed in `CREDITS.md`, except what
+  Jose paid credits for (the film, Home's pictures, the music). The repo is
   public, so paid raw files can't be committed.
 
 ## Preview, checks and going live

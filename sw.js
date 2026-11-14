@@ -7,8 +7,10 @@
    Bump CACHE_VERSION in every change that touches a file listed below.
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
-   app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v39";
+   app updates. If the film itself changes, bump MEDIA.
+   The music (assets/sounds/, about 1 MB) lives in MEDIA too: saved the first time the page asks for it,
+   then served from there, so it plays offline. If the music changes, bump MEDIA. */
+const CACHE_VERSION = "cfb-v40";
 const MEDIA = "cfb-media-v3";
 /* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
    download. Each file is saved the first time the Sanctuary asks for it, and the world then opens
@@ -16,6 +18,7 @@ const MEDIA = "cfb-media-v3";
 const WORLD = "cfb-world-v7";
 const WORLD_PATHS = ["sanctuary3d.js", "sanctuary3d-life.js", "assets/sanctuary/", "assets/vendor/three/"];
 const FILM = "assets/video/launch.mp4";
+const SOUNDS = "assets/sounds/";
 const PRECACHE = [
   "./",
   "index.html",
@@ -33,6 +36,7 @@ const PRECACHE = [
   "assets/vendor/barcode-detector/barcode-detector.js",
   "assets/vendor/barcode-detector/zxing_reader.wasm",
   "intro.js",
+  "music.js",
   "data/brands.json",
   "data/questions.json",
   "manifest.webmanifest",
@@ -84,7 +88,7 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
   const rel = url.pathname.startsWith(SCOPE) ? url.pathname.slice(SCOPE.length) : "";
-  e.respondWith(url.pathname === SCOPE + FILM ? film(req, url) : WORLD_PATHS.some(p => rel.startsWith(p)) ? world(req, url) : fromCache(req, url));
+  e.respondWith(url.pathname === SCOPE + FILM ? film(req, url) : WORLD_PATHS.some(p => rel.startsWith(p)) ? kept(WORLD, req, url) : rel.startsWith(SOUNDS) ? kept(MEDIA, req, url) : fromCache(req, url));
 });
 
 /* The launch film. Saved whole when the page asks (after it has played once); after that it is served from
@@ -125,8 +129,9 @@ async function film(req, url) {
   });
 }
 
-async function world(req, url) {
-  const cache = await caches.open(WORLD), href = url.origin + url.pathname;
+/* The Sanctuary's world and the music: saved the first time they are asked for, served from the cache after. */
+async function kept(name, req, url) {
+  const cache = await caches.open(name), href = url.origin + url.pathname;
   const saved = await cache.match(href);
   if (saved) return saved;
   const res = await fetch(req);

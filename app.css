@@ -715,6 +715,20 @@ html.intro-on .intro {
 .tab[aria-current="page"] .tab-pin { transform: scale(1.12) translateY(-1px); }
 .tabbar .tab { height: 56px; }
 
+/* ---------- Music button (music.js): last in the tab bar on phones, at the foot of the side rail on computers ---------- */
+.tab-sound { border: 0; background: none; font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.tab-sound[hidden] { display: none; }
+.tab-sound svg { width: 26px; height: 26px; flex: none; }
+.tab-sound .snd-off, .tab-sound[aria-pressed="false"] .snd-on { display: none; }
+.tab-sound[aria-pressed="false"] .snd-off { display: inline; }
+.tab-sound[aria-pressed="false"] svg { opacity: .62; }
+.ic-cut { stroke: var(--rose); }
+.tabbar .tab-sound { min-width: 52px; padding: 0; margin-left: var(--sp-px); border-left: 1px solid var(--glass-line); border-radius: 0 var(--r-pill) var(--r-pill) 0; }
+.rail .tab-sound { margin-top: auto; width: 100%; }
+.rail .tab-sound svg { width: 32px; height: 32px; }
+.snd-state { margin-left: auto; font-size: var(--fs-foot); color: var(--ink-soft); }
+@media (max-width: 374px) { .tabbar .tab { min-width: 60px; padding: 0 var(--sp-1); } .tabbar .tab-sound { min-width: 46px; } }
+
 /* ---------- My beauty profile: hero panel and pinned routine steps ---------- */
 .pf-hero {
   position: relative; overflow: hidden; padding: var(--sp-5) var(--sp-4); border-radius: var(--r-lg); border: 1px solid var(--qt-edge);

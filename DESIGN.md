@@ -145,6 +145,11 @@ tiles.
 - **Tab bar (phones):** floating glass capsule, 56 px tabs, each a 28 px
   pin over its label (32 px in the side rail); the active one in blush-2
   with its pin a touch larger. **Side rail (computers)** replaces it.
+- **Music button:** last in the tab bar after a hairline, 52 px wide
+  (46 under 375 px), icon only: a duotone pair of notes when on; when off
+  the pink block goes, the notes dim to 62% and a rose line crosses them.
+  On computers it is a row at the foot of the side rail: icon, "Music",
+  and "On" or "Off" at the right in footnote size.
 - **Empty state:** the logo, a display-serif line, one honest sentence.
 - **Strict / Certified switch:** blush pill track, the chosen side paper
   with the finish (44 px tall).
