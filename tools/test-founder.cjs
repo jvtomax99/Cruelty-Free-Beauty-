@@ -102,9 +102,29 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.goto(BASE + '?intro=0&founder=0#profile', { waitUntil: 'networkidle' });
   check(!(await page.$('#founder-row .fd-card')), '?founder=0 hides the row');
 
+  // Inside the installed app there's no address bar: 5 taps on the logo turn the tools on or off.
+  const tapLogo = async (n) => { for (let i = 0; i < n; i++) await page.click('[data-screen="home"] .brandbar img'); };
+  await page.goto(APP + '#home', { waitUntil: 'networkidle' });
+  await tapLogo(4);
+  check(await page.evaluate(() => localStorage.getItem('cfb-founder')) === null, '4 taps on the logo: nothing happens');
+  await page.waitForTimeout(3200);
+  await tapLogo(1);
+  check(await page.evaluate(() => localStorage.getItem('cfb-founder')) === null, 'taps more than 3 s apart don\'t add up');
+  await page.waitForTimeout(3200);
+  await tapLogo(5);
+  check(await page.evaluate(() => localStorage.getItem('cfb-founder')) === '1', '5 quick taps on the logo turn Founder tools on');
+  check(/Founder tools are on/.test(await page.textContent('#fd-toast')) && await page.$eval('#fd-toast', (t) => t.classList.contains('is-on')), 'a message says so and where to find them');
+  if (SHOTS) { await page.waitForTimeout(300); await page.screenshot({ path: path.join(SHOTS, 'unlock-390.png') }); }
+  await page.goto(APP + '#profile', { waitUntil: 'networkidle' });
+  check(!!(await page.$('#founder-row .fd-card')), 'the row is on Profile after the taps');
+  await page.goto(APP + '#home', { waitUntil: 'networkidle' });
+  await tapLogo(5);
+  check(await page.evaluate(() => localStorage.getItem('cfb-founder')) === null && /are off/.test(await page.textContent('#fd-toast')), '5 more taps turn them off again');
+
   // Picks card on, with a storefront link in the data.
   await page.route('**/data/brands.json', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ...DATA, picks: { url: PICKS, checked: '2026-11-14' } }) }));
   await page.goto(APP + '#profile', { waitUntil: 'networkidle' });
+  await page.reload({ waitUntil: 'networkidle' });   // a hash change alone wouldn't fetch the data again
   await page.waitForSelector('#picks-app .pk-card');
   const a = await page.$eval('#picks-app a', (x) => ({ href: x.href, rel: x.rel, target: x.target }));
   check(a.href === PICKS && /sponsored/.test(a.rel) && /noopener/.test(a.rel) && a.target === '_blank', `picks card links the storefront, new tab, rel="${a.rel}"`);

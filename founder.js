@@ -2,8 +2,10 @@
    The add box sends nothing itself: Send opens GitHub's "Add a brand" issue form, filled in,
    and she taps Submit there. A daily scheduled check reads those issues (only from trusted
    logins, CLAUDE.md), checks PETA and Leaping Bunny, and adds the brand with its proof.
-   Hidden, not secured: the Founder tools row shows only on a phone that opened the app with
-   ?founder=1 once (cfb-founder); ?founder=0 hides it again. The security is on GitHub.
+   Hidden, not secured: the Founder tools row shows only on a phone that turned it on (cfb-founder),
+   by tapping the C.F.B. logo 5 times (inside the installed app too, whose storage on an iPhone is
+   apart from Safari's) or by opening the app with ?founder=1; the same 5 taps or ?founder=0 turn it
+   off. The security is on GitHub.
    The storefront card shows only when data/brands.json has picks.url. */
 (function () {
   "use strict";
@@ -20,6 +22,30 @@
     if (f === "0") localStorage.removeItem("cfb-founder");
   } catch (_) {}
   const isFounder = () => store.get("founder", "") === "1";
+
+  /* ---------- 5 taps on the logo (Home's brand bar or the side rail) turn the tools on or off ---------- */
+  const TAPS = 5, WINDOW_MS = 3000;
+  let taps = [];
+  let toastTimer = 0;
+  function toast(text) {
+    let t = $("fd-toast");
+    if (!t) { t = document.createElement("p"); t.id = "fd-toast"; t.className = "fd-toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+    t.textContent = text;
+    t.classList.add("is-on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("is-on"), 3500);
+  }
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".brandbar")) return;
+    const now = Date.now();
+    taps = taps.filter((t) => now - t < WINDOW_MS);
+    taps.push(now);
+    if (taps.length < TAPS) return;
+    taps = [];
+    if (isFounder()) { try { localStorage.removeItem("cfb-founder"); } catch (_) {} toast("Founder tools are off on this phone."); }
+    else { store.set("founder", "1"); toast("Founder tools are on. Find them on your Profile."); }
+    renderRow();
+  });
 
   /* ---------- The issue link ---------- */
   // Only a web address is passed on; anything else in a link field is dropped.
