@@ -300,17 +300,19 @@ other an outline. The focus ring on night is `--pink`. Letterbox bars
 (6vh, at most 56 px) frame the show like a film. Reduced motion: the
 finished hero pose, held 1.6 s, then a 0.6 s fade.
 
-The gate (2026-11-12, Jose: the dark spotlight stage "looks low detail
-and doesn't scream glamorous"): the film's own frame at 0.6 s, the
-lipstick held up before the bulb mirror (`assets/images/gate.webp`), so
-the tap flows straight into the film. It drifts slowly (scale 1 to 1.06
-over 14 s) and the glint on the lipstick breathes. Top: "C.F.B. presents"
-in `--gold-pale` small capitals, then "Cruelty-Free *Beauty*" in the display serif
-500 at 34, `--star` with the italic in `--gold-pale`, and a short gold
-rule. Bottom: two 56 px pills with a `--gold-pale` hairline, the main one
-`--rose` with `--star` text, the other night glass. On a wide screen the
-frame is a centred column with soft edges, like the film. The drawn stage
-is still underneath as the fallback show.
+The gate (2026-11-14, Jose's own picture, replacing the film frame): a
+light screen, the one part of the opening that is not night. The bunny in
+a ring of bulbs between ivory curtains, with "C.F.B. presents", a gold
+"Welcome" and a slogan painted into the picture
+(`assets/images/gate.webp`, 1206 x 1947). The picture is always fitted by
+height so its words are never cut, and its sides fade into `--gate-floor`
+#FBFAF6, the cream of its own floor, which runs on below it for the last
+12% of the screen (at least 92 px). There: "Tap to start" in `--gold-deep`
+small capitals at 0.32em, breathing between full and 35% (still under
+reduced motion), and under it "Start without sound", an underlined
+`--ink-soft` text button; both 44 px tall. A tap anywhere starts the
+opening with sound. The browser bar is light at the gate and goes night at
+the tap.
 
 The film (version 2, remade twice on 2026-11-12) is set in a glamorous
 dressing room at dusk: bronze shadow, warm mirror bulbs, gold rim light,

@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="app.css">
 <!-- launch show: decide before paint so Home never flashes first (intro.js; ?intro=0 skips, ?intro=1 forces) -->
 <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
-<script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}try{off=off||Math.abs(Date.now()-Number(sessionStorage.getItem("cfb-renewed")||0))<20000}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content="#1C0F13";setTimeout(function(){if(!window.CFBIntro){d.classList.remove("intro-on");if(m)m.content="#FBF6F2"}},5000)}})();</script>
+<script>(function(){var d=document.documentElement,q=new URLSearchParams(location.search).get("intro"),off=false;try{off=localStorage.getItem("cfb-intro")==="off"}catch(e){}try{off=off||Math.abs(Date.now()-Number(sessionStorage.getItem("cfb-renewed")||0))<20000}catch(e){}if(q==="1"||(q!=="0"&&!off&&location.hash.indexOf("#brand/")!==0)){d.classList.add("intro-on");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content="#F5F5F3";setTimeout(function(){if(!window.CFBIntro){d.classList.remove("intro-on");if(m)m.content="#FBF6F2"}},5000)}})();</script>
 </head>
 <body>
 
@@ -23,7 +23,7 @@
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="C.F.B. opening">
   <div class="in-bg"></div>
   <div class="in-scene" aria-hidden="true"></div>
-  <div class="in-poster" aria-hidden="true"><i></i></div>
+  <div class="in-poster" aria-hidden="true"></div>
   <canvas class="in-fx" aria-hidden="true"></canvas>
   <video class="in-film" playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
   <div class="in-flash" aria-hidden="true"></div>
@@ -51,14 +51,10 @@
     <div class="in-line" aria-hidden="true">Cruelty-free looks<br><em>beautiful on you</em></div>
     <button class="in-go" type="button" tabindex="-1">Find cruelty-free makeup</button>
   </div>
-  <div class="in-title" aria-hidden="true">
-    <div class="in-presents">C.F.B. presents</div>
-    <div class="in-marquee">Cruelty-Free <em>Beauty</em></div>
-    <div class="in-rule"></div>
-  </div>
   <div class="in-gate">
-    <button class="in-btn in-btn-main" type="button" data-sound="on">Enter with sound</button>
-    <button class="in-btn" type="button" data-sound="off">Enter quietly</button>
+    <p class="sr-only">C.F.B. presents: Welcome.</p>
+    <button class="in-start" type="button" data-sound="on">Tap to start</button>
+    <button class="in-quiet" type="button" data-sound="off">Start without sound</button>
   </div>
   <button class="in-skip" type="button" hidden>Skip</button>
 </div>

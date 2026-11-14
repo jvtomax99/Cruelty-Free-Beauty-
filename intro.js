@@ -7,7 +7,7 @@
    The drawn show (version 1, about 6 s, described next) plays alone whenever the film can't.
    The head of index.html decides before paint whether it plays (html.intro-on): the first visit only,
    unless ?intro=0 or the link opens one brand (#brand/...); ?intro=1 forces it.
-   The gate ("Enter with sound" / "Enter quietly") gives the tap phones need before sound.
+   The gate ("Tap to start", or "Start without sound") gives the tap phones need before sound.
    Then the shots, as in a character reveal: an empty stage under a spotlight, close-ups that never
    show the whole star (the lipstick twisting up, ears in silhouette against a bright door, the paws,
    the face), one flash, the hero pose with hearts and the name card, and the bunny lands on Home's logo.
@@ -419,15 +419,16 @@
     gate.classList.remove("is-gone"); skipBtn.hidden = true;
     el.classList.add("is-gate");
     if (app) app.inert = true;
-    if (themeMeta) themeMeta.content = "#1C0F13";
+    if (themeMeta) themeMeta.content = "#F5F5F3";         // the gate is a light screen; the stage goes dark at the tap
     filmLoad();
     resize(); kick();
-    const b = gate.querySelector("[data-sound=on]"); if (b) b.focus({ preventScroll: true });
+    el.tabIndex = -1; el.focus({ preventScroll: true });   // the dialog itself, so no ring is drawn round "Tap to start" before a key is pressed
   }
   function start(withSound) {
     if (state !== "gate") return;
     state = "starting";                                     // further taps now skip; they can't start it twice
     gate.classList.add("is-gone"); gate.inert = true; el.classList.remove("is-gate");
+    if (themeMeta) themeMeta.content = "#1C0F13";
     startAt = performance.now();
     const trying = svg ? filmTry(withSound) : null;         // play() is called here, inside the tap
     const sure = !!trying && filmReady();                   // already buffered: no need for the drawn show's sound

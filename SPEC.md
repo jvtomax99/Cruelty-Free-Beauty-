@@ -91,8 +91,8 @@ me**.
   companies, China today. Done when every answer links a primary source.
 
 - **Launch show** (added 2026-11-11). A short stage reveal for the bunny,
-  in the style of a game's character reveal: a gate ("Enter with sound" /
-  "Enter quietly"), an empty stage under a spotlight, close-ups (the
+  in the style of a game's character reveal: a gate ("Tap to start" /
+  "Start without sound"), an empty stage under a spotlight, close-ups (the
   lipstick twisting up, ears in silhouette against a bright door, the paws,
   the face), one flash, the hero pose with hearts and the name card, then
   the bunny lands on Home's logo. Pink after dark; music made in code.
@@ -129,7 +129,7 @@ me**.
     opens Home. The drawn show (version 1) plays instead when the film
     can't start within 0.8 s of the tap, on reduced motion, or with data
     saver on. If the film breaks or freezes for 1.5 s, the app opens at
-    once. "Enter quietly" plays it muted. On a computer the film is a
+    once. "Start without sound" plays it muted. On a computer the film is a
     centred column. The offline worker saves the film once it has played.
     Not in this version: a widescreen cut, a tappable "See why", real
     products on the cards, Spanish.
@@ -415,7 +415,7 @@ me**.
   first tap and fades in. A music button is always in view (last in the
   tab bar on phones, at the foot of the side rail on computers); the
   choice is kept on the phone. It is silent while the opening plays and
-  while the app is in the background. "Enter quietly" at the opening
+  while the app is in the background. "Start without sound" at the opening
   keeps it silent for that visit; the button brings it back. With data saver on, nothing is downloaded unless she
   turns the music on herself. It plays offline after the first time.
   Not in this version: a song per screen, a volume slider, sound effects,
@@ -600,6 +600,12 @@ only if it can be shown to work across skin tones.
 
 ## Decided
 
+- 2026-11-14 (Jose): the opening's first screen is "tap to start", on his
+  own picture (the bunny in the bulb ring, "Welcome"). A tap anywhere
+  starts with sound; Claude kept a small "Start without sound" under it.
+  The picture's painted slogan reads "Cruelty free looks best on skin.",
+  not the app's "Cruelty-free looks beautiful on you.": Jose to say
+  whether that is meant.
 - 2026-11-14 (Jose): the app always starts with the opening, as he first
   chose on 2026-11-11 (it had been first visit only since 2026-11-12).
   Claude's objection: a tap and up to 14 seconds, or two taps with Skip,

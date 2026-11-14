@@ -53,7 +53,7 @@
   /* ---------- Press feedback on touch ----------
      :hover never fires on a phone, and :active flickers off before the eye sees it,
      so a touched control holds .is-pressed for 260 ms (Interp's pattern). */
-  const LIFTS = ".qt-tile, .hr-card, .hb-pal, .tab, .search, .learn summary, .brand-row, .chip, .mode-btn, .quiz-opt, .save-btn, .scan-link, .pf-start, .in-btn, .in-skip, .pill-btn, .gd-card, .gd-home, .gd-go, .sx-btn, .sx-back, .sx-step, .sx-who";
+  const LIFTS = ".qt-tile, .hr-card, .hb-pal, .tab, .search, .learn summary, .brand-row, .chip, .mode-btn, .quiz-opt, .save-btn, .scan-link, .pf-start, .in-skip, .pill-btn, .gd-card, .gd-home, .gd-go, .sx-btn, .sx-back, .sx-step, .sx-who";
   const HOLD_MS = 260;
   document.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse") return;

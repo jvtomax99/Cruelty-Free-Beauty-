@@ -24,6 +24,7 @@
   --rail-bg: rgba(255,252,250,.6);
   --scrim: rgba(59,42,42,.35);       /* dims the camera around the barcode frame */
   --bunny-line: #DB6B7E;  /* the logo's outline */
+  --gate-floor: #FBFAF6;   /* the gate: the cream floor of its picture, carried on below it */
   --night: #1C0F13;       /* launch show: the dark stage */
   --night-2: #3A1E27;     /* launch show: where the spot falls */
   --spot: #FFE3E8;        /* launch show: spotlight, text on night */
@@ -537,64 +538,43 @@ html.intro-on .intro {
 .in-go:focus-visible { outline: 3px solid var(--gold-pale); outline-offset: 3px; }
 
 .in-gate {
-  position: absolute; left: 0; right: 0; bottom: max(11vh, calc(env(safe-area-inset-bottom) + 40px));
-  display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); padding: 0 var(--sp-4);
+  position: absolute; left: 0; right: 0; bottom: 0; height: max(12%, calc(env(safe-area-inset-bottom) + 92px));
+  padding: 0 var(--sp-4) env(safe-area-inset-bottom);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   transition: opacity .3s var(--ease), transform .3s var(--ease);
 }
+.intro:focus { outline: none; }
 .in-gate.is-gone { opacity: 0; transform: translateY(12px); pointer-events: none; }
-/* The gate: the film's own first frame (the lipstick before the mirror), a marquee title in gold
-   above it, the two buttons below. It fades away as the film or the drawn show starts. */
+/* The gate (Jose's picture, 2026-11-14): the bunny in the bulb ring with "Welcome" under it, on a cream
+   floor that runs on below the picture, where "Tap to start" sits. A tap anywhere starts the opening.
+   The picture is always fitted by height, so its words are never cut; its sides fade into the cream. */
 .in-poster {
-  position: absolute; inset: 0; opacity: 0; pointer-events: none; overflow: hidden; background: var(--night);
+  position: absolute; inset: 0; opacity: 0; pointer-events: none; overflow: hidden; background: var(--gate-floor);
   transition: opacity .5s ease;
 }
 .intro.is-gate .in-poster { opacity: 1; }
 .in-poster::before {
-  content: ""; position: absolute; inset: 0; background: url("assets/images/gate.webp") center / cover no-repeat;
-  animation: gateDrift 14s ease-in-out infinite alternate;
+  content: ""; position: absolute; inset: 0 0 max(12%, calc(env(safe-area-inset-bottom) + 92px)) 0; background: url("assets/images/gate.webp") top center / auto 100% no-repeat;
+  -webkit-mask-image: linear-gradient(to right, transparent calc(50% - 27vh), #000 calc(50% - 21vh), #000 calc(50% + 21vh), transparent calc(50% + 27vh));
+  mask-image: linear-gradient(to right, transparent calc(50% - 27vh), #000 calc(50% - 21vh), #000 calc(50% + 21vh), transparent calc(50% + 27vh));
 }
-.in-poster::after {   /* shade for the title (top) and the buttons (bottom) */
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(to bottom, var(--night-veil) 0, transparent 24%, transparent 52%, var(--veil) 92%);
+.in-start, .in-quiet { border: 0; background: none; cursor: pointer; font-family: var(--font-body); -webkit-tap-highlight-color: transparent; }
+.in-start {
+  min-height: 44px; padding: 0 var(--sp-4); color: var(--gold-deep);
+  font-size: var(--fs-foot); font-weight: 700; letter-spacing: .32em; text-transform: uppercase; text-indent: .32em;
+  animation: gateTap 2.2s ease-in-out infinite;
 }
-.in-poster i {   /* the glint on the lipstick breathes */
-  position: absolute; left: 50%; top: 33.5%; width: 46vmin; height: 46vmin; margin: -23vmin 0 0 -23vmin; border-radius: 50%; z-index: 1;
-  background: radial-gradient(closest-side, var(--gold-pale), transparent 70%); mix-blend-mode: screen; opacity: .25;
-  animation: gateGlint 3.4s ease-in-out infinite;
-}
-@keyframes gateDrift { from { transform: scale(1); } to { transform: scale(1.06); } }
-@keyframes gateGlint { 50% { opacity: .6; transform: scale(1.12); } }
-@media (min-aspect-ratio: 3/4) {   /* wide screens: the frame as a centred column, like the film */
-  .in-poster::before { background-size: auto 100%; -webkit-mask-image: linear-gradient(to right, transparent calc(50% - 28vh), #000 calc(50% - 17vh), #000 calc(50% + 17vh), transparent calc(50% + 28vh)); mask-image: linear-gradient(to right, transparent calc(50% - 28vh), #000 calc(50% - 17vh), #000 calc(50% + 17vh), transparent calc(50% + 28vh)); }
-  .in-poster i { width: 30vh; height: 30vh; margin: -15vh 0 0 -15vh; }
-}
-.in-title {
-  position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top) + var(--sp-5)); padding: 0 var(--sp-4);
-  display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none;
-  opacity: 0; transition: opacity .3s var(--ease);
-}
-.intro.is-gate .in-title { opacity: 1; }
-.in-presents { font-size: var(--fs-cap); font-weight: 600; letter-spacing: .32em; text-transform: uppercase; color: var(--gold-pale); text-shadow: 0 1px 10px var(--night); }
-.in-marquee { margin-top: var(--sp-1); font-family: var(--font-display); font-size: var(--fs-large); font-weight: 500; line-height: 1.1; letter-spacing: var(--tr-title); color: var(--star); text-shadow: 0 2px 18px var(--night), 0 0 28px var(--gold); }
-.in-marquee em { font-style: italic; color: var(--gold-pale); }
-.in-rule { width: 64px; height: 1px; margin-top: var(--sp-3); background: linear-gradient(to right, transparent, var(--gold-pale), transparent); }
-.in-btn {
-  min-width: 240px; min-height: 52px; padding: 0 var(--sp-5); border-radius: var(--r-pill); cursor: pointer;
-  border: 1.5px solid var(--spot-line); background: var(--night-glass); color: var(--spot);
-  font: 600 var(--fs-call)/1 var(--font-body); letter-spacing: var(--tr-sm);
-  transition: transform var(--t-press) var(--ease), background-color var(--t-press) var(--ease);
-}
-.in-btn { min-height: 56px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-color: var(--gold-pale); }
-.in-btn-main { border-color: var(--gold-pale); background: var(--rose); color: var(--star); box-shadow: 0 0 0 1px var(--gold) inset, 0 10px 34px -8px var(--glow); }
-.in-btn:active, .in-btn.is-pressed { transform: scale(.97); }
+.in-quiet { min-height: 44px; margin-top: calc(-1 * var(--sp-1)); padding: 0 var(--sp-4); color: var(--ink-soft); font-size: var(--fs-foot); text-decoration: underline; text-underline-offset: 3px; }
+@keyframes gateTap { 50% { opacity: .35; } }
+.in-start:focus-visible, .in-quiet:focus-visible { outline: 3px solid var(--rose); outline-offset: 0; border-radius: var(--r-sm); }
 .in-skip {
   position: absolute; top: calc(env(safe-area-inset-top) + min(6vh, 56px) + var(--sp-2)); right: var(--sp-4);
   min-height: 44px; min-width: 64px; padding: 0 var(--sp-4); border-radius: var(--r-pill); cursor: pointer;
   border: 1px solid var(--spot-line); background: var(--night-glass); color: var(--spot);
   font: 550 var(--fs-foot)/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase;
 }
-.in-btn:focus-visible, .in-skip:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .in-gate, .in-btn, .in-skip, .pill-btn, .mode-btn, .in-poster, .in-title { transition: none; } .in-poster::before, .in-poster i { animation: none; } }
+.in-skip:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .in-gate, .in-skip, .pill-btn, .mode-btn, .in-poster { transition: none; } .in-start { animation: none; } }
 
 
 /* ---------- Home: hello banner, quick tiles, brand rail (Interp's layout in C.F.B.'s colours) ---------- */
