@@ -72,6 +72,11 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
     check(!q.has('proof'), 'a link field that is not a web address is dropped');
   }
   check(await page.inputValue('#add-name') === '', 'the form clears after Send');
+  await page.fill('#add-name', 'Kaja');
+  await page.fill('#add-proof', 'https://crueltyfree.peta.org/company/kaja-beauty/?x=1&y=2');
+  await page.click('#add-form button[type=submit]');
+  await page.waitForTimeout(200);
+  check(opened[1] && new URL(opened[1]).searchParams.get('proof') === 'https://crueltyfree.peta.org/company/kaja-beauty/?x=1&y=2', 'a certifier link arrives whole');
   check(/Submit new issue/.test(await page.textContent('#add-msg')), 'she is told to tap Submit on GitHub');
 
   // The issue form's field ids match what the app fills in.
@@ -84,7 +89,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('#add-sent .ad-row');
   const rows = await page.$$eval('#add-sent .ad-row', (a) => a.map((r) => [r.querySelector('.ad-name').textContent, r.querySelector('.ad-state').textContent]));
-  check(rows.length === 2 && rows[0][0] === 'milani' && rows[0][1] === 'In the app' && rows[1][0] === NAME && /^Sent /.test(rows[1][1]), `sent list after reload: ${JSON.stringify(rows)}`);
+  check(rows.length === 3 && rows[0][0] === 'milani' && rows[0][1] === 'In the app' && rows[1][0] === 'Kaja' && rows[2][0] === NAME && /^Opened /.test(rows[2][1]), `sent list after reload: ${JSON.stringify(rows)}`);
   check(await page.$eval('#add-sent .ad-state.is-in', (a) => a.getAttribute('href')) === '#brand/milani', '"In the app" links to the brand page');
   if (SHOTS) { await page.$eval('#add-sent', (e) => e.scrollIntoView({ block: 'center' })); await page.waitForTimeout(700); await page.screenshot({ path: path.join(SHOTS, 'add-sent-390.png') }); }
 

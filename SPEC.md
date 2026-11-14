@@ -435,7 +435,8 @@ me**.
     Submit. A daily scheduled Claude check reads open `add-brand` issues
     from trusted logins only, looks each name up on PETA and Leaping Bunny
     (`tools/add-brand.cjs`), opens both pages, and adds the brand only if
-    a certifier lists it, with each page and the date. Parent company and
+    PETA says it doesn't test or Leaping Bunny certifies it, with each
+    page and the date. Parent company and
     China stay "not yet researched". It answers on the issue either way.
     The screen lists what she sent from this phone and which are in the
     app now.
@@ -455,9 +456,10 @@ me**.
     (names with &, ' and accents); a brand in the app shows "In the app"
     in her sent list; `tools/add-brand.cjs` drafts a record that passes
     `check-brands` for a listed brand and adds nothing for an unlisted
-    one; the picks card is absent while `picks.url` is null and shows the
-    commission line when set (`tools/test-founder.cjs`); and the daily
-    check has added a real brand she sent.
+    one or one PETA says tests (`tools/test-add-brand.cjs`); the picks
+    card is absent while `picks.url` is null and shows the commission line
+    when set (`tools/test-founder.cjs`); and the daily check has added a
+    real brand she sent.
 
 ## Not in v1
 
@@ -592,7 +594,9 @@ only if it can be shown to work across skin tones.
 
 ### Founder tools (added 2026-11-14, the founder's ask)
 - [ ] Add a brand screen, issue form, `tools/add-brand.cjs`, the picks
-      card (built 2026-11-14, `tools/test-founder.cjs` passes)
+      card (built 2026-11-14; `tools/test-founder.cjs` and
+      `tools/test-add-brand.cjs` pass; live lookups of Kaja and Juice
+      Beauty drafted correctly)
 - [ ] The daily scheduled check, once her GitHub login is known, and a
       first real brand added through it
 

@@ -32,7 +32,7 @@
   }
   window.CFB.issueUrl = issueUrl;   // the test checks the encoding
 
-  /* ---------- Names sent from this phone ---------- */
+  /* ---------- Names opened on GitHub from this phone (saved at Send, before she taps Submit there) ---------- */
   function sentList() {
     try { const a = JSON.parse(store.get("sent-brands", "[]")); return Array.isArray(a) ? a.filter((x) => x && typeof x.name === "string").slice(0, MAX_SENT) : []; }
     catch (_) { return []; }
@@ -50,13 +50,13 @@
     if (!list.length) { box.innerHTML = ""; return; }
     await window.CFB.brands.catch(() => []);
     const rows = list.map((x) => {
-      const b = window.CFB.match(x.name);
+      const b = window.CFB.match(x.name) || window.CFB.match(x.name + " beauty");   // "Rare" is in as Rare Beauty
       return `<li class="ad-row"><span class="ad-name">${esc(x.name)}</span>${b
         ? `<a class="ad-state is-in" href="#brand/${encodeURIComponent(b.id)}">In the app</a>`
-        : `<span class="ad-state">Sent ${esc(day(x.at))}</span>`}</li>`;
+        : `<span class="ad-state">Opened ${esc(day(x.at))}</span>`}</li>`;
     }).join("");
-    box.innerHTML = `<h2 class="rt-head">Sent from this phone</h2>
-      <p class="rt-intro">A brand moves to "In the app" once it's checked. If neither PETA nor Leaping Bunny lists it, it stays out, and GitHub tells you why on your issue.</p>
+    box.innerHTML = `<h2 class="rt-head">Your brands</h2>
+      <p class="rt-intro">A brand moves to "In the app" once it's checked. If neither PETA nor Leaping Bunny lists it as cruelty-free, it stays out, and GitHub tells you why on your issue. If you closed GitHub without tapping Submit, send it again.</p>
       <ul class="ad-list">${rows}</ul>`;
   }
 

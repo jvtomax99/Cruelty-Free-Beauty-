@@ -101,6 +101,8 @@ function checkBrand(b, seen) {
     if (!f || !isUrl(f.url) || !f.label || !isDate(f.checked)) err(id, 'shadeFinder needs an https url, a label and a checked date');
     else if (ageDays(f.checked) > MAX_AGE_DAYS) warn(id, `shadeFinder check due (last checked ${f.checked})`);
   }
+  // A parent that tests must be named: brands.js fails Strict only on a named parent.
+  if (b.parent && b.parent.testsOnAnimals === 'yes' && !b.parent.name) err(id, 'parent tests on animals but has no name, so Strict would let it pass');
   if (!REVIEW.includes(b.review)) err(id, `review "${b.review}" is not one of ${REVIEW.join(', ')}`);
   // added: the day a brand came in through the founder's Add a brand box (tools/add-brand.cjs).
   if (b.added !== undefined && (!isDate(b.added) || ageDays(b.added) < 0)) err(id, `added "${b.added}" must be a past YYYY-MM-DD date`);
