@@ -71,6 +71,34 @@
 
   /* ---------- Offline: the worker saves the app so it opens with no signal ---------- */
   if ("serviceWorker" in navigator && window.isSecureContext) {
-    window.addEventListener("load", () => { navigator.serviceWorker.register("./sw.js").catch(() => {}); });
+    const sw = navigator.serviceWorker;
+    /* Updates on their own (Jose, 2026-11-13: nobody should have to reinstall). An installed app is mostly
+       resumed, not loaded, so it asks for a new version each time it comes back into view. When one has
+       downloaded and taken over, the page reloads by itself at a moment nobody is watching or working:
+       when the app goes into the background, or on arriving at Home. Never under a reader on another
+       screen, and never while something is in use: the opening, a quiz (finished or not on view), a
+       Sanctuary round, the Sanctuary itself, the Scan screen, a brand search, a field being typed in. */
+    let had = !!sw.controller;            // false on the very first visit: that worker is not an update
+    let fresh = false, reg = null, asked = 0;
+    const on = (name) => { const s = document.querySelector(`[data-screen="${name}"]`); return !!s && !s.hidden; };
+    const busy = () => document.documentElement.classList.contains("intro-on") || on("scan") || on("practice") || on("garden")
+      || !!document.querySelector("#profile-app .quiz")          // a quiz under way, even with another screen on view
+      || !!(document.getElementById("brand-q") || {}).value      // a search she would have to type again
+      || /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "");
+    const renew = () => {
+      if (!fresh || busy() || !(document.hidden || on("home"))) return;
+      let last = 0; try { last = Number(sessionStorage.getItem("cfb-renewed")) || 0; } catch (_) {}
+      if (Date.now() - last < 30e3) return;                       // never a loop of reloads
+      try { sessionStorage.setItem("cfb-renewed", String(Date.now())); } catch (_) {}
+      fresh = false;
+      location.reload();
+    };
+    const ask = () => { if (reg && !document.hidden && Date.now() - asked > 60e3) { asked = Date.now(); reg.update().catch(() => {}); } };
+    sw.addEventListener("controllerchange", () => { if (had) { fresh = true; if (document.hidden) renew(); } else had = true; });
+    document.addEventListener("cfb:screen", (e) => { if (e.detail.name === "home") setTimeout(renew, 0); });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) renew(); else ask(); });
+    window.addEventListener("pageshow", ask);
+    window.addEventListener("load", () => { sw.register("./sw.js").then((r) => { reg = r; asked = Date.now(); }).catch(() => {}); });
+    window.CFB.update = { busy, waiting: () => fresh };          // for tests
   }
 })();

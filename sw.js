@@ -1,13 +1,14 @@
 /* C.F.B. offline worker.
    Every file comes from one versioned cache, so a launch never mixes a new page
    with old files. A new version (bumped CACHE_VERSION) downloads everything in the
-   background, then takes over: the next launch is the new version, whole.
+   background, then takes over, and app.js reloads the page at a quiet moment ("Updates on their own"):
+   the app is then the new version, whole.
    Paths are relative to the worker's scope, so it works under /Cruelty-Free-Beauty-/.
    Bump CACHE_VERSION in every change that touches a file listed below.
    The launch film is the one exception: it is too big to make the install wait for it, so it
    lives in its own cache (MEDIA), is saved when the page asks (after the film has played), and survives
    app updates. If the film itself changes, bump MEDIA. */
-const CACHE_VERSION = "cfb-v35";
+const CACHE_VERSION = "cfb-v36";
 const MEDIA = "cfb-media-v3";
 /* The Sanctuary's 3D world (its script, three.js, the models): about 3 MB, so it is not in the first
    download. Each file is saved the first time the Sanctuary asks for it, and the world then opens
