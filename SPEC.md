@@ -151,8 +151,11 @@ me**.
   A first finding (from "unknown") says "Newly confirmed", not "now". The
   date shown is when we checked, not when the list changed. The compare
   tool covers PETA and Leaping Bunny; parent and China changes are entered
-  by hand. An installed app shows a change one or two opens after the
-  update, because of how the offline worker swaps versions.
+  by hand. An installed app picks an update up by itself
+  (2026-11-13, Jose: nobody should have to reinstall): it asks for a new
+  version each time it comes back into view and reloads once that version
+  has downloaded, waiting while the opening, a quiz, a Sanctuary round,
+  the Scan screen or a typed-in field is in use.
   - Done when: a change added to `data/brands.json` shows on Home once the
     app has updated, with its date and source link, hearted brands first; "Got it"
     hides it and it stays in "Recent changes" and on the brand page.
