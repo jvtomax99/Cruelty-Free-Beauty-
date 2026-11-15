@@ -1858,6 +1858,53 @@
    "review": "needs-review",
    "sells": null,
    "shadeFinder": null
+  },
+  {
+   "id": "summer-fridays",
+   "name": "Summer Fridays",
+   "search": [
+    "Summer Fridays, LLC",
+    "Summer Fridays"
+   ],
+   "peta": {
+    "status": "unknown",
+    "note": "PETA: may not be cruelty-free (not on its list)",
+    "url": "https://crueltyfree.peta.org/company/summer-fridays/",
+    "checked": "2026-11-15"
+   },
+   "leapingBunny": {
+    "status": "yes",
+    "note": "Leaping Bunny certified",
+    "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1812",
+    "checked": "2026-11-15"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://summerfridays.com/",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null,
+   "added": "2026-11-15"
   }
  ]
 }
