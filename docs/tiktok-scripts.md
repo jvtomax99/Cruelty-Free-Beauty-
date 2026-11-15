@@ -1,8 +1,8 @@
 # TikTok scripts: the proof angle
 
 Three short videos for @cfb.beauty2026, written 2026-11-15 after a review of
-her first three posts. Every claim comes from the app's own records, with the
-certifier page and the date it was checked. These words speak for the
+her first three posts. Every claim about a brand comes from the app's records
+or a certifier page opened on the date given, cited under each script. These words speak for the
 founder, so Jose signs off before she films.
 
 **Before filming any of them:** open each linked page that morning. Brands
@@ -28,7 +28,7 @@ anyone who checked her claim on PETA.
 | 0 to 2 s | Holding the Lip Butter Balm to camera. Text: **Is this actually cruelty-free?** | "I used this in my lip combo. Then I checked PETA." |
 | 2 to 8 s | Phone screen: PETA's Summer Fridays page | "PETA says it 'may not be cruelty-free.'" |
 | 8 to 14 s | Phone screen: Leaping Bunny's page | "But Leaping Bunny has certified it since 2018." |
-| 14 to 22 s | Talking to camera | "They're two different lists. A brand can be certified by one and just not signed up with the other. That's not the same as testing on animals." |
+| 14 to 22 s | Talking to camera | "They're two different lists. Not being on PETA's list doesn't mean a brand tests. Leaping Bunny checked this one and certified it." |
 | 22 to 25 s | The app's Summer Fridays page: "Passes Strict, certified by Leaping Bunny" | "That's why I made an app that shows you both." |
 
 Sources: [PETA](https://crueltyfree.peta.org/company/summer-fridays/)
@@ -44,7 +44,7 @@ Caption: Two cruelty-free lists, two answers. Here's how to read them.
 
 ## 2. "Cruelty-free brand, parent company that tests" (about 20 s)
 
-Her Strict rule is the one thing other cruelty-free accounts skip.
+Her Strict rule, shown in 20 seconds.
 
 | Time | On screen | She says |
 |---|---|---|
@@ -57,7 +57,7 @@ Sources: NYX's record in `data/brands.json` (PETA: doesn't test; parent
 L'Oréal), [PETA's L'Oréal page](https://crueltyfree.peta.org/company/loreal-usa/),
 checked 2026-11-11. Recheck both before filming. Same pattern, if NYX
 changes: Urban Decay (L'Oréal), Too Faced (Estée Lauder), Tarte (Kosé),
-Hourglass (Unilever), all sourced the same way in the app.
+all sourced the same way in the app.
 
 Caption: Your money still goes up the chain. Do you shop Certified or
 Strict? #crueltyfree #crueltyfreemakeup #nyx #loreal
@@ -71,13 +71,13 @@ Filmed in a store aisle, or at a vanity standing in for one.
 | Time | On screen | She says |
 |---|---|---|
 | 0 to 2 s | Hand reaching for a product on a shelf. Text: **Don't buy it yet** | "Before this goes in my basket..." |
-| 2 to 9 s | Phone scanning the barcode in the app, result appears | "...I scan it. Who certifies it, who owns it, and when it was last checked." |
-| 9 to 15 s | Talking to camera with the product | "Takes three seconds. Free, no account. C.F.B." |
+| 2 to 9 s | Phone scanning the barcode in the app, result appears | "...I scan it. It tells me who certifies it, and the proof is one tap away." |
+| 9 to 15 s | Talking to camera with the product | "Takes a few seconds. Free, no account. C.F.B." |
 
 Test the exact product at home first: the scan uses Open Beauty Facts, and
 not every barcode is in it. An e.l.f. product she owns is a good first try
 (PETA and Leaping Bunny both list e.l.f., checked 2026-11-11), if its
 barcode scans.
 
-Caption: The 3-second check I do in every beauty aisle.
+Caption: The quick check I do in every beauty aisle.
 #crueltyfreebeauty #crueltyfreemakeup #beautyhacks
