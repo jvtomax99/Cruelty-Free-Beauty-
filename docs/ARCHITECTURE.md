@@ -54,7 +54,9 @@ relative.
 
 Nothing leaves the phone except a scanned barcode number, sent to Open
 Beauty Facts to learn the brand. Settings, quiz answers and the Garden's progress live in
-localStorage under `cfb-` keys. Brand data is `data/brands.json`, precached by
+localStorage under `cfb-` keys. The first time she saves something of her own after the app opens,
+`app.js` asks the phone to keep that data when space runs low
+(`navigator.storage.persist`); the phone may refuse. Brand data is `data/brands.json`, precached by
 the worker so the list will work offline once the Brands screen reads it
 (phase 3). Research flow: `lookup-certifiers`
 prints what the certifiers say, a person updates the JSON, `check-brands`

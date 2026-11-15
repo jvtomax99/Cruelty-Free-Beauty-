@@ -3,9 +3,24 @@
   "use strict";
 
   /* ---------- Saved settings (always inside try/catch: private mode can refuse) ---------- */
+  /* Ask the phone to keep what is saved here when it runs low on space, instead of clearing it.
+     The phone may say no, and then nothing changes. Asked the first time she saves something of
+     her own after the app opens (a heart, her profile, a scan, the Garden, a brand request), so
+     nobody is asked before there is anything to lose (Firefox shows a question; Chrome and Safari
+     decide by themselves). */
+  const HERS = ["saved", "profile", "scans", "garden", "sent-brands"];
+  let askedToKeep = false;
+  function askToKeep() {
+    if (askedToKeep) return;
+    askedToKeep = true;
+    try {
+      const s = navigator.storage;
+      if (s && s.persist && s.persisted) s.persisted().then((kept) => kept || s.persist()).catch(() => {});
+    } catch (_) {}
+  }
   const store = {
     get(k, d) { try { const v = localStorage.getItem("cfb-" + k); return v === null ? d : v; } catch (_) { return d; } },
-    set(k, v) { try { localStorage.setItem("cfb-" + k, v); } catch (_) {} }
+    set(k, v) { if (HERS.includes(k)) askToKeep(); try { localStorage.setItem("cfb-" + k, v); } catch (_) {} }
   };
   window.CFB = { store };
 
