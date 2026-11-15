@@ -1905,6 +1905,52 @@
    "sells": null,
    "shadeFinder": null,
    "added": "2026-11-15"
+  },
+  {
+   "id": "celavi",
+   "name": "Celavi",
+   "search": [
+    "Celavi"
+   ],
+   "peta": {
+    "status": "yes",
+    "note": "PETA: company that doesn't test",
+    "url": "https://crueltyfree.peta.org/company/celavi/",
+    "checked": "2026-11-15"
+   },
+   "leapingBunny": {
+    "status": "unknown",
+    "note": "Not found in Leaping Bunny's Shopping Guide",
+    "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
+    "checked": "2026-11-15"
+   },
+   "parent": {
+    "name": null,
+    "testsOnAnimals": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "chinaRetail": {
+    "status": "unknown",
+    "url": null,
+    "note": "Not yet researched",
+    "checked": null
+   },
+   "vegan": "unknown",
+   "price": null,
+   "productTypes": [],
+   "whereToBuy": [
+    {
+     "store": "Official site",
+     "url": "https://mycelavi.com",
+     "linkType": "plain"
+    }
+   ],
+   "review": "needs-review",
+   "sells": null,
+   "shadeFinder": null,
+   "added": "2026-11-15"
   }
  ]
 }
