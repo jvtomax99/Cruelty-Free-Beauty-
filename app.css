@@ -459,6 +459,20 @@ main {
 .fd-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
 @media (min-width: 900px) { .fd-toast { bottom: var(--sp-6); } }
 @media (prefers-reduced-motion: reduce) { .fd-toast { transition: none; } }
+/* Install hint (iPhone, once, after her first save): a paper bar above the tab bar */
+.ih {
+  position: fixed; left: var(--sp-3); right: var(--sp-3); bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 55;
+  display: flex; align-items: center; gap: var(--sp-3); max-width: 420px; margin: 0 auto;
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-4); border-radius: var(--r-lg);
+  background: var(--paper); border: 1px solid var(--line); box-shadow: var(--finish); color: var(--ink); font-size: var(--fs-sub);
+  opacity: 0; transform: translateY(8px); transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+.ih.is-on { opacity: 1; transform: none; }
+.ih p { margin: 0; flex: 1; }
+.ih b { color: var(--rose-ink); }
+.ih svg { width: 18px; height: 18px; vertical-align: -3px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ih-x { flex: none; width: 44px; height: 44px; border: 0; border-radius: var(--r-pill); background: var(--blush); color: var(--rose-ink); font: inherit; font-size: var(--fs-t3); line-height: 1; }
+@media (prefers-reduced-motion: reduce) { .ih { transition: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .pf-start, .save-btn, .scan-link, .brand-row, .brand-row::before, .chip, .mode-btn, .quiz-opt { transition: none; }

@@ -467,6 +467,17 @@ me**.
     request (`tools/test-brand-requests.cjs`); and it has added a real
     brand she sent.
 
+### Keeping what she saved (Jose, 2026-11-15)
+
+- The first time she saves something of her own, the app asks the phone to
+  keep its saved data when space runs low. The phone may refuse.
+- On an iPhone in Safari, when the app is not on the Home Screen, a bar shows
+  once after her first saved brand or profile: "Tap Share, then Add to Home
+  Screen to keep your saved brands safe." One tap closes it for good.
+  - Done when: a fresh iPhone visit shows the bar once after the first save,
+    it never returns, and Android, computers and the installed app never
+    show it.
+
 ## Not in v1
 
 - Camera skin or undertone analysis (lighting makes it unreliable; face
