@@ -20,8 +20,35 @@
   }
   const store = {
     get(k, d) { try { const v = localStorage.getItem("cfb-" + k); return v === null ? d : v; } catch (_) { return d; } },
-    set(k, v) { if (HERS.includes(k)) askToKeep(); try { localStorage.setItem("cfb-" + k, v); } catch (_) {} }
+    set(k, v) {
+      if (HERS.includes(k)) askToKeep();
+      try { localStorage.setItem("cfb-" + k, v); } catch (_) {}
+      if (k === "saved" || k === "profile") installHint();
+    }
   };
+
+  /* ---------- Install hint: iPhone never offers to install, and Safari clears a site's saved
+     data after seven days of Safari use without a visit. Shown once, the first time she saves
+     a brand or her profile, only in Safari on an iPhone or iPad, only when the app is not
+     already on the Home Screen. ---------- */
+  function installHint() {
+    try {
+      if (store.get("install-hint", "") === "1" || document.querySelector(".ih")) return;
+      const ua = navigator.userAgent;
+      const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const safari = !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+      const installed = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
+      if (!ios || !safari || installed) return;
+      const box = document.createElement("div");
+      box.className = "ih";
+      box.setAttribute("role", "status");
+      box.innerHTML = '<p>Tap <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> <b>Share</b>, then <b>Add to Home Screen</b> to keep your saved brands safe.</p><button type="button" class="ih-x" aria-label="Close">&times;</button>';
+      box.querySelector(".ih-x").addEventListener("click", () => { box.classList.remove("is-on"); setTimeout(() => box.remove(), 250); });
+      document.body.appendChild(box);
+      requestAnimationFrame(() => box.classList.add("is-on"));
+      try { localStorage.setItem("cfb-install-hint", "1"); } catch (_) {}
+    } catch (_) {}
+  }
   window.CFB = { store };
 
   /* ---------- Screens (hash routing, so the Back button retraces) ---------- */

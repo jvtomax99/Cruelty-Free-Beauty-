@@ -141,6 +141,10 @@ tiles.
   clear background, in `assets/pins/`. No rainbow of colours: that is the
   Hub's look, not ours.
 - **Search:** paper, 52 px tall, hairline border, finish shadow.
+- **Install hint (iPhone):** a paper bar above the tab bar, radius 20,
+  hairline border, finish shadow, 15 px text with Share and Add to Home
+  Screen in rose ink, a 44 px blush pill to close. Shown once, after her
+  first save, only in Safari when the app is not on the Home Screen.
 - **Card:** paper with a hairline and the finish.
 - **Tab bar (phones):** floating glass capsule, 56 px tabs, each a 28 px
   pin over its label (32 px in the side rail); the active one in blush-2
