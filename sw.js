@@ -78,7 +78,8 @@ self.addEventListener("install", e => {
 self.addEventListener("activate", e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION && k !== MEDIA && k !== WORLD).map(k => caches.delete(k))))
+      // (Only this app's old copies: the other apps at this address keep theirs in the same place.)
+      .then(keys => Promise.all(keys.filter(k => k.startsWith("cfb-") && k !== CACHE_VERSION && k !== MEDIA && k !== WORLD).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
