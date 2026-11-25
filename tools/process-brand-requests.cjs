@@ -14,6 +14,9 @@
 //   - more than one match, a parent company that tests, a dead link, or anything that kept it
 //     from going live: mention Jose and label needs-jose, which this script then skips
 //   - a lookup that failed: say so once, mentioning Jose (label retrying), and try again next run
+// Details she sends (the optional boxes, or her "Add details" form, titled "Details:") go through
+// tools/brand-details.cjs: each saved only when its link shows it, the rest left for Jose. They go
+// out with the new brands in the same commit, and her answer lists what happened to each box.
 // Issue text is only data: the name reaches add-brand.cjs through a file, never a command line.
 // Exit 1 when something needs a look (the workflow run turns red).
 //
@@ -147,7 +150,7 @@ function publish(queued) {
     }
     const { raw, data } = readData();
     for (const q of adds) if (!data.brands.some((b) => b.id === q.record.id)) data.brands.push(q.record);
-    for (const q of more) if (!bd.apply(data, q.brand.id, q.patch, q.change)) return { ok: false, reason: `${q.brand.name} is no longer in the app's data` };
+    for (const q of more) if (!bd.apply(data, q.brand.id, q.patch, q.change, q.stores)) return { ok: false, reason: `${q.brand.name} is no longer in the app's data` };
     writeData(data, raw);
     bumpCache();
     const cb = run(process.execPath, [path.join(__dirname, 'check-brands.cjs')]);
@@ -176,7 +179,11 @@ async function goLive(queued) {
     await new Promise((r) => setTimeout(r, 10000));
     try {
       const live = await fetch(`${SITE}data/brands.json?t=${Date.now()}`, { cache: 'no-store' }).then((r) => r.json());
-      const shows = (q) => { const b = live.brands.find((x) => x.id === q.brand.id); return !!b && Object.entries(q.patch || {}).every(([k, v]) => JSON.stringify(b[k]) === JSON.stringify(v)); };
+      const shows = (q) => {
+        const b = live.brands.find((x) => x.id === q.brand.id);
+        return !!b && Object.entries(q.patch || {}).every(([k, v]) => JSON.stringify(b[k]) === JSON.stringify(v))
+          && (q.stores || []).every((w) => (b.whereToBuy || []).some((x) => x.url === w.url));
+      };
       if (queued.every(shows)) return true;
     } catch (_) {}
   }
@@ -195,8 +202,8 @@ async function main() {
     const lead = wasAdd ? `**${b.name}** is already in the app, so I looked at the details you sent.` : `Details for **${b.name}**:`;
     const list = r.lines.map((l) => '- ' + l).join('\n');
     if (r.jose) trouble++;
-    if (Object.keys(r.patch).length) {
-      queued.push({ issue: n, brand: { id: b.id, name: b.name }, patch: r.patch, change: r.change, retried: has(issue, RETRY), dups: [], lines: r.lines, jose: r.jose });
+    if (Object.keys(r.patch).length || r.stores.length) {
+      queued.push({ issue: n, brand: { id: b.id, name: b.name }, patch: r.patch, stores: r.stores, change: r.change, retried: has(issue, RETRY), dups: [], lines: r.lines, jose: r.jose });
       return true;
     }
     await comment(n, `${lead}\n\n${list}\n\nNothing was changed in the app.${r.jose ? ` ${JOSE} will finish what's left.` : ''}`);
@@ -214,7 +221,8 @@ async function main() {
       // "Add details" for a brand already in: no certifier lookup, just the details.
       if (isDetails(issue)) {
         const { data } = readData();
-        const b = bd.find(data, name);
+        const { brand: b, many } = bd.find(data, name);
+        if (many) { await hold(n, `More than one brand in the app matches **${name}**, so ${JOSE} will check which one these details are for.`); trouble++; continue; }
         if (!b) { await comment(n, `**${name}** isn't in the app, so there's nothing to add details to. Send it with Add a brand first (the details boxes are there too).`); await close(n, 'not_planned'); continue; }
         if (queued.some((x) => x.brand.id === b.id)) { await hold(n, `Another request in this same check changes **${b.name}**. ${JOSE} will add these details after it.`); trouble++; continue; }
         if (!withDetails) { await comment(n, `No details came with this request for **${b.name}**, so nothing changed. Fill in at least one box.`); await close(n, 'not_planned'); continue; }
@@ -233,12 +241,12 @@ async function main() {
           if (withDetails) {
             // A new brand's details go into its record before it goes out. No "changes" entry: it's new.
             const r = await bd.details(res.record, details);
-            Object.assign(res.record, r.patch);
+            const { raw, data } = readData();
+            bd.apply(data, res.record.id, r.patch, null, r.stores);
+            writeData(data, raw);
+            Object.assign(res.record, data.brands.find((x) => x.id === res.record.id));
             q.lines = r.lines; q.jose = r.jose;
             if (r.jose) trouble++;
-            const { raw, data } = readData();
-            bd.apply(data, res.record.id, r.patch, null);
-            writeData(data, raw);
           }
           queued.push(q);
         }
@@ -287,13 +295,13 @@ async function main() {
   if (!pub.ok) {
     log(`\nNot published: ${pub.reason}`);
     if (!DRY) run('git', ['reset', '--hard', 'origin/main']);
-    await everyone((q, n) => hold(n, `**${q.brand.name}** checks out with the certifiers, but it couldn't go live: ${pub.reason}. ${JOSE} will take a look.`));
+    await everyone((q, n) => hold(n, `${q.record ? `**${q.brand.name}** checks out with the certifiers` : `The details for **${q.brand.name}** check out`}, but couldn't go live: ${pub.reason}. ${JOSE} will take a look.`));
     return 1;
   }
   const live = await goLive(queued);
   if (!live) {
     log('\nPushed, but the live site did not show the new brands within 6 minutes.');
-    await everyone((q, n) => hold(n, `**${q.brand.name}** is saved, but the live app hasn't updated yet. ${JOSE} will check the site's build.`));
+    await everyone((q, n) => hold(n, `${q.record ? `**${q.brand.name}** is` : `The details for **${q.brand.name}** are`} saved, but the live app hasn't updated yet. ${JOSE} will check the site's build.`));
     return 1;
   }
   await everyone(async (q, n) => {

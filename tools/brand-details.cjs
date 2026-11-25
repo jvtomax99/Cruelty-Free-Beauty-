@@ -1,39 +1,52 @@
 // The founder's details for a brand (parent company, mainland China, price, a store), from the
 // optional boxes on her Add a brand and Add details forms. Used by tools/process-brand-requests.cjs.
 // Each detail is saved only when its link shows it (CLAUDE.md: claims need sources):
-//   - parent: her page must name both the brand and the parent; then PETA says whether the parent
-//     tests (its page becomes the source), and a parent that tests gets a "changes" entry
+//   - parent: her page must name both the brand and the parent, as whole words; it stays the
+//     source. PETA then says whether the parent tests. A parent PETA says tests would make the
+//     brand fail Strict, so that one goes to Jose, as does a PETA answer that doesn't clearly match
 //   - China: never saved by the bot (a page can mention China without proving mainland store
 //     sales, and a wrong "yes" fails a brand); it goes to Jose with her link
 //   - price: only for a brand with no price yet, with the brand's own site as where to check it
 //   - store: a plain link (never an affiliate one) to a page that names the brand
-// details(brand, d) returns { patch, change, lines, jose }: the fields to set on the brand, an
-// optional "changes" entry, one line per box for her issue, and whether Jose is needed.
-// BRAND_DETAILS_FAKE=file.json ({ "pages": { url: text }, "peta": { name: [hits] } }) replaces the
+// details(brand, d) returns { patch, stores, change, lines, jose }: the fields to set on the brand,
+// stores to add to its buy links, an optional "changes" entry, one line per box for her issue, and
+// whether Jose is needed.
+// BRAND_DETAILS_FAKE=file.json ({ "pages": { url: text or { text, url } }, "peta": { name: [hits] } })
+// replaces the
 // network, for tools/test-brand-requests.cjs.
 
 const fs = require('fs');
 
 const today = () => new Date().toISOString().slice(0, 10);
-const fold = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '');
-// "Benefit Cosmetics" is called "Benefit" on most pages; "LVMH, Inc." is "LVMH".
-const core = (s) => fold(String(s || '').replace(/\s*\(.*\)\s*$/, '').replace(/[,.]?\s+(cosmetics|beauty|makeup|inc|llc|ltd|group|corp|corporation|company|co|sa|plc)\.?$/i, ''));
+// Words of a name or a page: no accents, no apostrophes ("L'Oréal" is one word, "loreal").
+const wordsOf = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/['\u2019]/g, '').split(/[^a-z0-9]+/).filter(Boolean);
+// A company's name without what pages leave off: a leading "The", trailing "Cosmetics", "Inc",
+// "Groupe", "Companies" and the like, and a "(...)" note. "The Estée Lauder Companies Inc." is "estee lauder".
+const TRAIL = new Set(['cosmetics', 'cosmetic', 'beauty', 'makeup', 'inc', 'llc', 'ltd', 'limited', 'group', 'groupe', 'corp', 'corporation', 'company', 'companies', 'co', 'sa', 'plc', 'ag', 'gmbh', 'holdings', 'brands', 'international', 'usa']);
+function nameWords(s) {
+  const w = wordsOf(String(s || '').replace(/\s*\(.*\)\s*$/, ''));
+  if (w[0] === 'the' && w.length > 1) w.shift();
+  while (w.length > 1 && TRAIL.has(w[w.length - 1])) w.pop();
+  return w;
+}
+const core = (s) => nameWords(s).join('');
 const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (_) { return 'her link'; } };
 const httpsLink = (u) => (/^https:\/\/[^\s]+$/.test(u || '') && u.length <= 300 ? u : null);
 // Shopping links that pay a commission are not allowed on brands (CLAUDE.md "Her storefront").
-const AFFILIATE = /shopmy\.us|shop\.app\/|rstyle\.me|howl\.(me|link)|linksynergy|skimresources|shareasale|awin1|anrdoezrs|amzn\.to|bit\.ly|tinyurl|liketoknow|ltk\.app|[?&](tag|aff|affiliate|affid|ref|rfsn|irclickid|clickid)=/i;
+// Checked on her link and on wherever it ends up after redirects.
+const AFFILIATE = /shopmy\.us|shop\.app\/|rstyle\.me|howl\.(me|link)|liketoknow|liketk\.it|ltk\.app|shopltk|linksynergy|skimresources|skimlinks|shareasale|awin1|anrdoezrs|dpbolvw|jdoqocy|tkqlhce|kqzyfj|amzn\.to|bit\.ly|tinyurl|geni\.us|pxf\.io|sjv\.io|ojrq\.net|evyy\.net|shopstyle\.it|prf\.hn|go\.magik\.ly|[?&](tag|aff|affiliate|affid|aff_id|ref|rfsn|irclickid|irgwc|clickid|linkcode|ranmid|raneaid|ransiteid|sscid|cjevent|utm_medium=affiliate)\b/i;
 
 function fakeData() { return process.env.BRAND_DETAILS_FAKE ? JSON.parse(fs.readFileSync(process.env.BRAND_DETAILS_FAKE, 'utf8')) : null; }
 
-// A page's words, or null when it won't open. Brand and store sites often refuse plain requests,
-// so a real browser is tried next (CLAUDE.md "Brand sites").
+// A page's words and where it ended up ({ text, url }), or null when it won't open. Brand and
+// store sites often refuse plain requests, so a real browser is tried next (CLAUDE.md "Brand sites").
 async function pageText(url) {
   const fake = fakeData();
-  if (fake) return Object.hasOwn(fake.pages || {}, url) ? fake.pages[url] : null;
+  if (fake) { const f = (fake.pages || {})[url]; return f === undefined ? null : typeof f === 'string' ? { text: f, url } : f; }
   const strip = (html) => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ');
   try {
     const r = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0 (C.F.B. brand check)' } });
-    if (r.ok) { const t = strip(await r.text()); if (t.length > 400) return t; }
+    if (r.ok) { const t = strip(await r.text()); if (t.length > 400) return { text: t, url: r.url || url }; }
   } catch (_) {}
   let browser;
   try {
@@ -43,7 +56,7 @@ async function pageText(url) {
     const r = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
     if (!r || !r.ok()) return null;
     await page.waitForTimeout(2000);
-    return (await page.evaluate(() => document.body.innerText)).replace(/\s+/g, ' ');
+    return { text: (await page.evaluate(() => document.body.innerText)).replace(/\s+/g, ' '), url: page.url() };
   } catch (_) { return null; } finally { if (browser) await browser.close().catch(() => {}); }
 }
 
@@ -53,11 +66,22 @@ async function petaHits(name) {
   return require('./lookup-certifiers.cjs').peta(name);
 }
 
-const names = (b) => [...new Set([b.name, ...(b.search || [])].map(core).filter((k) => k.length >= 3))];
-const mentions = (text, keys) => { const t = fold(text); return keys.some((k) => t.includes(k)); };
+// Does the page name it, as whole words? "elf" is not in "shelf", "Rare" not in "rarely".
+// A name written as letters ("e.l.f.") also counts when the page writes it as one word ("elf").
+function mentions(text, name) {
+  const page = wordsOf(text), want = nameWords(name);
+  if (!want.length || want.join('').length < 2) return false;
+  const joined = want.join('');
+  for (let i = 0; i < page.length; i++) {
+    if (page[i] === joined) return true;
+    if (want.length > 1 && want.every((w, k) => page[i + k] === w)) return true;
+  }
+  return false;
+}
+const namesBrand = (text, b) => [b.name, ...(b.search || [])].some((n) => mentions(text, n));
 
 async function details(brand, d) {
-  const patch = {}, lines = [];
+  const patch = {}, lines = [], stores = [];
   let change = null, jose = false;
   const say = (box, text, needsJose = false) => { lines.push(`**${box}:** ${text}`); if (needsJose) jose = true; };
   const T = today();
@@ -75,24 +99,27 @@ async function details(brand, d) {
     } else if (was.name && was.checked && was.url) {
       say('Parent company', `**${was.name}** is already on its page, with its source (${was.url}).`);
     } else {
-      const text = await pageText(link);
-      if (text === null) say('Parent company', `${link} didn't open for the check. Jose will read it.`, true);
-      else if (!mentions(text, names(brand)) || !mentions(text, [core(parent)].filter((k) => k.length >= 2))) {
+      const page = await pageText(link);
+      if (page === null) say('Parent company', `${link} didn't open for the check. Jose will read it.`, true);
+      else if (!namesBrand(page.text, brand) || !mentions(page.text, parent)) {
         say('Parent company', `${link} doesn't name both ${brand.name} and ${parent}, so nothing was saved. Jose will take a look.`, true);
       } else {
         let hits = [];
         try { hits = await petaHits(parent); } catch (_) { hits = null; }
+        const bare = (t) => String(t || '').replace(/\s*\(.*\)\s*$/, '');
+        const hit = hits && hits.find((h) => core(bare(h.title)) === core(parent) && h.verdict !== 'no verdict found');
         if (hits === null) say('Parent company', `PETA's site didn't answer, so whether ${parent} tests wasn't checked. Jose will finish it.`, true);
-        else {
-          const hit = hits.find((h) => core(h.title) === core(parent) && h.verdict !== 'no verdict found');
-          const tests = hit && hit.status === 'no' ? 'yes' : hit && hit.status === 'yes' ? 'no' : 'unknown';
-          const law = hit && /regulatory/i.test(hit.verdict || '');
-          patch.parent = tests === 'unknown'
-            ? { name: parent, testsOnAnimals: 'unknown', url: link, note: `${host(link)} names ${parent} as the owner. PETA doesn't list ${parent} as cruelty-free or as testing`, checked: T }
-            : { name: parent, testsOnAnimals: tests, url: hit.url, note: `${host(link)} names ${parent} as the owner. ${hit.verdict}`, checked: T };
+        else if (hits.length && !hit) say('Parent company', `PETA lists names close to ${parent} (${hits.slice(0, 3).map((h) => bare(h.title)).join(', ')}) but not exactly it, so nothing was saved. Jose will check which one it is.`, true);
+        else if (hit && hit.status === 'no') {
+          // A parent that tests fails the brand under Strict: a person reads her link first.
+          say('Parent company', `${link} names ${parent}, and PETA says ${parent} tests on animals${/regulatory/i.test(hit.verdict || '') ? ' when the law requires it' : ''} (${hit.url}). That would make ${brand.name} fail Strict, so Jose checks it before it goes in.`, true);
+        } else {
+          const tests = hit && hit.status === 'yes' ? 'no' : 'unknown';
+          patch.parent = { name: parent, testsOnAnimals: tests, url: link,
+            note: `The founder's link (${host(link)}) names ${parent} with ${brand.name}. ${tests === 'no' ? `PETA: company that doesn't test (${hit.url})` : `PETA doesn't list ${parent} as cruelty-free or as testing`}`, checked: T };
           const from = was.testsOnAnimals || 'unknown';
-          if (from !== tests) change = { id: brand.id, claim: 'parent', from, to: tests, date: T, url: patch.parent.url };
-          say('Parent company', `saved: **${parent}**, from ${link}. ${tests === 'yes' ? `PETA says it tests on animals${law ? ' when the law requires it' : ''}, so ${brand.name} now fails Strict` : tests === 'no' ? "PETA says it doesn't test" : "PETA doesn't list it either way, so its testing shows as unknown"}.`);
+          if (from !== tests) change = { id: brand.id, claim: 'parent', from, to: tests, date: T, url: link };
+          say('Parent company', `saved: **${parent}**, from ${link}. ${tests === 'no' ? "PETA says it doesn't test." : "PETA doesn't list it either way, so its testing shows as unknown."}`);
         }
       }
     }
@@ -109,7 +136,7 @@ async function details(brand, d) {
     const m = String(d.price).trim().match(/^(\${1,3})(?!\$)/);
     const site = (brand.whereToBuy || []).find((w) => /official site/i.test(w.store || '') && httpsLink(w.url));
     if (!m) say('Price', `"${String(d.price).slice(0, 20)}" isn't $, $$ or $$$, so nothing was saved.`);
-    else if (brand.price && brand.priceSource && httpsLink(brand.priceSource.url) && !/founder/i.test(brand.priceSource.note || '')) say('Price', `kept ${brand.price}: it already comes from the brand's own prices (${brand.priceSource.url}).`);
+    else if (brand.price) say('Price', `kept ${brand.price}: it already has a price${brand.priceSource && brand.priceSource.url ? ` (${brand.priceSource.url})` : ''}.`);
     else if (!site) say('Price', `${m[1]} wasn't saved because the app has no brand website to show next to it. Send the brand's site and it can be.`);
     else {
       patch.price = m[1];
@@ -122,22 +149,23 @@ async function details(brand, d) {
   if (d.store || d.storeLink) {
     const link = httpsLink(d.storeLink);
     const store = String(d.store || '').replace(/\s+/g, ' ').trim().slice(0, 40) || (link ? host(link) : '');
-    const have = (brand.whereToBuy || []).concat(patch.whereToBuy || []);
+    const have = brand.whereToBuy || [];
     if (!link) say('Store', `${store || 'the store'} needs a link to the brand's page there, so nothing was saved.`);
     else if (AFFILIATE.test(link)) say('Store', `${link} looks like a commission link, and the app never puts those on a brand. Send the store's plain page for the brand.`);
     else if (have.some((w) => w.url === link)) say('Store', `${store} is already on its page.`);
     else {
-      const text = await pageText(link);
-      if (text === null) say('Store', `${link} didn't open for the check. Jose will read it.`, true);
-      else if (!mentions(text, names(brand))) say('Store', `${link} doesn't name ${brand.name}, so nothing was saved.`);
+      const page = await pageText(link);
+      if (page === null) say('Store', `${link} didn't open for the check. Jose will read it.`, true);
+      else if (AFFILIATE.test(page.url || '')) say('Store', `${link} leads to a commission link, and the app never puts those on a brand. Send the store's plain page for the brand.`);
+      else if (!namesBrand(page.text, brand)) say('Store', `${link} doesn't name ${brand.name}, so nothing was saved.`);
       else {
-        patch.whereToBuy = [...(brand.whereToBuy || []), { store, url: link, linkType: 'plain' }];
+        stores.push({ store, url: link, linkType: 'plain' });
         say('Store', `saved: ${store}.`);
       }
     }
   }
 
-  return { patch, change, lines, jose };
+  return { patch, stores, change, lines, jose };
 }
 
 // The form's boxes, from an issue body ("### Label\n\nvalue"); '' for an empty box.
@@ -154,11 +182,14 @@ function fromIssue(section) {
 }
 const any = (d) => Object.values(d).some(Boolean);
 
-// Puts a patch on the brand with that id in a brands file's data (each publish try starts from main).
-function apply(data, id, patch, change) {
+// Puts details on the brand with that id in a brands file's data (each publish try starts from
+// main): fields set, stores added to what main has now (never the list as it was read earlier).
+function apply(data, id, patch, change, stores = []) {
   const b = data.brands.find((x) => x.id === id);
   if (!b) return false;
   Object.assign(b, JSON.parse(JSON.stringify(patch)));
+  b.whereToBuy = b.whereToBuy || [];
+  for (const w of stores) if (!b.whereToBuy.some((x) => x.url === w.url)) b.whereToBuy.push({ ...w });
   if (change) {
     data.changes = (data.changes || []).filter((c) => !(c.id === change.id && c.claim === change.claim && c.date === change.date));
     data.changes.push(change);
@@ -171,10 +202,11 @@ function apply(data, id, patch, change) {
 const words = (s) => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
 const FILLER = new Set(['cosmetics', 'cosmetic', 'makeup', 'professional', 'paris', 'companies', 'inc', 'new', 'york', 'london', 'usa', 'beauty']);
 function keys(n) { const w = words(n); if (!w.length) return []; const t = w.slice(); while (t.length > 1 && FILLER.has(t[t.length - 1])) t.pop(); return [...new Set([w.join(''), t.join('')])]; }
+// { brand } for one match, { many: true } for more than one, {} for none.
 function find(data, name) {
   const want = keys(name);
   const hits = data.brands.filter((b) => [b.name, ...(b.search || [])].some((n) => keys(n).some((k) => want.includes(k))));
-  return hits.length === 1 ? hits[0] : null;
+  return hits.length === 1 ? { brand: hits[0] } : hits.length ? { many: true } : {};
 }
 
-module.exports = { details, fromIssue, any, apply, find, AFFILIATE };
+module.exports = { details, fromIssue, any, apply, find, mentions, AFFILIATE };

@@ -37,8 +37,15 @@ fs.writeFileSync(path.join(dir, 'details.json'), JSON.stringify({
     'https://www.ulta.com/brand/celavi': 'Shop Celavi at Ulta Beauty. Celavi lipstick, Celavi blush.',
     'https://credobeauty.com/brands/juice-beauty': 'Juice Beauty at Credo: clean makeup.',
     'https://nopage.example/about': 'About us. We make many things.',
+    'https://kindgroup.example/brands': 'The Kind Group family: Milani, and more.',
+    'https://store.example/milani': { text: 'Milani at our store.', url: 'https://shopmy.us/redirected' },
+    'https://news.example/self-care': "L'Oréal news: treat yourself to a shelf of self-care.",
   },
-  peta: { 'Glow Holdings': [{ title: 'Glow Holdings', url: 'https://crueltyfree.peta.org/company/glow-holdings/', status: 'no', verdict: 'PETA: does test on animals' }] },
+  peta: {
+    'Glow Holdings': [{ title: 'Glow Holdings', url: 'https://crueltyfree.peta.org/company/glow-holdings/', status: 'no', verdict: 'PETA: does test on animals' }],
+    'The Kind Group Inc.': [{ title: 'Kind Group', url: 'https://crueltyfree.peta.org/company/kind-group/', status: 'yes', verdict: "PETA: company that doesn't test" }],
+    'Nearby': [{ title: 'Nearby Labs', url: 'https://crueltyfree.peta.org/company/nearby-labs/', status: 'yes', verdict: "PETA: company that doesn't test" }],
+  },
 }));
 // The form as it was before Cruelty Free International was added: issues sent then still work.
 const oldForm = (name, proof) => `### Brand name\n\n${name}\n\n### Brand's website (if you have it)\n\n_No response_\n\n### PETA or Leaping Bunny page (if you have it)\n\n${proof}`;
@@ -66,6 +73,8 @@ fs.writeFileSync(path.join(dir, 'issues.json'), JSON.stringify([
   issue(20, 'cfbbeauty', form('Milani') + more({ price: '$$', store: 'My picks', storeLink: 'https://shopmy.us/collections/123', parent: 'Nopage Inc', parentLink: 'https://nopage.example/about' })),
   issue(21, 'cfbbeauty', detailsForm('Notabrand Zz', { price: '$' }), ['add-brand'], 'Details: Notabrand Zz'),
   issue(22, 'cfbbeauty', detailsForm('Milani', {}), ['add-brand'], 'Details: Milani'),
+  issue(23, 'cfbbeauty', detailsForm('Milani', { parent: 'The Kind Group Inc.', parentLink: 'https://kindgroup.example/brands', store: 'Our store', storeLink: 'https://store.example/milani' }), ['add-brand'], 'Details: Milani'),
+  issue(24, 'cfbbeauty', detailsForm('e.l.f. Cosmetics', { parent: "L'Oréal", parentLink: 'https://news.example/self-care' }), ['add-brand'], 'Details: e.l.f.'),
 ]));
 
 const r = spawnSync(process.execPath, [path.join(__dirname, 'process-brand-requests.cjs')], {
@@ -79,7 +88,7 @@ const closed = (n, reason) => calls(n).some((l) => l.startsWith('[dry run] PATCH
 const labelled = (n, name) => calls(n).some((l) => l.includes('/labels') && l.includes(name));
 
 check(r.status === 1, `the run ends with exit 1, because some requests need Jose (exit ${r.status})`);
-check(/19 request\(s\) to check/.test(out), 'it skips the untrusted author, the one left for Jose and the pull request (19 to check)');
+check(/21 request\(s\) to check/.test(out), 'it skips the untrusted author, the one left for Jose and the pull request (21 to check)');
 check(calls(3).length === 0 && calls(9).length === 0 && calls(12).length === 0, 'no GitHub call at all for the untrusted issue, the held one or the pull request');
 
 const data = JSON.parse(fs.readFileSync(DATA, 'utf8'));
@@ -89,7 +98,7 @@ check(kaja && kaja.whereToBuy[0] && kaja.whereToBuy[0].url === 'https://www.kaja
 check(juice && juice.whereToBuy.length === 1 && juice.whereToBuy[0].store === 'Credo' && juice.whereToBuy[0].linkType === 'plain', 'a javascript: website is dropped, never a buy link; the store she sent (its page names the brand) is the one buy link');
 check(said(1, /Added to C\.F\.B\.: \*\*Kaja Beauty\*\*, listed as cruelty-free by PETA/) && said(1, /#brand\/kaja-beauty/) && closed(1, 'completed'), '#1: "Added", with its certifier and link, closed');
 check(said(2, /Leaping Bunny/) && said(2, /No buy link yet/) && closed(2, 'completed'), '#2: added from Leaping Bunny, and told a website gives it a buy link');
-check(/bump CACHE_VERSION/.test(out) && /git commit and push: Add Kaja Beauty, Juice Beauty, Euroglow; details for Celavi \(the founder's requests #1, #2, #17, #19\)/.test(out), 'one commit for all three, with CACHE_VERSION bumped');
+check(/bump CACHE_VERSION/.test(out) && /git commit and push: Add Kaja Beauty, Juice Beauty, Euroglow; details for Celavi, Milani \(the founder's requests #1, #2, #17, #19, #23\)/.test(out), 'one commit for all three, with CACHE_VERSION bumped');
 check(said(4, /already in the app/) && said(4, /#brand\/milani/) && closed(4, 'completed'), '#4 Milani: already in the app, with its link, closed');
 check(said(5, /couldn't find \*\*Zzqx Glow Lab\*\* on PETA's, Leaping Bunny's or Cruelty Free International's/) && said(5, /send it again with its PETA, Leaping Bunny or Cruelty Free International page/) && closed(5, 'not_planned'), '#5: not listed, closed as not planned, told how to ask again');
 check(said(6, /PETA says \*\*Testco\*\* tests on animals/) && closed(6, 'not_planned'), '#6: PETA says it tests, closed as not planned');
@@ -108,18 +117,25 @@ check(said(18, /you sent https:\/\/www\.crueltyfreeinternational\.org\/approved-
 check(!/Hidden Gem|Flaky/.test(JSON.stringify(data.brands.map((b) => b.name))), 'nothing unconfirmed was written to the data');
 check(said(2, /Your details:/) && said(2, /Store:\*\* saved: Credo/), '#2: the answer lists the details she sent with the new brand');
 const celavi = data.brands.find((b) => b.id === 'celavi');
-check(celavi && celavi.parent.name === 'Glow Holdings' && celavi.parent.testsOnAnimals === 'yes' && celavi.parent.url === 'https://crueltyfree.peta.org/company/glow-holdings/', '#19: a parent page that names both is saved, and PETA (the source) says the parent tests');
-check(data.changes.some((c) => c.id === 'celavi' && c.claim === 'parent' && c.from === 'unknown' && c.to === 'yes' && /peta\.org/.test(c.url)), '#19: a parent that tests gets a "What changed" entry with its PETA link');
+check(celavi && celavi.parent.name === null && said(19, /PETA says Glow Holdings tests on animals/) && said(19, /Jose checks it before it goes in/), '#19: a parent PETA says tests is never saved by the bot (it would fail the brand): left for Jose');
 check(celavi && celavi.price === '$' && celavi.priceSource.url === 'https://mycelavi.com' && /founder/i.test(celavi.priceSource.note), "#19: her price is saved for a brand with none, pointing at the brand's own site");
 check(celavi && celavi.whereToBuy.some((w) => w.store === 'Ulta' && w.linkType === 'plain'), '#19: the store whose page names the brand is added as a plain link');
 check(celavi && celavi.chinaRetail.status === 'unknown' && said(19, /Jose checks this one by hand/) && labelled(19, 'needs-jose') && !closed(19, 'completed'), '#19: China is never saved by the bot: left for Jose');
 check(said(19, /Details saved for \*\*Celavi\*\*/) && at(/\/issues\/19\/comments/) > at(/git commit and push/), '#19: answered once the details are live');
 const milani = data.brands.find((b) => b.id === 'milani');
-check(milani && milani.price === '$' && milani.parent.name === null && !milani.whereToBuy.some((w) => /shopmy/.test(w.url)), "#20: Milani unchanged: its own price kept, a commission link refused, a parent page that doesn't name both not saved");
+check(milani && milani.price === '$' && milani.parent.name !== 'Nopage Inc' && !milani.whereToBuy.some((w) => /shopmy/.test(w.url)), "#20: Milani unchanged: its own price kept, a commission link refused, a parent page that doesn't name both not saved");
 check(said(20, /already in the app, so I looked at the details/) && said(20, /commission link/) && said(20, /Nothing was changed/) && labelled(20, 'needs-jose'), '#20: the answer says why for each, and leaves the parent for Jose');
 check(said(21, /isn't in the app/) && closed(21, 'not_planned'), '#21: details for a brand not in the app: told to add it first, closed');
 check(said(22, /No details came/) && closed(22, 'not_planned'), '#22: a details form with every box empty: said so, closed');
-check(/git commit and push: Add Kaja Beauty, Juice Beauty, Euroglow; details for Celavi/.test(out), 'the details go out in the same commit as the new brands');
+check(/git commit and push: Add Kaja Beauty, Juice Beauty, Euroglow; details for Celavi, Milani/.test(out), 'the details go out in the same commit as the new brands');
+check(milani && milani.parent.name === 'The Kind Group Inc.' && milani.parent.testsOnAnimals === 'no' && milani.parent.url === 'https://kindgroup.example/brands' && /crueltyfree\.peta\.org\/company\/kind-group/.test(milani.parent.note), '#23: "The Kind Group Inc." matches PETA\'s "Kind Group"; her ownership link stays the source, PETA\'s page is named in the note');
+check(data.changes.some((c) => c.id === 'milani' && c.claim === 'parent' && c.from === 'unknown' && c.to === 'no'), '#23: a newly confirmed parent that doesn\'t test gets a "What changed" entry');
+check(milani && !milani.whereToBuy.some((w) => /store\.example|shopmy/.test(w.url)) && said(23, /leads to a commission link/), '#23: a store link that redirects to a commission link is refused');
+const elf = data.brands.find((b) => b.id === 'elf');
+check(elf && elf.parent.name !== "L'Oréal" && said(24, /doesn't name both/), '#24: "elf" inside "shelf" and "self" is not e.l.f.: nothing saved');
+const { mentions, AFFILIATE } = require('./brand-details.cjs');
+check(mentions('Shop e.l.f. today', 'e.l.f.') && mentions('ELF Beauty owns it', 'e.l.f.') && !mentions('a shelf of self-care', 'elf') && !mentions('rarely seen', 'Rare Beauty') && mentions("L'Oréal Groupe brands", "L'Oréal"), 'names match as whole words only');
+check(['https://liketk.it/4abc', 'https://ulta.pxf.io/x', 'https://sephora.sjv.io/y', 'https://www.amazon.com/dp/B0?tag=me-20', 'https://www.amazon.com/dp/B0?linkCode=ll1'].every((u) => AFFILIATE.test(u)) && !AFFILIATE.test('https://www.ulta.com/brand/milani'), 'commission links from LTK, Impact and Amazon are caught; a plain store page is not');
 check(fs.readFileSync(path.join(__dirname, '..', 'sw.js'), 'utf8') === swBefore, "a dry run never touches the real sw.js");
 const cb = spawnSync(process.execPath, [path.join(__dirname, 'check-brands.cjs')], { encoding: 'utf8', env: { ...process.env, BRANDS_FILE: DATA, NODE_USE_ENV_PROXY: '1' } });
 check(cb.status === 0, 'the data with both new brands passes check-brands');

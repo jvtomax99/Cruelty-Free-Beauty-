@@ -456,9 +456,10 @@ me**.
     (`brand-details.yml`, titled "Details:"), and with founder tools on
     every brand page has an "Add details" button. The same Action saves a
     detail only when its link shows it: a parent only if her page names
-    both, with PETA's page saying whether the parent tests (a parent that
-    tests gets a "What changed" entry); a price only for a brand with none
-    yet; a store only as a plain link to a page that names the brand,
+    both as whole words (her page stays the source), with PETA saying
+    whether the parent tests; a parent PETA says tests, or a PETA answer
+    that doesn't clearly match, goes to Jose instead, since it would fail
+    the brand under Strict; a price only for a brand with none yet; a store only as a plain link to a page that names the brand,
     never a commission link. China is never saved by the bot: it goes to
     Jose. Comments on an issue are never read. Not in this version: free
     notes, vegan, changing a parent that's already named.
