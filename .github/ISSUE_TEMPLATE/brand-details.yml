@@ -1,0 +1,55 @@
+# The founder's "Add details" (founder.js, for a brand already in C.F.B.) opens this form filled in.
+# The Add a brand GitHub Action (.github/workflows/add-brand.yml) handles these too, only from
+# the trusted logins in CLAUDE.md: each detail is saved only if its link shows it.
+name: Add details to a brand
+description: Send a parent company, China sales, price or a store for a brand already in C.F.B.
+title: "Details: "
+labels: ["add-brand"]   # the same Action; the "Details:" title tells it apart
+body:
+  - type: input
+    id: brand
+    attributes:
+      label: Brand name
+      placeholder: Milani
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        **More details (optional).** Each one is saved only if its link shows it. Comments below aren't read by the check, so put details in these boxes.
+  - type: input
+    id: parent
+    attributes:
+      label: Parent company (who owns the brand)
+      placeholder: L'Oréal
+  - type: input
+    id: parent_link
+    attributes:
+      label: Link that shows who owns it
+      description: A page from the owner, the brand or a certifier that names both.
+      placeholder: https://
+  - type: input
+    id: china
+    attributes:
+      label: Sold in mainland China stores? (yes or no)
+      placeholder: yes
+  - type: input
+    id: china_link
+    attributes:
+      label: Link that shows where it sells
+      placeholder: https://
+  - type: input
+    id: price
+    attributes:
+      label: Price ($ drugstore, $$ mid, $$$ luxury)
+      placeholder: $
+  - type: input
+    id: store
+    attributes:
+      label: A store that carries it
+      placeholder: Ulta
+  - type: input
+    id: store_link
+    attributes:
+      label: Store link (the brand's page at that store)
+      placeholder: https://

@@ -50,11 +50,27 @@
   /* ---------- The issue link ---------- */
   // Only a web address is passed on; anything else in a link field is dropped.
   const webLink = (s) => { const t = String(s || "").trim(); return /^https?:\/\/\S+$/i.test(t) && t.length <= 300 ? t : ""; };
-  function issueUrl(name, site, link) {
-    const q = new URLSearchParams({ template: "add-brand.yml", title: "Add brand: " + name, brand: name });
-    if (site) q.set("site", site);
-    if (link) q.set("proof", link);
+  // more: the optional details ({ parent, parent_link, china, china_link, price, store, store_link }).
+  // detailsOnly: the brand is already in the app, so the Add details form is opened instead.
+  function issueUrl(name, site, link, more = {}, detailsOnly = false) {
+    const q = new URLSearchParams(detailsOnly
+      ? { template: "brand-details.yml", title: "Details: " + name, brand: name }
+      : { template: "add-brand.yml", title: "Add brand: " + name, brand: name });
+    if (site && !detailsOnly) q.set("site", site);
+    if (link && !detailsOnly) q.set("proof", link);
+    for (const [k, v] of Object.entries(more)) if (v) q.set(k, v);
     return REPO + "/issues/new?" + q.toString();
+  }
+  // What's in the More details fold: text up to 80 letters, links only as web addresses.
+  function moreDetails() {
+    const text = (id) => $(id).value.replace(/\s+/g, " ").trim().slice(0, 80);
+    const pick = (id, ok) => (ok.includes($(id).value) ? $(id).value : "");
+    return {
+      parent: text("add-parent"), parent_link: webLink($("add-parent-link").value),
+      china: pick("add-china", ["yes", "no"]), china_link: webLink($("add-china-link").value),
+      price: pick("add-price", ["$", "$$", "$$$"]),
+      store: text("add-store"), store_link: webLink($("add-store-link").value),
+    };
   }
   window.CFB.issueUrl = issueUrl;   // the test checks the encoding
 
@@ -95,10 +111,21 @@
     if (!name) { msg.textContent = "Type the brand's name first."; $("add-name").focus(); return; }
     const site = webLink($("add-site").value);
     const link = webLink($("add-proof").value);
-    remember(name);
-    window.open(issueUrl(name, site, link), "_blank", "noopener");
+    const more = moreDetails();
+    const have = Object.values(more).some(Boolean);
+    const inApp = window.CFB.match && (window.CFB.match(name) || window.CFB.match(name + " beauty"));
+    if (inApp && !have) {
+      msg.textContent = `${inApp.name} is already in the app. To send something about it, fill in a box under More details.`;
+      $("add-more").open = true;
+      return;
+    }
+    remember(inApp ? inApp.name : name);
+    window.open(issueUrl(inApp ? inApp.name : name, site, link, more, !!inApp), "_blank", "noopener");
     form.reset();
-    msg.textContent = `GitHub opened with ${name} filled in. Tap "Submit new issue" there to send it.`;
+    $("add-more").open = false;
+    msg.textContent = inApp
+      ? `GitHub opened with the details for ${inApp.name}. Tap "Submit new issue" there to send them.`
+      : `GitHub opened with ${name} filled in. Tap "Submit new issue" there to send it.`;
     renderSent();
   });
 
@@ -125,9 +152,30 @@
       : "";
   }
 
+  /* ---------- A brand page: "Add details" (founder tools on only) ---------- */
+  let pending = "";   // the brand whose details she's about to send
+  document.addEventListener("cfb:brand-shown", (e) => {
+    const page = $("brand-page");
+    if (!page || !isFounder() || !e.detail || !e.detail.name) return;
+    const box = document.createElement("div");
+    box.className = "card fd-card fd-brand";
+    box.innerHTML = `<h2>Founder tools</h2><p>Know who owns ${esc(e.detail.name)}, where it sells, its price or a store that carries it?</p>
+      <a class="pf-start" href="#add" id="fd-details">Add details</a>`;
+    page.appendChild(box);
+    $("fd-details").addEventListener("click", () => { pending = e.detail.name; });
+  });
+
   document.addEventListener("cfb:screen", (e) => {
     if (e.detail.name === "profile") { renderRow(); renderPicks(); }
-    if (e.detail.name === "add") renderSent();
+    if (e.detail.name === "add") {
+      renderSent();
+      if (pending) {
+        $("add-name").value = pending;
+        $("add-more").open = true;
+        $("add-msg").textContent = `Adding details for ${pending}. Fill in what you know, each with its link.`;
+        pending = "";
+      }
+    }
   });
   renderRow();
   renderPicks();

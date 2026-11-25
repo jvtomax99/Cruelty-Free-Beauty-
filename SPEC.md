@@ -448,6 +448,24 @@ me**.
     (`needs-jose`). A failed lookup is retried daily.
     The screen lists what she sent from this phone and which are in the
     app now.
+  - *Details for a brand* (Jose, 2026-11-25, after her Celavi note went
+    unread as an issue comment). A "More details (optional)" fold on Add a
+    brand: parent company and a link that names it as the owner, mainland
+    China (yes / no) and a link, price ($ / $$ / $$$), a store and its
+    link. A brand already in the app opens the "Add details" form instead
+    (`brand-details.yml`, titled "Details:"), and with founder tools on
+    every brand page has an "Add details" button. The same Action saves a
+    detail only when its link shows it: a parent only if her page names
+    both as whole words (her page stays the source), with PETA saying
+    whether the parent tests; a parent PETA says tests, or a PETA answer
+    that doesn't clearly match, goes to Jose instead, since it would fail
+    the brand under Strict; a price only for a brand with none yet; a store only as a plain link to a page that names the brand,
+    never a commission link. China is never saved by the bot: it goes to
+    Jose. Comments on an issue are never read. Not in this version: free
+    notes, vegan, changing a parent that's already named.
+    Done when: `tools/test-brand-requests.cjs` covers each detail (saved,
+    refused, left for Jose) and `tools/test-founder.cjs` the fold, the
+    details form and the brand page button.
   - *Her storefront.* A "Shop my picks" card on Profile that opens her
     creator storefront (ShopMy, My Sephora Storefront or Amazon
     Storefront) in a new tab, always with the line that she earns a

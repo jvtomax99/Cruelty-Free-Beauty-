@@ -443,6 +443,15 @@ main {
 .ad-form .search-field input { font-size: var(--fs-call); }   /* never under 16 px: iPhones zoom */
 .ad-form .search-field:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
 .ad-form .pf-start { margin-top: var(--sp-3); }
+.ad-more-body { display: grid; gap: var(--sp-2); margin-top: var(--sp-1); }
+.ad-more-body .ad-label { margin-top: var(--sp-2); }
+.ad-more summary { display: flex; align-items: center; gap: var(--sp-2); min-height: 44px; cursor: pointer; list-style: none; }
+.ad-more summary > span:first-child { flex: 1; color: var(--ink); font-weight: 600; }
+.ad-more summary::-webkit-details-marker { display: none; }
+.ad-more summary .chev { margin-left: auto; width: 20px; height: 20px; flex: none; transition: transform var(--t-press) var(--ease); }
+.ad-more[open] summary .chev { transform: rotate(180deg); }
+.ad-more select { width: 100%; border: 0; background: transparent; font: inherit; font-size: var(--fs-call); color: var(--ink); min-height: 44px; }
+.fd-brand { margin-top: var(--sp-3); }
 .ad-list { display: grid; gap: var(--sp-2); margin: var(--sp-3) 0 0; padding: 0; list-style: none; }
 .ad-row { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-3); min-height: 52px; padding: 0 var(--sp-4); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); box-shadow: var(--finish); }
 .ad-name { font-weight: 600; overflow-wrap: anywhere; }

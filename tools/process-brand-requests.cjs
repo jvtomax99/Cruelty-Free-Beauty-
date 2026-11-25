@@ -14,6 +14,9 @@
 //   - more than one match, a parent company that tests, a dead link, or anything that kept it
 //     from going live: mention Jose and label needs-jose, which this script then skips
 //   - a lookup that failed: say so once, mentioning Jose (label retrying), and try again next run
+// Details she sends (the optional boxes, or her "Add details" form, titled "Details:") go through
+// tools/brand-details.cjs: each saved only when its link shows it, the rest left for Jose. They go
+// out with the new brands in the same commit, and her answer lists what happened to each box.
 // Issue text is only data: the name reaches add-brand.cjs through a file, never a command line.
 // Exit 1 when something needs a look (the workflow run turns red).
 //
@@ -29,6 +32,9 @@ const { spawnSync } = require('child_process');
 const TRUSTED = ['jvtomax99', 'cfbbeauty'];   // CLAUDE.md; also in .github/workflows/add-brand.yml
 const JOSE = '@jvtomax99';
 const LABEL = 'add-brand', HOLD = 'needs-jose', RETRY = 'retrying';
+// Her Add details form (brand-details.yml) has the same label; its title starts "Details:".
+const isDetails = (issue) => /^\s*details:/i.test(issue.title || '');
+const bd = require('./brand-details.cjs');
 const ROOT = path.join(__dirname, '..');
 const FILE = process.env.BRANDS_FILE || path.join(ROOT, 'data', 'brands.json');
 const REPO = process.env.GITHUB_REPOSITORY || 'jvtomax99/Cruelty-Free-Beauty-';
@@ -72,12 +78,13 @@ function fields(issue) {
     return v === '_No response_' ? '' : v;
   };
   let name = section('Brand name');
-  if (!name) name = String(issue.title || '').replace(/^\s*add brand:\s*/i, '');
+  if (!name) name = String(issue.title || '').replace(/^\s*(add brand|details):\s*/i, '');
   name = name.split('\n')[0].replace(/\s+/g, ' ').trim().slice(0, 80);
   // The form's label was "PETA or Leaping Bunny page" before Cruelty Free International was added.
   const proof = httpsLink((section('Certifier page') || section('PETA or Leaping Bunny page')).split(/\s+/)[0]);
   return {
     name,
+    details: bd.fromIssue(section),
     site: httpsLink(section("Brand's website").split(/\s+/)[0]),
     proof: proof && /^https:\/\/(crueltyfree\.peta\.org|(www\.)?leapingbunny\.org|(www\.)?crueltyfreeinternational\.org)\//.test(proof) ? proof : null,
   };
@@ -132,7 +139,9 @@ function bumpCache() {
 // Each try starts from the latest main, so a change merged meanwhile is never lost or undone,
 // the cache bump is always one more than main's, and the checks run on exactly what is pushed.
 function publish(queued) {
-  const msg = `Add ${queued.map((q) => q.brand.name).join(', ')} (the founder's request${queued.length > 1 ? 's' : ''} ${queued.map((q) => '#' + q.issue).join(', ')})`;
+  const adds = queued.filter((q) => q.record), more = queued.filter((q) => q.patch && !q.record);
+  const msg = [adds.length && `Add ${adds.map((q) => q.brand.name).join(', ')}`, more.length && `${adds.length ? 'details' : 'Details'} for ${more.map((q) => q.brand.name).join(', ')}`].filter(Boolean).join('; ')
+    + ` (the founder's request${queued.length > 1 ? 's' : ''} ${queued.map((q) => '#' + q.issue).join(', ')})`;
   for (let attempt = 1; attempt <= 3; attempt++) {
     if (!DRY) {
       const f = run('git', ['fetch', 'origin', 'main']);
@@ -140,7 +149,8 @@ function publish(queued) {
       if (f.code !== 0 || r.code !== 0) return { ok: false, reason: 'git could not fetch main' };
     }
     const { raw, data } = readData();
-    for (const q of queued) if (!data.brands.some((b) => b.id === q.record.id)) data.brands.push(q.record);
+    for (const q of adds) if (!data.brands.some((b) => b.id === q.record.id)) data.brands.push(q.record);
+    for (const q of more) if (!bd.apply(data, q.brand.id, q.patch, q.change, q.stores)) return { ok: false, reason: `${q.brand.name} is no longer in the app's data` };
     writeData(data, raw);
     bumpCache();
     const cb = run(process.execPath, [path.join(__dirname, 'check-brands.cjs')]);
@@ -169,7 +179,12 @@ async function goLive(queued) {
     await new Promise((r) => setTimeout(r, 10000));
     try {
       const live = await fetch(`${SITE}data/brands.json?t=${Date.now()}`, { cache: 'no-store' }).then((r) => r.json());
-      if (queued.every((q) => live.brands.some((b) => b.id === q.brand.id))) return true;
+      const shows = (q) => {
+        const b = live.brands.find((x) => x.id === q.brand.id);
+        return !!b && Object.entries(q.patch || {}).every(([k, v]) => JSON.stringify(b[k]) === JSON.stringify(v))
+          && (q.stores || []).every((w) => (b.whereToBuy || []).some((x) => x.url === w.url));
+      };
+      if (queued.every(shows)) return true;
     } catch (_) {}
   }
   return false;
@@ -181,13 +196,39 @@ async function main() {
   log(`${issues.length} request(s) to check.`);
   const queued = [];
   let trouble = 0;
+  // Details for a brand already in the app: queue what checks out, or answer at once if nothing does.
+  async function detailsFor(n, b, details, issue, wasAdd = false) {
+    const r = await bd.details(b, details);
+    const lead = wasAdd ? `**${b.name}** is already in the app, so I looked at the details you sent.` : `Details for **${b.name}**:`;
+    const list = r.lines.map((l) => '- ' + l).join('\n');
+    if (r.jose) trouble++;
+    if (Object.keys(r.patch).length || r.stores.length) {
+      queued.push({ issue: n, brand: { id: b.id, name: b.name }, patch: r.patch, stores: r.stores, change: r.change, retried: has(issue, RETRY), dups: [], lines: r.lines, jose: r.jose });
+      return true;
+    }
+    await comment(n, `${lead}\n\n${list}\n\nNothing was changed in the app.${r.jose ? ` ${JOSE} will finish what's left.` : ''}`);
+    if (r.jose) await label(n, HOLD); else await close(n, 'not_planned');
+    return true;
+  }
 
   for (const issue of issues) {
     const n = issue.number;
     try {
-      const { name, site, proof } = fields(issue);
-      log(`\n#${n}: "${name}"${site ? ' ' + site : ''}`);
+      const { name, site, proof, details } = fields(issue);
+      const withDetails = bd.any(details);
+      log(`\n#${n}: "${name}"${site ? ' ' + site : ''}${withDetails ? ' (with details)' : ''}`);
       if (!name) { await hold(n, `I couldn't find a brand name in this request. ${JOSE} will take a look.`); trouble++; continue; }
+      // "Add details" for a brand already in: no certifier lookup, just the details.
+      if (isDetails(issue)) {
+        const { data } = readData();
+        const { brand: b, many } = bd.find(data, name);
+        if (many) { await hold(n, `More than one brand in the app matches **${name}**, so ${JOSE} will check which one these details are for.`); trouble++; continue; }
+        if (!b) { await comment(n, `**${name}** isn't in the app, so there's nothing to add details to. Send it with Add a brand first (the details boxes are there too).`); await close(n, 'not_planned'); continue; }
+        if (queued.some((x) => x.brand.id === b.id)) { await hold(n, `Another request in this same check changes **${b.name}**. ${JOSE} will add these details after it.`); trouble++; continue; }
+        if (!withDetails) { await comment(n, `No details came with this request for **${b.name}**, so nothing changed. Fill in at least one box.`); await close(n, 'not_planned'); continue; }
+        await detailsFor(n, b, details, issue);
+        continue;
+      }
       const res = addBrand(name, site);
       if (res.code === 0) {
         const dead = await deadLinks(res.record);
@@ -195,12 +236,31 @@ async function main() {
           removeBrand(res.record.id);
           await hold(n, `**${res.brand.name}** is on the certifiers' list, but a link for it doesn't open: ${dead.join(', ')}. ${JOSE} will take a look.`);
           trouble++;
-        } else queued.push({ issue: n, brand: res.brand, record: res.record, site, retried: has(issue, RETRY), dups: [] });
+        } else {
+          const q = { issue: n, brand: res.brand, record: res.record, site, retried: has(issue, RETRY), dups: [], lines: [], jose: false };
+          if (withDetails) {
+            // A new brand's details go into its record before it goes out. No "changes" entry: it's new.
+            const r = await bd.details(res.record, details);
+            const { raw, data } = readData();
+            bd.apply(data, res.record.id, r.patch, null, r.stores);
+            writeData(data, raw);
+            Object.assign(res.record, data.brands.find((x) => x.id === res.record.id));
+            q.lines = r.lines; q.jose = r.jose;
+            if (r.jose) trouble++;
+          }
+          queued.push(q);
+        }
         continue;
       }
       if (res.code === 3) {
         const q = res.brand && queued.find((x) => x.brand.id === res.brand.id);
+        if (q && withDetails) { await hold(n, `**${q.brand.name}** goes into the app in this same check. ${JOSE} will add the details you sent after it.`); trouble++; continue; }
         if (q) { q.dups.push(n); continue; }   // answered once that brand is live
+        // Already in, but she sent details (her Celavi note): add those.
+        if (withDetails && res.brand) {
+          const b = readData().data.brands.find((x) => x.id === res.brand.id);
+          if (b) { await detailsFor(n, b, details, issue, true); continue; }
+        }
         await comment(n, `**${res.brand ? res.brand.name : name}** is already in the app: ${res.brand ? brandLink(res.brand) : SITE}`);
         await close(n, 'completed');
       } else if (res.code === 2 && proof && !res.tests) {
@@ -235,26 +295,31 @@ async function main() {
   if (!pub.ok) {
     log(`\nNot published: ${pub.reason}`);
     if (!DRY) run('git', ['reset', '--hard', 'origin/main']);
-    await everyone((q, n) => hold(n, `**${q.brand.name}** checks out with the certifiers, but it couldn't go live: ${pub.reason}. ${JOSE} will take a look.`));
+    await everyone((q, n) => hold(n, `${q.record ? `**${q.brand.name}** checks out with the certifiers` : `The details for **${q.brand.name}** check out`}, but couldn't go live: ${pub.reason}. ${JOSE} will take a look.`));
     return 1;
   }
   const live = await goLive(queued);
   if (!live) {
     log('\nPushed, but the live site did not show the new brands within 6 minutes.');
-    await everyone((q, n) => hold(n, `**${q.brand.name}** is saved, but the live app hasn't updated yet. ${JOSE} will check the site's build.`));
+    await everyone((q, n) => hold(n, `${q.record ? `**${q.brand.name}** is` : `The details for **${q.brand.name}** are`} saved, but the live app hasn't updated yet. ${JOSE} will check the site's build.`));
     return 1;
   }
   await everyone(async (q, n) => {
     if (n !== q.issue) { await comment(n, `**${q.brand.name}** is in the app now: ${brandLink(q.brand)}`); await close(n, 'completed'); return; }
+    const extra = q.lines.length ? `\n\nYour details:\n${q.lines.map((l) => '- ' + l).join('\n')}` + (q.jose ? `\n\n${JOSE} will finish what's left.` : '') : '';
+    const end = async () => { if (q.retried) await unlabel(n, RETRY); if (q.jose) await label(n, HOLD); else await close(n, 'completed'); };
+    if (!q.record) {
+      await comment(n, `Details saved for **${q.brand.name}**. It's in the app now: ${brandLink(q.brand)}${extra}`);
+      return end();
+    }
     const r = q.record;
     const certs = [r.peta.status === 'yes' && 'PETA', r.leapingBunny.status === 'yes' && 'Leaping Bunny', r.cfi && r.cfi.status === 'yes' && 'Cruelty Free International'].filter(Boolean);
     const by = certs.length > 2 ? `${certs.slice(0, -1).join(', ')} and ${certs[certs.length - 1]}` : certs.join(' and ');
     await comment(n, `Added to C.F.B.: **${q.brand.name}**, listed as cruelty-free by ${by}. It's in the app now: ${brandLink(q.brand)}`
-      + (q.site ? '' : "\n\nNo website was given, so its page says \"No buy link yet\". Add the brand's website next time and it gets a buy link."));
-    if (q.retried) await unlabel(n, RETRY);
-    await close(n, 'completed');
+      + (q.site ? '' : "\n\nNo website was given, so its page says \"No buy link yet\". Add the brand's website next time and it gets a buy link.") + extra);
+    await end();
   });
-  log(`\nPublished ${queued.length} brand(s).`);
+  log(`\nPublished ${queued.length} request(s).`);
   return trouble ? 1 : 0;
 }
 
