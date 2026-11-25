@@ -21,13 +21,13 @@ const brands = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'br
 const byText = new Map(file.questions.map((q) => [q.q, q]));
 // The Strict verdict, from SPEC "Brand rules", written again here on purpose.
 function chip(b) {
-  if (b.peta.status !== 'yes' && b.leapingBunny.status !== 'yes') return b.peta.status === 'no' ? "Doesn't pass" : 'Not on either list';
+  if (b.peta.status !== 'yes' && b.leapingBunny.status !== 'yes' && b.cfi.status !== 'yes') return b.peta.status === 'no' ? "Doesn't pass" : 'Not on any list';
   if (b.parent.testsOnAnimals === 'yes' && b.parent.name && b.parent.name !== b.name) return "Doesn't pass";
   if (b.chinaRetail.status === 'yes') return "Doesn't pass";
   return 'Passes';
 }
 const fresh = (iso) => iso && (Date.now() - new Date(iso + 'T00:00:00').getTime()) / 864e5 <= 90;
-const askable = brands.filter((b) => fresh(b.peta.checked) && fresh(b.leapingBunny.checked) && (b.peta.url || b.leapingBunny.url));
+const askable = brands.filter((b) => fresh(b.peta.checked) && fresh(b.leapingBunny.checked) && fresh(b.cfi.checked) && (b.peta.url || b.leapingBunny.url || b.cfi.url));
 const TOTAL = file.questions.length + askable.length;
 const MEADOW = file.questions.filter((q) => q.topic === 'meadow').length;
 
@@ -143,7 +143,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
     kinds.add(a.good);
     const hrefs = await page.$$eval('#practice-result .sources a', (as) => as.map((x) => x.getAttribute('href')));
     const b = brands.find((x) => 'brand:' + x.id === a.id);
-    if (!hrefs.length || !hrefs.every((h) => [b.peta.url, b.leapingBunny.url, b.parent.url, b.chinaRetail.url].includes(h))) brandOk = false;
+    if (!hrefs.length || !hrefs.every((h) => [b.peta.url, b.leapingBunny.url, b.cfi.url, b.parent.url, b.chinaRetail.url].includes(h))) brandOk = false;
     await page.click('#practice-next');
   }
   check(brandOk, 'five brand questions: the right answer matches the Strict rule, with that brand\'s own source links');

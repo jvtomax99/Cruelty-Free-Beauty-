@@ -1,6 +1,6 @@
 // Drafts a record for a brand the founder asked for (her Add a brand box opens a GitHub issue;
-// the Add a brand GitHub Action, tools/process-brand-requests.cjs, runs this for each one). Looks the name up on PETA and Leaping Bunny
-// with the same code as tools/lookup-certifiers.cjs and builds a record whose every claim links
+// the Add a brand GitHub Action, tools/process-brand-requests.cjs, runs this for each one). Looks the name up on PETA, Leaping Bunny and
+// Cruelty Free International with the same code as tools/lookup-certifiers.cjs and builds a record whose every claim links
 // its certifier page and today's date. Parent company and China are left "not yet researched".
 //
 //   node tools/add-brand.cjs --name-file name.txt              print the draft, change nothing
@@ -11,11 +11,12 @@
 // Issue text must reach this tool through --name-file (written with a file tool, never pasted into
 // a shell command): a brand name like  $(...)  inside a command line would run.
 //
-// A brand counts as listed only if PETA says it doesn't test or Leaping Bunny certifies it.
+// A brand counts as listed only if PETA says it doesn't test, Leaping Bunny certifies it or
+// Cruelty Free International approves it.
 // Exit codes: 0 drafted (or written), 2 not listed (or a certifier says it tests), 3 already in
 // the app, 4 more than one certifier entry matches (ask which), 5 Leaping Bunny flags a parent
 // company that tests: research its name and run again with --parent "Name", 1 a lookup failed.
-// ADD_BRAND_FAKE=answers.json replaces the two lookups ({ "peta": [...], "leapingBunny": [...] },
+// ADD_BRAND_FAKE=answers.json replaces the lookups ({ "peta": [...], "leapingBunny": [...], "cfi": [...] },
 // shaped like lookup-certifiers' output), for tools/test-add-brand.cjs.
 
 const fs = require('fs');
@@ -29,7 +30,7 @@ if ((process.env.HTTPS_PROXY || process.env.https_proxy) && !process.env.NODE_US
   process.exit(r.status === null ? 1 : r.status);
 }
 const path = require('path');
-const { peta, leapingBunny, LB } = require('./lookup-certifiers.cjs');
+const { peta, leapingBunny, cfi, LB, CFI_LIST } = require('./lookup-certifiers.cjs');
 
 const FILE = process.env.BRANDS_FILE || path.join(__dirname, '..', 'data', 'brands.json');
 const today = new Date().toISOString().slice(0, 10);
@@ -61,14 +62,15 @@ async function lookups(name) {
   if (process.env.ADD_BRAND_FAKE) {
     const f = JSON.parse(fs.readFileSync(process.env.ADD_BRAND_FAKE, 'utf8'));
     if ((f.fail || []).includes(name)) throw new Error('fake lookup failure');
-    return [f.peta || [], f.leapingBunny || []];
+    return [f.peta || [], f.leapingBunny || [], (f.cfiDown || []).includes(name) ? null : f.cfi || []];
   }
   const { chromium } = require('playwright');
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage();
     await page.goto(`${LB}/Web/Shopping-Guide/Brands.aspx`, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    return [await peta(name), await leapingBunny(page, name)];
+    // null: Cruelty Free International's list didn't load (the others still count)
+    return [await peta(name), await leapingBunny(page, name), await cfi(name).catch(() => null)];
   } finally { await browser.close(); }
 }
 
@@ -88,28 +90,33 @@ async function main() {
   const have = inApp(name);
   if (have) done(3, `Already in the app: ${have.name} (${have.id}).`, { brand: { id: have.id, name: have.name } });
 
-  const [petaHits, lbHits] = await lookups(name);
+  const [petaHits, lbHits, cfiHits] = await lookups(name);
 
   // Only an exact name counts: a search for "Kiko" also returns "Kikori", and that is not her brand.
   const p = petaHits.filter((h) => loose(bare(h.title), name) && h.verdict !== 'no verdict found');
   const l = lbHits.filter((h) => loose(h.tradingName || '', name) || loose(h.company || '', name));
   const pYes = p.filter((h) => h.status === 'yes');
   const pNo = p.filter((h) => h.status === 'no');
-  const near = [...petaHits.map((h) => `PETA: ${h.title}`), ...lbHits.map((h) => `Leaping Bunny: ${h.tradingName || h.company}`)];
+  const cfiDown = cfiHits === null;
+  const c = (cfiHits || []).filter((h) => loose(h.name || '', name));
+  const near = [...petaHits.map((h) => `PETA: ${h.title}`), ...lbHits.map((h) => `Leaping Bunny: ${h.tradingName || h.company}`), ...(cfiHits || []).map((h) => `Cruelty Free International: ${h.name}`)];
 
-  if (!pYes.length && !l.length) {
-    if (pNo.length) done(2, `Not added: PETA says "${name}" tests on animals (${pNo[0].verdict}, ${pNo[0].url}), and Leaping Bunny doesn't certify it.`, { tests: true, url: pNo[0].url });
-    done(2, `Not listed: neither PETA nor Leaping Bunny lists "${name}" as cruelty-free (searched ${today}).`
+  // Not on PETA or Leaping Bunny, and Cruelty Free International couldn't be read: try again later.
+  if (!pYes.length && !l.length && cfiDown) { console.error("Cruelty Free International's list didn't load"); result(1, "Lookup failed: Cruelty Free International's list didn't load"); process.exit(1); }
+  if (!pYes.length && !l.length && !c.length) {
+    if (pNo.length) done(2, `Not added: PETA says "${name}" tests on animals (${pNo[0].verdict}, ${pNo[0].url}), and neither Leaping Bunny nor Cruelty Free International lists it.`, { tests: true, url: pNo[0].url });
+    done(2, `Not listed: none of PETA, Leaping Bunny and Cruelty Free International lists "${name}" as cruelty-free (searched ${today}).`
       + (near.length ? '\nClose names they do list:\n  ' + near.slice(0, 8).join('\n  ') : ''));
   }
-  if (new Set(p.filter((h) => h.status !== 'unknown').map((h) => h.url)).size > 1 || new Set(l.map((h) => h.url)).size > 1) {
+  if (new Set(p.filter((h) => h.status !== 'unknown').map((h) => h.url)).size > 1 || new Set(l.map((h) => h.url)).size > 1 || new Set(c.map((h) => h.url)).size > 1) {
     done(4, `Unclear: more than one certifier entry is called "${name}". Ask which one:\n  `
-      + [...p.map((h) => `PETA: ${h.title} ${h.url}`), ...l.map((h) => `Leaping Bunny: ${h.tradingName || h.company} ${h.url}`)].join('\n  '));
+      + [...p.map((h) => `PETA: ${h.title} ${h.url}`), ...l.map((h) => `Leaping Bunny: ${h.tradingName || h.company} ${h.url}`), ...c.map((h) => `Cruelty Free International: ${h.name} ${h.url}`)].join('\n  '));
   }
 
   const ph = pYes[0] || pNo[0] || p[0] || null;   // a PETA page saying "may not be cruelty-free" is still a source
   const lh = l[0] || null;
-  const display = (lh && (lh.tradingName || lh.company)) || (ph && bare(ph.title)) || name;
+  const ch = c[0] || null;
+  const display = (lh && (lh.tradingName || lh.company)) || (ph && bare(ph.title)) || (ch && ch.name) || name;
   // The certifier's own name may be one we already have (she typed the company's legal name).
   const dup = inApp(display) || data.brands.find((b) => b.id === slug(display));
   if (dup) done(3, `Already in the app: ${dup.name} (${dup.id}); the certifiers call it "${display}".`, { brand: { id: dup.id, name: dup.name } });
@@ -127,6 +134,11 @@ async function main() {
     leapingBunny: lh
       ? { status: 'yes', note: 'Leaping Bunny certified', url: lh.url, checked: today }
       : { status: 'unknown', note: "Not found in Leaping Bunny's Shopping Guide", url: `${LB}/Web/Shopping-Guide/Brands.aspx`, checked: today },
+    cfi: ch
+      ? { status: 'yes', note: 'Approved by Cruelty Free International', url: ch.url, checked: today }
+      : cfiDown
+        ? { status: 'unknown', note: "Not checked yet: Cruelty Free International's list didn't load", url: CFI_LIST, checked: null }
+        : { status: 'unknown', note: "Not on Cruelty Free International's approved brands list", url: CFI_LIST, checked: today },
     parent: lh && lh.parentTests
       ? { name: parentName, testsOnAnimals: 'yes', url: lh.url, note: 'Leaping Bunny: its parent company tests on animals', checked: today }
       : { name: null, testsOnAnimals: 'unknown', url: null, note: 'Not yet researched', checked: null },
@@ -142,7 +154,7 @@ async function main() {
   };
 
   console.log(JSON.stringify(record, null, 1));
-  console.log(`\nOpen before adding:\n  ${record.peta.url}\n  ${record.leapingBunny.url}${site ? `\n  ${site}` : '\n  (no official site given: find it on the brand\'s own site for whereToBuy)'}`);
+  console.log(`\nOpen before adding:\n  ${record.peta.url}\n  ${record.leapingBunny.url}\n  ${record.cfi.url}${site ? `\n  ${site}` : '\n  (no official site given: find it on the brand\'s own site for whereToBuy)'}`);
   if (process.argv.includes('--write')) {
     data.brands.push(record);
     fs.writeFileSync(FILE, JSON.stringify(data, null, 1) + (raw.endsWith('\n') ? '\n' : ''));

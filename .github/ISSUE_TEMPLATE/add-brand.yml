@@ -1,6 +1,6 @@
 # The founder's "Add a brand" box (founder.js) opens this form filled in.
 # The Add a brand GitHub Action (.github/workflows/add-brand.yml) handles these,
-# only from the trusted logins in CLAUDE.md: it checks PETA and Leaping Bunny,
+# only from the trusted logins in CLAUDE.md: it checks PETA, Leaping Bunny and Cruelty Free International,
 # adds the brand with its proof, and answers on the issue.
 name: Add a brand
 description: Ask for a cruelty-free brand to be checked and added to C.F.B.
@@ -10,7 +10,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        We check PETA and Leaping Bunny and add the brand with the proof. If neither lists it, it stays out and we say why here.
+        We check PETA, Leaping Bunny and Cruelty Free International and add the brand with the proof. If none of them lists it, it stays out and we say why here.
   - type: input
     id: brand
     attributes:
@@ -26,5 +26,5 @@ body:
   - type: input
     id: proof
     attributes:
-      label: PETA or Leaping Bunny page (if you have it)
+      label: Certifier page, from PETA, Leaping Bunny or Cruelty Free International (if you have it)
       placeholder: https://

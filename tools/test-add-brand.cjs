@@ -1,4 +1,4 @@
-// Checks tools/add-brand.cjs without the network: fake PETA and Leaping Bunny answers
+// Checks tools/add-brand.cjs without the network: fake PETA, Leaping Bunny and Cruelty Free International answers
 // (ADD_BRAND_FAKE) against a scratch copy of data/brands.json (BRANDS_FILE).
 //   node tools/test-add-brand.cjs
 const { spawnSync } = require('child_process');
@@ -17,6 +17,7 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
 
 const peta = (title, status, slug, vegan = false) => ({ title, url: `https://crueltyfree.peta.org/company/${slug}/`, status, verdict: status === 'yes' ? "PETA: company that doesn't test" : status === 'no' ? 'PETA: does test on animals' : 'PETA: may not be cruelty-free (not on its list)', vegan, countries: [] });
 const lb = (tradingName, id, parentTests = false, company = tradingName) => ({ company, tradingName, url: `https://www.leapingbunny.org/ShopBrandDetail?BrandId=${id}`, parentTests });
+const cfi = (name, slug) => ({ name, url: `https://www.crueltyfreeinternational.org/approved-brands/listing/${slug}/`, regions: 'Europe' });
 
 function run(name, fake, extra = [], viaArg = false) {
   const f = path.join(dir, 'fake.json');
@@ -43,6 +44,7 @@ const after = JSON.parse(fs.readFileSync(DATA, 'utf8'));
 const k = after.brands.find((b) => b.id === 'kaja-beauty');
 check(r.code === 0 && !!k && after.brands.length === JSON.parse(before).brands.length + 1, '--write appends one brand');
 check(k && k.peta.url === 'https://crueltyfree.peta.org/company/kaja-beauty/' && k.peta.checked === today && k.added === today, 'its PETA claim links the page and is dated today');
+check(k && k.cfi && k.cfi.status === 'unknown' && /crueltyfreeinternational\.org\/approved-brands\/$/.test(k.cfi.url) && k.cfi.checked === today, 'not on Cruelty Free International: its claim is "unknown", links the list, dated today');
 check(k && k.whereToBuy[0] && k.whereToBuy[0].url === 'https://www.kajabeauty.com/' && k.whereToBuy[0].linkType === 'plain', 'the official site becomes a plain buy link');
 check(fs.readFileSync(DATA, 'utf8') === JSON.stringify(after, null, 1) + (before.endsWith('\n') ? '\n' : ''), 'the file keeps its one-space formatting');
 const cb = checkData();
@@ -63,9 +65,23 @@ check(r.code === 3 && /Rare Beauty/.test(r.out), `"Rare": already in the app as 
 r = run('Rare', { peta: [peta('Rare Earth Minerals', 'yes', 'rare-earth')], leapingBunny: [] });
 check(r.code === 2, `"Rare" is not "Rare Earth Minerals" (exit ${r.code})`);
 
+// Approved by Cruelty Free International only: added, with that page as its proof.
+r = run('Euroglow', { peta: [], leapingBunny: [], cfi: [cfi('Euroglow', 'euroglow')] });
+check(r.code === 0 && /"id": "euroglow"/.test(r.out) && /approved-brands\/listing\/euroglow\//.test(r.out) && /"status": "yes"/.test(r.out), `Cruelty Free International only: drafted (exit ${r.code})`);
+// Two Cruelty Free International entries with the name: ask which.
+r = run('Euroglow', { peta: [], leapingBunny: [], cfi: [cfi('Euroglow', 'euroglow'), cfi('Euroglow', 'euroglow-2')] });
+check(r.code === 4, `two Cruelty Free International entries with the name: ask which (exit ${r.code})`);
+
+// Cruelty Free International's list didn't load: a brand PETA lists still goes in, its CFI claim not yet checked;
+// one nobody else lists is a failed lookup (tried again later), never "not listed".
+r = run('Kaja Two', { peta: [peta('Kaja Two', 'yes', 'kaja-two')], leapingBunny: [], cfiDown: ['Kaja Two'] });
+check(r.code === 0 && /didn't load/.test(r.out) && /"checked": null/.test(r.out), `CFI down, PETA lists it: drafted, CFI marked not checked (exit ${r.code})`);
+r = run('Euroglow', { peta: [], leapingBunny: [], cfi: [cfi('Euroglow', 'euroglow')], cfiDown: ['Euroglow'] });
+check(r.code === 1, `CFI down and no one else lists it: a failed lookup, not "not listed" (exit ${r.code})`);
+
 // Not listed at all.
 r = run('Zzqx Glow Lab', { peta: [], leapingBunny: [] });
-check(r.code === 2 && /Not listed/.test(r.out), `listed by neither: not added (exit ${r.code})`);
+check(r.code === 2 && /Not listed/.test(r.out), `listed by none: not added (exit ${r.code})`);
 
 // PETA says it tests, Leaping Bunny doesn't certify it: not added.
 r = run('Testco', { peta: [peta('Testco', 'no', 'testco')], leapingBunny: [] });

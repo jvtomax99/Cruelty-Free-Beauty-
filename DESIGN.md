@@ -180,7 +180,7 @@ tiles.
   warning icon: it reports, it doesn't accuse.
 - **Verdict chip:** like the film (founder, 2026-11-12): Passes = ok-bg / ok
   with a ✓, one per certifier ("✓ PETA", "✓ Leaping Bunny") on a brand row;
-  Doesn't pass = no-bg / no with a ✕; Not on either list = paper with a
+  Doesn't pass = no-bg / no with a ✕; Not on any list (renamed from "Not on either list" when Cruelty Free International was added, Jose, 2026-11-25) = paper with a
   dashed ink-soft edge and no mark (unverified is not the same as testing).
   The words always say it, so colour is never the only signal.
 - **Verdict box and fact lines:** the box takes the chip's fill, its title
@@ -286,7 +286,7 @@ white. Outline `--bunny-line` #DB6B7E, 3.05:1 on cream
 (the 3:1 graphics minimum). Every part has an id (`ears`, `body`, `face`,
 `eye-l`, `bullet`, `hearts`, `cape`, `tiara`, `collar`, `clasp`...): the launch show animates them, so keep the
 ids when editing. Re-render the icons with `node tools/make-icons.cjs`. It
-reads at 32 px. Never use PETA or Leaping Bunny marks anywhere in the app.
+reads at 32 px. Never use PETA, Leaping Bunny or Cruelty Free International marks anywhere in the app.
 
 ## Launch show (night)
 

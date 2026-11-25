@@ -1,7 +1,17 @@
 {
  "schema": 1,
- "updated": "2026-11-11",
- "changes": [],
+ "updated": "2026-11-25",
+ "changes": [
+  {
+   "id": "benefit",
+   "claim": "cfi",
+   "from": "unknown",
+   "to": "yes",
+   "date": "2026-11-25",
+   "url": "https://www.crueltyfreeinternational.org/approved-brands/listing/benefit/",
+   "note": "C.F.B. started checking this list on 25 Nov 2026."
+  }
+ ],
  "picks": {
   "url": null,
   "checked": null
@@ -25,6 +35,12 @@
     "note": "Leaping Bunny certified",
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1018",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -70,6 +86,12 @@
     "note": "Leaping Bunny certified",
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2101",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -143,6 +165,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": null,
     "testsOnAnimals": "unknown",
@@ -214,6 +242,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": null,
     "testsOnAnimals": "unknown",
@@ -280,6 +314,12 @@
     "note": "Leaping Bunny certified",
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1342",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -353,6 +393,12 @@
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1610",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": null,
     "testsOnAnimals": "unknown",
@@ -424,6 +470,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": "Kosé",
@@ -497,6 +549,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": "Estée Lauder",
     "testsOnAnimals": "yes",
@@ -541,6 +599,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": "L'Oréal",
@@ -587,6 +651,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -654,6 +724,12 @@
     "note": "Leaping Bunny certified",
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1302",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -727,6 +803,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": "Markwins",
     "testsOnAnimals": "no",
@@ -798,6 +880,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -871,6 +959,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": null,
     "testsOnAnimals": "unknown",
@@ -941,6 +1035,12 @@
     "note": "Leaping Bunny certified",
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=2218",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -1014,6 +1114,12 @@
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1811",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": null,
     "testsOnAnimals": "unknown",
@@ -1058,6 +1164,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -1108,6 +1220,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -1176,6 +1294,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -1251,6 +1375,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": null,
     "testsOnAnimals": "unknown",
@@ -1295,6 +1425,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -1368,6 +1504,12 @@
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1752",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": null,
     "testsOnAnimals": "unknown",
@@ -1439,6 +1581,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": "Unilever",
@@ -1512,6 +1660,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": "L'Oréal",
     "testsOnAnimals": "yes",
@@ -1556,6 +1710,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": "L'Oréal",
@@ -1603,6 +1763,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": "L'Oréal",
     "testsOnAnimals": "n/a",
@@ -1649,6 +1815,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": "Estée Lauder",
@@ -1719,6 +1891,12 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
+   },
    "parent": {
     "name": "Estée Lauder",
     "testsOnAnimals": "n/a",
@@ -1763,6 +1941,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": "Estée Lauder",
@@ -1832,17 +2016,23 @@
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-11"
    },
+   "cfi": {
+    "status": "yes",
+    "note": "Approved by Cruelty Free International",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/listing/benefit/",
+    "checked": "2026-11-25"
+   },
    "parent": {
-    "name": null,
+    "name": "LVMH",
     "testsOnAnimals": "unknown",
-    "url": null,
-    "note": "Not yet researched",
-    "checked": null
+    "url": "https://www.lvmh.com/en/our-maisons/perfumes-cosmetics/benefit-cosmetics",
+    "note": "LVMH's own site lists Benefit Cosmetics as one of its houses. PETA doesn't list LVMH, Inc. as cruelty-free or as testing",
+    "checked": "2026-11-25"
    },
    "chinaRetail": {
     "status": "unknown",
     "url": null,
-    "note": "Not yet researched",
+    "note": "Benefit's site refuses automated readers.",
     "checked": null
    },
    "vegan": "unknown",
@@ -1877,6 +2067,12 @@
     "note": "Leaping Bunny certified (certified since 2018)",
     "url": "https://www.leapingbunny.org/ShopBrandDetail?BrandId=1812",
     "checked": "2026-11-15"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,
@@ -1923,6 +2119,12 @@
     "note": "Not found in Leaping Bunny's Shopping Guide",
     "url": "https://www.leapingbunny.org/Web/Shopping-Guide/Brands.aspx",
     "checked": "2026-11-15"
+   },
+   "cfi": {
+    "status": "unknown",
+    "note": "Not on Cruelty Free International's approved brands list",
+    "url": "https://www.crueltyfreeinternational.org/approved-brands/",
+    "checked": "2026-11-25"
    },
    "parent": {
     "name": null,

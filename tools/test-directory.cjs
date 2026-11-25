@@ -17,7 +17,7 @@ const server = http.createServer((req, res) => {
 });
 
 const data = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'brands.json'), 'utf8')).brands;
-const certified = data.filter((b) => b.peta.status === 'yes' || b.leapingBunny.status === 'yes');
+const certified = data.filter((b) => b.peta.status === 'yes' || b.leapingBunny.status === 'yes' || b.cfi.status === 'yes');
 const strict = certified.filter((b) => !(b.parent.testsOnAnimals === 'yes' && b.parent.name !== b.name) && b.chinaRetail.status !== 'yes');
 const veganStrict = strict.filter((b) => b.vegan === 'all');
 
@@ -59,10 +59,10 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
 
   // Browsing never lists a brand that doesn't pass, and every row names its certifier (founder, 2026-11-11)
   const listText = await page.textContent('#brand-list');
-  check(!/Doesn't pass|Not on either list|Maybelline|Fenty/.test(listText), 'browsing lists no brand that fails');
+  check(!/Doesn't pass|Not on any list|Maybelline|Fenty/.test(listText), 'browsing lists no brand that fails');
   check(await page.$('#brand-more') === null, 'no "show the brands that don\'t pass" button');
   const chips = await page.$$eval('#brand-list .brand-row', (a) => a.map((r) => [...r.querySelectorAll('.verdict')].map((c) => c.textContent.replace(/[^A-Za-z ]/g, '').replace('Certified by ', '').trim()).join('+')));
-  check(chips.every((c) => /^(PETA|Leaping Bunny|PETA\+Leaping Bunny)$/.test(c)), `every row names PETA and/or Leaping Bunny (${[...new Set(chips)].join(', ')})`);
+  check(chips.every((c) => /^(PETA|Leaping Bunny|Cruelty Free International)(\+(Leaping Bunny|Cruelty Free International))*$/.test(c)), `every row names its certifiers (${[...new Set(chips)].join(', ')})`);
 
   // Brand page: Tarte passes Certified but fails Strict over its parent
   await page.evaluate(() => window.scrollTo(0, 400));

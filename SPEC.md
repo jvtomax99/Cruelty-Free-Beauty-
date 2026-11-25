@@ -23,8 +23,9 @@ me**.
 
 ## Brand rules (what the data follows)
 
-1. Every brand record holds: PETA status, Leaping Bunny status (two
-   separate fields, different standards), parent company and whether it
+1. Every brand record holds: PETA status, Leaping Bunny status and
+   Cruelty Free International status (three separate fields, different
+   standards; CFI added 2026-11-25), parent company and whether it
    tests on animals, mainland China retail sales, vegan availability, price
    level, product types, where to buy, evidence links, last-checked date,
    review status.
@@ -34,7 +35,9 @@ me**.
    was checked and dated. A brand's marketing claim alone shows as
    "unverified".
 4. **Strictness switch**, the user's choice:
-   - *Certified:* listed by PETA or certified by Leaping Bunny.
+   - *Certified:* listed by PETA, certified by Leaping Bunny, or approved
+     by Cruelty Free International (Jose, 2026-11-25: CFI runs its own
+     Approval Programme and list, apart from Leaping Bunny).
    - *Strict* (the founder's original rule): certified, parent company does
      not test, and not sold in mainland China stores.
    - Default: Strict (decided 2026-11-11).
@@ -52,7 +55,7 @@ me**.
    cruelty-free.
 6. Every brand is rechecked at least every 90 days. Past that, it shows
    "check due" until rechecked.
-7. No PETA or Leaping Bunny logos (trademarks). The app names the
+7. No PETA, Leaping Bunny or Cruelty Free International logos (trademarks). The app names the
    certification in words and links to the certifier's listing.
 
 ## Features in v1, and when each is done
@@ -87,7 +90,7 @@ me**.
   (2026-11-11, Jose: the routine suggests brands per step, not named
   products; we hold no sourced product data. "Why it fits" uses strictness,
   budget, vegan and what the brand sells.)
-- **Learn.** Cruelty-free vs vegan, PETA vs Leaping Bunny, parent
+- **Learn.** Cruelty-free vs vegan, PETA vs Leaping Bunny vs Cruelty Free International, parent
   companies, China today. Done when every answer links a primary source.
 
 - **Launch show** (added 2026-11-11). A short stage reveal for the bunny,
@@ -141,7 +144,7 @@ me**.
       real iPhone, and the voice and music mix was placed by measurement,
       not checked by ear by Claude (Jose to listen).
 - **What changed** (founder's ask, 2026-11-11). When a recheck finds that a
-  brand's PETA, Leaping Bunny, parent company or China status changed, the
+  brand's PETA, Leaping Bunny, Cruelty Free International, parent company or China status changed, the
   app says so the next time it is opened: a card on Home (brands the person
   hearted first), a line on the brand's page, and "Recent changes" under
   the Brands list for 12 months. The words say only what the list showed on
@@ -150,7 +153,7 @@ me**.
   go live only through the recheck pull request Jose reads.
   A first finding (from "unknown") says "Newly confirmed", not "now". The
   date shown is when we checked, not when the list changed. The compare
-  tool covers PETA and Leaping Bunny; parent and China changes are entered
+  tool covers PETA, Leaping Bunny and Cruelty Free International; parent and China changes are entered
   by hand. An installed app picks an update up by itself
   (2026-11-13, Jose: nobody should have to reinstall): it asks for a new
   version each time it comes back into view and, once that version has
@@ -168,7 +171,7 @@ me**.
   before the founder had seen it). A study
   game: an open sanctuary garden in 3D that grows with what the person
   learns. Five habitats, one per topic: Bunny Meadow (cruelty-free or
-  vegan), Leafy Garden (PETA or Leaping Bunny), Wooded Meadow (parent
+  vegan), Leafy Garden (PETA, Leaping Bunny, CFI), Wooded Meadow (parent
   companies), Willow Pond (China today), Orchard (read a brand). Rounds
   of 5 questions; a missed question comes
   back sooner than a right one (5 minutes, then 1, 3, 7, 16, 35 days); "I
@@ -435,9 +438,9 @@ me**.
     name, and the brand's site and certifier page if she has them; Send
     opens GitHub's "Add a brand" issue form filled in, and she taps
     Submit. A GitHub Action starts at once (trusted logins only), looks
-    the name up on PETA and Leaping Bunny (`tools/add-brand.cjs`), and adds
-    the brand only if PETA says it doesn't test or Leaping Bunny certifies
-    it, with each page and the date; it runs the data and site checks,
+    the name up on PETA, Leaping Bunny and Cruelty Free International
+    (`tools/add-brand.cjs`), and adds the brand only if PETA says it
+    doesn't test, Leaping Bunny certifies it or CFI approves it, with each page and the date; it runs the data and site checks,
     pushes to `main`, asks for a Pages build and answers on the issue once
     the brand is live. Parent company and China stay "not yet researched".
     Not listed or already in: it says so and closes the issue. Unclear (two
@@ -500,7 +503,7 @@ Prices for the 10 brands whose sites block automated readers (e.l.f.,
 Too Faced, Urban Decay, Kosas, Juvia's Place, NYX, Maybelline, L'Oréal
 Paris, Estée Lauder, Benefit): checked by hand, or by the founder.
 
-Bulk import of PETA's and Leaping Bunny's lists, hundreds of brands at
+Bulk import of PETA's, Leaping Bunny's and Cruelty Free International's lists, hundreds of brands at
 a time, each with its source (ask both whether reuse is allowed first;
 Bunny Search shows it can be done). A public "Ask us to add a brand"
 button. Picks of single products inside the app.

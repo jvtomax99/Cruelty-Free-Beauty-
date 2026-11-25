@@ -11,7 +11,7 @@
   const day = (iso) => { const [y, m, d] = iso.split("-").map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
   const KEEP_DAYS = 365, HOME_MAX = 5;
 
-  const SOURCE = { peta: "PETA's page", leapingBunny: "Leaping Bunny", parent: "Source", chinaRetail: "Brand's page" };
+  const SOURCE = { peta: "PETA's page", leapingBunny: "Leaping Bunny", cfi: "Cruelty Free International", parent: "Source", chinaRetail: "Brand's page" };
   /* What we saw, in plain words. "from" and "to" are the stored values (yes / no / unknown / n/a). */
   function words(c) {
     const t = c.to, was = c.from;
@@ -21,6 +21,7 @@
       return was === "yes" ? "No longer on PETA's cruelty-free list" : "No longer on PETA's list of companies that test";
     }
     if (c.claim === "leapingBunny") return t === "yes" ? "Now in Leaping Bunny's guide" : "No longer in Leaping Bunny's guide";
+    if (c.claim === "cfi") return t === "yes" ? "Now on Cruelty Free International's approved list" : "No longer on Cruelty Free International's approved list";
     // From "unknown" we only learned something; nothing is known to have changed.
     if (c.claim === "parent") {
       if (t === "yes") return was === "unknown" ? "Newly confirmed: its parent company tests on animals" : "Its parent company is now one that tests on animals";
@@ -47,7 +48,7 @@
     const today = Date.now();
     return (Array.isArray(list) ? list : []).filter((c) => {
       if (!c || !name(c.id) || !Object.hasOwn(SOURCE, c.claim) || !/^\d{4}-\d{2}-\d{2}$/.test(c.date || "")) return false;
-      if (c.claim === "leapingBunny" && c.from !== "yes" && c.to !== "yes") return false;   // it was never in the guide
+      if ((c.claim === "leapingBunny" || c.claim === "cfi") && c.from !== "yes" && c.to !== "yes") return false;   // it was never on the list
       const age = (today - new Date(c.date + "T00:00:00Z").getTime()) / 864e5;   // UTC, like the tools
       return age >= 0 && age <= KEEP_DAYS;
     }).sort((a, b) => b.date.localeCompare(a.date));
