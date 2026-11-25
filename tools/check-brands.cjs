@@ -109,7 +109,7 @@ function checkBrand(b, seen) {
   // Brand rule 3: a certifier's status must link that certifier's own site.
   for (const [k, re] of Object.entries(OWN_SITE)) {
     const c = b[k];
-    if (c && (c.status === 'yes' || c.status === 'no') && !re.test(c.url || '')) err(id, `${k} says "${c.status}" but does not link ${k === 'peta' ? 'PETA' : 'Leaping Bunny'}'s own site`);
+    if (c && (c.status === 'yes' || c.status === 'no') && !re.test(c.url || '')) err(id, `${k} says "${c.status}" but does not link ${{ peta: 'PETA', leapingBunny: 'Leaping Bunny', cfi: 'Cruelty Free International' }[k]}'s own site`);
   }
   if (b.review === 'verified') {
     const open = Object.keys(CLAIMS).filter((k) => b[k] && (b[k].checked === null || b[k].checked === undefined));

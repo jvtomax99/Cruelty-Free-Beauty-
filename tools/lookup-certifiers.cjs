@@ -112,9 +112,13 @@ async function leapingBunny(page, name) {
 
 // Cruelty Free International's whole list, read once per run: [{ name, url }].
 // Each page of 20 names its brands as links titled with the brand's name.
+// A failure is kept too, so a site that's down is asked once per run, not once per brand.
 let cfiCache = null;
-async function cfiList() {
-  if (cfiCache) return cfiCache;
+function cfiList() {
+  if (!cfiCache) cfiCache = cfiRead();
+  return cfiCache;
+}
+async function cfiRead() {
   const all = new Map();
   let last = 1;
   for (let n = 1; n <= last && n <= 60; n++) {
@@ -126,8 +130,7 @@ async function cfiList() {
     await sleep(300);
   }
   if (all.size < 100) throw new Error(`Cruelty Free International's list came back with ${all.size} brands; its page may have changed`);
-  cfiCache = [...all.values()];
-  return cfiCache;
+  return [...all.values()];
 }
 // Entries whose whole name matches (ignoring a trailing "Cosmetics", "Beauty" or "Makeup"),
 // each confirmed on its own page, so a renamed or removed listing isn't counted.
@@ -174,7 +177,8 @@ async function main() {
     for (const s of n.search) {
       try { row.peta.push(...await peta(s)); } catch (e) { row.errors.push(`PETA ${s}: ${e.message}`); }
       try { row.leapingBunny.push(...await leapingBunny(page, s)); } catch (e) { row.errors.push(`LB ${s}: ${e.message}`); }
-      try { row.cfi.push(...await cfi(s)); } catch (e) { row.errors.push(`CFI ${s}: ${e.message}`); }
+      // Kept apart: Cruelty Free International being down mustn't stop the PETA and Leaping Bunny checks.
+      try { row.cfi.push(...await cfi(s)); } catch (e) { row.cfiError = `CFI ${s}: ${e.message}`; }
     }
     const uniq = (a) => a.filter((x, i) => a.findIndex((y) => y.url === x.url) === i);
     row.peta = uniq(row.peta); row.leapingBunny = uniq(row.leapingBunny); row.cfi = uniq(row.cfi);
@@ -230,10 +234,12 @@ async function diff(brands, results) {
 
     // Cruelty Free International (records from before it was added have no claim yet)
     const cStored = b.cfi ? b.cfi.status : 'missing';
-    if (cStored === 'yes' && !r.cfi.some((x) => x.url === b.cfi.url)) {
+    const cHit = r.cfi.find((x) => names.includes(fold(x.name)) || names.includes(cfiKey(x.name)));
+    if (r.cfiError) unsure.push(`${b.name}: Cruelty Free International not checked (${r.cfiError})`);
+    else if (cStored === 'yes' && !r.cfi.some((x) => x.url === b.cfi.url)) {
       out.push({ why: `${b.name}: not found on Cruelty Free International's list (stored: yes)`, entry: entry('cfi', 'unknown', CFI_LIST) });
-    } else if (cStored !== 'yes' && r.cfi.length) {
-      const c = r.cfi[0];
+    } else if (cStored !== 'yes' && cHit) {
+      const c = cHit;
       out.push({ why: `${b.name}: approved by Cruelty Free International as "${c.name}" (stored: ${cStored})`, entry: { ...entry('cfi', 'yes', c.url), from: cStored } });
     }
   }

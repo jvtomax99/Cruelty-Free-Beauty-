@@ -62,14 +62,15 @@ async function lookups(name) {
   if (process.env.ADD_BRAND_FAKE) {
     const f = JSON.parse(fs.readFileSync(process.env.ADD_BRAND_FAKE, 'utf8'));
     if ((f.fail || []).includes(name)) throw new Error('fake lookup failure');
-    return [f.peta || [], f.leapingBunny || [], f.cfi || []];
+    return [f.peta || [], f.leapingBunny || [], (f.cfiDown || []).includes(name) ? null : f.cfi || []];
   }
   const { chromium } = require('playwright');
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage();
     await page.goto(`${LB}/Web/Shopping-Guide/Brands.aspx`, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    return [await peta(name), await leapingBunny(page, name), await cfi(name)];
+    // null: Cruelty Free International's list didn't load (the others still count)
+    return [await peta(name), await leapingBunny(page, name), await cfi(name).catch(() => null)];
   } finally { await browser.close(); }
 }
 
@@ -96,9 +97,12 @@ async function main() {
   const l = lbHits.filter((h) => loose(h.tradingName || '', name) || loose(h.company || '', name));
   const pYes = p.filter((h) => h.status === 'yes');
   const pNo = p.filter((h) => h.status === 'no');
-  const c = cfiHits.filter((h) => loose(h.name || '', name));
-  const near = [...petaHits.map((h) => `PETA: ${h.title}`), ...lbHits.map((h) => `Leaping Bunny: ${h.tradingName || h.company}`), ...cfiHits.map((h) => `Cruelty Free International: ${h.name}`)];
+  const cfiDown = cfiHits === null;
+  const c = (cfiHits || []).filter((h) => loose(h.name || '', name));
+  const near = [...petaHits.map((h) => `PETA: ${h.title}`), ...lbHits.map((h) => `Leaping Bunny: ${h.tradingName || h.company}`), ...(cfiHits || []).map((h) => `Cruelty Free International: ${h.name}`)];
 
+  // Not on PETA or Leaping Bunny, and Cruelty Free International couldn't be read: try again later.
+  if (!pYes.length && !l.length && cfiDown) { console.error("Cruelty Free International's list didn't load"); result(1, "Lookup failed: Cruelty Free International's list didn't load"); process.exit(1); }
   if (!pYes.length && !l.length && !c.length) {
     if (pNo.length) done(2, `Not added: PETA says "${name}" tests on animals (${pNo[0].verdict}, ${pNo[0].url}), and neither Leaping Bunny nor Cruelty Free International lists it.`, { tests: true, url: pNo[0].url });
     done(2, `Not listed: none of PETA, Leaping Bunny and Cruelty Free International lists "${name}" as cruelty-free (searched ${today}).`
@@ -132,7 +136,9 @@ async function main() {
       : { status: 'unknown', note: "Not found in Leaping Bunny's Shopping Guide", url: `${LB}/Web/Shopping-Guide/Brands.aspx`, checked: today },
     cfi: ch
       ? { status: 'yes', note: 'Approved by Cruelty Free International', url: ch.url, checked: today }
-      : { status: 'unknown', note: "Not on Cruelty Free International's approved brands list", url: CFI_LIST, checked: today },
+      : cfiDown
+        ? { status: 'unknown', note: "Not checked yet: Cruelty Free International's list didn't load", url: CFI_LIST, checked: null }
+        : { status: 'unknown', note: "Not on Cruelty Free International's approved brands list", url: CFI_LIST, checked: today },
     parent: lh && lh.parentTests
       ? { name: parentName, testsOnAnimals: 'yes', url: lh.url, note: 'Leaping Bunny: its parent company tests on animals', checked: today }
       : { name: null, testsOnAnimals: 'unknown', url: null, note: 'Not yet researched', checked: null },

@@ -232,6 +232,7 @@
         <ul class="buy" id="scan-lists">
           <li><a href="${PETA_SEARCH}${encodeURIComponent(name)}" target="_blank" rel="noopener">Search PETA for ${esc(name)}</a></li>
           <li><a href="${LB_GUIDE}" target="_blank" rel="noopener">Leaping Bunny's shopping guide</a> <span>search ${esc(name)} there</span></li>
+          <li><a href="https://www.crueltyfreeinternational.org/approved-brands/" target="_blank" rel="noopener">Cruelty Free International's approved brands</a> <span>search ${esc(name)} there</span></li>
         </ul>
         <p class="src">Noted on this phone, so it's easy to ask us to add it.</p>
         ${code ? obfLine(code) : ""}

@@ -72,6 +72,13 @@ check(r.code === 0 && /"id": "euroglow"/.test(r.out) && /approved-brands\/listin
 r = run('Euroglow', { peta: [], leapingBunny: [], cfi: [cfi('Euroglow', 'euroglow'), cfi('Euroglow', 'euroglow-2')] });
 check(r.code === 4, `two Cruelty Free International entries with the name: ask which (exit ${r.code})`);
 
+// Cruelty Free International's list didn't load: a brand PETA lists still goes in, its CFI claim not yet checked;
+// one nobody else lists is a failed lookup (tried again later), never "not listed".
+r = run('Kaja Two', { peta: [peta('Kaja Two', 'yes', 'kaja-two')], leapingBunny: [], cfiDown: ['Kaja Two'] });
+check(r.code === 0 && /didn't load/.test(r.out) && /"checked": null/.test(r.out), `CFI down, PETA lists it: drafted, CFI marked not checked (exit ${r.code})`);
+r = run('Euroglow', { peta: [], leapingBunny: [], cfi: [cfi('Euroglow', 'euroglow')], cfiDown: ['Euroglow'] });
+check(r.code === 1, `CFI down and no one else lists it: a failed lookup, not "not listed" (exit ${r.code})`);
+
 // Not listed at all.
 r = run('Zzqx Glow Lab', { peta: [], leapingBunny: [] });
 check(r.code === 2 && /Not listed/.test(r.out), `listed by none: not added (exit ${r.code})`);

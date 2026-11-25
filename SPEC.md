@@ -90,7 +90,7 @@ me**.
   (2026-11-11, Jose: the routine suggests brands per step, not named
   products; we hold no sourced product data. "Why it fits" uses strictness,
   budget, vegan and what the brand sells.)
-- **Learn.** Cruelty-free vs vegan, PETA vs Leaping Bunny, parent
+- **Learn.** Cruelty-free vs vegan, PETA vs Leaping Bunny vs Cruelty Free International, parent
   companies, China today. Done when every answer links a primary source.
 
 - **Launch show** (added 2026-11-11). A short stage reveal for the bunny,
@@ -144,7 +144,7 @@ me**.
       real iPhone, and the voice and music mix was placed by measurement,
       not checked by ear by Claude (Jose to listen).
 - **What changed** (founder's ask, 2026-11-11). When a recheck finds that a
-  brand's PETA, Leaping Bunny, parent company or China status changed, the
+  brand's PETA, Leaping Bunny, Cruelty Free International, parent company or China status changed, the
   app says so the next time it is opened: a card on Home (brands the person
   hearted first), a line on the brand's page, and "Recent changes" under
   the Brands list for 12 months. The words say only what the list showed on
@@ -153,7 +153,7 @@ me**.
   go live only through the recheck pull request Jose reads.
   A first finding (from "unknown") says "Newly confirmed", not "now". The
   date shown is when we checked, not when the list changed. The compare
-  tool covers PETA and Leaping Bunny; parent and China changes are entered
+  tool covers PETA, Leaping Bunny and Cruelty Free International; parent and China changes are entered
   by hand. An installed app picks an update up by itself
   (2026-11-13, Jose: nobody should have to reinstall): it asks for a new
   version each time it comes back into view and, once that version has
@@ -171,7 +171,7 @@ me**.
   before the founder had seen it). A study
   game: an open sanctuary garden in 3D that grows with what the person
   learns. Five habitats, one per topic: Bunny Meadow (cruelty-free or
-  vegan), Leafy Garden (PETA or Leaping Bunny), Wooded Meadow (parent
+  vegan), Leafy Garden (PETA, Leaping Bunny, CFI), Wooded Meadow (parent
   companies), Willow Pond (China today), Orchard (read a brand). Rounds
   of 5 questions; a missed question comes
   back sooner than a right one (5 minutes, then 1, 3, 7, 16, 35 days); "I

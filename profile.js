@@ -89,8 +89,9 @@
       .filter((b) => p.budget === "any" || b.price === p.budget)
       .filter((b) => p.vegan !== "yes" || b.vegan === "all")
       .sort((x, y) => {
-        const both = (b) => (b.peta.status === "yes" && b.leapingBunny.status === "yes" ? 0 : 1);
-        return both(x) - both(y) || x.name.localeCompare(y.name);
+        // more certifiers first
+        const certs = (b) => [b.peta, b.leapingBunny, b.cfi].filter((c) => c && c.status === "yes").length;
+        return certs(y) - certs(x) || x.name.localeCompare(y.name);
       })
       .slice(0, 3);
   }

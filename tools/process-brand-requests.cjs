@@ -111,7 +111,7 @@ function removeBrand(id) { const { raw, data } = readData(); data.brands = data.
 // A new brand's own links only (the whole file's 200-odd links are the monthly recheck's job).
 async function deadLinks(record) {
   if (process.env.NO_LINK_CHECK === '1') return [];
-  const urls = [record.peta && record.peta.url, record.leapingBunny && record.leapingBunny.url, ...(record.whereToBuy || []).map((w) => w.url)].filter(Boolean);
+  const urls = [record.peta && record.peta.url, record.leapingBunny && record.leapingBunny.url, record.cfi && record.cfi.url, ...(record.whereToBuy || []).map((w) => w.url)].filter(Boolean);
   const dead = [];
   for (const u of new Set(urls)) {
     try { const r = await fetch(u, { redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0 (C.F.B. link check)' } }); if (r.status === 404 || r.status === 410) dead.push(`${u} (${r.status})`); }
