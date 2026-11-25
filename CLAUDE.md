@@ -42,7 +42,9 @@ differs, this file wins.
   `add-brand` (her Add a brand box, `founder.js`). The "Add a brand" GitHub
   Action (`.github/workflows/add-brand.yml`, `tools/process-brand-requests.cjs`)
   handles them by itself and pushes what certifiers list straight to `main`
-  (Jose, 2026-11-14): the one change that goes live without a pull request.
+  (Jose, 2026-11-14), and since 2026-11-25 the details she sends (parent,
+  price, a store) when their links check out: the one change that goes live
+  without a pull request.
   Issues it labels `needs-jose` are for a person. Trusted logins, in that
   script and the workflow: `jvtomax99` and the founder's, `cfbbeauty`. When
   you handle one by hand: issue

@@ -40,6 +40,8 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   await page.goto(APP + '#profile', { waitUntil: 'networkidle' });
   check(!(await page.$('#founder-row .fd-card')), 'fresh phone: no Founder tools row on Profile');
   check(!(await page.$('#picks-app .pk-card')), 'picks url null: no "Shop my picks" card');
+  await page.goto(APP + '#brand/celavi', { waitUntil: 'networkidle' });
+  check(!(await page.$('#brand-page .fd-brand')), 'fresh phone: no "Add details" on a brand page');
 
   // ?founder=1 once turns the row on, and it stays after a plain reload.
   await page.goto(BASE + '?intro=0&founder=1#profile', { waitUntil: 'networkidle' });
@@ -83,15 +85,44 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
   const form = fs.readFileSync(path.join(__dirname, '..', '.github', 'ISSUE_TEMPLATE', 'add-brand.yml'), 'utf8');
   check(['brand', 'site', 'proof'].every((id) => new RegExp(`id: ${id}\\b`).test(form)) && /labels: \["add-brand"\]/.test(form), 'issue form has the brand, site and proof fields and the add-brand label');
 
-  // Sent list: the new name is waiting; a name already in the app links to its page; both survive a reload.
+  // A brand already in the app: with no details nothing opens; with details, the Add details form does.
+  const before = opened.length;
   await page.fill('#add-name', 'milani');
   await page.click('#add-form button[type=submit]');
+  await page.waitForTimeout(200);
+  check(opened.length === before && /already in the app/.test(await page.textContent('#add-msg')) && await page.$eval('#add-more', (d) => d.open), 'a brand already in, with no details: nothing opens, she is pointed to More details');
+  await page.selectOption('#add-price', '$$');
+  await page.fill('#add-store', 'Ulta & Co');
+  await page.fill('#add-store-link', 'https://www.ulta.com/brand/milani?a=1&b=2');
+  await page.fill('#add-parent', 'Gryphon');
+  await page.fill('#add-parent-link', 'not a link');
+  await page.selectOption('#add-china', 'no');
+  await page.click('#add-form button[type=submit]');
+  await page.waitForTimeout(200);
+  const d = opened.length > before ? new URL(opened[opened.length - 1]).searchParams : null;
+  check(!!d && d.get('template') === 'brand-details.yml' && d.get('title') === 'Details: Milani' && d.get('brand') === 'Milani', 'with details: the Add details form, named for the brand in the app');
+  check(!!d && d.get('price') === '$$' && d.get('store') === 'Ulta & Co' && d.get('store_link') === 'https://www.ulta.com/brand/milani?a=1&b=2' && d.get('china') === 'no' && d.get('parent') === 'Gryphon', 'every detail arrives whole');
+  check(!!d && !d.has('parent_link') && !d.has('site'), 'a detail link that is not a web address is dropped');
+  check(/details for Milani/.test(await page.textContent('#add-msg')) && !(await page.$eval('#add-more', (x) => x.open)) && await page.inputValue('#add-price') === '', 'she is told, and the form clears');
+  const dform = fs.readFileSync(path.join(__dirname, '..', '.github', 'ISSUE_TEMPLATE', 'brand-details.yml'), 'utf8');
+  check(['brand', 'parent', 'parent_link', 'china', 'china_link', 'price', 'store', 'store_link'].every((id) => new RegExp(`id: ${id}\\b`).test(dform) && new RegExp(`id: ${id}\\b`).test(form)) && /labels: \["add-brand"\]/.test(dform) && /^title: "Details: "/m.test(dform), 'both issue forms have every detail field the app fills in; the details form is titled "Details:" for the Action');
+
+  // Sent list: the new name is waiting; a name already in the app links to its page; both survive a reload.
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('#add-sent .ad-row');
   const rows = await page.$$eval('#add-sent .ad-row', (a) => a.map((r) => [r.querySelector('.ad-name').textContent, r.querySelector('.ad-state').textContent]));
-  check(rows.length === 3 && rows[0][0] === 'milani' && rows[0][1] === 'In the app' && rows[1][0] === 'Kaja' && rows[2][0] === NAME && /^Opened /.test(rows[2][1]), `sent list after reload: ${JSON.stringify(rows)}`);
+  check(rows.length === 3 && rows[0][0] === 'Milani' && rows[0][1] === 'In the app' && rows[1][0] === 'Kaja' && rows[2][0] === NAME && /^Opened /.test(rows[2][1]), `sent list after reload: ${JSON.stringify(rows)}`);
   check(await page.$eval('#add-sent .ad-state.is-in', (a) => a.getAttribute('href')) === '#brand/milani', '"In the app" links to the brand page');
   if (SHOTS) { await page.$eval('#add-sent', (e) => e.scrollIntoView({ block: 'center' })); await page.waitForTimeout(700); await page.screenshot({ path: path.join(SHOTS, 'add-sent-390.png') }); }
+
+  // A brand page with founder tools on: "Add details" opens Add a brand with the name in and the fold open.
+  await page.goto(APP + '#brand/celavi', { waitUntil: 'networkidle' });
+  check(!!(await page.$('#brand-page .fd-brand #fd-details')), 'founder tools on: a brand page shows "Add details"');
+  await page.click('#fd-details');
+  await page.waitForSelector('[data-screen="add"]:not([hidden])');
+  check(await page.inputValue('#add-name') === 'Celavi' && await page.$eval('#add-more', (x) => x.open) && /Adding details for Celavi/.test(await page.textContent('#add-msg')), '"Add details" fills in the name and opens More details');
+  if (SHOTS) { await page.waitForTimeout(500); await page.screenshot({ path: path.join(SHOTS, 'add-details-390.png'), fullPage: true }); }
+  await page.fill('#add-name', '');
 
   // Broken saved data doesn't break the screen.
   await page.evaluate(() => localStorage.setItem('cfb-sent-brands', '{not json'));

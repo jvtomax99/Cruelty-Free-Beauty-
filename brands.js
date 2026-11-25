@@ -220,6 +220,7 @@
         ${card("Price", priceStatus, b.priceSource ? b.priceSource.note : "", b.priceSource ? sourceLine(b.priceSource, "Brand's site") : "")}
         <div class="fact"><h2>Where to buy</h2>${buy}</div>
       </div>`;
+    document.dispatchEvent(new CustomEvent("cfb:brand-shown", { detail: { id: b.id, name: b.name } }));   // founder.js adds her "Add details"
   }
 
   /* ---------- Wiring ---------- */

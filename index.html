@@ -263,9 +263,28 @@
           <span class="search search-field"><input id="add-site" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://"></span>
           <label class="ad-label" for="add-proof">Certifier page <span>(PETA, Leaping Bunny or Cruelty Free International, if you have it)</span></label>
           <span class="search search-field"><input id="add-proof" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://"></span>
+          <details class="ad-more" id="add-more">
+            <summary class="ad-label"><span>More details <span>(optional; each needs a link that shows it)</span></span><svg class="chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+            <div class="ad-more-body">
+            <label class="ad-label" for="add-parent">Parent company <span>(who owns it)</span></label>
+            <span class="search search-field"><input id="add-parent" type="text" autocomplete="off" spellcheck="false" maxlength="80" placeholder="For example, L’Oréal"></span>
+            <label class="ad-label" for="add-parent-link">Link that shows who owns it</label>
+            <span class="search search-field"><input id="add-parent-link" type="url" inputmode="url" autocomplete="off" spellcheck="false" maxlength="300" placeholder="https://"></span>
+            <label class="ad-label" for="add-china">Sold in mainland China stores?</label>
+            <span class="search search-field"><select id="add-china"><option value="">Don't know</option><option value="yes">Yes</option><option value="no">No</option></select></span>
+            <label class="ad-label" for="add-china-link">Link that shows where it sells</label>
+            <span class="search search-field"><input id="add-china-link" type="url" inputmode="url" autocomplete="off" spellcheck="false" maxlength="300" placeholder="https://"></span>
+            <label class="ad-label" for="add-price">Price</label>
+            <span class="search search-field"><select id="add-price"><option value="">Don't know</option><option value="$">$ Drugstore</option><option value="$$">$$ Mid</option><option value="$$$">$$$ Luxury</option></select></span>
+            <label class="ad-label" for="add-store">A store that carries it</label>
+            <span class="search search-field"><input id="add-store" type="text" autocomplete="off" spellcheck="false" maxlength="80" placeholder="For example, Ulta"></span>
+<label class="ad-label" for="add-store-link">Store link <span>(the brand's page at that store)</span></label>
+            <span class="search search-field"><input id="add-store-link" type="url" inputmode="url" autocomplete="off" spellcheck="false" maxlength="300" placeholder="https://"></span>
+            </div>
+          </details>
           <button type="submit" class="pf-start">Send</button>
         </form>
-        <p class="src" id="add-msg" role="status">Send opens GitHub with the brand filled in. Tap "Submit new issue" there.</p>
+        <p class="src" id="add-msg" role="status">Send opens GitHub with the brand filled in. Tap "Submit new issue" there. A brand already in the app gets just the details.</p>
       </div>
       <div id="add-sent"></div>
     </section>
