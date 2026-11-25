@@ -59,13 +59,20 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if 
     });
     check((await here()).count === 1, `${tag}, Home: only the big one`);
 
-    // Scan with nothing scanned: the empty line, which leads to the camera button.
+    // Scan with nothing scanned: the empty line, which starts the camera.
     await page.goto(APP + '#scan');
     await page.waitForSelector('#scan-empty .hm');
     await expect('no scans yet', 'No scans yet. Try one from your bag.', '#scan', 'rest');
     await shot('places-noscans');
     await page.click('#scan-empty .hm');
-    check(await page.evaluate(() => document.activeElement && document.activeElement.id === 'scan-start'), `${tag}, its link moves to the Start camera button`);
+    await page.waitForTimeout(300);
+    check(/camera/i.test(await page.textContent('#scan-status') || ''), `${tag}, its link starts the camera (as Start camera does)`);
+    // With the camera already on (its button reads Stop camera), the line must not turn it off.
+    await page.evaluate(() => { const b = document.getElementById('scan-start'); b.disabled = false; b.textContent = 'Stop camera'; document.getElementById('scan-status').textContent = ''; });
+    await page.click('#scan-empty .hm');
+    await page.waitForTimeout(300);
+    check((await page.textContent('#scan-status')) === '' && (await page.textContent('#scan-start')) === 'Stop camera', `${tag}, its link leaves a running camera on`);
+    await page.evaluate(() => { document.getElementById('scan-start').textContent = 'Start camera'; });
 
     // A result of each kind: her face follows it, the empty line goes, the link opens the proof.
     for (const [code, kind, face] of [[1, 'pass', 'smile'], [2, 'fail', 'sad'], [4, 'none', 'surprised']]) {

@@ -10,7 +10,7 @@
   const QUESTIONS = [
     { key: "skin", q: "What's your skin type?", options: [["dry", "Dry"], ["oily", "Oily"], ["combination", "Combination"], ["normal", "Normal"]] },
     { key: "depth", q: "How light or deep is your skin?", options: [["fair", "Fair"], ["light", "Light"], ["medium", "Medium"], ["tan", "Tan"], ["deep", "Deep"]] },
-    { key: "veins", q: "Look at the veins on your inner wrist in daylight. What colour are they?", options: [["cool", "Blue or purple"], ["warm", "Green"], ["neutral", "Can't tell, or both"]] },
+    { key: "veins", q: "Look at the veins on your inner wrist in daylight. What color are they?", options: [["cool", "Blue or purple"], ["warm", "Green"], ["neutral", "Can't tell, or both"]] },
     { key: "jewelry", q: "Which jewelry looks better on you?", options: [["warm", "Gold"], ["cool", "Silver"], ["neutral", "Both"]] },
     { key: "sun", q: "What does your skin do in the sun?", options: [["cool", "Burns"], ["warm", "Tans"], ["neutral", "A bit of both"]] },
     { key: "finish", q: "What finish do you like?", options: [["matte", "Matte"], ["natural", "Natural"], ["dewy", "Dewy"]] },

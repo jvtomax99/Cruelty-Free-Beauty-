@@ -104,7 +104,7 @@ body::before {
 /* ---------- Layout ---------- */
 .app { display: flex; min-height: 100dvh; }
 main {
-  flex: 1; width: 100%; max-width: 760px; margin: 0 auto;
+  flex: 1; width: 100%; min-width: 0; max-width: 760px; margin: 0 auto;
   padding: calc(env(safe-area-inset-top) + var(--sp-4)) var(--sp-4) calc(var(--tab-h) + env(safe-area-inset-bottom) + var(--sp-6));
 }
 .screen[hidden] { display: none; }
@@ -685,7 +685,7 @@ html.intro-on .intro {
 @keyframes palBob { 50% { transform: translateY(-4px) rotate(-1.5deg); } }
 .hb + .search { position: relative; margin-top: calc(-1 * var(--sp-5)); }
 
-.qt { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2); margin-top: var(--sp-4); }
+.qt { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2); margin-top: var(--sp-4); }
 .qt-tile {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-1);
   min-height: 98px; padding: var(--sp-2) var(--sp-1); border-radius: var(--r-lg); border: 1px solid var(--qt-edge);
@@ -736,6 +736,7 @@ html.intro-on .intro {
 .hr-track.is-arriving > li:nth-child(3) { animation-delay: .08s; }
 .hr-track.is-arriving > li:nth-child(n+4) { animation-delay: .12s; }
 .hr-chips { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-top: auto; }
+.hr-chips .verdict { white-space: normal; line-height: 1.2; padding-block: 3px; }
 .hr-more { justify-content: center; align-items: center; padding-top: var(--sp-3); }
 .hr-more .hr-name { font-style: italic; color: var(--rose); }
 .hr:not([hidden]) + .card { margin-top: var(--sp-3); }
@@ -938,3 +939,10 @@ a.pill-btn.gd-go { display: inline-flex; align-items: center; text-decoration: n
 /* Manrope runs wider than Inter: on the narrowest phones the quick tiles' labels
    drop to 12 so "My profile" stays on one line like the others. */
 @media (max-width: 374px) { .qt-tile { font-size: var(--fs-cap); letter-spacing: 0; } }
+/* The narrowest phones (a folded Galaxy Fold is 280 px): smaller pins and tabs so nothing runs off the edge. */
+@media (max-width: 319px) {
+  .qt { gap: var(--sp-1); }
+  .qt-tile img { width: 40px; height: 40px; }
+  .tabbar .tab { min-width: 52px; }
+  .tabbar .tab-sound { min-width: 44px; }
+}
