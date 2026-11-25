@@ -8,6 +8,8 @@
   const PETA_FAQ = { t: "PETA: Cruelty-free FAQ", u: "https://crueltyfree.peta.org/faq/" };
   const PETA_LIST = { t: "PETA: Join the Ultimate Cruelty-Free List", u: "https://www.peta.org/about-peta/learn-about-peta/info-businesses/join-petas-ultimate-cruelty-free-list/" };
   const PETA_VEGAN = { t: "PETA: Vegan companies that don't test", u: "https://crueltyfree.peta.org/vegan-companies/" };
+  const CFI_APP = { t: "Cruelty Free International: Our Approval Programme (read 25 Nov 2026)", u: "https://www.crueltyfreeinternational.org/for-brands/our-approval-programme/" };
+  const CFI_LIST = { t: "Cruelty Free International: Our Approved Brands (read 25 Nov 2026)", u: "https://www.crueltyfreeinternational.org/approved-brands/" };
 
   const ANSWERS = [
     {
@@ -22,13 +24,14 @@
     },
     {
       topic: "burrow",   // its habitat in the Garden (garden.js)
-      q: "PETA or Leaping Bunny: aren't they the same?",
+      q: "PETA, Leaping Bunny, Cruelty Free International: aren't they the same?",
       a: [
-        "No. They're two programs with different checks, so C.F.B. never treats one as the other.",
+        "No. They're three programs with different checks, so C.F.B. never treats one as another.",
         "Leaping Bunny: the company picks a fixed cut-off date and promises no new animal testing after it, by itself or its suppliers. It keeps written declarations from each supplier (its supplier monitoring system), recommits every year, and must be open to an independent audit.",
-        "PETA's Ultimate Cruelty-Free List, running since 1987, lists companies that verify that they and their suppliers never test on animals, now or in the future. Since 2018 it also lists individual brands that meet its rules across their whole product line."
+        "PETA's Ultimate Cruelty-Free List, running since 1987, lists companies that verify that they and their suppliers never test on animals, now or in the future. Since 2018 it also lists individual brands that meet its rules across their whole product line.",
+        "Cruelty Free International runs its own Approval Programme, with its own logo. An approved brand keeps a fixed cut-off date and monitors its suppliers, and that supplier monitoring must be independently audited. Its list of approved brands shows the regions where each one sells; many sell only in Europe."
       ],
-      src: [LB_STD, LB_FAQ, PETA_LIST, PETA_FAQ]
+      src: [LB_STD, LB_FAQ, PETA_LIST, PETA_FAQ, CFI_APP, CFI_LIST]
     },
     {
       topic: "oak",   // its habitat in the Garden (garden.js)

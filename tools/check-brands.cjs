@@ -29,9 +29,9 @@ const VEGAN = ['all', 'some', 'none', 'unknown'];
 const PRICE = ['$', '$$', '$$$', null];
 const REVIEW = ['verified', 'needs-review'];
 const LINK_TYPES = ['plain', 'affiliate'];
-const CLAIMS = { peta: STATUS, leapingBunny: STATUS, parent: PARENT_STATUS, chinaRetail: STATUS };
+const CLAIMS = { peta: STATUS, leapingBunny: STATUS, cfi: STATUS, parent: PARENT_STATUS, chinaRetail: STATUS };
 
-const OWN_SITE = { peta: /^https:\/\/(crueltyfree\.)?peta\.org\//, leapingBunny: /^https:\/\/(www\.)?leapingbunny\.org\// };
+const OWN_SITE = { peta: /^https:\/\/(crueltyfree\.)?peta\.org\//, leapingBunny: /^https:\/\/(www\.)?leapingbunny\.org\//, cfi: /^https:\/\/(www\.)?crueltyfreeinternational\.org\// };
 
 const errors = [];
 const warnings = [];
@@ -133,6 +133,7 @@ function checkChanges(list, brands) {
     if (!allowed.includes(c.from) || !allowed.includes(c.to)) err(at, `from "${c.from}" and to "${c.to}" must each be one of ${allowed.join(', ')}`);
     if (c.from === c.to) err(at, 'from and to are the same, so nothing changed');
     if (c.claim === 'leapingBunny' && c.from !== 'yes' && c.to !== 'yes') err(at, 'a Leaping Bunny change must start or end at "yes" (the app says "no longer in" or "now in" its guide)');
+    if (c.claim === 'cfi' && c.from !== 'yes' && c.to !== 'yes') err(at, 'a Cruelty Free International change must start or end at "yes" (the app says "no longer on" or "now on" its list)');
     if (c.law !== undefined && !(c.law === true && c.claim === 'peta' && c.to === 'no')) err(at, 'law may only be true, on a peta change to "no" (PETA: working for regulatory change)');
     const dup = `${c.id}|${c.claim}|${c.date}`;
     if (keys.has(dup)) err(at, `a second ${c.claim} change for ${c.id} on ${c.date}`);

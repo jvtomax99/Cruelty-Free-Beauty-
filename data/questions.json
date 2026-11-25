@@ -7,6 +7,7 @@
     "PETA_FAQ": { "t": "PETA: Cruelty-free FAQ", "u": "https://crueltyfree.peta.org/faq/", "checked": "2026-11-12" },
     "PETA_LIST": { "t": "PETA: Join the Ultimate Cruelty-Free List", "u": "https://www.peta.org/about-peta/learn-about-peta/info-businesses/join-petas-ultimate-cruelty-free-list/", "checked": "2026-11-12" },
     "PETA_VEGAN": { "t": "PETA: Vegan companies that don't test", "u": "https://crueltyfree.peta.org/vegan-companies/", "checked": "2026-11-12" },
+    "CFI_APP": { "t": "Cruelty Free International: Our Approval Programme", "u": "https://www.crueltyfreeinternational.org/for-brands/our-approval-programme/", "checked": "2026-11-25" },
     "APP": { "t": "C.F.B.'s own rule (Learn)", "u": "#learn", "checked": "2026-11-12" }
   },
   "questions": [
@@ -38,6 +39,9 @@
     { "id": "c1", "topic": "burrow", "q": "PETA's list and Leaping Bunny's certification are:",
       "options": ["Two programs with different checks", "The same program under two names", "Both run by the U.S. government", "Both run by makeup brands"],
       "why": "They are separate programs, so being on one says nothing about the other.", "src": ["LB_STD", "PETA_LIST"] },
+    { "id": "c9", "topic": "burrow", "q": "To be approved by Cruelty Free International, a brand's supplier monitoring must be:",
+      "options": ["Independently audited", "Run by its parent company", "Checked by PETA", "Done once, before launch"],
+      "why": "Cruelty Free International says an approved brand's supplier monitoring system must be independently audited.", "src": ["CFI_APP"] },
     { "id": "c2", "topic": "burrow", "q": "Under Leaping Bunny, what does a company promise about its cut-off date?",
       "options": ["No new animal testing after it, by itself or its suppliers", "To stop selling older products", "To renew its packaging", "To be audited on that date"],
       "why": "The company picks a fixed cut-off date and commits to no new testing after it.", "src": ["LB_STD"] },
@@ -71,7 +75,7 @@
       "why": "Leaping Bunny notes that many shoppers prefer to avoid such parents, and leaves the choice to them.", "src": ["LB_FAQ"] },
     { "id": "p4", "topic": "oak", "q": "In C.F.B., a certified brand whose parent company tests shows as:",
       "options": ["\"Doesn't pass\" on Strict, \"Passes\" on Certified", "\"Passes\" on both", "\"Doesn't pass\" on both", "It isn't shown at all"],
-      "why": "Strict looks at the parent company. Certified looks only at PETA and Leaping Bunny.", "src": ["APP"] },
+      "why": "Strict looks at the parent company. Certified looks only at the certifiers: PETA, Leaping Bunny and Cruelty Free International.", "src": ["APP"] },
     { "id": "p5", "topic": "oak", "q": "On Strict, a certified brand whose owner we couldn't confirm:",
       "options": ["Passes, with a note that the parent isn't confirmed", "Doesn't pass", "Is hidden", "Is marked as testing on animals"],
       "why": "Strict fails a brand only on a known problem with a source. An unknown passes with a note.", "src": ["APP"] },

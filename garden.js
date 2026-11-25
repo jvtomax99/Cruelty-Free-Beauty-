@@ -22,7 +22,7 @@
 
   const TOPICS = [
     { id: "meadow", name: "Bunny Meadow", sub: "Cruelty-free or vegan" },
-    { id: "burrow", name: "Leafy Garden", sub: "PETA or Leaping Bunny" },
+    { id: "burrow", name: "Leafy Garden", sub: "PETA, Leaping Bunny, CFI" },
     { id: "oak", name: "Wooded Meadow", sub: "Parent companies" },
     { id: "pond", name: "Willow Pond", sub: "China today" },
     { id: "orchard", name: "Orchard", sub: "Read a brand" },
@@ -64,9 +64,10 @@
   function brandQuestions(brands) {
     const CHIP = window.CFB.CHIP, out = [];
     for (const b of brands) {
-      if (stale(b.peta.checked) || stale(b.leapingBunny.checked)) continue;
+      if (stale(b.peta.checked) || stale(b.leapingBunny.checked) || (b.cfi && stale(b.cfi.checked))) continue;
       const v = window.CFB.verdict(b, "strict");
-      const byParent = v.kind === "fail" && (b.peta.status === "yes" || b.leapingBunny.status === "yes") && b.parent.testsOnAnimals === "yes" && b.parent.name && b.parent.name !== b.name;
+      const certified = b.peta.status === "yes" || b.leapingBunny.status === "yes" || (b.cfi && b.cfi.status === "yes");
+      const byParent = v.kind === "fail" && certified && b.parent.testsOnAnimals === "yes" && b.parent.name && b.parent.name !== b.name;
       const byChina = v.kind === "fail" && !byParent && b.chinaRetail.status === "yes";
       // the answer rests on that claim, so it needs its own link and a check that isn't due
       if (byParent && (!b.parent.url || stale(b.parent.checked))) continue;
@@ -74,6 +75,7 @@
       const src = [];
       if (b.peta.url) src.push({ t: "PETA: " + b.name, u: b.peta.url, checked: b.peta.checked });
       if (b.leapingBunny.url) src.push({ t: "Leaping Bunny: " + b.name, u: b.leapingBunny.url, checked: b.leapingBunny.checked });
+      if (b.cfi && b.cfi.url) src.push({ t: "Cruelty Free International: " + b.name, u: b.cfi.url, checked: b.cfi.checked });
       if (byParent) src.push({ t: "Parent company: " + b.parent.name, u: b.parent.url, checked: b.parent.checked });
       if (byChina) src.push({ t: "Where it sells", u: b.chinaRetail.url, checked: b.chinaRetail.checked });
       if (!src.length) continue;   // no proof to show, so no question

@@ -16,13 +16,17 @@ let failures = 0;
 const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if (!ok) failures++; };
 
 const peta = (title, status, slug) => ({ title, url: `https://crueltyfree.peta.org/company/${slug}/`, status, verdict: status === 'yes' ? "PETA: company that doesn't test" : 'PETA: does test on animals', vegan: false, countries: [] });
+const cfi = (name, slug) => ({ name, url: `https://www.crueltyfreeinternational.org/approved-brands/listing/${slug}/`, regions: 'Europe' });
 const lb = (name, id, parentTests = false) => ({ company: name, tradingName: name, url: `https://www.leapingbunny.org/ShopBrandDetail?BrandId=${id}`, parentTests });
 fs.writeFileSync(path.join(dir, 'fake.json'), JSON.stringify({
   peta: [peta('Kaja Beauty', 'yes', 'kaja-beauty'), peta('Testco', 'no', 'testco')],
   leapingBunny: [lb('Juice Beauty', 5), lb('Bunnyco', 6, true), lb('Twin', 7), lb('Twin', 8)],
+  cfi: [cfi('Euroglow', 'euroglow')],
   fail: ['Flaky'],
 }));
-const form = (name, site = '_No response_', proof = '_No response_') => `### Brand name\n\n${name}\n\n### Brand's website (if you have it)\n\n${site}\n\n### PETA or Leaping Bunny page (if you have it)\n\n${proof}`;
+const form = (name, site = '_No response_', proof = '_No response_') => `### Brand name\n\n${name}\n\n### Brand's website (if you have it)\n\n${site}\n\n### Certifier page, from PETA, Leaping Bunny or Cruelty Free International (if you have it)\n\n${proof}`;
+// The form as it was before Cruelty Free International was added: issues sent then still work.
+const oldForm = (name, proof) => `### Brand name\n\n${name}\n\n### Brand's website (if you have it)\n\n_No response_\n\n### PETA or Leaping Bunny page (if you have it)\n\n${proof}`;
 const issue = (number, login, body, labels = ['add-brand'], title = 'Add brand: x') => ({ number, title, body, user: { login }, labels: labels.map((name) => ({ name })) });
 fs.writeFileSync(path.join(dir, 'issues.json'), JSON.stringify([
   issue(1, 'cfbbeauty', form('Kaja', 'https://www.kajabeauty.com/').replace(/\n/g, '\r\n')),
@@ -40,7 +44,9 @@ fs.writeFileSync(path.join(dir, 'issues.json'), JSON.stringify([
   issue(13, 'cfbbeauty', '', ['add-brand'], ''),
   issue(14, 'cfbbeauty', form('Flaky')),
   issue(15, 'cfbbeauty', form('Flaky'), ['add-brand', 'retrying']),
-  issue(16, 'cfbbeauty', form('Hidden Gem', '_No response_', 'https://crueltyfree.peta.org/company/hidden-gem/')),
+  issue(16, 'cfbbeauty', oldForm('Hidden Gem', 'https://crueltyfree.peta.org/company/hidden-gem/')),
+  issue(17, 'cfbbeauty', form('Euroglow', 'https://euroglow.example/')),
+  issue(18, 'cfbbeauty', form('Lost Euro', '_No response_', 'https://www.crueltyfreeinternational.org/approved-brands/listing/lost-euro/')),
 ]));
 
 const r = spawnSync(process.execPath, [path.join(__dirname, 'process-brand-requests.cjs')], {
@@ -54,7 +60,7 @@ const closed = (n, reason) => calls(n).some((l) => l.startsWith('[dry run] PATCH
 const labelled = (n, name) => calls(n).some((l) => l.includes('/labels') && l.includes(name));
 
 check(r.status === 1, `the run ends with exit 1, because some requests need Jose (exit ${r.status})`);
-check(/13 request\(s\) to check/.test(out), 'it skips the untrusted author, the one left for Jose and the pull request (13 to check)');
+check(/15 request\(s\) to check/.test(out), 'it skips the untrusted author, the one left for Jose and the pull request (15 to check)');
 check(calls(3).length === 0 && calls(9).length === 0 && calls(12).length === 0, 'no GitHub call at all for the untrusted issue, the held one or the pull request');
 
 const data = JSON.parse(fs.readFileSync(DATA, 'utf8'));
@@ -64,9 +70,9 @@ check(kaja && kaja.whereToBuy[0] && kaja.whereToBuy[0].url === 'https://www.kaja
 check(juice && juice.whereToBuy.length === 0, 'a javascript: website is dropped, never a buy link');
 check(said(1, /Added to C\.F\.B\.: \*\*Kaja Beauty\*\*, listed as cruelty-free by PETA/) && said(1, /#brand\/kaja-beauty/) && closed(1, 'completed'), '#1: "Added", with its certifier and link, closed');
 check(said(2, /Leaping Bunny/) && said(2, /No buy link yet/) && closed(2, 'completed'), '#2: added from Leaping Bunny, and told a website gives it a buy link');
-check(/bump CACHE_VERSION/.test(out) && /git commit and push: Add Kaja Beauty, Juice Beauty \(the founder's requests #1, #2\)/.test(out), 'one commit for both, with CACHE_VERSION bumped');
+check(/bump CACHE_VERSION/.test(out) && /git commit and push: Add Kaja Beauty, Juice Beauty, Euroglow \(the founder's requests #1, #2, #17\)/.test(out), 'one commit for all three, with CACHE_VERSION bumped');
 check(said(4, /already in the app/) && said(4, /#brand\/milani/) && closed(4, 'completed'), '#4 Milani: already in the app, with its link, closed');
-check(said(5, /couldn't find \*\*Zzqx Glow Lab\*\* on PETA's or Leaping Bunny's/) && said(5, /send it again with its PETA or Leaping Bunny page/) && closed(5, 'not_planned'), '#5: not listed, closed as not planned, told how to ask again');
+check(said(5, /couldn't find \*\*Zzqx Glow Lab\*\* on PETA's, Leaping Bunny's or Cruelty Free International's/) && said(5, /send it again with its PETA, Leaping Bunny or Cruelty Free International page/) && closed(5, 'not_planned'), '#5: not listed, closed as not planned, told how to ask again');
 check(said(6, /PETA says \*\*Testco\*\* tests on animals/) && closed(6, 'not_planned'), '#6: PETA says it tests, closed as not planned');
 check(said(7, /@jvtomax99 will check which one/) && labelled(7, 'needs-jose') && !closed(7, 'completed'), '#7: two matches, left open for Jose, who is mentioned');
 check(said(8, /parent company tests/) && labelled(8, 'needs-jose') && !closed(8, 'completed'), '#8: a parent that tests, left open for Jose');
@@ -74,9 +80,12 @@ check(!fs.existsSync('/tmp/cfb-pwned2') && closed(10, 'not_planned'), '#10: a na
 const at = (re) => out.split('\n').findIndex((l) => re.test(l));
 check(said(11, /is in the app now/) && said(11, /kaja-beauty/) && closed(11, 'completed') && at(/\/issues\/11\/comments/) > at(/git commit and push/), '#11: a duplicate of a brand added in this run (title only, no form) is answered only after it goes live');
 check(said(13, /couldn't find a brand name/) && labelled(13, 'needs-jose'), '#13: no name at all: left for Jose');
-check(said(14, /couldn't reach PETA or Leaping Bunny/) && said(14, /@jvtomax99/) && labelled(14, 'retrying') && !closed(14, 'completed'), '#14: a failed lookup: said once, mentions Jose, labelled retrying, left open');
+check(said(14, /couldn't reach the certifiers' sites/) && said(14, /@jvtomax99/) && labelled(14, 'retrying') && !closed(14, 'completed'), '#14: a failed lookup: said once, mentions Jose, labelled retrying, left open');
 check(calls(15).length === 0, '#15: a failed lookup already labelled retrying: tried again silently');
-check(said(16, /you sent https:\/\/crueltyfree\.peta\.org\/company\/hidden-gem\//) && labelled(16, 'needs-jose') && !closed(16, 'not_planned'), '#16: not found, but she sent a certifier page: left for Jose, not closed');
+check(said(16, /you sent https:\/\/crueltyfree\.peta\.org\/company\/hidden-gem\//) && labelled(16, 'needs-jose') && !closed(16, 'not_planned'), '#16: not found, but she sent a certifier page (on the old form): left for Jose, not closed');
+const euro = data.brands.find((b) => b.id === 'euroglow');
+check(!!euro && euro.cfi.status === 'yes' && said(17, /listed as cruelty-free by Cruelty Free International/) && closed(17, 'completed'), '#17: approved by Cruelty Free International only: added, and the answer names it');
+check(said(18, /you sent https:\/\/www\.crueltyfreeinternational\.org\/approved-brands\/listing\/lost-euro\//) && labelled(18, 'needs-jose'), '#18: a Cruelty Free International page she sent counts as a certifier page');
 check(!/Hidden Gem|Flaky/.test(JSON.stringify(data.brands.map((b) => b.name))), 'nothing unconfirmed was written to the data');
 check(fs.readFileSync(path.join(__dirname, '..', 'sw.js'), 'utf8') === swBefore, "a dry run never touches the real sw.js");
 const cb = spawnSync(process.execPath, [path.join(__dirname, 'check-brands.cjs')], { encoding: 'utf8', env: { ...process.env, BRANDS_FILE: DATA, NODE_USE_ENV_PROXY: '1' } });

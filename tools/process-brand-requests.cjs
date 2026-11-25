@@ -3,7 +3,7 @@
 //
 // For every open add-brand issue opened by a trusted login (and not already left for Jose):
 // read the brand name and website from the issue form, run tools/add-brand.cjs on it, and
-//   - listed by PETA ("doesn't test") or Leaping Bunny, links alive: queue it. All queued brands
+//   - listed by PETA ("doesn't test"), Leaping Bunny or Cruelty Free International, links alive: queue it. All queued brands
 //     go out together: start again from the latest main, add them, bump CACHE_VERSION, run the
 //     data and site checks, commit, push (up to 3 tries, each from a fresh main), ask for a Pages
 //     build and wait for the live data. Only then: "Added" with its link, and the issue closes.
@@ -74,11 +74,12 @@ function fields(issue) {
   let name = section('Brand name');
   if (!name) name = String(issue.title || '').replace(/^\s*add brand:\s*/i, '');
   name = name.split('\n')[0].replace(/\s+/g, ' ').trim().slice(0, 80);
-  const proof = httpsLink(section('PETA or Leaping Bunny page').split(/\s+/)[0]);
+  // The form's label was "PETA or Leaping Bunny page" before Cruelty Free International was added.
+  const proof = httpsLink((section('Certifier page') || section('PETA or Leaping Bunny page')).split(/\s+/)[0]);
   return {
     name,
     site: httpsLink(section("Brand's website").split(/\s+/)[0]),
-    proof: proof && /^https:\/\/(crueltyfree\.peta\.org|(www\.)?leapingbunny\.org)\//.test(proof) ? proof : null,
+    proof: proof && /^https:\/\/(crueltyfree\.peta\.org|(www\.)?leapingbunny\.org|(www\.)?crueltyfreeinternational\.org)\//.test(proof) ? proof : null,
   };
 }
 
@@ -203,13 +204,13 @@ async function main() {
         await comment(n, `**${res.brand ? res.brand.name : name}** is already in the app: ${res.brand ? brandLink(res.brand) : SITE}`);
         await close(n, 'completed');
       } else if (res.code === 2 && proof && !res.tests) {
-        await hold(n, `I couldn't find **${name}** on PETA's or Leaping Bunny's cruelty-free lists, but you sent ${proof}. ${JOSE} will check that page.`);
+        await hold(n, `I couldn't find **${name}** on PETA's, Leaping Bunny's or Cruelty Free International's lists, but you sent ${proof}. ${JOSE} will check that page.`);
         trouble++;
       } else if (res.code === 2) {
         await comment(n, (res.tests
-          ? `PETA says **${name}** tests on animals (${res.url}), and Leaping Bunny doesn't certify it, so it stays out of the app.`
-          : `I couldn't find **${name}** on PETA's or Leaping Bunny's cruelty-free lists, so it stays out of the app.\n\n${res.message.split('\n').slice(1).join('\n')}`.trim())
-          + `\n\nIf it is on one of their lists, send it again with its PETA or Leaping Bunny page and ${JOSE} will check.`);
+          ? `PETA says **${name}** tests on animals (${res.url}), and neither Leaping Bunny nor Cruelty Free International lists it, so it stays out of the app.`
+          : `I couldn't find **${name}** on PETA's, Leaping Bunny's or Cruelty Free International's lists, so it stays out of the app.\n\n${res.message.split('\n').slice(1).join('\n')}`.trim())
+          + `\n\nIf it is on one of their lists, send it again with its PETA, Leaping Bunny or Cruelty Free International page and ${JOSE} will check.`);
         await close(n, 'not_planned');
       } else if (res.code === 4) {
         await hold(n, `More than one brand on the certifiers' lists matches **${name}**, so ${JOSE} will check which one you mean.\n\n${res.message.split('\n').slice(1).join('\n')}`);
@@ -220,7 +221,7 @@ async function main() {
       } else {
         log(`lookup failed for #${n}: ${res.message}`);
         trouble++;
-        if (!has(issue, RETRY)) { await comment(n, `I couldn't reach PETA or Leaping Bunny just now (${String(res.message).slice(0, 120)}). I'll try again tomorrow. ${JOSE} for a look if it keeps happening.`); await label(n, RETRY); }
+        if (!has(issue, RETRY)) { await comment(n, `I couldn't reach the certifiers' sites just now (${String(res.message).slice(0, 120)}). I'll try again tomorrow. ${JOSE} for a look if it keeps happening.`); await label(n, RETRY); }
       }
     } catch (e) {
       console.error(`#${n}: ${e.message}`);   // one issue's GitHub error never stops the others
@@ -246,7 +247,8 @@ async function main() {
   await everyone(async (q, n) => {
     if (n !== q.issue) { await comment(n, `**${q.brand.name}** is in the app now: ${brandLink(q.brand)}`); await close(n, 'completed'); return; }
     const r = q.record;
-    const by = [r.peta.status === 'yes' && 'PETA', r.leapingBunny.status === 'yes' && 'Leaping Bunny'].filter(Boolean).join(' and ');
+    const certs = [r.peta.status === 'yes' && 'PETA', r.leapingBunny.status === 'yes' && 'Leaping Bunny', r.cfi && r.cfi.status === 'yes' && 'Cruelty Free International'].filter(Boolean);
+    const by = certs.length > 2 ? `${certs.slice(0, -1).join(', ')} and ${certs[certs.length - 1]}` : certs.join(' and ');
     await comment(n, `Added to C.F.B.: **${q.brand.name}**, listed as cruelty-free by ${by}. It's in the app now: ${brandLink(q.brand)}`
       + (q.site ? '' : "\n\nNo website was given, so its page says \"No buy link yet\". Add the brand's website next time and it gets a buy link."));
     if (q.retried) await unlabel(n, RETRY);

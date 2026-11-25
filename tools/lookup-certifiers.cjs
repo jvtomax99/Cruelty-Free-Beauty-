@@ -1,4 +1,4 @@
-// Looks up brands on PETA's and Leaping Bunny's own sites and prints what
+// Looks up brands on PETA's, Leaping Bunny's and Cruelty Free International's own sites and prints what
 // each certifier says, with the page to cite. It does not edit brands.json:
 // a person (or the monthly scheduled run) reads the output and decides.
 //
@@ -11,6 +11,7 @@
 // Needs Playwright (Leaping Bunny's list only answers from inside its page).
 // PETA: WordPress JSON search, then the company page for its verdict line.
 // Leaping Bunny: the query its Shopping Guide page uses, then the brand page.
+// Cruelty Free International: its approved-brands list (plain pages of 20), then the brand's page.
 
 const fs = require('fs');
 
@@ -25,6 +26,8 @@ if ((process.env.HTTPS_PROXY || process.env.https_proxy) && !process.env.NODE_US
 
 const PETA = 'https://crueltyfree.peta.org';
 const LB = 'https://www.leapingbunny.org';
+const CFI = 'https://www.crueltyfreeinternational.org';
+const CFI_LIST = `${CFI}/approved-brands/`;
 const UA = 'Mozilla/5.0 (C.F.B. brand check)';
 
 const decode = (s) => s
@@ -107,6 +110,46 @@ async function leapingBunny(page, name) {
   }));
 }
 
+// Cruelty Free International's whole list, read once per run: [{ name, url }].
+// Each page of 20 names its brands as links titled with the brand's name.
+let cfiCache = null;
+async function cfiList() {
+  if (cfiCache) return cfiCache;
+  const all = new Map();
+  let last = 1;
+  for (let n = 1; n <= last && n <= 60; n++) {
+    const html = await get(`${CFI_LIST}?_page=${n}&num=20&sort=`);
+    for (const m of html.matchAll(/_page=(\d+)&(?:amp;)?num=20/g)) last = Math.max(last, Number(m[1]));
+    for (const m of html.matchAll(/href="(https:\/\/www\.crueltyfreeinternational\.org\/approved-brands\/listing\/[^"\/]+\/)"[^>]*title="([^"]+)"[^>]*drts-entity-permalink/g)) {
+      if (!all.has(m[1])) all.set(m[1], { name: decode(m[2]).trim(), url: m[1] });
+    }
+    await sleep(300);
+  }
+  if (all.size < 100) throw new Error(`Cruelty Free International's list came back with ${all.size} brands; its page may have changed`);
+  cfiCache = [...all.values()];
+  return cfiCache;
+}
+// Entries whose whole name matches (ignoring a trailing "Cosmetics", "Beauty" or "Makeup"),
+// each confirmed on its own page, so a renamed or removed listing isn't counted.
+const cfiKey = (s) => fold(String(s).replace(/\s+(cosmetics|beauty|makeup|skincare)$/i, ''));
+async function cfi(name) {
+  const k = cfiKey(name);
+  if (!k) return [];
+  const hits = (await cfiList()).filter((e) => cfiKey(e.name) === k || fold(e.name) === fold(name));
+  const out = [];
+  for (const h of hits) {
+    const r = await fetch(h.url, { headers: { 'User-Agent': UA } });
+    if (r.status === 404 || r.status === 410) continue;
+    if (!r.ok) throw new Error(`${r.status} ${h.url}`);
+    const page = text(await r.text());
+    if (!page.toLowerCase().includes(h.name.toLowerCase())) continue;
+    const regions = (page.match(/Region (.*?) Retail Presence/) || [])[1] || '';
+    out.push({ name: h.name, url: h.url, regions });
+    await sleep(300);
+  }
+  return out;
+}
+
 async function main() {
   const args = process.argv.slice(2);
   let names;
@@ -127,15 +170,16 @@ async function main() {
 
   const results = [];
   for (const n of names) {
-    const row = { id: n.id, checked: new Date().toISOString().slice(0, 10), peta: [], leapingBunny: [], errors: [] };
+    const row = { id: n.id, checked: new Date().toISOString().slice(0, 10), peta: [], leapingBunny: [], cfi: [], errors: [] };
     for (const s of n.search) {
       try { row.peta.push(...await peta(s)); } catch (e) { row.errors.push(`PETA ${s}: ${e.message}`); }
       try { row.leapingBunny.push(...await leapingBunny(page, s)); } catch (e) { row.errors.push(`LB ${s}: ${e.message}`); }
+      try { row.cfi.push(...await cfi(s)); } catch (e) { row.errors.push(`CFI ${s}: ${e.message}`); }
     }
     const uniq = (a) => a.filter((x, i) => a.findIndex((y) => y.url === x.url) === i);
-    row.peta = uniq(row.peta); row.leapingBunny = uniq(row.leapingBunny);
+    row.peta = uniq(row.peta); row.leapingBunny = uniq(row.leapingBunny); row.cfi = uniq(row.cfi);
     results.push(row);
-    process.stderr.write(`${n.id}: PETA ${row.peta.length}, LB ${row.leapingBunny.length}\n`);
+    process.stderr.write(`${n.id}: PETA ${row.peta.length}, LB ${row.leapingBunny.length}, CFI ${row.cfi.length}\n`);
   }
   await browser.close();
   if (wantDiff) return diff(JSON.parse(fs.readFileSync(file, 'utf8')).brands, results);
@@ -153,7 +197,7 @@ async function diff(brands, results) {
     if (!r) continue;
     if (r.errors.length) { unsure.push(`${b.name}: lookup errors (${r.errors.join('; ')})`); continue; }
     const names = [b.name, ...(b.search || [])].map(fold);
-    const entry = (claim, to, url) => ({ id: b.id, claim, from: b[claim].status, to, date: r.checked, url });
+    const entry = (claim, to, url) => ({ id: b.id, claim, from: b[claim] ? b[claim].status : 'unknown', to, date: r.checked, url });
 
     // PETA
     const stored = b.peta.status;
@@ -183,13 +227,22 @@ async function diff(brands, results) {
       const lb = r.leapingBunny.find((x) => names.includes(fold(x.tradingName || '')) || names.includes(fold(x.company || '')));
       if (lb) out.push({ why: `${b.name}: found in Leaping Bunny's guide as "${lb.tradingName || lb.company}" (stored: ${lbStored})`, entry: entry('leapingBunny', 'yes', lb.url) });
     }
+
+    // Cruelty Free International (records from before it was added have no claim yet)
+    const cStored = b.cfi ? b.cfi.status : 'missing';
+    if (cStored === 'yes' && !r.cfi.some((x) => x.url === b.cfi.url)) {
+      out.push({ why: `${b.name}: not found on Cruelty Free International's list (stored: yes)`, entry: entry('cfi', 'unknown', CFI_LIST) });
+    } else if (cStored !== 'yes' && r.cfi.length) {
+      const c = r.cfi[0];
+      out.push({ why: `${b.name}: approved by Cruelty Free International as "${c.name}" (stored: ${cStored})`, entry: { ...entry('cfi', 'yes', c.url), from: cStored } });
+    }
   }
-  console.log('Compared PETA and Leaping Bunny only. Parent company and China changes are found and entered by hand.\n');
-  console.log(out.length ? `${out.length} possible change(s). Open each link and confirm before editing data/brands.json:\n` : 'No changes: every stored PETA and Leaping Bunny status matches a fresh lookup.');
+  console.log('Compared PETA, Leaping Bunny and Cruelty Free International only. Parent company and China changes are found and entered by hand.\n');
+  console.log(out.length ? `${out.length} possible change(s). Open each link and confirm before editing data/brands.json:\n` : 'No changes: every stored certifier status matches a fresh lookup.');
   for (const o of out) console.log(`- ${o.why}\n  ${JSON.stringify(o.entry)}\n`);
   if (unsure.length) console.log(`Could not check (${unsure.length}):\n  ` + unsure.join('\n  '));
 }
 
-// tools/add-brand.cjs reuses the two lookups; run directly, this prints them.
-module.exports = { peta, leapingBunny, petaPage, fold, LB, PETA };
+// tools/add-brand.cjs reuses the lookups; run directly, this prints them.
+module.exports = { peta, leapingBunny, cfi, petaPage, fold, LB, PETA, CFI, CFI_LIST };
 if (require.main === module) main().catch((e) => { console.error(e); process.exit(1); });

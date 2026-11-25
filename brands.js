@@ -19,21 +19,21 @@
   };
 
   /* ---------- Verdict ----------
-     Certified: on PETA's list or Leaping Bunny certified.
+     Certified: on PETA's list, Leaping Bunny certified, or approved by Cruelty Free International.
      Strict: certified, and not a known problem: a parent that tests, or sold in mainland China
      stores, each with a source. Unknowns pass with a note (SPEC, 2026-11-11). */
   function verdict(b, mode) {
-    const peta = b.peta.status, lb = b.leapingBunny.status;
+    const peta = b.peta.status, lb = b.leapingBunny.status, cfi = b.cfi ? b.cfi.status : "unknown";
     const notes = [];
-    if (peta !== "yes" && lb !== "yes") {
+    if (peta !== "yes" && lb !== "yes" && cfi !== "yes") {
       if (peta === "no") {
         const law = /regulatory/i.test(b.peta.note);
         return { pass: false, kind: "fail", reason: law ? "PETA says it tests on animals when the law requires it." : "PETA says it tests on animals.", notes };
       }
-      return { pass: false, kind: "none", reason: "Not on PETA's or Leaping Bunny's list, so its cruelty-free status isn't verified.", notes };
+      return { pass: false, kind: "none", reason: "Not on PETA's, Leaping Bunny's or Cruelty Free International's list, so its cruelty-free status isn't verified.", notes };
     }
-    const certs = [peta === "yes" && "PETA", lb === "yes" && "Leaping Bunny"].filter(Boolean);
-    const by = certs.join(" and ");
+    const certs = [peta === "yes" && "PETA", lb === "yes" && "Leaping Bunny", cfi === "yes" && "Cruelty Free International"].filter(Boolean);
+    const by = certs.length > 2 ? certs.slice(0, -1).join(", ") + " and " + certs[certs.length - 1] : certs.join(" and ");
     if (mode === "strict") {
       if (b.parent.testsOnAnimals === "yes" && b.parent.name && b.parent.name !== b.name) {
         const law = /regulatory/i.test(b.parent.note || "");
@@ -47,7 +47,7 @@
     }
     return { pass: true, kind: "pass", reason: `Certified by ${by}.`, notes, certs };
   }
-  const CHIP = { pass: "Passes", fail: "Doesn't pass", none: "Not on either list" };
+  const CHIP = { pass: "Passes", fail: "Doesn't pass", none: "Not on any list" };
   // One chip per certifier for a brand that passes; the Brands list and Home's rail both use it.
   const certChips = (v) => v.certs.map((c) => `<span class="verdict v-pass"><span class="sr-only">Certified by </span>${c}</span>`).join("");
 
@@ -127,7 +127,7 @@
     document.querySelectorAll(".mode-btn").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.mode === state.mode)));
     $("mode-help").textContent = state.mode === "strict"
       ? "Certified, and no known parent that tests or sales in mainland China stores."
-      : "On PETA's list or certified by Leaping Bunny.";
+      : "On PETA's list, certified by Leaping Bunny or approved by Cruelty Free International.";
     document.querySelectorAll(".chip[data-filter=vegan]").forEach((x) => x.setAttribute("aria-pressed", String(state.vegan)));
     document.querySelectorAll(".chip[data-price]").forEach((x) => x.setAttribute("aria-pressed", String(state.price.has(x.dataset.price))));
 
@@ -184,9 +184,11 @@
     const v = verdict(b, state.mode);
     const modeName = state.mode === "strict" ? "Strict" : "Certified";
     const p = b.peta, lb = b.leapingBunny, par = b.parent, ch = b.chinaRetail;
+    const cf = b.cfi || { status: "unknown", url: null, checked: null };
 
     const petaStatus = p.status === "yes" ? "On PETA's cruelty-free list" : p.status === "no" ? (/regulatory/i.test(p.note) ? "Tests on animals when the law requires it, per PETA" : "Tests on animals, per PETA") : "Unknown: not on PETA's cruelty-free list";
     const lbStatus = lb.status === "yes" ? "Leaping Bunny certified" : lb.status === "no" ? "Not certified" : "Unknown: not in Leaping Bunny's guide";
+    const cfStatus = cf.status === "yes" ? "Approved by Cruelty Free International" : cf.status === "no" ? "Not approved" : "Unknown: not on its approved list";
     const parStatus = par.testsOnAnimals === "n/a" ? "This brand is the parent company"
       : par.name ? `${par.name}: ${par.testsOnAnimals === "yes" ? "tests on animals" : par.testsOnAnimals === "no" ? "doesn't test on animals" : "testing unknown"}`
       : par.testsOnAnimals === "unknown" ? "Unknown" : "";
@@ -211,6 +213,7 @@
       <div class="facts">
         ${card("PETA", petaStatus, "", sourceLine(p, "PETA's page"), p.status === "yes" ? "ok" : p.status === "no" ? "no" : "")}
         ${card("Leaping Bunny", lbStatus, "", sourceLine(lb, "Leaping Bunny"), lb.status === "yes" ? "ok" : "")}
+        ${card("Cruelty Free International", cfStatus, "", sourceLine(cf, "Cruelty Free International"), cf.status === "yes" ? "ok" : "")}
         ${card("Parent company", parStatus, parNote, sourceLine(par, "Source"), par.testsOnAnimals === "yes" && par.name && par.name !== b.name ? (state.mode === "strict" ? "no" : "") : par.testsOnAnimals === "no" && par.name ? "ok" : "")}
         ${card("Mainland China", chStatus, chNote, sourceLine(ch, "Brand's page"), ch.status === "no" ? "ok" : ch.status === "yes" && state.mode === "strict" ? "no" : "")}
         ${card("Vegan", veganStatus, "", b.vegan === "all" ? sourceLine(p, "PETA's page") : "")}
