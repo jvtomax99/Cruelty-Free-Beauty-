@@ -1,0 +1,9 @@
+# GitHub Pages publishes this folder. Files listed here stay in the repo but are not put on the
+# live site: notes, plans and the tools that build or check the app. Nothing the app loads is here.
+exclude:
+  - CLAUDE.md
+  - SPEC.md
+  - DESIGN.md
+  - README.md
+  - docs/
+  - tools/

@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- The link preview picture (assets/images/social.jpg, 1200 x 630). Rebuild: node tools/make-social.cjs -->
+<html><head><meta charset="utf-8"><style>
+@font-face { font-family: "Instrument Serif"; src: url("../assets/fonts/instrument-serif.woff2"); size-adjust: 122%; }
+@font-face { font-family: "Instrument Serif"; src: url("../assets/fonts/instrument-serif-italic.woff2"); font-style: italic; size-adjust: 122%; }
+@font-face { font-family: "Manrope"; src: url("../assets/fonts/manrope.woff2"); font-weight: 200 800; }
+* { margin: 0; box-sizing: border-box; }
+body { width: 1200px; height: 630px; overflow: hidden; font-family: "Manrope", sans-serif; color: #3B2A2A;
+  background: radial-gradient(120% 90% at 100% 0%, #F0D2CE, transparent 60%), radial-gradient(90% 80% at 0% 100%, #F2DCCB, transparent 60%), #FBF6F2; position: relative; }
+.left { position: absolute; left: 84px; top: 0; bottom: 0; width: 640px; display: flex; flex-direction: column; justify-content: center; }
+.brand { display: flex; align-items: center; gap: 18px; }
+.brand img { width: 76px; height: 76px; }
+.wm { font-family: "Instrument Serif"; font-size: 48px; font-weight: 600; color: #9E4F62; letter-spacing: .02em; line-height: 1; }
+.sub { font-size: 20px; color: #6B524D; letter-spacing: .03em; margin-top: 6px; }
+h1 { font-family: "Instrument Serif"; font-weight: 500; font-size: 72px; line-height: 1.04; white-space: nowrap; letter-spacing: -.01em; margin-top: 40px; }
+h1 em { font-style: italic; color: #9E4F62; font-weight: 450; }
+p { font-size: 25px; color: #6B524D; margin-top: 26px; line-height: 1.4; max-width: 560px; }
+.girl { position: absolute; right: 30px; bottom: 0; height: 560px; }
+</style></head><body>
+<div class="left">
+  <div class="brand"><img src="../assets/logo.svg" alt=""><div><div class="wm">C.F.B.</div><div class="sub">Cruelty-Free Beauty</div></div></div>
+  <h1>Cruelty-free looks<br><em>beautiful on you.</em></h1>
+  <p>Who certified each brand, when it was checked, and what suits your skin.</p>
+</div>
+<img class="girl" src="../assets/host/base.webp" alt="">
+</body></html>

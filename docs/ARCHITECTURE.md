@@ -10,7 +10,7 @@ relative.
 
 | Path | What |
 |---|---|
-| `index.html` | The shell: icon sprite, side rail (computers), the screens (`data-screen` home, brands, brand, scan, profile, garden, practice, learn, add), tab bar (phones) |
+| `index.html` | The shell: head tags (description, canonical address, link preview: Open Graph and Twitter card pointing at `assets/images/social.jpg`), icon sprite, side rail (computers), the screens (`data-screen` home, brands, brand, scan, profile, garden, practice, learn, add), tab bar (phones) |
 | `app.css` | All styles. Tokens in `:root` at the top; DESIGN.md explains them |
 | `app.js` | Screens by `#hash` (Back retraces), greeting by time of day, press feedback (`LIFTS`, `.is-pressed` held 260 ms), saved settings (`CFB.store`, localStorage inside try/catch), registers the worker |
 | `brands.js` | Brands screen and brand pages (`#brand/<id>`): loads `data/brands.json`, works out each verdict (Strict / Certified, saved as `cfb-mode`; certified = PETA, Leaping Bunny or Cruelty Free International), search, filters. Also shared helpers: `CFB.match` (a label's brand name to our brand), `CFB.saved` (hearts, `cfb-saved`) |
@@ -42,6 +42,10 @@ relative.
 | `learn.js` | The Learn answers and their sources (`ANSWERS`, `CHECKED` date) |
 | `sw.js` | Offline worker: every file from one versioned cache, so a launch never mixes old and new files. A bumped `CACHE_VERSION` downloads the new version whole in the background and takes over; `app.js` then reloads the page by itself ("Updates on their own": it asks for a new version each time the app comes back into view, at most once a minute, and reloads when the app goes into the background or on arriving at Home, never under a reader on another screen, and never while the opening, a quiz, a Sanctuary round, the Sanctuary, the Scan screen, a brand search or a typed-in field is in use; never twice within 30 s). Bump it by hand in every change to a precached file. The launch film is not precached (too big to make the install wait): it lives in its own cache (`MEDIA`), saved when the page asks once the film has played, served in byte ranges (iPhones need that), and kept across app updates; bump `MEDIA` if the film changes. The music (`assets/sounds/`) is in `MEDIA` as well, saved the first time the page asks for it (`kept`); bump `MEDIA` if it changes. The Sanctuary's 3D world (`sanctuary3d.js`, `assets/sanctuary/`, `assets/vendor/three/`, about 2.7 MB) is a third cache, `WORLD`: each file is saved the first time it is asked for and served from there after, so bump `WORLD` in every change to any of them |
 | `manifest.webmanifest` | Install name, colours, icons |
+| `_config.yml` | What GitHub Pages leaves off the live site: notes and plans (`CLAUDE.md`, `SPEC.md`, `DESIGN.md`, `README.md`, `docs/`) and `tools/`. A new top-level notes file goes on this list |
+| `404.html` | GitHub Pages' page for a missing address. It can be shown at any depth, so its links, fonts and logo are full addresses |
+| `sitemap.xml` | The one address, for search consoles |
+| `assets/images/social.jpg` | The link preview picture (1200 x 630), drawn from `tools/social-card.html` by `tools/make-social.cjs` |
 | `assets/logo.svg` | The bunny logo (original). Every part has an id; `intro.js` animates them |
 | `assets/icons/` | App icons, made from the logo by `tools/make-icons.cjs` |
 | `assets/fonts/` | Instrument Serif (headings, normal and italic) and Manrope (text), WOFF2, OFL. |

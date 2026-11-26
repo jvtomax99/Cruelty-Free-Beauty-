@@ -1,7 +1,7 @@
 /* C.F.B. founder tools: her add-a-brand box (#add) and her storefront card on Profile.
    The add box sends nothing itself: Send opens GitHub's "Add a brand" issue form, filled in,
    and she taps Submit there. A daily scheduled check reads those issues (only from trusted
-   logins, CLAUDE.md), checks PETA, Leaping Bunny and Cruelty Free International, and adds the brand with its proof.
+   logins, listed in the workflow), checks PETA, Leaping Bunny and Cruelty Free International, and adds the brand with its proof.
    Hidden, not secured: the Founder tools row shows only on a phone that turned it on (cfb-founder),
    by tapping the C.F.B. logo 5 times (inside the installed app too, whose storage on an iPhone is
    apart from Safari's) or by opening the app with ?founder=1; the same 5 taps or ?founder=0 turn it

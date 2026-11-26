@@ -51,6 +51,8 @@
     const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     to.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
     (to.matches("a, button") ? to : to.querySelector("a, button") || to).focus({ preventScroll: true });
+    // "Try one from your bag" starts the camera, not just points at it; never a second tap that would turn it off
+    if (to.id === "scan-start" && to.textContent.trim() === "Start camera" && !to.disabled) to.click();
   });
 
   let brands = [];

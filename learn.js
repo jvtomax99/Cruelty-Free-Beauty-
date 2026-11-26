@@ -76,7 +76,7 @@
         <div class="sources">Sources, checked ${CHECKED}:
           <ul>${x.src.map(s => `<li><a href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.t)}</a></li>`).join("")}</ul>
         </div>
-        <a class="pill-btn gd-go" href="#practice/${x.topic}">Practise this</a>
+        <a class="pill-btn gd-go" href="#practice/${x.topic}">Practice this</a>
       </div>
     </details>`).join("");
 })();

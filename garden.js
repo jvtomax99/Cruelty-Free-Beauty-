@@ -184,7 +184,7 @@
     const all = tally();
     $("garden-total").textContent = `${all.learned} of ${all.total} learned`;
     $("garden-all").hidden = false;
-    $("garden-all").textContent = all.due ? `Practise 5 (${all.due} to review)` : "Practise 5";
+    $("garden-all").textContent = all.due ? `Practice 5 (${all.due} to review)` : "Practice 5";
     box.innerHTML = TOPICS.map((t) => {
       const n = tally(t.id);
       return `<a class="gd-card${n.p >= 1 ? " is-bloom" : ""}" href="#practice/${t.id}">
@@ -257,7 +257,7 @@
       </div>
       <div class="sx-actions">
         <button class="sx-btn" type="button" id="sx-hello">Say hello</button>
-        <a class="sx-btn sx-btn-2" href="#practice/${t.id}">Practise</a>
+        <a class="sx-btn sx-btn-2" href="#practice/${t.id}">Practice</a>
       </div>` : view === "visit" ? `
       <div class="sx-text">
         <h2 class="sx-name">${esc(t.name)}</h2>
@@ -265,7 +265,7 @@
       </div>
       <div class="sx-home"><span class="sx-line">At home here:</span>${home.length ? home.map((x) => `<button class="sx-who" type="button" data-who="${esc(x.id)}" aria-label="Meet ${esc(x.name)}">${esc(x.name)}</button>`).join("") : `<span class="sx-desc">${esc(list(HOME[sel].who.slice(0, here)))}</span>`}</div>
       <div class="sx-actions">
-        <a class="sx-btn" href="#practice/${t.id}" id="sx-practise">Practise</a>
+        <a class="sx-btn" href="#practice/${t.id}" id="sx-practise">Practice</a>
       </div>` : `
       <div class="sx-text" aria-live="polite">
         <h2 class="sx-name">${esc(t.name)}</h2>
@@ -311,7 +311,7 @@
     document.title = "C.F.B. · " + $("practice-h").textContent;
     if (failed) { box.innerHTML = LOAD_FAIL; return; }
     const qs = pick(topic);
-    if (!qs.length) { box.innerHTML = `<p class="gd-note">Nothing to practise here yet.</p>`; return; }
+    if (!qs.length) { box.innerHTML = `<p class="gd-note">Nothing to practice here yet.</p>`; return; }
     round = { topic, qs, i: 0, right: 0, before: tally(topic === "all" ? null : topic), world: snapshot() };
     ask();
   }

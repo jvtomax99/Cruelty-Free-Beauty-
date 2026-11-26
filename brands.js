@@ -176,7 +176,7 @@
     const b = brands.find((x) => x.id === id);
     const page = $("brand-page");
     if (!b) {
-      page.innerHTML = `<h1 id="brand-h" tabindex="-1">Brand not found</h1><p class="lede">It may have been renamed. Go back to all brands.</p>`;
+      page.innerHTML = `<h1 id="brand-h" tabindex="-1">Brand not found</h1><p class="lede">It may have been renamed, or the link is broken.</p><a class="pill-btn gd-go" href="#brands">See all brands</a>`;
       document.title = "C.F.B. · Brand not found";
       return;
     }

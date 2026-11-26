@@ -38,4 +38,4 @@ jobs:
           # and if it didn't, the check below would fail to open the page.
           timeout 180 npx playwright install --with-deps chromium || npx playwright install chromium
       - name: Check the site
-        run: node .github/site-check.cjs index.html
+        run: node .github/site-check.cjs index.html 404.html
